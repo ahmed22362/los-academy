@@ -1,0 +1,14 @@
+{
+    "Navbar": {
+      "navbar-title": "اهلا بك في الشركة"
+    },
+    "Hompage": {
+      "home-title": "الصفحة الرئيسية"
+    },
+    "About": {
+      "about-title": "عن الشركة"
+    },
+    "Footer": {
+      "footer-title": "الحقوق محفوظة للشركة"
+    }
+  }

@@ -1,0 +1,14 @@
+{
+    "Navbar": {
+      "navbar-title": "Navbar"
+    },
+    "Hompage": {
+      "home-title": "Home"
+    },
+    "About": {
+      "footer-title": "About"
+    },
+    "Footer": {
+      "footer-title": "Footer"
+    }
+  }

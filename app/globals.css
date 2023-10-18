@@ -2,11 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* /* :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-} */
+:root,
+.root,
+#root
+#docs-root {
+  --primary-color: #0B193E;
+  --secondary-color: #6D67E4;
+  --secondary-hover: #6d67e49a;
+  --gradiant-color: linear-gradient(180deg, #0B193E 0%, #3D4193 51.04%, #6D67E4 100%);
+  --black-one-color: #000015;
+  --black-two-color: #1D1D1D;
+  --black-three-color: #282828;
+  --white-color: #EBF6FE;
+  --gray-one-coloer: #333333;
+  --gray-two-coloer: #4f4f4f;
+  --gray-three-coloer: #828282;
+  --gray-four-coloer: #BDBDBD;
+}
 
 /* @media (prefers-color-scheme: dark) {
   :root {
@@ -15,13 +27,8 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+*/
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}  */
+body{
+  color: var(--primary-color);
+} 

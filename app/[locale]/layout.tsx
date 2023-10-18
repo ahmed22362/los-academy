@@ -1,34 +1,49 @@
 import '../globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import {useLocale} from 'next-intl';
+import { Work_Sans } from 'next/font/google'
 import {notFound} from 'next/navigation';
-import {unstable_setRequestLocale} from 'next-intl/server';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import {NextIntlClientProvider} from 'next-intl';
+import Footer from './layout/Footer';
+import CustomNavbar from './layout/Navbar';
 
-const inter = Inter({ subsets: ['latin'] })
 
-const locales = ['en', 'ar'];
+  const workSans = Work_Sans({
+    subsets: ['latin'],
+    display: "swap",
+    variable: "--font-work-sans",
+    weight: ["100","200","300","400", "500", "600", "700", "800"],
+    style: "normal",
+    preload: true
+  })
+
+export function generateStaticParams() {
+  return [{locale: 'en'}, {locale: 'de'}];
+}
 
 export const metadata: Metadata = {
   title: 'LOS Academy',
   description: 'Learning Forgeins Kids Arabic And Islamic Courses',
 }
 
-export default function LocaleLayout({children, params: {locale}}: {children: React.ReactNode, params: {locale: string}}) {
+export default async function LocaleLayout({children, params: {locale}}: {children: React.ReactNode, params: {locale: string}}) {
 
-  const isValidLocale = locales.some((cur) => cur === locale);
-  if (!isValidLocale) notFound();
-  unstable_setRequestLocale(locale);
+  let messages;
+  try {
+    messages = (await import(`../../messages/${locale}.json`)).default;
+  } catch (error) {
+    notFound();
+  }
+
   return (
-    <html lang={locale}>
-      <body className={inter.className}>
+    <html className={workSans.className} lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      <body>
+      <NextIntlClientProvider locale={locale} messages={messages}>
         <header>
-          <Navbar />
+          <CustomNavbar />
         </header>
           {children}
         <Footer />
+        </NextIntlClientProvider>
         </body>
     </html>
   )

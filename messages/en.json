@@ -1,6 +1,14 @@
 {
-    "Navbar": {
-      "navbar-title": "Navbar"
+    "CustomNavbar": {
+      "logo-title": "LOS Academy",
+      "home-link": "Home",
+      "about-link": "About",
+      "courses-link": "Courses",
+      "prices-link": "Prices",
+      "feedback-link": "Feedback",
+      "contact-link": "Contact",
+      "login-btn": "Login",
+      "lang-title": "Choose language"
     },
     "Hompage": {
       "home-title": "Home"

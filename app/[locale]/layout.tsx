@@ -16,10 +16,6 @@ import CustomNavbar from './layout/Navbar';
     preload: true
   })
 
-export function generateStaticParams() {
-  return [{locale: 'en'}, {locale: 'de'}];
-}
-
 export const metadata: Metadata = {
   title: 'LOS Academy',
   description: 'Learning Forgeins Kids Arabic And Islamic Courses',

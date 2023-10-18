@@ -1,5 +1,8 @@
 import {useTranslations} from 'next-intl';
 import {unstable_setRequestLocale} from 'next-intl/server';
+import Hero from './components/Hero';
+import TrySection from './components/TrySection';
+import OurCourses from './components/OurCourses';
 
 export default function Home({params: {locale}}: {params: {locale: string}}) {
 
@@ -8,8 +11,10 @@ export default function Home({params: {locale}}: {params: {locale: string}}) {
   unstable_setRequestLocale(locale);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h2>{t('home-title')}</h2>
+    <main className="min-h-screen">
+      <Hero />
+      <TrySection />
+      <OurCourses />
     </main>
   )
 }

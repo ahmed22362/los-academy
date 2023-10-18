@@ -1,6 +1,14 @@
 {
-    "Navbar": {
-      "navbar-title": "اهلا بك في الشركة"
+    "CustomNavbar": {
+      "logo-title": "LOS Academy",
+      "home-link": "الصفحة الرئيسية",
+      "about-link": "عن الأكاديمية",
+      "courses-link": "الدورات",
+      "prices-link": "الأسعار",
+      "feedback-link": "تعليقات المشتركين",
+      "contact-link": "تواصل معنا",
+      "login-btn": "تسجيل الدخول",
+      "lang-title": "اختر اللغة"
     },
     "Hompage": {
       "home-title": "الصفحة الرئيسية"

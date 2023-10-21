@@ -64,7 +64,7 @@ export default function CustomNavbar() {
           >
             {t("home-link")}
           </Navbar.Link>
-          <Navbar.Link href="/#" theme={customNavTheme.link}>
+          <Navbar.Link href="/#aboutUs" theme={customNavTheme.link}>
             {t("about-link")}
           </Navbar.Link>
           <Navbar.Link href="/#courses" theme={customNavTheme.link}>
@@ -88,6 +88,7 @@ export default function CustomNavbar() {
               "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 shadow rounded-full"
             }
             text={t("login-btn")}
+            onClick={() => {console.log("click")}}
           />
           <Dropdown label={<MdLanguage className="w-5 h-5" />} inline>
             <Link locale="en" href={"/"}>

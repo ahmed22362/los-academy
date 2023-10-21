@@ -1,11 +1,16 @@
 import '../globals.css'
+import 'bootstrap-icons/font/bootstrap-icons.min.css'
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+
+
 import type { Metadata } from 'next'
 import { Work_Sans } from 'next/font/google'
 import {notFound} from 'next/navigation';
 import {NextIntlClientProvider} from 'next-intl';
 import Footer from './layout/Footer';
 import CustomNavbar from './layout/Navbar';
-
 
   const workSans = Work_Sans({
     subsets: ['latin'],

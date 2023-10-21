@@ -1,22 +1,43 @@
 {
-    "CustomNavbar": {
-      "logo-title": "LOS Academy",
-      "home-link": "Home",
-      "about-link": "About",
-      "courses-link": "Courses",
-      "prices-link": "Prices",
-      "feedback-link": "Feedback",
-      "contact-link": "Contact",
-      "login-btn": "Login",
-      "lang-title": "Choose language"
+  "CustomNavbar": {
+    "logo-title": "LOS Academy",
+    "home-link": "Home",
+    "about-link": "About",
+    "courses-link": "Courses",
+    "prices-link": "Prices",
+    "feedback-link": "Feedback",
+    "contact-link": "Contact",
+    "login-btn": "Login",
+    "lang-title": "Choose language"
+  },
+  "Hompage": {
+    "hero-title": "Learn From anywhere around the world with us",
+    "hero-paragraph": "Online learning is valuable tool for children’s education and there mindset",
+    "hero-span": "Book your trial session now",
+    "bookNow-btn": "Book Now",
+    "try-title": "Try our free session.",
+    "try-paragraph": "You can choose the suitable day and time for you.",
+    "courses-title": "Our Courses"
+  },
+  "courses": [
+    {
+      "id": 1,
+      "name": "Arabic Language",
+      "paragraph": "The course aims to provide children with a solid foundation in Arabic vocabulary, pronunciation, basic grammar, and essential communication skills."
     },
-    "Hompage": {
-      "home-title": "Home"
+
+    {
+      "id": 2,
+      "name": "Islamic Studies",
+      "paragraph": "The course aims to instill a strong foundation in Islamic knowledge, moral values, and spiritual development."
     },
-    "About": {
-      "footer-title": "About"
-    },
-    "Footer": {
-      "footer-title": "Footer"
+    {
+      "id": 3,
+      "name": "Quran Memorization",
+      "paragraph": "The Quran is the holy book of Islam, and its memorization and recitation are a central part of Muslim religious practice."
     }
+  ],
+  "Footer": {
+    "footer-title": "Footer"
   }
+}

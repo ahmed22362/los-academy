@@ -67,7 +67,7 @@ export default function CustomNavbar() {
           <Navbar.Link href="/#" theme={customNavTheme.link}>
             {t("about-link")}
           </Navbar.Link>
-          <Navbar.Link href="/#" theme={customNavTheme.link}>
+          <Navbar.Link href="/#courses" theme={customNavTheme.link}>
             {t("courses-link")}
           </Navbar.Link>
           <Navbar.Link href="/#" theme={customNavTheme.link}>

@@ -1,8 +1,8 @@
 "use client";
 
-const PrimaryButton = ({text, ourStyle}: any) => {
+const PrimaryButton = ({text, ourStyle, onClick}: {text: string, ourStyle: string, onClick?: () => void}) => {
     return(
-        <button className={ourStyle}>{text}</button>
+        <button className={ourStyle} onClick={onClick}>{text}</button>
     )
 }
 

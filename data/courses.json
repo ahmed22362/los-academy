@@ -1,0 +1,16 @@
+{
+    "courses": [
+        {
+            "name": "Arabic Language",
+            "paragraph": "The course aims to provide children with a solid foundation in Arabic vocabulary, pronunciation, basic grammar, and essential communication skills."
+        },
+        {
+            "name": "Islamic Studies",
+            "paragraph": "The course aims to instill a strong foundation in Islamic knowledge, moral values, and spiritual development."
+        },
+        {
+            "name": "Quran Memorization",
+            "paragraph": "The Quran is the holy book of Islam, and its memorization and recitation are a central part of Muslim religious practice."
+        }
+    ]
+}

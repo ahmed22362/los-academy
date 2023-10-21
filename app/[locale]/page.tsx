@@ -3,6 +3,8 @@ import {unstable_setRequestLocale} from 'next-intl/server';
 import Hero from './components/Hero';
 import TrySection from './components/TrySection';
 import OurCourses from './components/OurCourses';
+import AboutUs from './components/Aboutus';
+
 
 export default function Home({params: {locale}}: {params: {locale: string}}) {
 
@@ -15,6 +17,7 @@ export default function Home({params: {locale}}: {params: {locale: string}}) {
       <Hero />
       <TrySection />
       <OurCourses />
+      <AboutUs />
     </main>
   )
 }

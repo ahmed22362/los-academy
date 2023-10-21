@@ -29,6 +29,45 @@
 }
 */
 
+html {
+  scroll-behavior: smooth;
+}
+
 body{
   color: var(--primary-color);
 } 
+.slick-slide div {
+  display: flex;
+  justify-content: center !important;
+  padding: 10px;
+}
+
+
+/* ===========> Start of SlickArrows <============= */
+
+/* ltr classes */
+.slick-next-ltr:before{
+  font-family: "Bootstrap-icons" !important;
+  content: "\F285" !important;
+  color: black !important;
+}
+.slick-prev-ltr:before{
+  font-family: "Bootstrap-icons" !important;
+  content: "\F284" !important;
+  color: black !important;
+}
+/* rtl classes */
+
+.slick-next-rtl:before{
+  font-family: "Bootstrap-icons" !important;
+  content: "\F284" !important;
+  color: black !important;
+}
+.slick-prev-rtl:before{
+  font-family: "Bootstrap-icons" !important;
+  content: "\F285" !important;
+  color: black !important;
+}
+/* ===========> End of SlickArrows <============= */
+
+

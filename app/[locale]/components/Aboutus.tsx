@@ -7,9 +7,8 @@ function AboutUs() {
 
     const t = useTranslations("AboutUs");
 
-
     return (
-        <section id="aboutUs" className="px-6 flex justify-center gap-[125px] max-lg:gap-[50px] items-center flex-wrap">
+        <section id="aboutUs" className="px-6 py-12 flex justify-center gap-[125px] max-lg:gap-[50px] items-center flex-wrap">
             <div>
                 <Image src={'/vectors/aboutus.svg'} alt="About Image" width={500} height={500} />
             </div>

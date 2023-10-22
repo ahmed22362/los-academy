@@ -4,6 +4,8 @@ import Hero from './components/Hero';
 import TrySection from './components/TrySection';
 import OurCourses from './components/OurCourses';
 import AboutUs from './components/Aboutus';
+import Plans from './components/Plans';
+import FeedBack from './components/FeedBack';
 
 
 export default function Home({params: {locale}}: {params: {locale: string}}) {
@@ -18,6 +20,8 @@ export default function Home({params: {locale}}: {params: {locale: string}}) {
       <TrySection />
       <OurCourses />
       <AboutUs />
+      <Plans />
+      <FeedBack />
     </main>
   )
 }

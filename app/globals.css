@@ -6,7 +6,7 @@
 .root,
 #root
 #docs-root {
-  --primary-color: #0B193E;
+  --primary-color: #0B193E !important;
   --secondary-color: #6D67E4;
   --secondary-hover: #6d67e49a;
   --gradiant-color: linear-gradient(180deg, #0B193E 0%, #3D4193 51.04%, #6D67E4 100%);
@@ -18,6 +18,10 @@
   --gray-two-coloer: #4f4f4f;
   --gray-three-coloer: #828282;
   --gray-four-coloer: #BDBDBD;
+  --success-color: #27AE60;
+  --info-color:#2F80ED;
+  --danger-color: #EB5757;
+  --warning-color: #E2B93B;
 }
 
 /* @media (prefers-color-scheme: dark) {

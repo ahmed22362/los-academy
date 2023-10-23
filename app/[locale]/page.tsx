@@ -6,6 +6,7 @@ import OurCourses from './components/OurCourses';
 import AboutUs from './components/Aboutus';
 import Plans from './components/Plans';
 import FeedBack from './components/FeedBack';
+import ContactUs from './components/ContactUs';
 
 
 export default function Home({params: {locale}}: {params: {locale: string}}) {
@@ -22,6 +23,7 @@ export default function Home({params: {locale}}: {params: {locale: string}}) {
       <AboutUs />
       <Plans />
       <FeedBack />
+      <ContactUs />
     </main>
   )
 }

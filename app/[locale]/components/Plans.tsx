@@ -6,11 +6,11 @@ import OurTab from "./OurTab";
 
 function Plans() {
 
- 
+    const t = useTranslations('plans-section')
 
     return (
-        <section>
-            <h2 className="text-black-color-one text-3xl font-bold text-center mb-4">Choose the plan that works for you</h2>
+        <section id="prices">
+            <h2 className="text-black-color-one text-3xl font-bold text-center mb-4">{t("plan-title")}</h2>
             <OurTab />
         </section>
     )

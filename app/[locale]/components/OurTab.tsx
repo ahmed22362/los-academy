@@ -8,7 +8,8 @@ import { BsPeople, BsPerson } from "react-icons/bs";
 
 export default function OurTab() {
 
-    const t = useTranslations("plans");
+    const t = useTranslations("plans-section.plans");
+    const t2 = useTranslations("plans-section");
 
     const customeTheme: CustomFlowbiteTheme = {
         tab: {
@@ -49,6 +50,7 @@ export default function OurTab() {
                 f3={t('0.features.f-3')}
                 f4={t('0.features.f-4')}
                 f5={t('0.features.f-5')}
+                btn={t2("plan-btn")}
             />
             <PlanCard 
                 title={t('1.title')}
@@ -58,6 +60,7 @@ export default function OurTab() {
                 f3={t('1.features.f-3')}
                 f4={t('1.features.f-4')}
                 f5={t('1.features.f-5')}
+                btn={t2("plan-btn")}
             />
             <PlanCard 
                 title={t('2.title')}
@@ -67,6 +70,7 @@ export default function OurTab() {
                 f3={t('2.features.f-3')}
                 f4={t('2.features.f-4')}
                 f5={t('2.features.f-5')}
+                btn={t2("plan-btn")}
             />
             <PlanCard 
                 title={t('3.title')}
@@ -76,13 +80,9 @@ export default function OurTab() {
                 f3={t('3.features.f-3')}
                 f4={t('3.features.f-4')}
                 f5={t('3.features.f-5')}
+                btn={t2("plan-btn")}
             />
         </div>
-      </Tabs.Item>
-      <Tabs.Item title="group" icon={BsPeople}>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Content 2
-        </p>
       </Tabs.Item>
     </Tabs.Group>
     </>

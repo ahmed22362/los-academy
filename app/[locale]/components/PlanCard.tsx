@@ -4,7 +4,7 @@ import { Card, CustomFlowbiteTheme } from "flowbite-react";
 import PrimaryButton from './PrimaryButton'
 import { useState } from "react";
 import PriceModal from "./PriceModal/PriceModal";
-function PlanCard({title, price, f1, f2, f3, f4, f5, btn}: any) {
+function PlanCard({title, price, f1, f2, f3, f4, f5, btn, targetComponent}: any) {
   
   const [openModal, setOpenModal] = useState<string | undefined>(undefined);
   const handleOpenModal = () => {
@@ -30,7 +30,8 @@ function PlanCard({title, price, f1, f2, f3, f4, f5, btn}: any) {
             openModal === 'default' && 
             <PriceModal
                 handleOpen={openModal} 
-                handleCloseModal={handleCloseModal} />
+                handleCloseModal={handleCloseModal}
+            targetComponent={targetComponent}/>
         }
       <h5 className="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">
         {title}

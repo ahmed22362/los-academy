@@ -51,6 +51,7 @@ export default function OurTab() {
                 f4={t('0.features.f-4')}
                 f5={t('0.features.f-5')}
                 btn={t2("plan-btn")}
+                targetComponent={1}
             />
             <PlanCard 
                 title={t('1.title')}
@@ -61,6 +62,7 @@ export default function OurTab() {
                 f4={t('1.features.f-4')}
                 f5={t('1.features.f-5')}
                 btn={t2("plan-btn")}
+                targetComponent={2}
             />
             <PlanCard 
                 title={t('2.title')}
@@ -71,6 +73,7 @@ export default function OurTab() {
                 f4={t('2.features.f-4')}
                 f5={t('2.features.f-5')}
                 btn={t2("plan-btn")}
+                targetComponent={3}
             />
             <PlanCard 
                 title={t('3.title')}
@@ -81,6 +84,7 @@ export default function OurTab() {
                 f4={t('3.features.f-4')}
                 f5={t('3.features.f-5')}
                 btn={t2("plan-btn")}
+                targetComponent={4}
             />
         </div>
       </Tabs.Item>

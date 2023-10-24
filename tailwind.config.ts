@@ -22,6 +22,10 @@ const config: Config = {
         "gray-two-color": "var(--gray-two-color)",
         "gray-three-color": "var(--gray-three-color)",
         "gray-four-color": "var(--gray-four-color)",
+        "success-color": "var(--success-color)",
+        "info-color": "var(--info-color)",
+        "danger-color": "var(--danger-color)",
+        "warning-color": "var(--warning-color)"
       }
     },
   },

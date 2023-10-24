@@ -5,6 +5,7 @@ import Image from "next/image";
 import PrimaryButton from './PrimaryButton';
 import ModalCourse from "./ModalCourse";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 function OurCard({title, paragraph, modalTarget}: {title: string, paragraph: string; modalTarget: number}) {
 
@@ -25,7 +26,7 @@ function OurCard({title, paragraph, modalTarget}: {title: string, paragraph: str
     const handleCloseModal = () => {
         setOpenModal(undefined);
     };
-
+    const t = useTranslations("Hompage");
 return (
     <Card theme={customTheme.card} className="max-w-sm">
         { 
@@ -53,7 +54,7 @@ return (
             {paragraph}
         </p>
         <PrimaryButton 
-            text={"Show Details"} 
+            text={t("course-btn")} 
             ourStyle={
                 "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-4 px-12 shadow rounded-full w-50 mx-auto mt-5 max-md:py-2.5 max-md:px-10 max-md:w-45"
             }

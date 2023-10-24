@@ -3,10 +3,10 @@
 import { useTranslations } from "next-intl";
 import Link from "next-intl/link";
 import { MdLanguage } from "react-icons/md";
-import { PrimaryButton } from "../components";
 import Image from "next/image";
 import { Dropdown, Navbar } from "flowbite-react";
 import type { CustomFlowbiteTheme } from "flowbite-react";
+import Link2 from 'next/link';
 
 export default function CustomNavbar() {
   const t = useTranslations("CustomNavbar");
@@ -70,26 +70,25 @@ export default function CustomNavbar() {
           <Navbar.Link href="/#courses" theme={customNavTheme.link}>
             {t("courses-link")}
           </Navbar.Link>
-          <Navbar.Link href="/#" theme={customNavTheme.link}>
+          <Navbar.Link href="/#prices" theme={customNavTheme.link}>
             {t("prices-link")}
           </Navbar.Link>
-          <Navbar.Link href="/#" theme={customNavTheme.link}>
+          <Navbar.Link href="/#feedback" theme={customNavTheme.link}>
             {t("feedback-link")}
           </Navbar.Link>
-          <Navbar.Link href="/#" theme={customNavTheme.link}>
+          <Navbar.Link href="/#contactus" theme={customNavTheme.link}>
             {t("contact-link")}
           </Navbar.Link>
         </Navbar.Collapse>
         <div className={
           "flex align-center m-3 flex-wrap gap-2 max-sm:ms-auto rtl:font-sans rtl:text-lg rtl:max-sm:me-0 rtl:max-sm:ms-auto"
           }>
-          <PrimaryButton
-            ourStyle={
-              "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 shadow rounded-full"
+          <Link2
+            href={"/login"}
+            className={
+              "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full"
             }
-            text={t("login-btn")}
-            onClick={() => {console.log("click")}}
-          />
+            >{t("login-btn")}</Link2>
           <Dropdown label={<MdLanguage className="w-5 h-5" />} inline>
             <Link locale="en" href={"/"}>
               <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">

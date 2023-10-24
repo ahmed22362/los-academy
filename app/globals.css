@@ -39,7 +39,14 @@ html {
 
 body{
   color: var(--primary-color);
-} 
+}
+
+.specialText > svg {
+  background: -webkit-linear-gradient(#3f5def, #9f69d5) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: #7b42d5 !important;
+}
+
 .slick-slide div {
   display: flex;
   justify-content: center !important;

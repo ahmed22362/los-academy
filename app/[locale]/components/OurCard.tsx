@@ -14,7 +14,7 @@ function OurCard({title, paragraph, modalTarget}: {title: string, paragraph: str
     const customTheme: CustomFlowbiteTheme = {
         card: {
             root: {
-                children: "flex h-96 flex-col items-center justify-center text-center gap-0 p-6 max-sm:p-1",
+                children: "flex h-[100%] flex-col items-center justify-center text-center gap-0 p-6 max-sm:p-1",
             }
         }
     }
@@ -43,13 +43,13 @@ return (
                 alt="course image" 
                 width={80} height={80} 
                 loading="lazy" 
-                style={{width: "100"}}
+                className={"w-auto h-auto"}
             />
         </div>
         <h3
             className="my-2 text-2xl font-semibold tracking-tight text-black-color-one">{title}</h3>
         <p
-            className="font-medium text-black-two-color text-base max-md:text-sm"
+            className="font-medium text-black-two-color text-base max-md:text-sm h-[130px] max-sm:h-auto"
         >
             {paragraph}
         </p>

@@ -62,7 +62,7 @@ function OurCourses() {
 
 
   return (
-      <section className="py-12 px-20 max-sm:px-9" id="courses">
+      <section className="py-12 px-20 max-sm:px-8" id="courses">
         <h3 className="text-center text-3xl mb-5 font-bold text-black-one-color">{t2('courses-title')}</h3>
           <Slider {...settings} className="flex justify-center">
             <OurCard title={t('0.name')} paragraph={t('0.paragraph')} modalTarget={1}/>

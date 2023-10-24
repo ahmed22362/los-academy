@@ -19,7 +19,7 @@ function PlanCard({title, price, f1, f2, f3, f4, f5, btn, targetComponent}: any)
   const customTheme: CustomFlowbiteTheme = {
     card: {
       root: {
-        children: "flex h-full flex-col justify-center gap-2 p-6",
+        children: "flex h-full flex-col justify-center gap-1 p-6 max-sm:gap-0",
       }
     }
   }
@@ -33,42 +33,42 @@ function PlanCard({title, price, f1, f2, f3, f4, f5, btn, targetComponent}: any)
                 handleCloseModal={handleCloseModal}
             targetComponent={targetComponent}/>
         }
-      <h5 className="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">
+      <h5 className="mb-4 text-xl font-medium text-black-color-two">
         {title}
       </h5>
-      <div className="flex items-baseline text-gray-900 dark:text-white">
+      <div className="flex items-baseline text-black-color-two">
         <span className="text-2xl font-semibold tracking-tight">
           {price}
         </span>
       </div>
       <ul className="my-7 space-y-5 h-[200px]">
         <li className="flex space-x-3 rtl:gap-2">
-        <i className="bi bi-check-circle-fill text-sky-600"></i>
-          <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
+        <i className="bi bi-check-circle-fill text-secondary-color"></i>
+          <span className="text-base font-normal leading-tight text-black-color-two">
             {f1}
           </span>
         </li>
         <li className="flex space-x-3 rtl:gap-2">
-        <i className="bi bi-check-circle-fill text-sky-600"></i>
-          <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
+        <i className="bi bi-check-circle-fill text-secondary-color"></i>
+          <span className="text-base font-normal leading-tight text-black-color-two">
             {f2}
           </span>
         </li>
         <li className="flex space-x-3 rtl:gap-2">
-        <i className="bi bi-check-circle-fill text-sky-600"></i>
-          <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
+        <i className="bi bi-check-circle-fill text-secondary-color"></i>
+          <span className="text-base font-normal leading-tight text-black-color-two">
             {f3}
           </span>
         </li>
         <li className="flex space-x-3 decoration-gray-500 rtl:gap-2">
-        <i className="bi bi-check-circle-fill text-sky-600"></i>
-          <span className="text-base font-normal leading-tight text-gray-500">
+        <i className="bi bi-check-circle-fill text-secondary-color"></i>
+          <span className="text-base font-normal leading-tight text-black-color-two">
             {f4}
           </span>
         </li>
         <li className="flex space-x-3 decoration-gray-500 rtl:gap-2">
-        <i className="bi bi-check-circle-fill text-sky-600"></i>
-          <span className="text-base font-normal leading-tight text-gray-500">
+        <i className="bi bi-check-circle-fill text-secondary-color"></i>
+          <span className="text-base font-normal leading-tight text-black-color-two">
             {f5}
           </span>
         </li>

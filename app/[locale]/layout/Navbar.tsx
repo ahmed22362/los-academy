@@ -43,14 +43,16 @@ export default function CustomNavbar() {
 
   return (
     <>
-      <Navbar rounded={true} theme={customNavTheme.root}>
-        <Navbar.Brand className="flex flex-row flex-wrap justify-center gap-5 rtl:flex-row-reverse">
+      <Navbar rounded={true} theme={customNavTheme.root} className="fixed w-full top-0 z-10 border-b-2 border-white-color">
+        <Navbar.Brand href="/" className="flex flex-row flex-wrap justify-center gap-5 rtl:flex-row-reverse">
           <Image
             src={"/logo.png"}
             alt="logo image"
-            width={36}
-            height={36}
+            width={35}
+            height={35}
             priority={true}
+            loading={"eager"}
+            className={"w-auto h-auto"}
           />
           <h2 className={"font-semibold text-xl"}>LOS Academy</h2>
         </Navbar.Brand>
@@ -58,7 +60,7 @@ export default function CustomNavbar() {
         <Navbar.Collapse className="rtl:font-sans rtl:text-lg" theme={customNavTheme.collapse}>
           <Navbar.Link
             theme={customNavTheme.link}
-            href="/#"
+            href="/#hero"
             active={true}
             className="rtl:ml-5"
           >

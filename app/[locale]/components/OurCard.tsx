@@ -47,9 +47,9 @@ return (
             />
         </div>
         <h3
-            className="my-2 text-2xl font-semibold tracking-tight text-black-color-one">{title}</h3>
+            className="my-2 text-2xl font-semibold tracking-tight text-black-color-one h-[70px]">{title}</h3>
         <p
-            className="font-medium text-black-two-color text-base max-md:text-sm h-[130px] max-sm:h-auto"
+            className="font-medium text-black-two-color text-base max-md:text-sm h-[130px]"
         >
             {paragraph}
         </p>

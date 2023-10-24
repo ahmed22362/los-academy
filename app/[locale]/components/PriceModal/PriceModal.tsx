@@ -1,9 +1,9 @@
 'use client';
 
 import {CustomFlowbiteTheme, Datepicker, Modal} from 'flowbite-react';
-import {useState} from "react";
-import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
-import "primereact/resources/primereact.min.css";                  //core css
+import {useEffect, useState} from "react";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
 import {Calendar} from "primereact/calendar";
 import {Nullable} from "primereact/ts-helpers";
 import { Label, Radio } from 'flowbite-react';
@@ -25,7 +25,7 @@ export default function PriceModal({handleOpen, handleCloseModal, targetComponen
 
   return (
     <>
-      <Modal show={true} onClose={handleCloseModal} size={"5xl"}>
+      <Modal show={true} onClose={handleCloseModal} size={"5xl"} id={"ourModal"}>
         <Modal.Header theme={customeTheme.header}></Modal.Header>
         <Modal.Body theme={customeTheme.body}>
             <div className={"flex flex-col justify-center items-center gap-8"}>

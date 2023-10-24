@@ -10,7 +10,7 @@ function AboutUs() {
     return (
         <section id="aboutUs" className="px-6 py-12 flex justify-center gap-[125px] max-lg:gap-[50px] items-center flex-wrap">
             <div>
-                <Image src={'/vectors/aboutus.svg'} alt="About Image" width={500} height={500} />
+                <Image src={'/vectors/aboutus.svg'} alt="About Image" width={500} height={500} loading={"lazy"} className={"w-auto h-auto"} />
             </div>
             <div className="flex flex-col justify-center items-center w-2/5 max-md:w-4/5 max-sm:w-auto gap-9">
                 <div>

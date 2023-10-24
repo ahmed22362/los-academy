@@ -10,7 +10,7 @@ function FooterMain() {
   return (
     <div className='flex items-center justify-evenly w-full flex-wrap'>
         <div className="flex flex-col justify-center items-center">
-            <Image src="/logo.png" alt="logo" width={50} height={50} loading="lazy"/>
+            <Image src="/logo.png" alt="logo" width={50} height={50} loading="lazy" className={"w-auto h-auto"}/>
             <h2 className={"font-semibold text-xl"}>LOS Academy</h2>
         </div>
         <div>

@@ -38,7 +38,7 @@
     };
     const url=`${process.env.NEXT_PUBLIC_APIURL}/user/auth/signup`;
     const handleFormSubmit = () => {
-     
+
       console.log(formData);
       fetch(`${url}`, {
           method: 'POST',

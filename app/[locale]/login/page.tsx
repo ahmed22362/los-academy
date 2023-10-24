@@ -36,7 +36,7 @@
         [name]: value,
       });
     };
-    const url='https://los-academy.onrender.com/api/v1/user/auth/signup'
+    const url=`${process.env.NEXT_PUBLIC_APIURL}/user/auth/signup`;
     const handleFormSubmit = () => {
      
       console.log(formData);
@@ -85,7 +85,7 @@
   }
     return (
       <section className="">
-        <div className="flex items-center mt-36 justify-evenly gap-20 sm:flex-row flex-col-reverse ">
+        <div className="flex items-center mt-20 justify-evenly gap-20 sm:flex-row flex-col-reverse ">
         <div className="image transition-all	duration-500">
         <Image src={`${activeTab?'./vectors/login.svg':'./vectors/sign up.svg'}`} className="transition-all	duration-500" width={400} height={300} alt=""/>
         </div>
@@ -99,7 +99,7 @@
       >
             <Tabs.Item
           active
-          title="Login"          
+          title="Login"
         >
           <div className=" flex justify-center items-center gap-3  flex-wrap " style={{minHeight:'300px' ,width:'100%'}}>
         <h3 className="font-bold	 text-xl	"> Welcome Back ! </h3>
@@ -193,7 +193,6 @@
         </Tabs.Item>
       </Tabs.Group>
         </div>
-        
         </div>
       </section>
     )

@@ -24,7 +24,7 @@ export default function ModalCourse({handleOpen, handleCloseModal, modalTarget}:
       <Modal show={true} onClose={handleCloseModal} size={"5xl"}>
         <Modal.Header theme={customeTheme.header}></Modal.Header>
         <Modal.Body theme={customeTheme.body}>
-          <div className='flex flex-row justify-between items-center'>
+          <div className='flex flex-row justify-between items-center flex-wrap'>
             {modalTarget === 1 && <ModalOne />}
             {modalTarget === 2 && <ModalTwo />}
             {modalTarget === 3 && <ModalThree />}

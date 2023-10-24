@@ -36,7 +36,7 @@ function PlanCard({title, price, f1, f2, f3, f4, f5, btn, targetComponent}: any)
       <h5 className="mb-4 text-xl font-medium text-black-color-two">
         {title}
       </h5>
-      <div className="flex items-baseline text-black-color-two">
+      <div className="flex items-baseline text-black-color-two h-[60px] w-[200px]">
         <span className="text-2xl font-semibold tracking-tight">
           {price}
         </span>

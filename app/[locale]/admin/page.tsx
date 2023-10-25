@@ -1,7 +1,8 @@
+"use client"
 export default function Admin() {
     return(
         <>
-            welcome to admin
+            <h2>welcome to admin</h2>
         </>
     )
 }

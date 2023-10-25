@@ -130,7 +130,8 @@
     ]
   },
     "Footer": {
-      "footer-title": "All Rights received - Codegate©2023"
+      "footer-title": "All Rights received - Codegate©2023",
+      "footer-follow": "Follow us on"
   },
   "eachModal": {
     "title": "Each Package Includes",

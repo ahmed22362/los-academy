@@ -12,14 +12,13 @@ import {RiUserSharedFill} from "react-icons/ri"
 
 export default function CustomNavbar() {
   const t = useTranslations("CustomNavbar");
-  const linkStyle = "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full";
-  const iconStyle = "text-lg";
+  const linkStyle = "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full rtl:lg:p-[15px]";
   const linkText = t("login-btn");
 
   const customNavTheme: CustomFlowbiteTheme["navbar"] = {
     root: {
       inner: {
-        base: "flex flex-row justify-between flex-wrap items-center px-10 max-md:px-3",
+        base: "flex flex-row justify-around max-lg:justify-between flex-wrap items-center px-2 max-md:px-5 max-sm:px-2 max-md:px-3",
         fluid: {
           off: "",
           on: ""
@@ -28,7 +27,7 @@ export default function CustomNavbar() {
     },
     collapse: {
         base: "w-full lg:block lg:w-auto rtl:xl:block",
-        list: "mt-4 flex flex-col lg:mt-0 lg:flex-row lg:space-x-8 lg:text-sm lg:font-medium gap-1",
+        list: "mt-4 flex flex-col lg:mt-0 lg:flex-row lg:space-x-8 lg:text-sm lg:font-medium gap-1 rtl:lg:space-x-3 rtl:gap-0",
         hidden: {
           on: "hidden",
           off: ""
@@ -49,13 +48,13 @@ export default function CustomNavbar() {
   return (
     <>
       <Navbar rounded={true} theme={customNavTheme.root} className="fixed w-full top-0 z-10 border-b-2 border-white-color">
-        <Navbar.Brand href="/" className="flex flex-row flex-wrap justify-center gap-5 rtl:flex-row-reverse">
+        <Navbar.Brand href="/" className="flex flex-row flex-wrap justify-center gap-3 rtl:flex-row-reverse">
           {/* Create gradient color for logo with animation*/}
           <Image
             src={"/logo.png"}
             alt="logo image"
-            width={35}
-            height={35}
+            width={30}
+            height={30}
             priority={true}
             loading={"eager"}
             className={"w-auto h-auto max-md:w-[30px]"}
@@ -67,7 +66,7 @@ export default function CustomNavbar() {
               }}
           >LOS Academy</h2>
         </Navbar.Brand>
-        <Navbar.Toggle theme={customNavTheme.toggle} />
+
         <Navbar.Collapse className="rtl:font-sans rtl:text-lg" theme={customNavTheme.collapse}>
           <Navbar.Link
             theme={customNavTheme.link}
@@ -94,15 +93,16 @@ export default function CustomNavbar() {
           </Navbar.Link>
         </Navbar.Collapse>
         <div className={
-          "flex align-center max-md:align-baseline gap-2 rtl:font-sans rtl:text-lg rtl:max-sm:me-0 rtl:max-sm:ms-auto"
+          "flex items-center max-md:items-baseline gap-2 rtl:font-sans rtl:text-lg rtl:max-sm:me-0 rtl:max-sm:ms-auto rtl:lg:w-[185px]"
           }>
+          <Navbar.Toggle theme={customNavTheme.toggle} />
           <div className="flex flex-col items-center">
             <Link2 href={"/login"} className={linkStyle + " hidden md:flex"}>
               {linkText}
             </Link2>
             <div className="mt-2 md:hidden">
               <Link2 href={"/login"}>
-                  <RiUserSharedFill className={iconStyle + " text-secondary-color text-xl"}/>
+                  <RiUserSharedFill className={"text-secondary-color hover:text-secondary-hover transition-colors text-2xl"}/>
                 </Link2>
             </div>
           </div>

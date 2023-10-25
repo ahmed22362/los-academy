@@ -4,9 +4,11 @@ import Link from 'next/link'
 import { BsTelephone } from 'react-icons/bs'
 import { GoLocation } from 'react-icons/go'
 import { TbMailOpened } from 'react-icons/tb'
+import {useTranslations} from "next-intl";
 
 
 function FooterMain() {
+    const t = useTranslations('CustomNavbar')
   return (
     <div className='flex items-center justify-evenly w-full flex-wrap'>
         <div className="flex flex-col justify-center items-center">
@@ -16,10 +18,10 @@ function FooterMain() {
         <div>
             <h5 className='font-semibold text-base text-black-one-color mb-2'>Academy</h5>
             <ul className='font-normal text-black-Two-color flex flex-col items-start gap-2'>
-                <Link href={"#"}><li>Home</li></Link>
-                <Link href={"#"}><li>About Us</li></Link>
-                <Link href={"#"}><li>Courses</li></Link>
-                <Link href={"#"}><li>Contact Us</li></Link>
+                <Link href={"/#hero"}><li>{t("home-link")}</li></Link>
+                <Link href={"/#aboutUs"}><li>{t("about-link")}</li></Link>
+                <Link href={"/#courses"}><li>{t("courses-link")}</li></Link>
+                <Link href={"/#contactus"}><li>{t("contact-link")}</li></Link>
             </ul>
         </div>
         <div>

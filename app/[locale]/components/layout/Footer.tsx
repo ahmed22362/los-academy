@@ -1,9 +1,19 @@
 "use client"
 import { useTranslations } from 'next-intl';
-import FooterMain from '../components/FooterMain';
-import FooterFollow from '../components/FooterFollow';
+import FooterMain from '../FooterMain';
+import FooterFollow from '../FooterFollow';
+import {usePathname} from "next/navigation";
 
 export default function Footer() {
+
+    const router = usePathname();
+    const isAdminDashboard = router.startsWith('/admin');
+
+    if (isAdminDashboard) {
+        return null;
+    }
+
+
     const t = useTranslations('Footer');
 
     return(

@@ -7,10 +7,20 @@ import Image from "next/image";
 import { Dropdown, Navbar } from "flowbite-react";
 import type { CustomFlowbiteTheme } from "flowbite-react";
 import Link2 from 'next/link';
+import {usePathname} from "next/navigation";
 // import {FaUser} from "react-icons/fa";
 import {RiUserSharedFill} from "react-icons/ri"
 
 export default function CustomNavbar() {
+
+  const router = usePathname();
+  const isAdminDashboard = router.startsWith('/admin');
+
+  if (isAdminDashboard) {
+    return null;
+  }
+
+
   const t = useTranslations("CustomNavbar");
   const linkStyle = "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full rtl:lg:p-[15px]";
   const linkText = t("login-btn");

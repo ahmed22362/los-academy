@@ -1,8 +1,8 @@
-"use client"
-export default function Admin() {
+
+export default function AdminPage() {
     return(
-        <>
-            <h2>welcome to admin</h2>
-        </>
+        <main>
+
+        </main>
     )
 }

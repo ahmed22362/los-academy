@@ -1,8 +1,10 @@
 'use client';
 
 import {CustomFlowbiteTheme, Sidebar} from 'flowbite-react';
+import {usePathname} from "next/navigation";
 
 export default function OurSideBar() {
+    const pathName = usePathname();
 
     const customTheme: CustomFlowbiteTheme['sidebar'] = {
         root: {
@@ -10,8 +12,8 @@ export default function OurSideBar() {
         },
         item: {
             base: "flex items-center justify-center rounded-lg p-2 text-base font-normal text-gray-900 hover:text-white hover:bg-secondary-color",
-            active: "bg-secondary-color text-white"
-        }
+            active: "bg-secondary-color text-white",
+        },
     }
 
 
@@ -22,7 +24,7 @@ export default function OurSideBar() {
                     <Sidebar.Item
                         href="/admin"
                         theme={customTheme.item}
-                        active={true}
+                        active={pathName === "/admin"}
                     >
                         <p>
                             Dashboard
@@ -31,6 +33,7 @@ export default function OurSideBar() {
                     <Sidebar.Item
                         href="/admin/teachers"
                         theme={customTheme.item}
+                        active={pathName === "/admin/teachers"}
                     >
                         <p>
                             Teachers
@@ -39,6 +42,7 @@ export default function OurSideBar() {
                     <Sidebar.Item
                         theme={customTheme.item}
                         href="/admin/students"
+                        active={pathName === "/admin/students"}
                     >
                         <p>
                             Students
@@ -47,6 +51,7 @@ export default function OurSideBar() {
                     <Sidebar.Item
                         theme={customTheme.item}
                         href="/admin/material"
+                        active={pathName === "/admin/Material"}
                     >
                         <p>
                             Material
@@ -55,6 +60,7 @@ export default function OurSideBar() {
                     <Sidebar.Item
                         theme={customTheme.item}
                         href="/admin/transactions"
+                        active={pathName === "/admin/transactions"}
                     >
                         <p>
                             Transactions
@@ -62,7 +68,7 @@ export default function OurSideBar() {
                     </Sidebar.Item>
                     <Sidebar.Item
                         theme={customTheme.item}
-                        href=""
+                        href="/"
                     >
                         <p>
                             Sign In

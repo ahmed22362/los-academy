@@ -1,24 +1,21 @@
 "use client"
-
 import Image from "next/image";
 import {Dropdown} from "flowbite-react";
-import {MdLanguage} from "react-icons/md";
-import Link from "next-intl/link";
 
 export default function AdminNavBar() {
     return(
         <nav className={
-            "flex justify-between align-center w-full p-10"
+            "flex justify-between align-center w-full px-[18px] py-[22px]"
         }>
-            <div>
+            <div className={"flex justify-center items-center gap-[20px]"}>
                 <Image
                     src={"/logo.png"}
                     alt="logo image"
-                    width={30}
-                    height={30}
+                    width={35}
+                    height={35}
                     priority={true}
                     loading={"eager"}
-                    className={"w-auto h-auto max-md:w-[30px]"}
+                    className={"w-[35px] h-[35px] max-md:w-[30px]"}
                 />
                 <h2
                     className={"font-semibold"}
@@ -27,13 +24,13 @@ export default function AdminNavBar() {
                     }}
                 >LOS Academy</h2>
             </div>
-            <div>
+            <div className={"flex items-center justify-center gap-5"}>
                 <Image src={"/vectors/feedback3.svg"} alt={"avatar"} width={40} height={40} loading={"eager"} priority={true}/>
                 <div>
                     <span>welcome</span>
                     <h6>Salma Sherif</h6>
                 </div>
-                <Dropdown label={<MdLanguage className="w-5 h-5" />} inline>
+                <Dropdown label={""} inline>
                     <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">
                             Profile
                     </Dropdown.Item>

@@ -11,14 +11,14 @@ export default function OurSideBar() {
             inner: "h-full overflow-y-auto overflow-x-hidden rounded py-4 px-3 bg-white",
         },
         item: {
-            base: "flex items-center justify-center rounded-lg p-2 text-base font-normal text-gray-900 hover:text-white hover:bg-secondary-color",
-            active: "bg-secondary-color text-white",
+            base: "flex items-center justify-center rounded-[1.5rem] px-[1rem] py-[0.8rem] text-base font-medium text-black-color-one hover:text-white hover:bg-secondary-color",
+            active: "bg-secondary-color text-white shadow-2xl",
         },
     }
 
 
     return (
-        <Sidebar aria-label="Default sidebar example" theme={customTheme}>
+        <Sidebar aria-label="Default sidebar example" theme={customTheme} className={"w-[14rem]"}>
             <Sidebar.Items>
                 <Sidebar.ItemGroup className={"text-center"}>
                     <Sidebar.Item

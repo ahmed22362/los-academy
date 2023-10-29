@@ -23,15 +23,32 @@
   --danger-color: #EB5757;
   --warning-color: #E2B93B;
 }
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+/*Scroll Bar Of Body */
+body::-webkit-scrollbar {
+  width: 0.5em;
+  height: 0.5em;
 }
-*/
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-color);
+  outline: 1px solid slategrey;
+}
+/* scroll Bar Of Divs */
+.scrollAction::-webkit-scrollbar {
+  width: 0.5em;
+  height: 0.5em;
+}
+.scrollAction::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.scrollAction::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-color);
+  outline: 1px solid slategrey;
+}
 
 html {
   scroll-behavior: smooth;
@@ -80,5 +97,20 @@ body{
   color: black !important;
 }
 /* ===========> End of SlickArrows <============= */
+.adminBox {
+  @apply flex shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-[15px]
+}
+.adminBoxTitle {
+  @apply text-[black-color-one] text-[16px] font-[600] text-start
+}
+.scrollAction {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
 
-
+.smallBtn {
+  @apply text-white bg-secondary-color rounded-full py-2 px-5 transition-colors
+}
+.responsiveText {
+  font-size: calc(16px + (24 - 16) * ((100vw - 320px) / (1920 - 320)));
+}

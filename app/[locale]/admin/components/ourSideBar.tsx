@@ -18,7 +18,7 @@ export default function OurSideBar() {
 
 
     return (
-        <Sidebar aria-label="Default sidebar example" theme={customTheme} className={"w-[14rem]"}>
+        <Sidebar aria-label="Default sidebar example" theme={customTheme} className={"w-[14rem] pt-[70px]"}>
             <Sidebar.Items>
                 <Sidebar.ItemGroup className={"text-center"}>
                     <Sidebar.Item

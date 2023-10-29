@@ -44,7 +44,7 @@ export default function OurChart() {
 
     return (
         <div className="card flex justify-content-center">
-            <Chart type="pie" data={chartData} options={chartOptions} className="w-full md:w-30rem" height={"200px"} width={"200px"} />
+            <Chart type="pie" data={chartData} options={chartOptions} className="w-full md:w-30rem" height={"150px"} width={"150px"} />
         </div>
     )
 }

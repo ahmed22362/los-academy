@@ -18,12 +18,12 @@ export default function OurChart() {
                         25
                     ],
                     backgroundColor: [
-                        documentStyle.getPropertyValue('--blue-400'),
-                        documentStyle.getPropertyValue('--blue-500'),
+                        documentStyle.getPropertyValue('--secondary-color'),
+                        documentStyle.getPropertyValue('--primary-color'),
                     ],
                     hoverBackgroundColor: [
+                        documentStyle.getPropertyValue('--blue-300'),
                         documentStyle.getPropertyValue('--blue-500'),
-                        documentStyle.getPropertyValue('--blue-400'),
                     ]
                 }
             ]

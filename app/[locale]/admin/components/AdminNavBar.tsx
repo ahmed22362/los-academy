@@ -5,7 +5,7 @@ import {Dropdown} from "flowbite-react";
 export default function AdminNavBar() {
     return(
         <nav className={
-            "flex justify-between align-center w-full px-[18px] py-[12px]"
+            "flex justify-between align-center w-full px-[18px] py-[12px] fixed top-0 z-50 bg-white shadow shadow-secondary-color"
         }>
             <div className={"flex justify-center items-center gap-[20px]"}>
                 <Image

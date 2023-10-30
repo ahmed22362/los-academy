@@ -68,7 +68,7 @@ export default function OurSideBar() {
                     </Sidebar.Item>
                     <Sidebar.Item
                         theme={customTheme.item}
-                        href="/"
+                        href="/admin/sessions"
                         active={pathName === "/admin/sessions"}
                     >
                         <p>
@@ -77,7 +77,7 @@ export default function OurSideBar() {
                     </Sidebar.Item>
                     <Sidebar.Item
                         theme={customTheme.item}
-                        href="#"
+                        href="/admin/ongoing"
                         active={pathName === "/admin/ongoing"}
                     >
                         <p>
@@ -86,7 +86,7 @@ export default function OurSideBar() {
                     </Sidebar.Item>
                     <Sidebar.Item
                         theme={customTheme.item}
-                        href="#"
+                        href="/admin/plans"
                         active={pathName === "/admin/plans"}
                     >
                         <p>

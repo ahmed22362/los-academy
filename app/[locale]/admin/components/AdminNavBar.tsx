@@ -1,13 +1,15 @@
 "use client"
 import Image from "next/image";
 import {Dropdown} from "flowbite-react";
+import Link from "next/link";
 
 export default function AdminNavBar() {
     return(
         <nav className={
             "flex justify-between align-center w-full px-[18px] py-[12px] fixed top-0 z-50 bg-white shadow shadow-secondary-color"
         }>
-            <div className={"flex justify-center items-center gap-[20px]"}>
+            <div className={""}>
+                <Link href={"/"} className="flex justify-center items-center gap-[20px]">
                 <Image
                     src={"/logo.png"}
                     alt="logo image"
@@ -23,6 +25,7 @@ export default function AdminNavBar() {
                         fontSize: "calc(16px + (24 - 16) * ((100vw - 320px) / (1920 - 320))"
                     }}
                 >LOS Academy</h2>
+            </Link>
             </div>
             <div className={"flex items-center justify-center gap-5"}>
                 <Image src={"/vectors/feedback3.svg"} alt={"avatar"} width={40} height={40} loading={"eager"} priority={true}/>

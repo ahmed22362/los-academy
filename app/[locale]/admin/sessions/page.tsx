@@ -2,7 +2,7 @@ import React from 'react'
 import ComboBox from '../components/comboBox';
 import OurTable from '../components/OurTable';
 
-function Matrial() {
+function Sessions() {
   return (
     <main className='ps-[260px] pt-[7rem]'>
 
@@ -14,4 +14,4 @@ function Matrial() {
   )
 }
 
-export default Matrial;
+export default Sessions;

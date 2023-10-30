@@ -1,6 +1,6 @@
 export default function OnGoingBox() {
     return(
-        <div className={"flex-col justify-center items-center gap-[16px] h-[240px] text-center w-[340px] adminBox"}>
+        <div className={"flex-col justify-center items-center gap-[16px] h-[240px] text-center adminBox"}>
             <h3 className={"adminBoxTitle"}>Ongoing Sessions</h3>
             <div className={"bg-white-color p-5 rounded-[16px] "}>
                 <div className={"flex flex-col items-start text-md font-semibold text-[black-color-one]"}>

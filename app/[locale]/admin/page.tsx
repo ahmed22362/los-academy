@@ -9,20 +9,22 @@ import PaidSesstionsTable from "@/app/[locale]/admin/components/paidSesstionsTab
 
 export default function AdminPage() {
     return(
-        <main className={"ps-[260px] pt-[7rem] flex gap-5 flex-wrap max-md:justify-center max-md:items-center"}>
-            <section className={"max-md:w-full max-md:flex max-md:flex-col max-md:gap-5 max-md:items-center w-[700px]"}>
+        <main className={"ps-[255px] pt-[7rem] flex justify-between gap-5 flex-wrap max-md:justify-between max-md:items-center"}>
+            <section className={"max-md:w-full max-md:flex max-md:flex-col max-md:gap-5 max-md:items-center w-[600px]"}>
                 <Statistics />
-                <div className={"flex items-center gap-5 pb-[20px] w-full flex-wrap"}>
+                <div className={"flex items-center gap-5 pb-[20px] w-(calc(100% / 2)) max-md:flex-wrap"}>
                     <Attendance />
                     <OnGoingBox/>
                 </div>
                 <TeacherSchedule />
                 <Reports />
             </section>
-            <section className={"w-[calc(100% - 700px)]"}>
+            <section className="mx-auto">
                 <CalendarSection />
-                <FreeTrialTable />
-                <PaidSesstionsTable />
+                <div className="px-2">
+                    <FreeTrialTable />
+                    <PaidSesstionsTable />
+                </div>
             </section>
         </main>
     )

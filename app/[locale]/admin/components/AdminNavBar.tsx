@@ -2,8 +2,22 @@
 import Image from "next/image";
 import {Dropdown} from "flowbite-react";
 import Link from "next/link";
+// import Cookies from "universal-cookie";
+// import { JwtPayload, jwtDecode } from "jwt-decode";
+// import { useEffect } from "react";
+// import { getAllTeachers } from "@/helpers/getAllTeachers";
 
 export default function AdminNavBar() {
+
+    // const cookies = new Cookies();
+    // const token = cookies.get('token')
+    // const decoded: JwtPayload = jwtDecode(token);
+
+    // useEffect(() => {
+    //     console.log(typeof(token))
+    //     getAllTeachers(decoded.id);
+    // })
+
     return(
         <nav className={
             "flex justify-between align-center w-full px-[18px] py-[12px] fixed top-0 z-50 bg-white shadow shadow-secondary-color"

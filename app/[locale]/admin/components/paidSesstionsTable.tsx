@@ -1,9 +1,25 @@
+"use client"
+
+import { useState } from "react"
+import AssignModal from "./assignModal"
+
 export default function PaidSesstionsTable() {
+    const [openModal, setOpenModal] = useState(false)
+    
+    const handleOpenModal = () => {
+        setOpenModal(true)
+    }
+    const hanldeCloseModal = () => {
+        setOpenModal(false);
+    }
+
+
     return(
         <div className={"w-full my-5"}>
+            <AssignModal openAssignModal={openModal} handleCloseModal={hanldeCloseModal} />
             <h3 className={"adminBoxTitle responsiveText"}>Newest Paid Sessions</h3>
             <div className={"adminBox mt-4 flex flex-col w-[390px] mx-auto"}>
-                <div className={"p-1 my-2 font-semibold flex w-full justify-between items-center text-base"}>
+                <div className={"p-1 my-2 font-semibold flex w-full justify-between items-center text-base"} onClick={handleOpenModal}>
                     <h5>Session #2</h5>
                     <span>4:00 - 4:30 PM</span>
                     <span>12- oct-2023</span>

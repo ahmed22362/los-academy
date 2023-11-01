@@ -14,10 +14,10 @@
   --black-two-color: #1D1D1D;
   --black-three-color: #282828;
   --white-color: #EBF6FE;
-  --gray-one-coloer: #333333;
-  --gray-two-coloer: #4f4f4f;
-  --gray-three-coloer: #828282;
-  --gray-four-coloer: #BDBDBD;
+  --gray-one-color: #333333;
+  --gray-two-color: #4f4f4f;
+  --gray-three-color: #828282;
+  --gray-four-color: #BDBDBD;
   --success-color: #27AE60;
   --info-color:#2F80ED;
   --danger-color: #EB5757;
@@ -113,4 +113,11 @@ body{
 }
 .responsiveText {
   font-size: calc(16px + (24 - 16) * ((100vw - 320px) / (1920 - 320)));
+}
+
+.bgWithHover {
+  background-color: var(--secondary-color) !important;
+}
+.bgWithHover:hover {
+  background-color: var(--secondary-hover) !important;
 }

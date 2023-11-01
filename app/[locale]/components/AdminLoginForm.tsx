@@ -6,13 +6,13 @@ import { useState, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { Checkbox } from 'primereact/checkbox';
 import Cookies from 'universal-cookie';
-import z from 'zod';
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 
 export default function AdminLoginForm() {
     const [isProcessing, setIsProcessing] = useState(false)
     const [checked, setChecked] = useState<boolean | any>(false);
+    const url = process.env.NEXT_PUBLIC_APIURL;
 
     const cookies = new Cookies();
     const router = useRouter()
@@ -42,27 +42,13 @@ export default function AdminLoginForm() {
         }
     }
 
-    const loginSchema = z.object({
-        email: z.string().email(),
-        password: z.string()
-    })
-
-
     function handleLogin(event: any) {
         event.preventDefault();
         setIsProcessing(true)
         const form = event.target;
         const email = form.email.value
         const password = form.password.value
-        const url = process.env.NEXT_PUBLIC_APIURL;
-        console.log(email, password)
-
-        // try {
-        //     loginSchema.parse({ email, password });
-        // } catch (error) {
-        //     console.log('Validation error:', error);
-        //     return;
-        // }
+        
 
         fetch(`${url}/teacher/login`, {
             method: "POST",
@@ -77,8 +63,8 @@ export default function AdminLoginForm() {
             console.log(data)
             if (data.status === "success") {
                 if(data.data.role === 'admin') {
-                    cookies.set('token', data.token);
-                    cookies.set('id', data.data.id);
+                    cookies.set('token', data.token, {path: '/', secure: true, httpOnly: true, maxAge: checked ? 3600 : 0});
+                    cookies.set('id', data.data.id, {path: '/', secure: true, httpOnly: true, maxAge: checked ? 3600 : 0});
                     showSuccess();
                     router.replace('/admin')
                 } else {
@@ -92,6 +78,7 @@ export default function AdminLoginForm() {
             err ? showError('Something went wrong. Please try again later. or Contact Support Team') : '';
         })
     }
+
     return (
     <form className="flex max-w-md flex-col gap-4 max-md:m-auto" onSubmit={handleLogin}>
         <Toast ref={toast} position={"top-center"} />
@@ -133,7 +120,7 @@ export default function AdminLoginForm() {
             <Checkbox onChange={e => setChecked(e.checked)} checked={checked}></Checkbox>
         </div>
             <Label htmlFor="remember">
-                Remember me
+                Keep me login
             </Label>
         </div>
         <Button

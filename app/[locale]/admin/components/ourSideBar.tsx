@@ -1,11 +1,13 @@
 'use client';
 
 import {CustomFlowbiteTheme, Sidebar} from 'flowbite-react';
-import {usePathname} from "next/navigation";
-
+import {usePathname, useRouter} from "next/navigation";
+import {BiLogOut} from 'react-icons/bi';
+import Cookies from 'universal-cookie';
 export default function OurSideBar() {
     const pathName = usePathname();
-
+    const cookies = new Cookies();
+    const router = useRouter();
     const customTheme: CustomFlowbiteTheme['sidebar'] = {
         root: {
             inner: "h-full overflow-y-auto overflow-x-hidden rounded py-4 px-3 bg-white",
@@ -16,6 +18,11 @@ export default function OurSideBar() {
         },
     }
 
+    const logOut = () => {
+        cookies.remove('token');
+        cookies.remove('id');
+        router.push('/los_auth');
+    }
 
     return (
         <Sidebar aria-label="Default sidebar example" theme={customTheme} className={"w-[14rem] pt-[70px]"}>
@@ -92,6 +99,16 @@ export default function OurSideBar() {
                         <p>
                             Plans
                         </p>
+                    </Sidebar.Item>
+                    <Sidebar.Item
+                        onClick={logOut}
+                    >
+                        <div className="text-red-500 flex items-center justify-center gap-1 cursor-pointer">
+                        <p>
+                            LogOut
+                        </p>
+                            <BiLogOut />
+                        </div>
                     </Sidebar.Item>
                 </Sidebar.ItemGroup>
             </Sidebar.Items>

@@ -16,7 +16,7 @@ export default function CustomNavbar() {
   const router = usePathname();
   const isAdminDashboard = router.startsWith('/admin');
   const isAdminLogin = router.startsWith('/los_auth');
-
+  const isStudentDashboard =router.startsWith('/student_profile')
   if (isAdminDashboard || isAdminLogin) {
     return null;
   }

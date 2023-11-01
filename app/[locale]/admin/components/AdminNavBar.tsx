@@ -2,21 +2,27 @@
 import Image from "next/image";
 import {Dropdown} from "flowbite-react";
 import Link from "next/link";
-// import Cookies from "universal-cookie";
-// import { JwtPayload, jwtDecode } from "jwt-decode";
-// import { useEffect } from "react";
-// import { getAllTeachers } from "@/helpers/getAllTeachers";
+import Cookies from "universal-cookie";
+import { useEffect, useState } from "react";
+import { getCurrentTeacher } from "@/helpers/getMe";
 
 export default function AdminNavBar() {
 
-    // const cookies = new Cookies();
-    // const token = cookies.get('token')
-    // const decoded: JwtPayload = jwtDecode(token);
-
-    // useEffect(() => {
-    //     console.log(typeof(token))
-    //     getAllTeachers(decoded.id);
-    // })
+    const cookies = new Cookies();
+    const userID = cookies.get('id')
+    const [data, setData] = useState<null | any>(null)
+    
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const result = await getCurrentTeacher(userID);
+                setData(result.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        getData();
+    }, []);
 
     return(
         <nav className={
@@ -45,7 +51,7 @@ export default function AdminNavBar() {
                 <Image src={"/vectors/feedback3.svg"} alt={"avatar"} width={40} height={40} loading={"eager"} priority={true}/>
                 <div>
                     <span>welcome</span>
-                    <h6>Salma Sherif</h6>
+                    {data && <h6>{data.name}</h6>}
                 </div>
                 <Dropdown label={""} inline>
                     <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">

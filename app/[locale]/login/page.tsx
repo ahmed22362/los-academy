@@ -1,6 +1,6 @@
 "use client";
 
-import { PrimaryButton } from "../components";
+import PrimaryButton  from "./../components/PrimaryButton";
 import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import { Toast } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";

@@ -1,7 +1,6 @@
 'use client';
 
 import { CustomFlowbiteTheme, Modal } from 'flowbite-react';
-import { PrimaryButton } from '.';
 import ModalOne from './CoursesModalBody/ModalOne';
 import ModalTwo from './CoursesModalBody/ModalTwo';
 import ModalThree from './CoursesModalBody/ModalThree';

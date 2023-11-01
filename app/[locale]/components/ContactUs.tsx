@@ -1,7 +1,7 @@
 "use client"
 
 import { useTranslations } from "next-intl";
-import { PrimaryButton } from "."
+import PrimaryButton  from "./PrimaryButton"
 
 function ContactUs() {
     const t = useTranslations("getInTouch");

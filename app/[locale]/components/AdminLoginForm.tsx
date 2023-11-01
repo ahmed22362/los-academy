@@ -1,14 +1,29 @@
 "use client"
-import { Button, Checkbox, CustomFlowbiteTheme, Label, TextInput } from 'flowbite-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import Cookies from 'universal-cookie';
 
+import { Button, CustomFlowbiteTheme, Label, TextInput } from 'flowbite-react';
+import { useRouter } from 'next/navigation';
+import { useState, useRef } from 'react';
+import { Toast } from 'primereact/toast';
+import { Checkbox } from 'primereact/checkbox';
+import Cookies from 'universal-cookie';
 import z from 'zod';
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
+
 export default function AdminLoginForm() {
     const [isProcessing, setIsProcessing] = useState(false)
+    const [checked, setChecked] = useState<boolean | any>(false);
+
     const cookies = new Cookies();
     const router = useRouter()
+    const toast = useRef<Toast>(null);
+    const showSuccess = () => {
+        toast.current?.show({severity:'success', summary: 'Success', detail:'Login Success', life: 2000});
+    }
+    const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
+    }
+
     const buttonTheme: CustomFlowbiteTheme['button'] = {
         color: {
             purple: "bg-secondary-color hover:bg-secondary-hover",
@@ -61,15 +76,25 @@ export default function AdminLoginForm() {
         }).then((response) => response.json()).then((data) => {
             console.log(data)
             if (data.status === "success") {
-                cookies.set('token', data.token);
-                cookies.set('adminData', data.data);
-                router.replace('/admin')
+                if(data.data.role === 'admin') {
+                    cookies.set('token', data.token);
+                    cookies.set('id', data.data.id);
+                    showSuccess();
+                    router.replace('/admin')
+                } else {
+                    showError('Login Failed you are not an admin');
+                }
+            } else {
+                showError('Email or password is incorrect, please make sure you entered the correct email and password');
             }
             setIsProcessing(false)
-        }).catch(err => console.log(err))
+        }).catch(err => {
+            err ? showError('Something went wrong. Please try again later. or Contact Support Team') : '';
+        })
     }
     return (
     <form className="flex max-w-md flex-col gap-4 max-md:m-auto" onSubmit={handleLogin}>
+        <Toast ref={toast} position={"top-center"} />
         <h5 className='text-center font-semibold'>Welcome back !</h5>
         <div>
             <div className="mb-2 block">
@@ -104,9 +129,11 @@ export default function AdminLoginForm() {
             />
         </div>
         <div className="flex items-center gap-2">
-            <Checkbox id="remember" />
+        <div className="card flex justify-content-center border-[1px] border-gray-300 rounded-[25%] p-[1px]">
+            <Checkbox onChange={e => setChecked(e.checked)} checked={checked}></Checkbox>
+        </div>
             <Label htmlFor="remember">
-            Remember me
+                Remember me
             </Label>
         </div>
         <Button

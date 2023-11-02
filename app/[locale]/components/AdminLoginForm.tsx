@@ -60,11 +60,10 @@ export default function AdminLoginForm() {
                 password: password
             })
         }).then((response) => response.json()).then((data) => {
-            console.log(data)
             if (data.status === "success") {
                 if(data.data.role === 'admin') {
-                    cookies.set('token', data.token, {path: '/', secure: true, httpOnly: true, maxAge: checked ? 3600 : 0});
-                    cookies.set('id', data.data.id, {path: '/', secure: true, httpOnly: true, maxAge: checked ? 3600 : 0});
+                    cookies.set('token', data.token, {secure: true, maxAge: checked ? 3600 : 1000});
+                    cookies.set('id', data.data.id, {secure: true, maxAge: checked ? 3600 : 1000});
                     showSuccess();
                     router.replace('/admin')
                 } else {

@@ -62,8 +62,8 @@ export default function AdminLoginForm() {
         }).then((response) => response.json()).then((data) => {
             if (data.status === "success") {
                 if(data.data.role === 'admin') {
-                    cookies.set('token', data.token, {secure: true, maxAge: checked ? 3600 : 1000});
-                    cookies.set('id', data.data.id, {secure: true, maxAge: checked ? 3600 : 1000});
+                    cookies.set('token', data.token, {secure: true, maxAge: checked ? 2592000000 : 3600});
+                    cookies.set('id', data.data.id, {secure: true, maxAge: checked ? 2592000000 : 3600});
                     showSuccess();
                     router.replace('/admin')
                 } else {

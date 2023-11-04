@@ -30,6 +30,8 @@ async function middleware(req: NextRequest) {
         const isAdmin = await res.json()
         if(isAdmin.status === 'success') {
             accessStatus = true
+        } else {
+            accessStatus = false
         }
       }
     if (accessStatus === false && protectedRoutes.includes(req.nextUrl.pathname)) {

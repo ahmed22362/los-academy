@@ -1,5 +1,5 @@
-
-export const getCurrentTeacher = async (id: string | any) => {
+const checkAdminRole = async (id: any) => {
+    let status = false;
     const response = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/${id}`, {
         method: "GET",
         headers: {
@@ -7,6 +7,11 @@ export const getCurrentTeacher = async (id: string | any) => {
         },
     });
     const data = await response.json();
-    console.log(data)
-    return data
+    if(data.data?.role === 'admin') {
+        status = true
+    } else {
+        status = false
+    }
+    return status;
 }
+export default checkAdminRole;

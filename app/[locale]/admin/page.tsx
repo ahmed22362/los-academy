@@ -4,8 +4,8 @@ import OnGoingBox from "@/app/[locale]/admin/components/onGoingBox";
 import TeacherSchedule from "@/app/[locale]/admin/components/teacherSchedule";
 import Reports from "@/app/[locale]/admin/components/reports";
 import CalendarSection from "@/app/[locale]/admin/components/calendarSection";
-import FreeTrialTable from "@/app/[locale]/admin/components/freeTrialTable";
 import PaidSesstionsTable from "@/app/[locale]/admin/components/paidSesstionsTable";
+import FreeSesstionsTable from "./components/freeTrialTable";
 
 export default function AdminPage() {
     return(
@@ -22,8 +22,8 @@ export default function AdminPage() {
             <section className="mx-auto">
                 <CalendarSection />
                 <div className="px-2">
-                    <FreeTrialTable />
-                    <PaidSesstionsTable />
+                    <FreeSesstionsTable />
+                        <PaidSesstionsTable />
                 </div>
             </section>
         </main>

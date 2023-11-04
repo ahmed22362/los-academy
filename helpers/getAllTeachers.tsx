@@ -1,10 +1,10 @@
-export const getAllTeachers = (id : String) => {
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/${id}`, {
+export const getAllTeachers: any = () => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
     }).then(response => response.json()).then(data => {
-        console.log(data)
-    })
+        return data;
+    }).catch(err => console.log(err))
 }

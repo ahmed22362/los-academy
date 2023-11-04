@@ -1,39 +1,88 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import AssignModal from "./assignModal"
-
+import Cookies from "universal-cookie"
+import { Spinner } from "flowbite-react";
+import { convertDateTimeZone } from "@/helpers/convertDateAndTime";
 export default function PaidSesstionsTable() {
-    const [openModal, setOpenModal] = useState(false)
-    
-    const handleOpenModal = () => {
-        setOpenModal(true)
-    }
-    const hanldeCloseModal = () => {
-        setOpenModal(false);
-    }
+    const [totalPaid, setTotlaPaid] = useState([]);
+    const [selectedSession, setSelectedSession]: any = useState(null);
 
+    const cookies = new Cookies();
+    
+    const convertDate = convertDateTimeZone;
+    const totalPaidSession = () => {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/paid/available`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setTotlaPaid(data.data)
+        })
+        .catch(err => console.log(err)
+        )
+    }
+    useEffect(() => {
+        totalPaidSession()
+    }, [])
+
+    const handleAssignSession = (session: any) => {
+        setSelectedSession(session);
+    };
+    const handleCloseModal = () => {
+        setSelectedSession(null);
+    };
 
     return(
         <div className={"w-full my-5"}>
-            <AssignModal openAssignModal={openModal} handleCloseModal={hanldeCloseModal} />
             <h3 className={"adminBoxTitle responsiveText"}>Newest Paid Sessions</h3>
             <div className={"adminBox mt-4 flex flex-col w-[390px] mx-auto"}>
-                <div className={"p-1 my-2 font-semibold flex w-full justify-between items-center text-base"} onClick={handleOpenModal}>
-                    <h5>Session #2</h5>
-                    <span>4:00 - 4:30 PM</span>
-                    <span>12- oct-2023</span>
-                </div>
-                <div className={"p-1 my-2 font-semibold flex w-full justify-between items-center text-base"}>
-                    <h5>Session #2</h5>
-                    <span>4:00 - 4:30 PM</span>
-                    <span>12- oct-2023</span>
-                </div>
-                <div className={"p-1 my-2 font-semibold flex w-full justify-between items-center text-base"}>
-                    <h5>Session #2</h5>
-                    <span>4:00 - 4:30 PM</span>
-                    <span>12- oct-2023</span>
-                </div>
+                {totalPaid.length > 0 ? totalPaid.map((paidSession: any) => {
+                    return(
+                        <div key={paidSession.id} className={"p-1 my-2 font-semibold flex w-full justify-between items-center text-base"}>
+                            <details>
+                                <summary>Session Details</summary>
+                                <div className="flex justify-center items-center gap-3">
+                                    <ul className="ps-4">
+                                        <li>
+                                            <span>
+                                                start time: {convertDate(paidSession.sessionDates[0], "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "h:mm A")}
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span className={`${paidSession.status === 'pending' ? 'text-warning-color' : 'text-success-color'}`}>
+                                                <span className="text-black">status:</span> {paidSession.status}
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                type: {paidSession.type}
+                                            </span>
+                                        </li>
+                                        sessions dates: 
+                                        {paidSession.sessionDates.map((date: any, index: number) => {
+                                            return(
+                                                <li key={index} className="ps-2">
+                                                        {convertDate(date, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MM/DD/YYYY hh:mm A")}
+                                                </li>
+                                            )
+                                        })}
+                                    </ul>
+                                </div>
+                            </details>
+                            <h5 onClick={() => handleAssignSession(paidSession)} key={paidSession.id} className={
+                                "cursor-pointer bg-secondary-color hover:bg-secondary-hover transition-colors px-[10px] py-[6px] text-[12px] text-white rounded-[16px]"
+                            }>Assign Session #{paidSession.id}</h5>
+                            {selectedSession && selectedSession.id === paidSession.id && (
+                                <AssignModal openAssignModal={true} handleCloseModal={handleCloseModal} sessionReqId={selectedSession.id} user={selectedSession.user.name} />
+                            )}
+                        </div>
+                    )
+                    }) : <p><Spinner /></p>}
             </div>
         </div>
     )

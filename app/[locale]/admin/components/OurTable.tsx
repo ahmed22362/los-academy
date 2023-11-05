@@ -1,11 +1,13 @@
 'use client';
 
 import {CustomFlowbiteTheme, Table} from 'flowbite-react';
-import {LiaPhoneSolid} from "react-icons/lia";
-import {GoMail} from "react-icons/go";
-import {BsTrash} from "react-icons/bs";
+import { useEffect, useState } from 'react';
+import FetchTeacherData from './fetchTeacherData';
+
 
 export default function OurTable() {
+    const [allTeachers, setAllTeachers]: any = useState([])
+    const [isLoading, setIsLoading] = useState(true);
 
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
@@ -15,6 +17,22 @@ export default function OurTable() {
             }
         }
     }
+
+    const fetchAllTechers = () => {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then(response => response.json()).then(data => {
+            setAllTeachers(data.data)
+            // console.log(data.data)
+        }).catch(err => console.log(err))
+    };
+
+    useEffect(() => {
+        fetchAllTechers()
+    }, [])
 
 
     return (
@@ -31,7 +49,7 @@ export default function OurTable() {
                     Student no.
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Subject
+                    Role
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
                     Joined
@@ -50,139 +68,11 @@ export default function OurTable() {
                 </Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                       100
-                    </Table.Cell>
-                    <Table.Cell>
-                        Salma
-                    </Table.Cell>
-                    <Table.Cell>
-                        2
-                    </Table.Cell>
-                    <Table.Cell>
-                        Arabic
-                    </Table.Cell>
-                    <Table.Cell>
-                        Sep 5,2022
-                    </Table.Cell>
-                    <Table.Cell>
-                        20
-                    </Table.Cell>
-                    <Table.Cell>
-                        10$
-                    </Table.Cell>
-                    <Table.Cell>
-                        <div className="flex flex-row justify-between">
-                            <LiaPhoneSolid className={"text-2xl"}/>
-                            <GoMail className={"text-2xl"} />
-                        </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                        <div className="flex flex-row justify-between">
-                            <BsTrash className={"text-2xl"} style={{color: "red"}}/>
-                        </div>
-                    </Table.Cell>
-                </Table.Row><Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                       100
-                    </Table.Cell>
-                    <Table.Cell>
-                        Salma
-                    </Table.Cell>
-                    <Table.Cell>
-                        2
-                    </Table.Cell>
-                    <Table.Cell>
-                        Arabic
-                    </Table.Cell>
-                    <Table.Cell>
-                        Sep 5,2022
-                    </Table.Cell>
-                    <Table.Cell>
-                        20
-                    </Table.Cell>
-                    <Table.Cell>
-                        10$
-                    </Table.Cell>
-                    <Table.Cell>
-                        <div className="flex flex-row justify-between">
-                            <LiaPhoneSolid className={"text-2xl"}/>
-                            <GoMail className={"text-2xl"} />
-                        </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                        <div className="flex flex-row justify-between">
-                            <BsTrash className={"text-2xl"} style={{color: "red"}}/>
-                        </div>
-                    </Table.Cell>
-                </Table.Row><Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                       100
-                    </Table.Cell>
-                    <Table.Cell>
-                        Salma
-                    </Table.Cell>
-                    <Table.Cell>
-                        2
-                    </Table.Cell>
-                    <Table.Cell>
-                        Arabic
-                    </Table.Cell>
-                    <Table.Cell>
-                        Sep 5,2022
-                    </Table.Cell>
-                    <Table.Cell>
-                        20
-                    </Table.Cell>
-                    <Table.Cell>
-                        10$
-                    </Table.Cell>
-                    <Table.Cell>
-                        <div className="flex flex-row justify-between">
-                            <LiaPhoneSolid className={"text-2xl"}/>
-                            <GoMail className={"text-2xl"} />
-                        </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                        <div className="flex flex-row justify-between">
-                            <BsTrash className={"text-2xl"} style={{color: "red"}}/>
-                        </div>
-                    </Table.Cell>
-                </Table.Row><Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                       100
-                    </Table.Cell>
-                    <Table.Cell>
-                        Salma
-                    </Table.Cell>
-                    <Table.Cell>
-                        2
-                    </Table.Cell>
-                    <Table.Cell>
-                        Arabic
-                    </Table.Cell>
-                    <Table.Cell>
-                        Sep 5,2022
-                    </Table.Cell>
-                    <Table.Cell>
-                        20
-                    </Table.Cell>
-                    <Table.Cell>
-                        10$
-                    </Table.Cell>
-                    <Table.Cell>
-                        <div className="flex flex-row justify-between">
-                            <LiaPhoneSolid className={"text-2xl"}/>
-                            <GoMail className={"text-2xl"} />
-                        </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                        <div className="flex flex-row justify-between">
-                            <BsTrash className={"text-2xl"} style={{color: "red"}}/>
-                        </div>
-                    </Table.Cell>
-                </Table.Row>
+                {allTeachers && allTeachers.map((teacher: any) => {
+                    return(
+                        <FetchTeacherData key={teacher.id} data={teacher} />
+                    )
+                })}
             </Table.Body>
         </Table>
         </div>

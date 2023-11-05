@@ -1,13 +1,57 @@
-import React from 'react';
+"use client"
+import React, { useEffect, useState } from 'react';
 import styles from './page.module.css'
 import Image from 'next/image';
 import PrimaryButton from '../components/PrimaryButton';
 import Link from 'next/link';
+import StudentPlan from './components/studentPlan';
+
 export default function page() {
-  return (
+
+  const url ='https://los-academy.onrender.com/api/v1/';
+  const [reports, setReports] = useState([]);
+    const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxSEVGWEMxQlNCU1NXNDVFRE00TVY4NkM4IiwiaWF0IjoxNjk5MTk0MDExLCJleHAiOjE3MDQzNzgwMTF9.OvSfZHnrL8y8sthkSc1A2uxTfp7ydtxMlUaY8yVK_EQ";
+
+    useEffect(() => {
+      // Fetch reports when the component mounts
+      fetch(`${url}user/myReports`, {
+        method: 'GET', // Specify the HTTP method as 'GET'
+        headers: {
+          Authorization: `Bearer ${token}` // Correct the header key to 'Authorization'
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          
+          // Set the retrieved reports in the state
+          setReports(data);
+        })
+        .catch((error) => {
+          console.error('Error fetching reports:', error);
+        });
+        fetch(`${url}user/upcomingSessions`, {
+          method: 'GET', // Specify the HTTP method as 'GET'
+          headers: {
+            Authorization: `Bearer ${token}` // Correct the header key to 'Authorization'
+          }
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            
+            // Set the retrieved reports in the state
+            setReports(data);
+          })
+          .catch((error) => {
+            console.error('Error fetching sessions:', error);
+          });
+   
+    }, []);
+      return (
 
     <main className={"ps-[245px] pe-10 pt-[7rem]  max-md:justify-between max-md:items-center"}>
-       
+       <StudentPlan/>
         <div className='flex flex-col justify-center items-center gap-5 w-fit '>
                 <div className='rounded-full  bg-[#EBF6FE] w-20 h-20 flex justify-center items-end '>
             <Image className='rounded-full  bg-[#EBF6FE]' src={'/vectors/courses.png'} width={60} height={60} alt='profile photo'/>
@@ -37,7 +81,7 @@ export default function page() {
                     </div>
                     <div className={`my-11 shadow-2xl		 p-5  rounded-3xl hover:shadow-lg duration-300	w-full`}>
                     <div className={`	`}>
-                      <h4 className={`${styles.secondary_head} `}>Community statistics</h4>
+                      <h4 className={`${styles.secondary_head} `}>Remain Sessions</h4>
                       <div className={`${styles.sessions} `}>
                           <div className={`${styles.session} flex justify-between gap-5 my-3`}>
                           <p>Session #6</p>

@@ -25,6 +25,7 @@ export default function OurTable() {
                 "Content-Type": "application/json",
             },
         }).then(response => response.json()).then(data => {
+            // console.log(data.data)
             setAllTeachers(data.data)
             setIsLoading(false)
         }).catch(err => {
@@ -37,6 +38,9 @@ export default function OurTable() {
         fetchAllTechers()
     }, [])
 
+    // const rerenderTable = () => {
+    //     fetchAllTechers()
+    // }
 
     return (
         <div className={"px-5 py-4"}>
@@ -76,9 +80,9 @@ export default function OurTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allTeachers.map((teacher: any) => {
+             (allTeachers && allTeachers.map((teacher: any) => {
                     return(
-                        <FetchTeacherData key={teacher.id} data={teacher} />
+                        <FetchTeacherData key={teacher.id} teacherData={teacher} updateComponent={fetchAllTechers}/>
                     )
                 }))
             }

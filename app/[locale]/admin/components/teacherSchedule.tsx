@@ -1,19 +1,25 @@
-export default function TeacherSchedule() {
+
+import { getAllSessions } from "@/helpers/getAllSessions";
+import TeacherScheduleData from './teacherScheduleData';
+
+
+export default async function TeacherSchedule() {
+
+    const allSessiosns = await getAllSessions('session');
+    const sortedSessiosns = allSessiosns.data.sort((a: any, b: any) => {
+        return new Date(a.sessionDate).getTime() - new Date(b.sessionDate).getTime();
+    })
+    const result = sortedSessiosns.slice(0, 10);
+
     return(
-        <div className={"adminBox w-full flex-col h-[200px] scrollAction mb-[20px]"}>
+        <div className={"adminBox w-full flex-col"}>
             <h3 className={"adminBoxTitle"}>Teacher’s Schedule</h3>
-            <div className={"py-5 px-4 bg-white-color rounded-[16px] my-4 flex gap-3 font-semibold"}>
-                <span>14:56 PM</span>
-                <p>(Omar sayed with khaled)</p>
-            </div>
-        {/*    Repeat */}
-            <div className={"py-5 px-4 bg-white-color rounded-[16px] my-4 flex gap-3 font-semibold"}>
-                <span>14:56 PM</span>
-                <p>(Omar sayed with khaled)</p>
-            </div>
-            <div className={"py-5 px-4 bg-white-color rounded-[16px] my-4 flex gap-3 font-semibold"}>
-                <span>14:56 PM</span>
-                <p>(Omar sayed with khaled)</p>
+            <div className="w-full flex-col h-[200px] scrollAction mb-[20px]">
+                {result.map((session: any) => {
+                    return(
+                        <TeacherScheduleData data={session} key={session.sessionid} />
+                    )
+                })}
             </div>
         </div>
     )

@@ -21,7 +21,7 @@ export default function OurSideBar() {
     const logOut = () => {
         cookies.remove('token');
         cookies.remove('id');
-        router.push('/los_auth');
+        router.replace('/los_auth');
     }
 
     return (

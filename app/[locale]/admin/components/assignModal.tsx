@@ -6,12 +6,13 @@ import { CustomFlowbiteTheme } from 'flowbite-react';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 import Cookies from 'universal-cookie';
 
-export default function AssignModal({openAssignModal, handleCloseModal, sessionReqId, user}: 
+export default function AssignModal({openAssignModal, handleCloseModal, sessionReqId, user, updateComponent}: 
     {
         openAssignModal: boolean;
         handleCloseModal: () => void;
         sessionReqId: number | string;
-        user: string | any
+        user: string | any;
+        updateComponent: () => void;
     }) {
 
       const modalRef = useRef<HTMLDivElement>(null);
@@ -96,6 +97,9 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
             })
         }).then(response => response.json()).then(data => {
             setMessage(data.status)
+            if(data.status === 'success') {
+                updateComponent()
+            }
         }).catch(err => console.log(err))
       }
 

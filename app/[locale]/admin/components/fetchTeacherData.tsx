@@ -4,15 +4,10 @@ import {LiaPhoneSolid} from "react-icons/lia";
 import {GoMail} from "react-icons/go";
 import {BsTrash} from "react-icons/bs";
 import { BiSolidEditAlt } from 'react-icons/bi';
+import Link from 'next/link';
+
 export default function FetchTeacherData(data: any) {
     const teacher = data && data
-
-    const sendEmail = () => {
-        const mailtoUrl = `mailto:${teacher.data.email}`;
-        console.log(mailtoUrl)
-        location.href = mailtoUrl;
-    }
-
   return (
     <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -43,9 +38,7 @@ export default function FetchTeacherData(data: any) {
                             location.href = `https://wa.me/+2${teacher.data.phone}`
                         }}
                     />
-                    <GoMail className={"text-2xl cursor-pointer"} 
-                        onClick={sendEmail()} 
-                    />
+                   <Link href={`mailto:${teacher.data.email}`}> <GoMail className={"text-2xl cursor-pointer"} /></Link>
                 </div>
             </Table.Cell>
             <Table.Cell>

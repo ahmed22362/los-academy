@@ -1,6 +1,6 @@
 'use client';
 
-import {CustomFlowbiteTheme, Table} from 'flowbite-react';
+import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import FetchTeacherData from './fetchTeacherData';
 
@@ -26,8 +26,11 @@ export default function OurTable() {
             },
         }).then(response => response.json()).then(data => {
             setAllTeachers(data.data)
-            // console.log(data.data)
-        }).catch(err => console.log(err))
+            setIsLoading(false)
+        }).catch(err => {
+            console.log(err)
+            setIsLoading(false)
+        })
     };
 
     useEffect(() => {
@@ -68,11 +71,17 @@ export default function OurTable() {
                 </Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
-                {allTeachers && allTeachers.map((teacher: any) => {
+                {isLoading ? (
+                    <Table.Row>
+                    <td><Spinner size="xl" /></td>
+                    </Table.Row>
+                 ) :
+             (allTeachers.map((teacher: any) => {
                     return(
                         <FetchTeacherData key={teacher.id} data={teacher} />
                     )
-                })}
+                }))
+            }
             </Table.Body>
         </Table>
         </div>

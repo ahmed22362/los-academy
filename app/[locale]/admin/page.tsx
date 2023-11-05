@@ -23,7 +23,7 @@ export default function AdminPage() {
                 <CalendarSection />
                 <div className="px-2">
                     <FreeSesstionsTable />
-                        <PaidSesstionsTable />
+                    <PaidSesstionsTable />
                 </div>
             </section>
         </main>

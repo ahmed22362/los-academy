@@ -4,13 +4,19 @@ import styles from './page.module.css'
 import Image from 'next/image';
 import PrimaryButton from '../components/PrimaryButton';
 import Link from 'next/link';
-import StudentPlan from './components/studentPlan';
+import RemainSessions from './components/RemainSessions';
+import StudentPlan from './components/StudentPlan';
 
 export default function page() {
 
   const url ='https://los-academy.onrender.com/api/v1/';
   const [reports, setReports] = useState([]);
     const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxSEVGWEMxQlNCU1NXNDVFRE00TVY4NkM4IiwiaWF0IjoxNjk5MTk0MDExLCJleHAiOjE3MDQzNzgwMTF9.OvSfZHnrL8y8sthkSc1A2uxTfp7ydtxMlUaY8yVK_EQ";
+
+    // const url=process.env.APIURL;
+    // const cookie=new Cookies();
+    //   const token =cookie.get('token');
+      
 
     useEffect(() => {
       // Fetch reports when the component mounts
@@ -30,23 +36,7 @@ export default function page() {
         .catch((error) => {
           console.error('Error fetching reports:', error);
         });
-        fetch(`${url}user/upcomingSessions`, {
-          method: 'GET', // Specify the HTTP method as 'GET'
-          headers: {
-            Authorization: `Bearer ${token}` // Correct the header key to 'Authorization'
-          }
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            
-            // Set the retrieved reports in the state
-            setReports(data);
-          })
-          .catch((error) => {
-            console.error('Error fetching sessions:', error);
-          });
-   
+       
     }, []);
       return (
 
@@ -79,28 +69,7 @@ export default function page() {
                       </div>
                       
                     </div>
-                    <div className={`my-11 shadow-2xl		 p-5  rounded-3xl hover:shadow-lg duration-300	w-full`}>
-                    <div className={`	`}>
-                      <h4 className={`${styles.secondary_head} `}>Remain Sessions</h4>
-                      <div className={`${styles.sessions} `}>
-                          <div className={`${styles.session} flex justify-between gap-5 my-3`}>
-                          <p>Session #6</p>
-                          <p> 3:00 - 3:30 PM </p>
-                          <p>17- oct-2023</p>
-                          </div>
-                          <div className={`${styles.session} flex justify-between gap-5 my-3`}>
-                          <p>Session #6</p>
-                          <p> 3:00 - 3:30 PM </p>
-                          <p>17- oct-2023</p>
-                          </div>
-                          <div className={`${styles.session} flex justify-between gap-5 my-3`}>
-                          <p>Session #6</p>
-                          <p> 3:00 - 3:30 PM </p>
-                          <p>17- oct-2023</p>
-                          </div>
-                      </div>
-                    </div>
-                    </div>
+                   <RemainSessions/>
                   </div>
                 </div>
                 <div className="card ">

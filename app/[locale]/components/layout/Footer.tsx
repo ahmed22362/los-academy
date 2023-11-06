@@ -9,8 +9,9 @@ export default function Footer() {
     const router = usePathname();
     const isAdminDashboard = router.startsWith('/admin');
     const isAdminLogin = router.startsWith('/los_auth');
+    const isStudentProfile = router.startsWith('/student');
 
-    if (isAdminDashboard || isAdminLogin) {
+    if (isAdminDashboard || isAdminLogin ||isStudentProfile) {
         return null;
     }
 

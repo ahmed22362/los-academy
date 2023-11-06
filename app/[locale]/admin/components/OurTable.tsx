@@ -2,7 +2,8 @@
 
 import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import FetchTeacherData from './fetchTeacherData';
+import FetchTeacherData from './teacher/fetchTeacherData';
+import ComboBox from './teacher/comboBox';
 
 
 export default function OurTable() {
@@ -11,7 +12,7 @@ export default function OurTable() {
 
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
-            base: "group/head text-xs uppercase text-black-color-one bg-white-color p-[15px]",
+            base: "group/head text-xs uppercase text-black-color-one bg-white-color p-[15px] text-center",
             cell: {
                 base: "group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-white-color px-6 py-3"
             }
@@ -25,7 +26,6 @@ export default function OurTable() {
                 "Content-Type": "application/json",
             },
         }).then(response => response.json()).then(data => {
-            // console.log(data.data)
             setAllTeachers(data.data)
             setIsLoading(false)
         }).catch(err => {
@@ -38,11 +38,9 @@ export default function OurTable() {
         fetchAllTechers()
     }, [])
 
-    // const rerenderTable = () => {
-    //     fetchAllTechers()
-    // }
-
     return (
+        <>
+        <ComboBox  updateComponent={fetchAllTechers}/>
         <div className={"px-5 py-4"}>
         <Table>
             <Table.Head theme={customTheme.head}>
@@ -53,13 +51,7 @@ export default function OurTable() {
                     Name
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Student no.
-                </Table.HeadCell>
-                <Table.HeadCell theme={customTheme.head}>
                     Role
-                </Table.HeadCell>
-                <Table.HeadCell theme={customTheme.head}>
-                    Joined
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
                     Sessions Completed
@@ -71,7 +63,7 @@ export default function OurTable() {
                     Contact
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    <span className={"sr-only"}>opt</span>
+                    options
                 </Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
@@ -89,5 +81,6 @@ export default function OurTable() {
             </Table.Body>
         </Table>
         </div>
+        </>
     )
 }

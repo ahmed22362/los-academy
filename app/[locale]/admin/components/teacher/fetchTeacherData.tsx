@@ -5,18 +5,21 @@ import {GoMail} from "react-icons/go";
 import {BsTrash} from "react-icons/bs";
 import { BiSolidEditAlt } from 'react-icons/bi';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import EditTeacherModal from './editTeacherModal';
+import { Toast } from 'primereact/toast';
+
 
 export default function FetchTeacherData({teacherData, updateComponent} : {teacherData: any; updateComponent: () => void}) {
     const [handleModal, setHandleModal] = useState(false)
-    // Craete Toast Message After Delete success
+    const toast = useRef<Toast>(null);
+
+    const showError = () => {
+        toast.current?.show({severity:'error', summary: 'Error', detail:'Deleted Success', life: 3000});
+    }
     
     const teacher = teacherData
 
-    useEffect(() => {
-        console.log(teacher)
-    })
 
     const openModal = () => {
         setHandleModal(true)
@@ -35,13 +38,16 @@ export default function FetchTeacherData({teacherData, updateComponent} : {teach
         }).then(response => response.json()).then(data => {
             console.log(data)
             updateComponent()
+            showError()
         }).catch(err => {
             console.log(err)
         })
     }
 
   return (
-    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+
+    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 text-center">
+        
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                 {teacher.id.slice(-4)}
             </Table.Cell>
@@ -49,19 +55,13 @@ export default function FetchTeacherData({teacherData, updateComponent} : {teach
                 {teacher.name}
             </Table.Cell>
             <Table.Cell>
-                2
-            </Table.Cell>
-            <Table.Cell>
                 {teacher.role}
             </Table.Cell>
             <Table.Cell>
-                Sep 5,2022
+                {teacher.committedSessions}
             </Table.Cell>
             <Table.Cell>
-                20
-            </Table.Cell>
-            <Table.Cell>
-                10$
+            {teacher.sessionCost}$
             </Table.Cell>
             <Table.Cell>
                 <div className="flex flex-row justify-between gap-3">
@@ -75,9 +75,10 @@ export default function FetchTeacherData({teacherData, updateComponent} : {teach
             </Table.Cell>
             <Table.Cell>
                 <div className="flex flex-row justify-between gap-4">
+                    <Toast ref={toast} />
                     <BiSolidEditAlt className={"text-2xl cursor-pointer"} style={{color: "green"}} onClick={openModal}/>
                     <BsTrash className={"text-2xl cursor-pointer"} style={{color: "red"}} onClick={removeTeacher}/>
-                    <EditTeacherModal openAssignModal={handleModal} handleCloseModal={closeModal} teacherDetails={teacher} />
+                    <EditTeacherModal openAssignModal={handleModal} handleCloseModal={closeModal} teacherDetails={teacher} updateComponent={updateComponent} />
                 </div>
             </Table.Cell>
         </Table.Row>

@@ -1,8 +1,12 @@
 "use client";
+import { useEffect } from 'react';
 import { convertDateTimeZone } from './../../../../helpers/convertDateAndTime';
 function TeacherScheduleData({data}: {data: any}) {
 
     const session = data && data;
+    // useEffect(() => {
+    //     console.log(session.user)
+    // }, [])
     const convertDate = convertDateTimeZone;
 
   return (

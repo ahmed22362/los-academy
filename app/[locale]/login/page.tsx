@@ -2,17 +2,39 @@
 
 import PrimaryButton  from "./../components/PrimaryButton";
 import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
-import { Toast } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Cookies from "universal-cookie";
+import { Toast } from "primereact/toast";
+import {useRouter} from 'next/navigation';
+
+//theme
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+
+
+
 
 function page() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+  const toast = useRef<Toast>(null);
+  const showSuccess = (msg :any) => {
+    toast.current?.show({severity:'success', summary: 'Success', detail:msg, life: 3000});
+}
+  const showError = (msg: string) => {
+      toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
+  }
+
+  const cookies = new Cookies();
+
+  const [userData, setUserData] = useState()
   interface FormData {
     name: string;
-    age: number;
-    phoneNumber: number;
+    age: String;
+    phoneNumber: String;
     email: string;
     password: string;
     passwordConfirmation: string;
@@ -20,23 +42,22 @@ function page() {
   const [activeTab, setActiveTab] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     name: "",
-    age: 0,
-    phoneNumber: 0,
+    age: "",
+    phoneNumber: "",
     email: "",
     password: "",
     passwordConfirmation: "",
   });
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const url ='https://los-academy.onrender.com/api/v1/';
+  const handleFormChange = (e: any) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  
+    // Use parseFloat or parseInt to parse the values as numbers
+    setFormData({ ...formData, [name]: name === 'age' || name === 'phoneNumber' ? parseInt(value, 10) : value });
   };
-  const url = `${process.env.NEXT_PUBLIC_APIURL}/user/auth/signup`;
   const handleFormSubmit = () => {
-    fetch(`${url}`, {
+    fetch(`${url}user/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,16 +67,82 @@ function page() {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
+          showSuccess('Registration Successfully');
           console.log(data);
+          setTimeout(() => {
+            router.push('/student_profile');
+          }, 3000);
+          setUserData(data)
+          cookies.set('token', data.token);
+
         } else {
+          showError('Registration failed');
           console.log(data);
         }
       })
       .catch((error) => {
         console.log(error);
+        showError('An error occurred')
       });
   };
 
+
+  // login
+
+
+      const handleEmailChange = (e :any) => {
+        setEmail(e.target.value);
+      };
+
+      const handlePasswordChange = (e :any) => {
+        setPassword(e.target.value);
+      };
+
+      const formDataLogin = {
+        email: email,
+        password: password,
+      };
+
+
+  const handleLogin = () => {
+    alert('clicked')
+      console.log(formDataLogin);
+          
+    // Perform basic client-side validation
+    if (!email || !password) {
+      showError("Please fill in all fields");
+      return;
+    }
+
+    // Send a POST request to the login endpoint
+    fetch(`${url}user/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formDataLogin),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          showSuccess('Login Successfully');
+          console.log(data);
+          setTimeout(() => {
+            // Redirect to a protected route upon successful login
+            router.push('/student_profile');
+          }, 3000);
+          // Save user token in a cookie or state as needed
+          cookies.set('token', data.token);
+        } else {
+          showError(`${data.message}`);
+          console.log(data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        showError('An error occurred');
+      });
+  };
   const customeTheme: CustomFlowbiteTheme = {
     tab: {
       tablist: {
@@ -77,6 +164,8 @@ function page() {
   return (
     <section className="mt-8">
       <div className="flex items-center mt-40 justify-evenly gap-20 sm:flex-row flex-col-reverse ">
+      <Toast ref={toast}  />
+
         <div className="image transition-all duration-500 ">
           <Image
             src={`${
@@ -104,20 +193,26 @@ function page() {
               >
                 <h3 className="font-bold	 text-xl	"> Welcome Back ! </h3>
                 <div className="flex flex-col gap-4" style={{ width: "100%" }}>
+
                   <input
                     className="border-blue-600 gradiant-color	 rounded-3xl w-full		border-2	"
                     type="email"
+                    value={email}
+                    onChange={handleEmailChange}
                     placeholder="Email address "
                   />
                   <input
                     className="border-blue-600 gradiant-color	 rounded-3xl w-full		border-2	"
                     type="password"
+                    value={password}
+                    onChange={handlePasswordChange}
                     placeholder="Password"
                   />
                   <Link className="font-semibold	 underline" href={"#"}>
                     Forget Password ?
                   </Link>
                   <PrimaryButton
+                  onClick={handleLogin}
                     text="Login"
                     ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
                   />
@@ -140,15 +235,8 @@ function page() {
                 className=" flex justify-center items-center gap-3 flex-col flex-wrap "
                 style={{ minHeight: "300px", width: "100%" }}
               >
-                <Toast>
-                  <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                    <HiCheck className="h-5 w-5" />
-                  </div>
-                  <div className="ml-3 text-sm font-normal">
-                    Item moved successfully.
-                  </div>
-                  <Toast.Toggle />
-                </Toast>
+
+
                 <h3 className="font-bold	 text-xl	">
                   {" "}
                   Welcome to LOS Accademy !{" "}
@@ -165,7 +253,6 @@ function page() {
                     />
                     <input
                       name="age"
-                      value={formData.age}
                       onChange={handleFormChange}
                       className="border-blue-600 gradiant-color rounded-3xl w-full appearance-none border-2"
                       type="tel"
@@ -174,7 +261,6 @@ function page() {
                   </div>
                   <input
                     name="phoneNumber"
-                    value={formData.phoneNumber}
                     onChange={handleFormChange}
                     type="tel"
                     className="border-blue-600 gradiant-color rounded-3xl w-full appearance-none border-2"

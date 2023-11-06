@@ -6,9 +6,11 @@ import TeacherScheduleData from './teacherScheduleData';
 export default async function TeacherSchedule() {
 
     const allSessiosns = await getAllSessions('session');
+
     const sortedSessiosns = allSessiosns.data.sort((a: any, b: any) => {
         return new Date(a.sessionDate).getTime() - new Date(b.sessionDate).getTime();
     })
+    
     const result = sortedSessiosns.slice(0, 10);
 
     return(

@@ -4,7 +4,7 @@ import ReportData from "./reportData";
 export default async function Reports() {
 
     const allReports = await getStaticData('report');
-    const theResult= await allReports.data;
+    const theResult = await allReports.data;
     
     return(
         <div className={"adminBox w-full flex-col my-5"}>

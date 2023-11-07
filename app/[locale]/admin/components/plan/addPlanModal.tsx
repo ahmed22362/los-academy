@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { PiStudentBold } from 'react-icons/pi';
+import Cookies from 'universal-cookie';
 
 export default function AddPlanModal({openAssignModal, handleCloseModal, updateComponent}: 
     {
@@ -15,10 +16,10 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
 
     const modalRef = useRef<HTMLDivElement>(null);
     const [title, setTitle] = useState('');
-    const [sessionDuration, setSessionDuration] = useState('');
-    const [sessionsCount, setSessionsCount] = useState('');
-    const [sessionsPerWeek, setSessionsPerWeek] = useState('');
-
+    const [sessionDuration, setSessionDuration] = useState<any>(null);
+    const [sessionsCount, setSessionsCount] = useState<any>(null);
+    const [sessionsPerWeek, setSessionsPerWeek] = useState<any>(null);
+    const cookies = new Cookies();
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Add Success', life: 3000});
@@ -57,6 +58,7 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
                 title: title,
@@ -95,19 +97,19 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
               <div className="mb-2 block">
                 <Label htmlFor="sessionDuration" value="Session Duration" />
               </div>
-              <TextInput id="sessionDuration" placeholder='Session Duration' onChange={(e) => setSessionDuration(e.target.value)} type="text" />
+              <TextInput id="sessionDuration" placeholder='Session Duration' onChange={(e) => setSessionDuration(e.target.value)} type="number" />
             </div>
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="sessionsCount" value="Sessions Count" />
               </div>
-              <TextInput id="sessionsCount" placeholder='Session Count' onChange={(e) => setSessionsCount(e.target.value)} type="text" />
+              <TextInput id="sessionsCount" placeholder='Session Count' onChange={(e) => setSessionsCount(e.target.value)} type="number" />
             </div>
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="sessionsPerWeek" value="Sessions Per Week" />
               </div>
-              <TextInput id="sessionsPerWeek" placeholder='Sessions Per Week' onChange={(e) => setSessionsPerWeek(e.target.value)} type="text" />
+              <TextInput id="sessionsPerWeek" placeholder='Sessions Per Week' onChange={(e) => setSessionsPerWeek(e.target.value)} type="number" />
             </div>
             <div className="w-full">
                 <button

@@ -13,10 +13,7 @@ export default function EditPlanModal({openAssignModal, handleCloseModal, planDe
     }) {
 
     const modalRef = useRef<HTMLDivElement>(null);
-    const [title, setTitle] = useState(planDetails.title);
-    const [sessionDuration, setSessionDuration] = useState(planDetails.sessionDuration);
-    const [sessionsCount, setSessionsCount] = useState(planDetails.sessionsCount);
-    const [sessionsPerWeek, setSessionsPerWeek] = useState(planDetails.sessionsPerWeek);
+    const [status, setStatus] = useState<boolean | any>(planDetails.active);
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
@@ -56,10 +53,7 @@ export default function EditPlanModal({openAssignModal, handleCloseModal, planDe
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                title: title,
-                sessionDuration: sessionDuration,
-                sessionsCount: sessionsCount,
-                sessionsPerWeek: sessionsPerWeek
+                active: status,
             }),
         }).then(response => response.json()).then(data => {
           if(data.status === "success") {
@@ -81,27 +75,13 @@ export default function EditPlanModal({openAssignModal, handleCloseModal, planDe
         <Toast ref={toast} />
             <div>
             <div className="mb-2 block">
-                <Label htmlFor="title" value="Plan Title" />
+                <Label htmlFor="status" value="Plan Active" />
               </div>
-              <TextInput id="title" defaultValue={planDetails.title} onChange={(e) => setTitle(e.target.value)} type='text' />
-            </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="sessionDuration" value="Session Duration" />
-              </div>
-              <TextInput id="sessionDuration" defaultValue={planDetails.sessionDuration} onChange={(e) => setSessionDuration(e.target.value)} type="text" />
-            </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="sessionsCount" value="Sessions Count" />
-              </div>
-              <TextInput id="sessionsCount" defaultValue={planDetails.sessionsCount} onChange={(e) => setSessionsCount(e.target.value)} type="text" />
-            </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="sessionsPerWeek" value="Sessions Per Week" />
-              </div>
-              <TextInput id="sessionsPerWeek" defaultValue={planDetails.sessionsPerWeek} onChange={(e) => setSessionsPerWeek(e.target.value)} type="text" />
+              <Select id="status" value={status} onChange={(e) => setStatus(e.target.value)} >
+                <option value={'true'}>Active</option>
+                <option value={'false'}>Inactive</option>
+              </Select>
+              {/* <TextInput id="title" defaultValue={planDetails.title} onChange={(e) => setStatus(e.target.value)} type='text' /> */}
             </div>
             <div className="w-full">
                 <button

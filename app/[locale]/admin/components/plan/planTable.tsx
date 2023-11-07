@@ -26,8 +26,9 @@ export default function PlanTable() {
                 "Content-Type": "application/json",
             },
         }).then(response => response.json()).then(data => {
-            console.log(data)
-            setAllPlan(data.data)
+            const sortedData = data.data.sort((x: any, y: any) => x.id - y.id)
+            console.log(sortedData)
+            setAllPlan(sortedData)
             setIsLoading(false)
         }).catch(err => {
             console.log(err)

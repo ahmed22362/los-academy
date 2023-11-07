@@ -20,8 +20,8 @@ export default function FetchPlanData({planData, updateComponent} : {planData: a
     const toast = useRef<Toast>(null);
     const toastB = useRef<Toast>(null);
     const toastC = useRef<Toast>(null);
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Deleted Success', life: 3000});
+    const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
     }
     
 
@@ -76,15 +76,18 @@ export default function FetchPlanData({planData, updateComponent} : {planData: a
 
     const confirmDelete = () => {
 
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/${plan.id}`, {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/plan/${plan.id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
             },
         }).then(response => response.json()).then(data => {
-            console.log(data)
-            updateComponent()
-            showError()
+            if(data.status === 'success') {
+                updateComponent()
+                showError('Deleted Success')
+            } else if (data.status === 'fail') {
+                showError('Deleted Failed Try Again later or contact support')
+            }
         }).catch(err => {
             console.log(err)
         })

@@ -6,12 +6,13 @@ import { CustomFlowbiteTheme } from 'flowbite-react';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 import Cookies from 'universal-cookie';
 
-export default function AssignModal({openAssignModal, handleCloseModal, sessionReqId, user}: 
+export default function AssignModal({openAssignModal, handleCloseModal, sessionReqId, user, updateComponent}: 
     {
         openAssignModal: boolean;
         handleCloseModal: () => void;
         sessionReqId: number | string;
-        user: string | any
+        user: string | any;
+        updateComponent: () => void;
     }) {
 
       const modalRef = useRef<HTMLDivElement>(null);
@@ -96,6 +97,9 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
             })
         }).then(response => response.json()).then(data => {
             setMessage(data.status)
+            if(data.status === 'success') {
+                updateComponent()
+            }
         }).catch(err => console.log(err))
       }
 
@@ -112,9 +116,9 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
             <div className="flex flex-col my-5 gap-3">
               <h4 className="adminBoxTitle">This Teacher: </h4>
               <Dropdown label={teacher} theme={customTheme} inline>
-                {allTeacher && allTeacher.map((teacher: any) => {
+                {allTeacher && allTeacher.map((teacher: any, index: number) => {
                   return(
-                    <Dropdown.Item key={teacher.id} onClick={() => {
+                    <Dropdown.Item key={index} onClick={() => {
                         selectTeacher(teacher.name)
                         selectTeacherid(teacher.id)
                         }}>

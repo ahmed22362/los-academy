@@ -1,15 +1,9 @@
-import React from 'react'
-import ComboBox from '../components/comboBox';
-import OurTable from '../components/OurTable';
+import SesstionsTable from "../components/session/sessionsTable";
 
 function SessionsPage() {
   return (
     <main className='ps-[260px] pt-[7rem]'>
-
-        <ComboBox />
-        
-        <OurTable />
-    
+      <SesstionsTable />
     </main>
   )
 }

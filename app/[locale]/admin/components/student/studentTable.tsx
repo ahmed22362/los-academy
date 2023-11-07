@@ -2,12 +2,12 @@
 
 import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import FetchTeacherData from './teacher/fetchTeacherData';
-import ComboBox from './teacher/teacherComboBox';
+import FetchStudentData from './fetchStudentData';
+import StudentComboBox from './studentComboBox';
 
 
-export default function OurTable() {
-    const [allTeachers, setAllTeachers]: any = useState([])
+export default function StudentTable() {
+    const [allStudents, setAllStudents]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
 
     const customTheme: CustomFlowbiteTheme['table'] = {
@@ -19,14 +19,15 @@ export default function OurTable() {
         }
     }
 
-    const fetchAllTechers = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher`, {
+    const fetchAllStudents = () => {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/user`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
         }).then(response => response.json()).then(data => {
-            setAllTeachers(data.data)
+            // console.log(data)
+            setAllStudents(data.data)
             setIsLoading(false)
         }).catch(err => {
             console.log(err)
@@ -35,12 +36,12 @@ export default function OurTable() {
     };
 
     useEffect(() => {
-        fetchAllTechers()
+        fetchAllStudents()
     }, [])
 
     return (
         <>
-        <ComboBox  updateComponent={fetchAllTechers}/>
+        <StudentComboBox  updateComponent={fetchAllStudents}/>
         <div className={"px-5 py-4"}>
         <Table>
             <Table.Head theme={customTheme.head}>
@@ -51,13 +52,16 @@ export default function OurTable() {
                     Name
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Role
+                    Gender
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Sessions Completed
+                    Age
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Session Cost
+                    Available Free Session
+                </Table.HeadCell>
+                <Table.HeadCell theme={customTheme.head}>
+                    Remain Sessions
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
                     Contact
@@ -72,9 +76,9 @@ export default function OurTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allTeachers && allTeachers.map((teacher: any, index: number) => {
+             (allStudents && allStudents.map((student: any, index: number) => {
                     return(
-                        <FetchTeacherData key={index} teacherData={teacher} updateComponent={fetchAllTechers}/>
+                        <FetchStudentData key={index} studentData={student} updateComponent={fetchAllStudents}/>
                     )
                 }))
             }

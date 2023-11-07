@@ -2,11 +2,11 @@
 
 import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import FetchTeacherData from './teacher/fetchTeacherData';
-import ComboBox from './teacher/teacherComboBox';
+import FetchTeacherData from '../teacher/fetchTeacherData';
+import TeacherComboBox from './teacherComboBox';
 
 
-export default function OurTable() {
+export default function TeacherTable() {
     const [allTeachers, setAllTeachers]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
 
@@ -40,7 +40,7 @@ export default function OurTable() {
 
     return (
         <>
-        <ComboBox  updateComponent={fetchAllTechers}/>
+        <TeacherComboBox  updateComponent={fetchAllTechers}/>
         <div className={"px-5 py-4"}>
         <Table>
             <Table.Head theme={customTheme.head}>

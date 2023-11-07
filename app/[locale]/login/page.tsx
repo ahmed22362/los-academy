@@ -9,6 +9,8 @@ import { useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
 import {useRouter} from 'next/navigation';
+import { RadioButton } from "primereact/radiobutton";
+import './login.module.css'
 
 //theme
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -29,13 +31,14 @@ function page() {
   }
 
   const cookies = new Cookies();
-
+  const [gender, setGender] = useState('');
   const [userData, setUserData] = useState()
   interface FormData {
     name: string;
     age: String;
-    phoneNumber: String;
+    phone: String;
     email: string;
+    gender: String;
     password: string;
     passwordConfirmation: string;
   }
@@ -43,8 +46,9 @@ function page() {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     age: "",
-    phoneNumber: "",
+    phone: "",
     email: "",
+    gender:"",
     password: "",
     passwordConfirmation: "",
   });
@@ -54,9 +58,19 @@ function page() {
     const { name, value } = e.target;
   
     // Use parseFloat or parseInt to parse the values as numbers
-    setFormData({ ...formData, [name]: name === 'age' || name === 'phoneNumber' ? parseInt(value, 10) : value });
+    setFormData({ ...formData, [name]: name === 'age' || name === 'phone' ? parseInt(value, 10) : value });
   };
   const handleFormSubmit = () => {
+    if (!gender) {
+      showError('Please select your gender');
+      return;
+    }
+  
+    // Set the gender directly in the formData object
+    formData.gender = gender;
+    
+    console.log(formData);
+    
     fetch(`${url}user/auth/signup`, {
       method: "POST",
       headers: {
@@ -259,8 +273,9 @@ function page() {
                       placeholder="Age"
                     />
                   </div>
+               
                   <input
-                    name="phoneNumber"
+                    name="phone"
                     onChange={handleFormChange}
                     type="tel"
                     className="border-blue-600 gradiant-color rounded-3xl w-full appearance-none border-2"
@@ -290,6 +305,16 @@ function page() {
                     type="password"
                     placeholder="Confirm Password"
                   />
+                     <div className="flex justify-evenly  flex-wrap gap-3">
+    <div className="flex align-items-center ">
+        <RadioButton  inputId="male" name="gender" value="male" onChange={(e) => setGender(e.value)} checked={gender === 'male'} />
+        <label htmlFor="male" className="ml-2">Male</label>
+    </div>
+    <div className="flex align-items-center">
+        <RadioButton inputId="famle" name="gender" value="famle" onChange={(e) => setGender(e.value)} checked={gender === 'famle'} />
+        <label htmlFor="famle" className="ml-2">Famle</label>
+    </div>
+    </div>
                   <PrimaryButton
                     text="Register"
                     ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"

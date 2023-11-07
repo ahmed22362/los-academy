@@ -63,9 +63,9 @@ export default function FreeSesstionsTable() {
                 {loading ? (
                     <Spinner />
                     ) : (
-                        totalFree.length > 0 ? totalFree.map((freeSession: any) => {
+                        totalFree.length > 0 ? totalFree.map((freeSession: any, index: number) => {
                         return(
-                            <div key={freeSession.id} className={"p-1 my-2 font-semibold flex w-full justify-between items-center text-base"}>
+                            <div key={index} className={"p-1 my-2 font-semibold flex w-full justify-between items-center text-base"}>
                                 <details>
                                     <summary>Session Details</summary>
                                     <div className="flex justify-center items-center gap-3">

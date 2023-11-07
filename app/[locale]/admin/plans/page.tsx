@@ -1,14 +1,10 @@
-import React from 'react'
-import ComboBox from '../components/teacher/comboBox';
-import OurTable from '../components/OurTable';
+import PlanTable from "../components/plan/planTable";
 
 function PlansPage() {
   return (
     <main className='ps-[260px] pt-[7rem]'>
 
-        <ComboBox />
-        
-        <OurTable />
+        <PlanTable />
     
     </main>
   )

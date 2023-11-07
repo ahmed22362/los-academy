@@ -10,9 +10,9 @@ export default async function Reports() {
         <div className={"adminBox w-full flex-col my-5"}>
             <h3 className={"adminBoxTitle"}>Reports</h3>
             <div className="w-full flex-col gap-2 h-[200px] scrollAction ">
-                {theResult.map((report: any) => {
+                {theResult.map((report: any, index: number) => {
                     return(
-                        <ReportData data={report} key={report.id}/>
+                        <ReportData data={report} key={index}/>
                     )
                 })}
             </div>

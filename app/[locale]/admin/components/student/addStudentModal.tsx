@@ -1,10 +1,11 @@
 'use client';
 
-import { CustomFlowbiteTheme, Label, Modal, TextInput } from 'flowbite-react';
+import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-react';
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { PiStudentBold } from 'react-icons/pi';
+
 export default function AddStudentModal({openAssignModal, handleCloseModal, updateComponent}: 
     {
         openAssignModal: boolean;
@@ -20,6 +21,7 @@ export default function AddStudentModal({openAssignModal, handleCloseModal, upda
     const [age, setAge] = useState('');
     const [password, setPassword] = useState('');
     const [remainSessions, setRemainSessions] = useState('');
+    const [gender, setGender] = useState('');
 
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
@@ -68,6 +70,7 @@ export default function AddStudentModal({openAssignModal, handleCloseModal, upda
                 remainSessions: remainSessions,
                 age: age,
                 password: password,
+                gender: gender
             }),
         }).then(response => response.json()).then(data => {
             console.log(data)
@@ -102,6 +105,17 @@ export default function AddStudentModal({openAssignModal, handleCloseModal, upda
               </div>
               <TextInput id="email" placeholder='Student Email' onChange={(e) => setEmail(e.target.value)} type="email" />
             </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="gender" value="Student Gender" />
+              </div>
+              <Select id="gender" onChange={(e) => setGender(e.target.value)}>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </Select>
+            </div>
+              {/* <TextInput id="gender" placeholder='Student Email' onChange={(e) => setEmail(e.target.value)} type="email" /> */}
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="phone" value="Student Phone" />

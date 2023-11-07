@@ -116,9 +116,9 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
             <div className="flex flex-col my-5 gap-3">
               <h4 className="adminBoxTitle">This Teacher: </h4>
               <Dropdown label={teacher} theme={customTheme} inline>
-                {allTeacher && allTeacher.map((teacher: any) => {
+                {allTeacher && allTeacher.map((teacher: any, index: number) => {
                   return(
-                    <Dropdown.Item key={teacher.id} onClick={() => {
+                    <Dropdown.Item key={index} onClick={() => {
                         selectTeacher(teacher.name)
                         selectTeacherid(teacher.id)
                         }}>

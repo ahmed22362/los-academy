@@ -1,25 +1,22 @@
 'use client';
 
-import { CustomFlowbiteTheme, Label, Modal, TextInput } from 'flowbite-react';
+import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-react';
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
-export default function EditTeacherModal({openAssignModal, handleCloseModal, teacherDetails, updateComponent}: 
+export default function EditPlanModal({openAssignModal, handleCloseModal, planDetails, updateComponent}: 
     {
         openAssignModal: boolean;
         handleCloseModal: () => void;
-        teacherDetails: any;
+        planDetails: any;
         updateComponent: () => void
     }) {
 
     const modalRef = useRef<HTMLDivElement>(null);
-    const [name, setName] = useState(teacherDetails.name);
-    const [email, setEmail] = useState(teacherDetails.email);
-    const [phone, setPhone] = useState(teacherDetails.phone);
-    const [role, setRole] = useState(teacherDetails.role);
-    const [cost, setCost] = useState(teacherDetails.sessionCost);
-    const [password, setPassword] = useState('');
-    
+    const [title, setTitle] = useState(planDetails.title);
+    const [sessionDuration, setSessionDuration] = useState(planDetails.sessionDuration);
+    const [sessionsCount, setSessionsCount] = useState(planDetails.sessionsCount);
+    const [sessionsPerWeek, setSessionsPerWeek] = useState(planDetails.sessionsPerWeek);
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
@@ -45,25 +42,24 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
       if (!openAssignModal) {
         return null;
       } 
+      
       const modalTheme: CustomFlowbiteTheme['modal'] = {
         header: {
           base: "flex items-start justify-between rounded-t px-5 py-2"
         }
       }
 
-      const updateTeacher = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/${teacherDetails.id}`, {
+      const updateStudent = () => {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/plan/${planDetails.id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                name: name,
-                email: email,
-                phone: phone,
-                role: role,
-                password: password,
-                sessionCost: cost
+                title: title,
+                sessionDuration: sessionDuration,
+                sessionsCount: sessionsCount,
+                sessionsPerWeek: sessionsPerWeek
             }),
         }).then(response => response.json()).then(data => {
           if(data.status === "success") {
@@ -79,49 +75,37 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
   return (
     <>
       <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"3xl"}>
-        <Modal.Header theme={modalTheme.header}>Edit Teacher: {teacherDetails.id}</Modal.Header>
+        <Modal.Header theme={modalTheme.header}>Edit Plan: {planDetails.id}</Modal.Header>
         <Modal.Body>
         <div className="space-y-6">
         <Toast ref={toast} />
             <div>
-              <div className="mb-2 block">
-                <Label htmlFor="name" value="Teacher Name" />
+            <div className="mb-2 block">
+                <Label htmlFor="title" value="Plan Title" />
               </div>
-              <TextInput id="name" defaultValue={teacherDetails.name} onChange={(e) => setName(e.target.value)} type='text' />
+              <TextInput id="title" defaultValue={planDetails.title} onChange={(e) => setTitle(e.target.value)} type='text' />
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="email" value="Teacher Email" />
+                <Label htmlFor="sessionDuration" value="Session Duration" />
               </div>
-              <TextInput id="email" defaultValue={teacherDetails.email} onChange={(e) => setEmail(e.target.value)} type="email" />
+              <TextInput id="sessionDuration" defaultValue={planDetails.sessionDuration} onChange={(e) => setSessionDuration(e.target.value)} type="text" />
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="phone" value="Teacher Phone" />
+                <Label htmlFor="sessionsCount" value="Sessions Count" />
               </div>
-              <TextInput id="phone" defaultValue={teacherDetails.phone} onChange={(e) => setPhone(e.target.value)} type="tel" />
+              <TextInput id="sessionsCount" defaultValue={planDetails.sessionsCount} onChange={(e) => setSessionsCount(e.target.value)} type="text" />
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="role" value="Role" />
+                <Label htmlFor="sessionsPerWeek" value="Sessions Per Week" />
               </div>
-              <TextInput id="role" type="text" defaultValue={teacherDetails.role} onChange={(e) => setRole(e.target.value)} />
-            </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="password" value="Update Teacher Password" />
-              </div>
-              <TextInput id="password" type="text" placeholder='update password' onChange={(e) => setPassword(e.target.value)} />
-            </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="cost" value="Cost" />
-              </div>
-              <TextInput id="cost" type="text" defaultValue={teacherDetails.sessionCost} onChange={(e) => setCost(e.target.value)} />
+              <TextInput id="sessionsPerWeek" defaultValue={planDetails.sessionsPerWeek} onChange={(e) => setSessionsPerWeek(e.target.value)} type="text" />
             </div>
             <div className="w-full">
                 <button
-                    onClick={updateTeacher}
+                    onClick={updateStudent}
                     type="submit"
                     className="text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
                 >

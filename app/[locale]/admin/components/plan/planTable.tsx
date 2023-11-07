@@ -2,12 +2,12 @@
 
 import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import FetchTeacherData from '../teacher/fetchTeacherData';
-import TeacherComboBox from './teacherComboBox';
+import PlanComboBox from './planComboBox';
+import FetchPlanData from './fetchPlanData';
 
 
-export default function TeacherTable() {
-    const [allTeachers, setAllTeachers]: any = useState([])
+export default function PlanTable() {
+    const [allPlans, setAllPlan]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
 
     const customTheme: CustomFlowbiteTheme['table'] = {
@@ -19,14 +19,15 @@ export default function TeacherTable() {
         }
     }
 
-    const fetchAllTechers = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher`, {
+    const fetchAllPlans = () => {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/plan`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
         }).then(response => response.json()).then(data => {
-            setAllTeachers(data.data)
+            console.log(data)
+            setAllPlan(data.data)
             setIsLoading(false)
         }).catch(err => {
             console.log(err)
@@ -35,12 +36,12 @@ export default function TeacherTable() {
     };
 
     useEffect(() => {
-        fetchAllTechers()
+        fetchAllPlans()
     }, [])
 
     return (
         <>
-        <TeacherComboBox  updateComponent={fetchAllTechers}/>
+        <PlanComboBox  updateComponent={fetchAllPlans}/>
         <div className={"px-5 py-4"}>
         <Table>
             <Table.Head theme={customTheme.head}>
@@ -48,19 +49,19 @@ export default function TeacherTable() {
                     #ID
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Name
+                    Title
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Role
+                    Session Duration
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Sessions Completed
+                    Sessions Count
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Session Cost
+                    Sessions Per Week
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Contact
+                    Status
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
                     options
@@ -72,9 +73,9 @@ export default function TeacherTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allTeachers && allTeachers.map((teacher: any, index: number) => {
+             (allPlans && allPlans.map((plan: any, index: number) => {
                     return(
-                        <FetchTeacherData key={index} teacherData={teacher} updateComponent={fetchAllTechers}/>
+                        <FetchPlanData key={index} planData={plan} updateComponent={fetchAllPlans}/>
                     )
                 }))
             }

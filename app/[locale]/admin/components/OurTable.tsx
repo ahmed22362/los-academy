@@ -3,7 +3,7 @@
 import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import FetchTeacherData from './teacher/fetchTeacherData';
-import ComboBox from './teacher/comboBox';
+import ComboBox from './teacher/teacherComboBox';
 
 
 export default function OurTable() {
@@ -72,9 +72,9 @@ export default function OurTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allTeachers && allTeachers.map((teacher: any) => {
+             (allTeachers && allTeachers.map((teacher: any, index: number) => {
                     return(
-                        <FetchTeacherData key={teacher.id} teacherData={teacher} updateComponent={fetchAllTechers}/>
+                        <FetchTeacherData key={index} teacherData={teacher} updateComponent={fetchAllTechers}/>
                     )
                 }))
             }

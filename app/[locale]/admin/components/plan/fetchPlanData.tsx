@@ -1,42 +1,45 @@
 "use client"
-import {CustomFlowbiteTheme, Table} from 'flowbite-react';
+
+import {Table} from 'flowbite-react';
 import {LiaPhoneSolid} from "react-icons/lia";
 import {GoMail} from "react-icons/go";
 import {BsTrash} from "react-icons/bs";
 import { BiSolidEditAlt } from 'react-icons/bi';
 import Link from 'next/link';
-import { useState, useEffect, useRef } from 'react';
-import EditTeacherModal from './editTeacherModal';
+import { useState, useRef } from 'react';
 import { Toast } from 'primereact/toast';
+import EditPlanModal from './editPlanModal';
 
 
-export default function FetchTeacherData({teacherData, updateComponent} : {teacherData: any; updateComponent: () => void}) {
+
+export default function FetchPlanData({planData, updateComponent} : {planData: any; updateComponent: () => void}) {
     const [handleModal, setHandleModal] = useState(false)
-    const teacher = teacherData
+    const plan = planData
     // Toast reference
     const [visible, setVisible] = useState(false);
     const toast = useRef<Toast>(null);
     const toastB = useRef<Toast>(null);
     const toastC = useRef<Toast>(null);
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Deleted Success', life: 3000});
+    const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
     }
+    
 
+    // Modal Handling
     const openModal = () => {
         setHandleModal(true)
     }
-
     const closeModal = () => {
         setHandleModal(false)
     }
-
-     // Delete Confirmation
-     const clear = () => {
+    // Delete Confirmation
+    const clear = () => {
         toastC.current?.clear();
         setVisible(false);
     };
 
-    // Confirm Delete Student
+    // Confirm Delete plan
+
     const confirm = () => {
         if (!visible) {
             setVisible(true);
@@ -46,8 +49,8 @@ export default function FetchTeacherData({teacherData, updateComponent} : {teach
                 sticky: true,
                 content: (
                     <div className="flex flex-column align-items-center" style={{ flex: '1' }}>
-                    <div className="flex flex-col">
-                    <div className="text-center">
+                       <div className="flex flex-col">
+                       <div className="text-center">
                             <i className="pi pi-exclamation-triangle" style={{ fontSize: '3rem' }}></i>
                             <div className="font-bold text-xl my-3">Are you sure you want to delete?</div>
                         </div>
@@ -71,17 +74,20 @@ export default function FetchTeacherData({teacherData, updateComponent} : {teach
         }
     };
 
-
     const confirmDelete = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/${teacher.id}`, {
+
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/plan/${plan.id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
             },
         }).then(response => response.json()).then(data => {
-            // console.log(data)
-            updateComponent()
-            showError()
+            if(data.status === 'success') {
+                updateComponent()
+                showError('Deleted Success')
+            } else if (data.status === 'fail') {
+                showError('Deleted Failed Try Again later or contact support')
+            }
         }).catch(err => {
             console.log(err)
         })
@@ -89,39 +95,31 @@ export default function FetchTeacherData({teacherData, updateComponent} : {teach
 
   return (
 
-    <Table.Row key={teacher.id} className="bg-white dark:border-gray-700 dark:bg-gray-800 text-center">
-        
+    <Table.Row key={plan.id} className="bg-white dark:border-gray-700 dark:bg-gray-800 text-center">
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                {teacher.id.slice(-4)}
+                {plan.id}
             </Table.Cell>
             <Table.Cell>
-                {teacher.name}
+                {plan.title}
             </Table.Cell>
             <Table.Cell>
-                {teacher.role}
+                {plan.sessionDuration || "not available"}
             </Table.Cell>
             <Table.Cell>
-                {teacher.committedSessions}
+                {plan.sessionsCount || "not available"}
             </Table.Cell>
             <Table.Cell>
-            {teacher.sessionCost}$
+                {plan.sessionsPerWeek || "not available"}
             </Table.Cell>
             <Table.Cell>
-                <div className="flex flex-row justify-between gap-3">
-                    <LiaPhoneSolid className={"text-2xl cursor-pointer"} 
-                        onClick={() => {
-                            location.href = `https://wa.me/+2${teacher.phone}`
-                        }}
-                    />
-                   <Link href={`mailto:${teacher.email}`}> <GoMail className={"text-2xl cursor-pointer"} /></Link>
-                </div>
+            {plan.active === true ? ( <p className="bg-success-color text-white px-2 py-1 rounded-full">Active</p>) : (<p className="bg-danger-color text-white px-2 py-1 rounded-full">Inactive</p>) }
             </Table.Cell>
             <Table.Cell>
                 <div className="flex flex-row justify-between gap-4">
                     <Toast ref={toast} />
                     <BiSolidEditAlt className={"text-2xl cursor-pointer"} style={{color: "green"}} onClick={openModal}/>
                     <BsTrash className={"text-2xl cursor-pointer"} style={{color: "red"}} onClick={confirm}/>
-                    <EditTeacherModal openAssignModal={handleModal} handleCloseModal={closeModal} teacherDetails={teacher} updateComponent={updateComponent} />
+                    <EditPlanModal openAssignModal={handleModal} handleCloseModal={closeModal} planDetails={plan} updateComponent={updateComponent} />
                     <Toast ref={toastB} />
                     <Toast ref={toastC} position="bottom-center" />
                 </div>

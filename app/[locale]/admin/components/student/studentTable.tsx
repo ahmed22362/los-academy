@@ -26,7 +26,7 @@ export default function StudentTable() {
                 "Content-Type": "application/json",
             },
         }).then(response => response.json()).then(data => {
-            console.log(data)
+            // console.log(data)
             setAllStudents(data.data)
             setIsLoading(false)
         }).catch(err => {
@@ -76,9 +76,9 @@ export default function StudentTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allStudents && allStudents.map((student: any) => {
+             (allStudents && allStudents.map((student: any, index: number) => {
                     return(
-                        <FetchStudentData key={student.id} studentData={student} updateComponent={fetchAllStudents}/>
+                        <FetchStudentData key={index} studentData={student} updateComponent={fetchAllStudents}/>
                     )
                 }))
             }

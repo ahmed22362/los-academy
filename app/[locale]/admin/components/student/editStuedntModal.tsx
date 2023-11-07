@@ -1,6 +1,6 @@
 'use client';
 
-import { CustomFlowbiteTheme, Label, Modal, TextInput } from 'flowbite-react';
+import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-react';
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
@@ -20,7 +20,7 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
     const [age, setAge] = useState(studentDetails.sessionCost);
     const [password, setPassword] = useState('');
     const [remainSessions, setRemainSessions] = useState(studentDetails.remainSessions);
-    
+    const [gender, setGender] = useState(studentDetails.gender);
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
@@ -67,6 +67,7 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
                 remainSessions: remainSessions,
                 age: age,
                 password: password,
+                gender: gender
             }),
         }).then(response => response.json()).then(data => {
           if(data.status === "success") {
@@ -82,7 +83,7 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
   return (
     <>
       <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"3xl"}>
-        <Modal.Header theme={modalTheme.header}>Edit Teacher: {studentDetails.id}</Modal.Header>
+        <Modal.Header theme={modalTheme.header}>Edit Student: {studentDetails.id}</Modal.Header>
         <Modal.Body>
         <div className="space-y-6">
         <Toast ref={toast} />
@@ -97,6 +98,16 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
                 <Label htmlFor="email" value="Student Email" />
               </div>
               <TextInput id="email" defaultValue={studentDetails.email} onChange={(e) => setEmail(e.target.value)} type="email" />
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="gender" value="Student Gender" />
+              </div>
+              <Select id="gender" defaultValue={studentDetails.gender} onChange={(e) => setGender(e.target.value)}>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </Select>
             </div>
             <div>
               <div className="mb-2 block">

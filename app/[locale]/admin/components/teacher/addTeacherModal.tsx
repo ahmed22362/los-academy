@@ -4,6 +4,7 @@ import { CustomFlowbiteTheme, Label, Modal, TextInput } from 'flowbite-react';
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
+import { GiTeacher } from 'react-icons/gi';
 export default function AddTeacherModal({openAssignModal, handleCloseModal, updateComponent}: 
     {
         openAssignModal: boolean;
@@ -46,7 +47,8 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
       } 
       const modalTheme: CustomFlowbiteTheme['modal'] = {
         header: {
-          base: "flex items-start justify-between rounded-t px-5 py-2"
+          base: "flex items-start justify-between rounded-t px-5 py-2",
+          title: "w-full flex items-center gap-4 text-2xl font-semibold"
         }
       }
 
@@ -66,7 +68,7 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
                 sessionCost: cost
             }),
         }).then(response => response.json()).then(data => {
-            console.log(data)
+            // console.log(data)
           if(data.status === "success") {
             showSuccess()
             updateComponent()
@@ -80,7 +82,10 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
 
   return (
       <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"3xl"}>
-         <Modal.Header theme={modalTheme.header}>Add Teacher</Modal.Header>
+         <Modal.Header theme={modalTheme.header}>
+            Add Teacher
+            <GiTeacher />
+          </Modal.Header>
         <Modal.Body>
         <div className="space-y-6">
         <Toast ref={toast} />

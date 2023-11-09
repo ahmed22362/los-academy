@@ -1,12 +1,9 @@
-import React from 'react'
-import ComboBox from '../components/teacher/teacherComboBox';
-import OurTable from '../components/OurTable';
+import OnGoingSesstionsTable from '../components/onGoingSessions/onGoingsessionsTable';
 
 function OnGoingPage() {
   return (
     <main className='ps-[260px] pt-[7rem]'>
-        <ComboBox />
-        <OurTable />
+      <OnGoingSesstionsTable />
     </main>
   )
 }

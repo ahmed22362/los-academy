@@ -1,25 +1,26 @@
 'use client';
 
-import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-react';
+import { CustomFlowbiteTheme, FileInput, Label, Modal, Select, TextInput } from 'flowbite-react';
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
-export default function EditTeacherModal({openAssignModal, handleCloseModal, teacherDetails, updateComponent}: 
+import Cookies from 'universal-cookie';
+export default function EditMatrialModal({openAssignModal, handleCloseModal, matrialDetails, updateComponent}: 
     {
         openAssignModal: boolean;
         handleCloseModal: () => void;
-        teacherDetails: any;
+        matrialDetails: any;
         updateComponent: () => void
     }) {
 
     const modalRef = useRef<HTMLDivElement>(null);
-    const [name, setName] = useState(teacherDetails.name);
-    const [email, setEmail] = useState(teacherDetails.email);
-    const [phone, setPhone] = useState(teacherDetails.phone);
-    const [role, setRole] = useState(teacherDetails.role);
-    const [cost, setCost] = useState(teacherDetails.sessionCost);
-    const [password, setPassword] = useState('');
-    
+    const [name, setName] = useState(matrialDetails.name);
+    const [age, setAge] = useState(matrialDetails.age);
+    const [course, setCourse] = useState(matrialDetails.course);
+    const [status, setStatus] = useState(matrialDetails.status);
+
+    const cookie = new Cookies()
+
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
@@ -45,26 +46,26 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
       if (!openAssignModal) {
         return null;
       } 
+      
       const modalTheme: CustomFlowbiteTheme['modal'] = {
         header: {
           base: "flex items-start justify-between rounded-t px-5 py-2"
         }
       }
 
-      const updateTeacher = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/${teacherDetails.id}`, {
+      const updateBook = () => {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/material/${matrialDetails.id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookie.get("token")}`
             },
             body: JSON.stringify({
-                name: name,
-                email: email,
-                phone: phone,
-                role: role,
-                password: password,
-                sessionCost: cost
-            }),
+                name,
+                age,
+                course,
+                status
+              }),
         }).then(response => response.json()).then(data => {
           if(data.status === "success") {
             showSuccess()
@@ -79,56 +80,46 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
   return (
     <>
       <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"3xl"}>
-        <Modal.Header theme={modalTheme.header}>Edit Teacher: {teacherDetails.id}</Modal.Header>
+        <Modal.Header theme={modalTheme.header}>Edit Book: {matrialDetails.id}</Modal.Header>
         <Modal.Body>
         <div className="space-y-6">
         <Toast ref={toast} />
-            <div>
+        <div>
               <div className="mb-2 block">
-                <Label htmlFor="name" value="Teacher Name" />
+                <Label htmlFor="name" value="Book Name" />
               </div>
-              <TextInput id="name" defaultValue={teacherDetails.name} onChange={(e) => setName(e.target.value)} type='text' />
+              <TextInput id="name" defaultValue={name} onChange={(e) => setName(e.target.value)} type='text' />
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="email" value="Teacher Email" />
+                <Label htmlFor="age" value="up to Age" />
               </div>
-              <TextInput id="email" defaultValue={teacherDetails.email} onChange={(e) => setEmail(e.target.value)} type="email" />
+              <TextInput id="age" defaultValue={age} onChange={(e) => setAge(e.target.value)} type="text" />
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="phone" value="Teacher Phone" />
+                <Label htmlFor="course" value="Course" />
               </div>
-              <TextInput id="phone" defaultValue={teacherDetails.phone} onChange={(e) => setPhone(e.target.value)} type="tel" />
+              <TextInput id="course" defaultValue={course} onChange={(e) => setCourse(e.target.value)} type="text" />
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="role" value="Role" />
+                <Label htmlFor="course" value="Course" />
               </div>
-              <Select id="role" defaultValue={teacherDetails.role} onChange={(e) => setRole(e.target.value)}>
-                <option value="admin">Admin</option>
-                <option value="teacher">Teacher</option>
+              <Select defaultValue={status} id="status" onChange={(e) => setStatus(e.target.value)}>
+                <option value="new Arrival">new Arrival</option>
+                <option value="active">active</option>
+                <option value="archived">archived</option>
               </Select>
-            </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="password" value="Update Teacher Password" />
-              </div>
-              <TextInput id="password" type="text" placeholder='update password' onChange={(e) => setPassword(e.target.value)} />
-            </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="cost" value="Cost" />
-              </div>
-              <TextInput id="cost" type="text" defaultValue={teacherDetails.sessionCost} onChange={(e) => setCost(e.target.value)} />
+              {/* <TextInput id="course" defaultValue={course} onChange={(e) => setCourse(e.target.value)} type="text" /> */}
             </div>
             <div className="w-full">
                 <button
-                    onClick={updateTeacher}
+                onClick={updateBook}
                     type="submit"
                     className="text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
                 >
-                  Save
+                  save
                 </button>
             </div>
           </div>

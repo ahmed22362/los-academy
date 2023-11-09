@@ -11,7 +11,12 @@ const protectedRoutes = [
     '/admin/plans',
     '/admin/sessions',
     '/admin/transactions',
+    '/teacher',
+    '/teacher/transactions',
+    '/teacher/material',
+    '/teacher/students',
   ];
+
 
 async function middleware(req: NextRequest) {
   

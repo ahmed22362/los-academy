@@ -61,11 +61,17 @@ export default function AdminLoginForm() {
             })
         }).then((response) => response.json()).then((data) => {
             if (data.status === "success") {
+                // if the role is admin or teacher
                 if(data.data.role === 'admin') {
                     cookies.set('token', data.token, {secure: true, maxAge: checked ? 2592000000 : 3600});
                     cookies.set('id', data.data.id, {secure: true, maxAge: checked ? 2592000000 : 3600});
                     showSuccess();
                     router.replace('/admin')
+                } else if (data.data.role === 'teacher') {
+                            cookies.set('token', data.token, {secure: true, maxAge: checked ? 2592000000 : 3600});
+                            cookies.set('id', data.data.id, {secure: true, maxAge: checked ? 2592000000 : 3600});
+                            showSuccess();
+                            router.replace('/teacher')
                 } else {
                     showError('Login Failed you are not an admin');
                 }

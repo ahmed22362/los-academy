@@ -5,11 +5,12 @@ import { CustomFlowbiteTheme, Tabs } from "flowbite-react"
 import PlanCard from "./PlanCard"
 import { useTranslations } from "next-intl";
 import { BsPeople, BsPerson } from "react-icons/bs";
+import { useEffect, useState } from "react";
+import CustomPlanCard from "./customPlanCard";
 
 export default function OurTab() {
+    const [plans, setPlans] = useState([])
 
-    const t = useTranslations("plans-section.plans");
-    const t2 = useTranslations("plans-section");
 
     const customeTheme: CustomFlowbiteTheme = {
         tab: {
@@ -29,6 +30,24 @@ export default function OurTab() {
         },
     }
     
+    const getAllPlans = () => {
+      fetch(`${process.env.NEXT_PUBLIC_APIURL}/plan`)
+      .then(response => response.json())
+      .then((data) => {
+        if(data.status === 'success') {
+          setPlans(data.data)
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
+
+    useEffect(() => {
+        getAllPlans();
+    }, [])
+
+
+
     return (
     <>
       <Tabs.Group
@@ -42,50 +61,14 @@ export default function OurTab() {
         icon={BsPerson }
       >
         <div className="py-8 px-8 flex justify-center items-center gap-10 flex-row-reverse flex-wrap">
-        <PlanCard 
-                title={t('0.title')}
-                price={t('0.price')}
-                f1={t('0.features.f-1')}
-                f2={t('0.features.f-2')}
-                f3={t('0.features.f-3')}
-                f4={t('0.features.f-4')}
-                f5={t('0.features.f-5')}
-                btn={t2("plan-btn")}
-                targetComponent={1}
-            />
-            <PlanCard 
-                title={t('1.title')}
-                price={t('1.price')}
-                f1={t('1.features.f-1')}
-                f2={t('1.features.f-2')}
-                f3={t('1.features.f-3')}
-                f4={t('1.features.f-4')}
-                f5={t('1.features.f-5')}
-                btn={t2("plan-btn")}
-                targetComponent={2}
-            />
-            <PlanCard 
-                title={t('2.title')}
-                price={t('2.price')}
-                f1={t('2.features.f-1')}
-                f2={t('2.features.f-2')}
-                f3={t('2.features.f-3')}
-                f4={t('2.features.f-4')}
-                f5={t('2.features.f-5')}
-                btn={t2("plan-btn")}
-                targetComponent={3}
-            />
-            <PlanCard 
-                title={t('3.title')}
-                price={t('3.price')}
-                f1={t('3.features.f-1')}
-                f2={t('3.features.f-2')}
-                f3={t('3.features.f-3')}
-                f4={t('3.features.f-4')}
-                f5={t('3.features.f-5')}
-                btn={t2("plan-btn")}
-                targetComponent={4}
-            />
+        {plans.map((plan: any, index: number) => {
+          if(plan.active === true) {
+            return (
+              <PlanCard planData={plan} key={index}/>
+            )
+          }
+        })}
+        <CustomPlanCard />
         </div>
       </Tabs.Item>
     </Tabs.Group>

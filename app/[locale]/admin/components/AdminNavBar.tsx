@@ -12,15 +12,16 @@ export default function AdminNavBar() {
     const userID = cookies.get('id')
     const [data, setData] = useState<null | any>(null)
     
+    const getData = async () => {
+        try {
+            const result = await getCurrentTeacher(userID);
+            setData(result.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
-        const getData = async () => {
-            try {
-                const result = await getCurrentTeacher(userID);
-                setData(result.data);
-            } catch (err) {
-                console.log(err);
-            }
-        };
         getData();
     }, []);
 

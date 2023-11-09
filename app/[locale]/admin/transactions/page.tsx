@@ -1,15 +1,9 @@
-import React from 'react'
-import ComboBox from '../components/teacher/teacherComboBox';
-import OurTable from '../components/OurTable';
+import PayOutTable from "../components/payout/payOutTable";
 
 function TransactionPage() {
   return (
     <main className='ps-[260px] pt-[7rem]'>
-
-        <ComboBox />
-        
-        <OurTable />
-    
+      <PayOutTable />
     </main>
   )
 }

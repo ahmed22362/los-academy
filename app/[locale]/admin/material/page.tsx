@@ -1,14 +1,9 @@
-import React from 'react'
-import ComboBox from '../components/teacher/teacherComboBox';
-import OurTable from '../components/OurTable';
+import MatrialTable from '../components/matrial/matrialTable';
 
 function MatrialPage() {
   return (
     <main className='ps-[260px] pt-[7rem]'>
-
-        <ComboBox />
-        
-        <OurTable />
+      <MatrialTable />
     
     </main>
   )

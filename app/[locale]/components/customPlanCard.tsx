@@ -1,12 +1,18 @@
 'use client';
 
 import { Card, CustomFlowbiteTheme } from "flowbite-react";
-import PrimaryButton from './PrimaryButton'
 import { useState } from "react";
-import PriceModal from "./PriceModal/PriceModal";
-function PlanCard({planData}: any) {
+import CustomPlanModal from "./PriceModal/customPlanModal";
+function CustomPlanCard() {
   
-  const plan = planData && planData
+  const plan = {
+    id: 1,
+    title: "Customize your Plan",
+    price: 50,
+    // sessionDuration: "30 min",
+    // sessionsCount: "10",
+    // sessionsPerWeek: "2",
+  }
 
 
   const [openModal, setOpenModal] = useState(false);
@@ -16,8 +22,7 @@ function PlanCard({planData}: any) {
 
     const handleCloseModal = () => {
         setOpenModal(false);
-    };
-
+    }
 
   const customTheme: CustomFlowbiteTheme = {
     card: {
@@ -34,26 +39,26 @@ function PlanCard({planData}: any) {
       </h5>
       <div className="flex items-baseline text-black-color-two h-[60px] w-[200px]">
         <span className="text-2xl font-semibold tracking-tight">
-          {plan.price}$/ per month
+          Started from {plan.price}$/ per month
         </span>
       </div>
       <ul className="mt-5 mb-3 space-y-5 h-auto">
         <li className="flex space-x-3 rtl:gap-2">
         <i className="bi bi-check-circle-fill text-gray-500"></i>
           <span className="text-base font-normal leading-tight text-black-color-two">
-            Session Duration: {plan.sessionDuration}
+            Choose Session Duration
           </span>
         </li>
         <li className="flex space-x-3 rtl:gap-2">
         <i className="bi bi-check-circle-fill text-gray-500"></i>
           <span className="text-base font-normal leading-tight text-black-color-two">
-            Session Count: {plan.sessionsCount}
+            Choose Session Count
           </span>
         </li>
         <li className="flex space-x-3 rtl:gap-2">
         <i className="bi bi-check-circle-fill text-gray-500"></i>
           <span className="text-base font-normal leading-tight text-black-color-two">
-            Session Per Week: {plan.sessionsPerWeek}
+            Choose Session Per Week
           </span>
         </li>
       </ul>
@@ -63,7 +68,7 @@ function PlanCard({planData}: any) {
       >
         Get Plan
       </button>
-      <PriceModal
+      <CustomPlanModal
             handleOpen={openModal} 
             handleCloseModal={handleCloseModal}
             targetComponent={plan.id}
@@ -72,4 +77,4 @@ function PlanCard({planData}: any) {
   )
 }
 
-export default PlanCard
+export default CustomPlanCard

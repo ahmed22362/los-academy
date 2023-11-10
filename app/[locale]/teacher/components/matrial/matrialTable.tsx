@@ -67,9 +67,6 @@ export default function MatrialTable() {
                 <Table.HeadCell theme={customTheme.head}>
                     Download
                 </Table.HeadCell>
-                <Table.HeadCell theme={customTheme.head}>
-                    options
-                </Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
                 {isLoading ? (
@@ -77,11 +74,13 @@ export default function MatrialTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allMatrial && allMatrial.map((matrial: any, index: number) => {
+             (allMatrial.length > 0 ? allMatrial.map((matrial: any, index: number) => {
                     return(
                         <FetchMatrialData key={index} matrialData={matrial} updateComponent={fetchAllMatrials}/>
                     )
-                }))
+                })
+                : <p className="p-3">No Matrials</p>
+                )
             }
             </Table.Body>
         </Table>

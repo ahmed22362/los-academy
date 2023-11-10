@@ -20,12 +20,16 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
     const [naionalID, setNationalID] = useState('');
     const [cost, setCost] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordConfirmaon, setPasswordConfirmation] = useState('');
     const toast = useRef<Toast>(null);
+
+
+
     const showSuccess = () => {
-        toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
+        toast.current?.show({severity:'success', summary: 'Success', detail:'Added Success', life: 3000});
     }
     const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Updated failed make sure all fields are correct', life: 4000});
+        toast.current?.show({severity:'error', summary: 'Error', detail:'make sure all fields are correct', life: 4000});
       }
 
     useEffect(() => {
@@ -64,11 +68,12 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
                 phone: phone,
                 nationalId: naionalID,
                 password: password,
+                passwordConfirmation: passwordConfirmaon,
                 role: role,
-                sessionCost: cost
+                sessionCost: parseInt(cost)
             }),
         }).then(response => response.json()).then(data => {
-            // console.log(data)
+            console.log(data)
           if(data.status === "success") {
             showSuccess()
             updateComponent()
@@ -131,9 +136,15 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
             </div>
             <div>
               <div className="mb-2 block">
+                <Label htmlFor="passwordConfirm" value="Password Confirmation" />
+              </div>
+              <TextInput id="passwordConfirm" type="text" placeholder={"make sure you enter the same password"} onChange={(e) => setPasswordConfirmation(e.target.value)} />
+            </div>
+            <div>
+              <div className="mb-2 block">
                 <Label htmlFor="cost" value="Cost" />
               </div>
-              <TextInput id="cost" type="text" placeholder={"Cost currency is USD / $"} onChange={(e) => setCost(e.target.value)} />
+              <TextInput id="cost" type="number" placeholder={"Cost currency is USD / $"} onChange={(e: any) => setCost(e.target.value)} />
             </div>
             <div className="w-full">
                 <button

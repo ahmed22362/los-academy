@@ -4,14 +4,14 @@ import { useState } from "react";
 import AddStudentModal from "./addStudentModal";
 
 export default function StudentComboBox({...props}: any) {
-    const [handleModal, setHandleModal] = useState(false)
+    // const [handleModal, setHandleModal] = useState(false)
 
-    const openModal = () => {
-        setHandleModal(true)
-    }
-    const closeModal = () => {
-        setHandleModal(false)
-    }
+    // const openModal = () => {
+    //     setHandleModal(true)
+    // }
+    // const closeModal = () => {
+    //     setHandleModal(false)
+    // }
 
     const customTheme: CustomFlowbiteTheme['dropdown'] = {
         inlineWrapper: "bg-white text-black-color-one px-5 py-2 flex items-center rounded-[16px] font-normal"
@@ -30,13 +30,6 @@ export default function StudentComboBox({...props}: any) {
                         <Dropdown.Item>one</Dropdown.Item>
                         <Dropdown.Item>Two</Dropdown.Item>
                     </Dropdown> */}
-                    <button 
-                    onClick={openModal}
-                    className={
-                        "bg-white hover:bg-gray-100 transition-colors text-black-color-one px-5 py-2 rounded-[16px] font-normal"
-                    }
-                    >Add Student +</button>
-                    <AddStudentModal openAssignModal={handleModal} handleCloseModal={closeModal} updateComponent={props.updateComponent} />
                 </div>
             </div>
         </section>

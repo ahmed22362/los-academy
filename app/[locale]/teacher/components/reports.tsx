@@ -4,6 +4,7 @@ import ReportData from "./reportData";
 export default async function Reports() {
 
     const allReports = await getStaticData('teacher/myReports');
+    
     const theResult = await allReports.data;
 
     return(

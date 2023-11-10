@@ -30,13 +30,6 @@ export default function MatrialComboBox({...props}: any) {
                         <Dropdown.Item>one</Dropdown.Item>
                         <Dropdown.Item>Two</Dropdown.Item>
                     </Dropdown> */}
-                    <button 
-                    onClick={openModal}
-                    className={
-                        "bg-white hover:bg-gray-100 transition-colors text-black-color-one px-5 py-2 rounded-[16px] font-normal"
-                    }
-                    >Add Book +</button>
-                    <AddMatrialModal openAssignModal={handleModal} handleCloseModal={closeModal} updateComponent={props.updateComponent} />
                 </div>
             </div>
         </section>

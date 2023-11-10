@@ -1,6 +1,6 @@
 'use client';
 
-import { CustomFlowbiteTheme, Label, Modal, TextInput } from 'flowbite-react';
+import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-react';
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
@@ -105,7 +105,10 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
               <div className="mb-2 block">
                 <Label htmlFor="role" value="Role" />
               </div>
-              <TextInput id="role" type="text" defaultValue={teacherDetails.role} onChange={(e) => setRole(e.target.value)} />
+              <Select id="role" defaultValue={teacherDetails.role} onChange={(e) => setRole(e.target.value)}>
+                <option value="admin">Admin</option>
+                <option value="teacher">Teacher</option>
+              </Select>
             </div>
             <div>
               <div className="mb-2 block">

@@ -64,7 +64,8 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
                 title: title,
                 sessionDuration: sessionDuration,
                 sessionsCount: sessionsCount,
-                sessionsPerWeek: sessionsPerWeek
+                sessionsPerWeek: sessionsPerWeek,
+                type: 'standard',
             }),
         }).then(response => response.json()).then(data => {
             console.log(data)

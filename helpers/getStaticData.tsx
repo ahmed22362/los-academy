@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-export const getStaticData = async (api: string | any) => {
+export const getStaticData = async (api: string) => {
     const token = cookies().get('token')
     const res = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/${api}`, {
         cache: 'no-store',

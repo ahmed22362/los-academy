@@ -10,6 +10,7 @@ function TeacherScheduleData({data}: {data: any}) {
 
   return (
                 <div className={"py-5 px-4 bg-white-color rounded-[16px] my-4 flex gap-3 font-semibold flex-wrap"}>
+                    <p>Session ID: {session.id}</p>
                     <span>{convertDate(session.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MM/DD/YYYY hh:mm A")}</span>
                     <p>{`with ${session.SessionInfo.user.name}`}</p>
                 </div> 

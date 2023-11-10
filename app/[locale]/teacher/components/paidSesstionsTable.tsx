@@ -50,7 +50,7 @@ export default function PaidSesstionsTable() {
 
     return(
         <div className={"w-full my-5"}>
-            <h3 className={"adminBoxTitle responsiveText"}>Newest Paid Sessions</h3>
+            <h3 className={"adminBoxTitle responsiveText"}>Paid Sessions Requests</h3>
             <div className={"adminBox mt-4 flex flex-col w-[390px] mx-auto"}>
             {loading ? (
                         <Spinner />

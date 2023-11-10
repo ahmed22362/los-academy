@@ -1,8 +1,9 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { getCurrentTeacher } from './helpers/getMe';
 
-const protectedRoutes = [
+const protectedAdminRoutes = [
     '/admin',
     '/admin/teachers', 
     '/admin/students',
@@ -11,19 +12,26 @@ const protectedRoutes = [
     '/admin/plans',
     '/admin/sessions',
     '/admin/transactions',
+  ];
+
+  const protectTeacherRoutes = [
     '/teacher',
     '/teacher/transactions',
     '/teacher/material',
-    '/teacher/students',
-  ];
-
+    '/teacher/students'
+  ]
 
 async function middleware(req: NextRequest) {
-  
-    const token = req.cookies.get('token');
-
-    let accessStatus = false;
     
+    let accessAdminStatus = false;
+    let accessTeacherStatus = false;
+
+    const token = req.cookies.get('token');
+    const id = req.cookies.get('id')
+    
+    const getUserRole = await getCurrentTeacher(id?.value);
+    const role = getUserRole.data?.role
+
     if(token) {
         const res = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/checkJWT/?token=${token.value}`, {
           method: 'GET',
@@ -32,16 +40,30 @@ async function middleware(req: NextRequest) {
             'Authorization': `Bearer ${token.value}`,
           },
         })
-        const isAdmin = await res.json()
-        if(isAdmin.status === 'success') {
-            accessStatus = true
+        
+        const validToken = await res.json()
+        
+        if(validToken.status === 'success' && role === 'admin') {
+          
+          accessAdminStatus = true
+        
+        } else if (validToken.status === 'success' && role === 'teacher') {
+  
+          accessTeacherStatus = true
+
         } else {
-            accessStatus = false
+
+          accessAdminStatus = false
+          accessTeacherStatus = false
+        
         }
       }
-    if (accessStatus === false && protectedRoutes.includes(req.nextUrl.pathname)) {
-      const absoluteUrl = new URL("/", req.nextUrl.origin);
-      return NextResponse.redirect(absoluteUrl.toString());
+    
+    if ((accessAdminStatus === false && protectedAdminRoutes.includes(req.nextUrl.pathname) 
+      || accessTeacherStatus === false && protectTeacherRoutes.includes(req.nextUrl.pathname))) {
+        
+        const absoluteUrl = new URL("/", req.nextUrl.origin);
+        return NextResponse.redirect(absoluteUrl.toString());
     }
 
   return createMiddleware({

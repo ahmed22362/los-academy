@@ -19,21 +19,22 @@ async function middleware(req: NextRequest) {
 
     let accessStatus = false;
     
-    if(token) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/checkJWT/?token=${token.value}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token.value}`,
-          },
-        })
-        const isAdmin = await res.json()
-        if(isAdmin.status === 'success') {
-            accessStatus = true
-        } else {
-            accessStatus = false
-        }
-      }
+    // if(token) {
+        
+        // const res = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/checkJWT/?token=${token.value}`, {
+        //   method: 'GET',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //     'Authorization': `Bearer ${token.value}`,
+        //   },
+        // })
+        // const isAdmin = await res.json()
+      //   if(isAdmin.status === 'success') {
+      //       accessStatus = true
+      //   } else {
+      //       accessStatus = false
+      //   }
+      // }
     if (accessStatus === false && protectedRoutes.includes(req.nextUrl.pathname)) {
       const absoluteUrl = new URL("/", req.nextUrl.origin);
       return NextResponse.redirect(absoluteUrl.toString());

@@ -7,6 +7,6 @@ export const getCurrentTeacher = async (id: string | any) => {
         },
     });
     const data = await response.json();
-    console.log(data)
+    // console.log(data)
     return data
 }

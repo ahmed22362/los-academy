@@ -1,8 +1,17 @@
 "use client"
 import {CustomFlowbiteTheme, Dropdown} from "flowbite-react";
-import {VscGoToFile} from "react-icons/vsc";
+import AddTeacherModal from "./addTeacherModal";
+import { useState } from "react";
 
-export default function ComboBox() {
+export default function TeacherComboBox({...props}: any) {
+    const [handleModal, setHandleModal] = useState(false)
+
+    const openModal = () => {
+        setHandleModal(true)
+    }
+    const closeModal = () => {
+        setHandleModal(false)
+    }
 
     const customTheme: CustomFlowbiteTheme['dropdown'] = {
         inlineWrapper: "bg-white text-black-color-one px-5 py-2 flex items-center rounded-[16px] font-normal"
@@ -17,17 +26,17 @@ export default function ComboBox() {
                     } type={"search"} placeholder={"search"} />
                 </form>
                 <div className={"flex flex-row justify-between items-center gap-5"}>
-                    <Dropdown label={"All"} theme={customTheme} inline>
+                    {/* <Dropdown label={"All"} theme={customTheme} inline>
                         <Dropdown.Item>one</Dropdown.Item>
                         <Dropdown.Item>Two</Dropdown.Item>
-                    </Dropdown>
-                    <button className={
-                        "bg-white text-black-color-one px-5 py-2 rounded-[16px] font-normal"
-                    }>Add +</button>
-                    <div className={"flex flex-row justify-center items-center gap-3 bg-white text-black-color-one px-5 py-2 rounded-[16px] font-normal"}>
-                        <VscGoToFile className={"text-2xl font-normal"}/>
-                        <span>Export Data</span>
-                    </div>
+                    </Dropdown> */}
+                    <button 
+                    onClick={openModal}
+                    className={
+                        "bg-white hover:bg-gray-100 transition-colors text-black-color-one px-5 py-2 rounded-[16px] font-normal"
+                    }
+                    >Add Teacher +</button>
+                    <AddTeacherModal openAssignModal={handleModal} handleCloseModal={closeModal} updateComponent={props.updateComponent} />
                 </div>
             </div>
         </section>

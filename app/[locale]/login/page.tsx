@@ -32,7 +32,9 @@ function page() {
 
   const cookies = new Cookies();
   const [gender, setGender] = useState('');
-  const [userData, setUserData] = useState()
+  const [userData, setUserData] = useState();
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
+
   interface FormData {
     name: string;
     age: String;
@@ -82,15 +84,21 @@ function page() {
       .then((data) => {
         if (data.status === "success") {
           showSuccess('Registration Successfully');
+          showSuccess(data.message)
           console.log(data);
           setTimeout(() => {
-            router.push('/student_profile');
+            router.push('/login');
           }, 3000);
           setUserData(data)
           cookies.set('token', data.token);
 
         } else {
           showError('Registration failed');
+          if (data?.message === "Duplicate field Please use another value!") {
+            showError("Email Already Exist Please Login");
+          } else {
+            showError(data?.message);
+          }
           console.log(data);
         }
       })
@@ -99,6 +107,10 @@ function page() {
         showError('An error occurred')
       });
   };
+
+
+// resend mail function
+
 
 
   // login
@@ -148,7 +160,13 @@ function page() {
           // Save user token in a cookie or state as needed
           cookies.set('token', data.token);
         } else {
-          showError(`${data.message}`);
+          if (data.message === "Can't log in before you verify you email if you miss the first mail you can always resend it!") {
+            // Display the div for email verification
+            showError(`${data.message}`);
+            setShowEmailVerification(true);
+          } else {
+            showError(`${data.message}`);
+          }
           console.log(data);
         }
       })
@@ -157,6 +175,7 @@ function page() {
         showError('An error occurred');
       });
   };
+  
   const customeTheme: CustomFlowbiteTheme = {
     tab: {
       tablist: {
@@ -173,6 +192,28 @@ function page() {
         },
       },
     },
+  };
+// resend mail
+  const handleResendMail = () => {
+    // Send a request to resend the confirmation email
+    fetch(`${url}user/auth/resendMailConfirmation?email=${email}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          showSuccess('Mail resent successfully');
+        } else {
+          showError(data.message);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        showError('An error occurred while resending the mail');
+      });
   };
 
   return (
@@ -225,6 +266,12 @@ function page() {
                   <Link className="font-semibold	 underline" href={"#"}>
                     Forget Password ?
                   </Link>
+                  {showEmailVerification && (
+            <div>
+              <div className="text-red-500 text-md font-medium text-center">Check Gmail and confirm your mail</div>
+              <div className="text-center font-sm">Didn't receive a mail? <button onClick={handleResendMail} className="underline text-lg font-medium">Resend mail</button></div>
+            </div>
+          )}
                   <PrimaryButton
                   onClick={handleLogin}
                     text="Login"

@@ -1,5 +1,5 @@
 import React from 'react'
-import ComboBox from '../components/comboBox';
+import ComboBox from '../components/teacher/teacherComboBox';
 import OurTable from '../components/OurTable';
 
 function OnGoingPage() {

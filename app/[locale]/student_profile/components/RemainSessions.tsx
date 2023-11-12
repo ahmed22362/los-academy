@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from '../page.module.css';
 import moment from 'moment-timezone';
 import Cookies from 'universal-cookie';
+import MyLoader from './MyLoader';
 
 
 function RemainSessions() {
@@ -20,7 +21,7 @@ function RemainSessions() {
 
   // api data
   useEffect(() => {
-    fetch(`${url}user/upcomingSessions`, {
+    fetch(`${url}user/remainSessions`, {
       method: 'GET', 
       headers: {
         Authorization: `Bearer ${token}` // Correct the header key to 'Authorization'
@@ -28,7 +29,7 @@ function RemainSessions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        console.log(data);
       
         setSessions(data.data)
         // Set the retrieved Seeions in the state
@@ -44,28 +45,37 @@ function RemainSessions() {
  
   return (
     <div>
-      <div className={`my-11 shadow-2xl p-5 rounded-3xl hover:shadow-lg duration-300 w-full`}>
-        <div className={` `}>
-          <h4 className={`${styles.secondary_head} `}>Remain Sessions</h4>
           <div className={`${styles.sessions} `}>
-            {sessions.length > 0 ? (
+          {sessions === null ? (
+              <MyLoader />
+            ) : sessions?.length > 0 ? (
               sessions.map((session, index) => (
-                <div key={index} className={`${styles.session} flex justify-between gap-5 my-3`}>
+                <div key={index} className={`${styles.session} flex justify-between gap-3 my-3`}>
                   <p>Session #{session.id}</p>
                   <p>
-                  {convertDateTimeZone(`${session.sessionDate}T${session.sessionStartTime}`, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "h:mm A")}
-                    {' - '}                  </p>
-                  <p>{convertDateTimeZone(session.sessionDate, 'GMT', Intl.DateTimeFormat().resolvedOptions().timeZone, 'DD-MMM-YYYY')}</p>
+                    {convertDateTimeZone(session.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "h:mm A")}
+                    {' - '}
+                    {convertDateTimeZone(
+                      moment(session.sessionDate)
+                        .add(session.sessionDuration, 'minutes')
+                        .format(), // Calculate end time by adding sessionDuration
+                      "UTC",
+                      Intl.DateTimeFormat().resolvedOptions().timeZone,
+                      "h:mm A"
+                    )}
+                  </p>
+                  {convertDateTimeZone(session.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MMM D,YYYY")}
                 </div>
               ))
-            ) : (
-              <p>No upcoming sessions.</p>
-            )}
+              )
+               : (
+                <p>No remaining sessions</p>
+              )}
           </div>
         </div>
-      </div>
-    </div>
+      
   );
+
 }
 
 

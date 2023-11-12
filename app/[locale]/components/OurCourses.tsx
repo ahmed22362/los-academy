@@ -5,7 +5,15 @@ import OurCard from "./OurCard"
 import { useEffect, useState} from "react";
 import Slider from "react-slick";
 
+
 function OurCourses() {
+
+
+  const [courses, setCourses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
+
+  const t = useTranslations('courses');
+  const t2 = useTranslations('Hompage');
 
   const [settings] = useState({
     dots: false,
@@ -32,43 +40,52 @@ function OurCourses() {
     ]
   });
 
-  const t = useTranslations('courses');
-  const t2 = useTranslations('Hompage');
+
+  const getCourses = () => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/course`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).then(response => response.json()).then(data => {
+        console.log(data.data);
+        setCourses(data.data)
+        setIsLoading(false)
+    }).catch(err => console.log(err))
+}
+
+  // useEffect(() => {
+  //   const htmlElement = document.getElementsByTagName('html')[0];
+  //   const dir = htmlElement.getAttribute('dir');
+  //   const arrowNext = document.getElementsByClassName('slick-next')[0];
+  //   const arrowPrev = document.getElementsByClassName('slick-prev')[0];
+
+  //   if(dir === "rtl") {
+  //     arrowNext?.classList.add('slick-next-rtl');
+  //     arrowPrev?.classList.add('slick-prev-rtl');
+  //   } else {
+  //     arrowNext?.classList.remove('slick-next-rtl');
+  //     arrowPrev?.classList.remove('slick-prev-rtl');
+  //     arrowNext?.classList.add('slick-next-ltr');
+  //     arrowPrev?.classList.add('slick-prev-ltr');
+  //   }
+  // }, [])
 
   useEffect(() => {
-    
-    const htmlElement = document.getElementsByTagName('html')[0];
-    
-    const dir = htmlElement.getAttribute('dir');
-    
-    const arrowNext = document.getElementsByClassName('slick-next')[0];
-    
-    const arrowPrev = document.getElementsByClassName('slick-prev')[0];
-    
-    
-    if(dir === "rtl") {
-      arrowNext?.classList.add('slick-next-rtl');
-      arrowPrev?.classList.add('slick-prev-rtl');
-    } else {
-      arrowNext?.classList.remove('slick-next-rtl');
-      arrowPrev?.classList.remove('slick-prev-rtl');
-      arrowNext?.classList.add('slick-next-ltr');
-      arrowPrev?.classList.add('slick-prev-ltr');
-    }
-
+    getCourses();
   }, [])
 
-  
 
 
   return (
       <section className="py-12 px-20 max-sm:px-8" id="courses">
         <h3 className="text-center text-3xl mb-5 font-bold text-black-one-color">{t2('courses-title')}</h3>
-          <Slider {...settings} className="flex justify-center">
-            <OurCard title={t('0.name')} paragraph={t('0.paragraph')} modalTarget={1}/>
-            <OurCard title={t('1.name')} paragraph={t('1.paragraph')} modalTarget={2}/>
-            <OurCard title={t('2.name')} paragraph={t('2.paragraph')} modalTarget={3}/>
-            <OurCard title={t('2.name')} paragraph={t('2.paragraph')} modalTarget={4}/>
+          <Slider {...settings} className="flex justify-center ourSlickStyle">
+            { isLoading ? <p>Loading...</p> :
+              courses.map((course: any, index: number) => (
+                <OurCard data={course} key={index}/>
+                ))
+            }
           </Slider>
       </section>
   )

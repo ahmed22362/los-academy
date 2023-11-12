@@ -20,7 +20,7 @@ export default async function TeacherSchedule() {
                         <TeacherScheduleData data={session} key={index} />
                     )
                 })
-                :  <p className="p-3">No Sessions</p>
+                :  <p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">No Sessions</p>
             }
             </div>
         </div>

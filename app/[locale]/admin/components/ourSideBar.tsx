@@ -21,7 +21,11 @@ export default function OurSideBar() {
     const logOut = () => {
         cookies.remove('token');
         cookies.remove('id');
-        router.replace('/los_auth');
+        if (!cookies.get('token') && !cookies.get('id')) {
+            router.replace('/los_auth');
+        } else {
+            console.error('Error removing cookies');
+        } 
     }
 
     return (
@@ -98,6 +102,15 @@ export default function OurSideBar() {
                     >
                         <p>
                             Plans
+                        </p>
+                    </Sidebar.Item>
+                    <Sidebar.Item
+                        theme={customTheme.item}
+                        href="/admin/courses"
+                        active={pathName === "/admin/courses"}
+                    >
+                        <p>
+                            Courses
                         </p>
                     </Sidebar.Item>
                     <Sidebar.Item

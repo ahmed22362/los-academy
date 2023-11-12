@@ -32,33 +32,33 @@ async function middleware(req: NextRequest) {
     const getUserRole = await getCurrentTeacher(id?.value);
     const role = getUserRole.data?.role
 
-    // if(token) {
+    if(token) {
         
-        // const res = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/checkJWT/?token=${token.value}`, {
-        //   method: 'GET',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //     'Authorization': `Bearer ${token.value}`,
-        //   },
-        // })
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/checkJWT/?token=${token.value}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token.value}`,
+          },
+        })
         
-        // const validToken = await res.json()
+        const validToken = await res.json()
         
-      //   if(validToken.status === 'success' && role === 'admin') {
+        if(validToken.status === 'success' && role === 'admin') {
           
           accessAdminStatus = true
         
         } else if (validToken.status === 'success' && role === 'teacher') {
   
-    //       accessTeacherStatus = true
+          accessTeacherStatus = true
 
-      //   } else {
+        } else {
 
-    //       accessAdminStatus = false
+          accessAdminStatus = false
           accessTeacherStatus = false
         
-      //   }
-      // }
+        }
+      }
     
     if ((accessAdminStatus === false && protectedAdminRoutes.includes(req.nextUrl.pathname) 
       || accessTeacherStatus === false && protectTeacherRoutes.includes(req.nextUrl.pathname))) {

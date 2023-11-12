@@ -50,9 +50,9 @@ function RemainSessions() {
               <MyLoader />
             ) : sessions?.length > 0 ? (
               sessions.map((session, index) => (
-                <div key={index} className={`${styles.session} flex justify-between gap-3 my-3`}>
-                  <p>Session #{session.id}</p>
-                  <p>
+                <div key={index} className={`${styles.session} flex justify-between gap-2 my-3 w-full`}>
+                  <p className='w'>Session #{session.id}</p>
+                  <p className='w-full'>
                     {convertDateTimeZone(session.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "h:mm A")}
                     {' - '}
                     {convertDateTimeZone(
@@ -64,7 +64,7 @@ function RemainSessions() {
                       "h:mm A"
                     )}
                   </p>
-                  {convertDateTimeZone(session.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MMM D,YYYY")}
+                  <p className='w-full'> {convertDateTimeZone(session.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MMM D,YYYY")}</p>
                 </div>
               ))
               )

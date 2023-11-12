@@ -14,10 +14,9 @@ import RemainSessions from './RemainSessions';
 export default function SeesionsModal() {
   const [openModal, setOpenModal] = useState(false);
   const cookie=new Cookies();
-  const url ='https://los-academy.onrender.com/api/v1/';
+  const url = process.env.NEXT_PUBLIC_APIURL;
   const token =cookie.get('token') ;
    const [historySessions, setHistorySessions] = useState<any[]>([]);
-   const [pendingSessions, setPendingSessions] = useState<any[]>([]);
 
   const convertDateTimeZone = (inputTime: moment.MomentInput, inputTimezone: string, outputTimezone: string, ourFormat: string) => {
     const convertedTime = moment(inputTime)
@@ -48,7 +47,7 @@ export default function SeesionsModal() {
   // History Sessions Api
 
   useEffect(() => {
-    fetch(`${url}user/myHistorySessions`, {
+    fetch(`${url}/user/myHistorySessions`, {
       method: 'GET', 
       headers: {
         Authorization: `Bearer ${token}` // Correct the header key to 'Authorization'

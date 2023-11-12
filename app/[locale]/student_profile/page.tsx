@@ -12,21 +12,20 @@ import SessionsModal from './components/SessionsModal';
 import EditProfile from './components/edit_profile';
 import Subscribtion from './components/Subscribtion';
 import BookModal from './components/BookModal';
+import Cookies from 'universal-cookie';
 
 export default function page() {
 
-  const url ='https://los-academy.onrender.com/api/v1/';
-  const [reports, setReports] = useState([]);
-    const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxSEVGWEMxQlNCU1NXNDVFRE00TVY4NkM4IiwiaWF0IjoxNjk5MTk0MDExLCJleHAiOjE3MDQzNzgwMTF9.OvSfZHnrL8y8sthkSc1A2uxTfp7ydtxMlUaY8yVK_EQ";
+    const [reports, setReports] = useState([]);
 
-    // const url=process.env.APIURL;
-    // const cookie=new Cookies();
-    //   const token =cookie.get('token');
+    const url = process.env.NEXT_PUBLIC_APIURL;
+    const cookie=new Cookies();
+    const token =cookie.get('token');
       
 
     useEffect(() => {
       // Fetch reports when the component mounts
-      fetch(`${url}user/myReports`, {
+      fetch(`${url}/user/myReports`, {
         method: 'GET', // Specify the HTTP method as 'GET'
         headers: {
           Authorization: `Bearer ${token}` // Correct the header key to 'Authorization'
@@ -35,7 +34,6 @@ export default function page() {
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
-          
           // Set the retrieved reports in the state
           setReports(data);
         })

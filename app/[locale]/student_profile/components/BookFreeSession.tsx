@@ -1,14 +1,14 @@
 import React from 'react'
 import { useEffect, useRef, useState } from 'react';
 import Cookies from 'universal-cookie';
-import {Calendar} from "primereact/calendar";
+import {Calendar, CalendarProps} from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 import PrimaryButton from '../../components/PrimaryButton';
 import { Toast } from 'primereact/toast';
 
 
 function BookFreeSession() {
-    const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date>>(null);
+    const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date> | any>(null);
     const toast = useRef<Toast>(null);
     const cookie=new Cookies();
     const url =process.env.NEXT_PUBLIC_APIURL;
@@ -66,9 +66,8 @@ function BookFreeSession() {
     <div className="m-auto flex justify-center flex-col items-center gap-5">
             Book  Free Session Now
             <Calendar
-                    id="calendar-12h" 
                     value={freedatetime12h}
-                    onChange={(e) => setFreeDateTime12h(e.value)} 
+                    onChange={(e: CalendarProps | any) => setFreeDateTime12h(e.value)} 
                     showTime
                      hourFormat="12"
                     style={{

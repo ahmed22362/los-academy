@@ -1,13 +1,13 @@
 import React from 'react'
 import { useEffect, useRef, useState } from 'react';
 import Cookies from 'universal-cookie';
-import {Calendar} from "primereact/calendar";
+import {Calendar, CalendarProps} from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 import PrimaryButton from '../../components/PrimaryButton';
 import { Toast } from 'primereact/toast';
 
 function BookPaidSession() {
-    const [datetime12h, setDateTime12h] = useState<Nullable<Date>>(null);
+    const [datetime12h, setDateTime12h] = useState<Nullable<Date> | any>(null);
 
     const toast = useRef<Toast>(null);
     const cookie=new Cookies();
@@ -70,10 +70,9 @@ function BookPaidSession() {
 
   return (
     <div className="m-auto flex justify-center flex-col items-center gap-5">
-    <Calendar
-            id="calendar-12h" 
+    <Calendar 
             value={datetime12h}
-            onChange={(e) => setDateTime12h(e.value)} 
+            onChange={(e: CalendarProps | any) => setDateTime12h(e.value)} 
             showTime
              hourFormat="12"
             style={{

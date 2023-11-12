@@ -14,9 +14,8 @@ import CancelSubscription from './CancelSubscription';
 export default function Subscribtion() {
   const [openSubscribtionModal, setOpenSubscribtionModal] = useState(false);
   const cookie=new Cookies();
-  const url ='https://los-academy.onrender.com/api/v1/';
   const token =cookie.get('token') ;
-   const [mySubscription, setMySubscription] = useState<any[]>([]);
+   const [mySubscription, setMySubscription] = useState<any>([]);
    const [showSubscriptionDetails, setShowSubscriptionDetails] = useState(true);
    const handleCancelSubscriptionClick = () => {
     setShowSubscriptionDetails(false);
@@ -39,7 +38,7 @@ export default function Subscribtion() {
   // Subsribtion Sessions Api
 
   useEffect(() => {
-    fetch(`${url}user/mySubscription`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySubscription`, {
       method: 'GET', 
       headers: {
         Authorization: `Bearer ${token}` // Correct the header key to 'Authorization'
@@ -83,7 +82,7 @@ export default function Subscribtion() {
                         </div>                
                 <div className='border border-[#828282] rounded-2xl mt-5 px-8 py-5 w-fit '>
                     <ul className='list-disc ml-3'>
-                        <li >{mySubscription?.sessionsPerWeek|| 0} Days Per Week </li>
+                        <li >{mySubscription?.sessionsPerWeek || 0} Days Per Week </li>
                         <li className='my-2'>{mySubscription?.price ||0}$ per Month </li>
                         <li>Session Duration {mySubscription?.sessionDuration||0 } mins</li>
                     </ul>

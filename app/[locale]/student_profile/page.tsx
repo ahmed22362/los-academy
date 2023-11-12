@@ -8,11 +8,12 @@ import RemainSessions from './components/RemainSessions';
 import StudentPlan from './components/StudentPlanModal';
 import CommunityStatistics from './components/CommunityStatistics';
 import UpcomingSessions from './components/UpcomingSessions';
-import SessionsModal from './components/SessionsModal';
+// import SessionsModal from './components/SessionsModal';?
 import EditProfile from './components/edit_profile';
 import Subscribtion from './components/Subscribtion';
 import BookModal from './components/BookModal';
 import Cookies from 'universal-cookie';
+import SessionsModal from './components/SessionsModal';
 
 export default function page() {
 
@@ -66,7 +67,7 @@ export default function page() {
                    <h4 className={`${styles.secondary_head} `}>Remain Sessions</h4>
                    <RemainSessions/>
                    </div>
-                    <SessionsModal/>
+                    <SessionsModal />
                   </div>
                 </div>
                 <div className="card ">

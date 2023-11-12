@@ -111,7 +111,7 @@ export default function FreeSesstionsTable() {
                             </div>
                         )
                     }) : (
-                            <p>There is no free sessions</p>
+                            <p className="p-3 bg-warning-color text-white w-fit rounded-full font-bold">No free sessions</p>
                     )
                 )}
             </div>

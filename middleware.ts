@@ -12,6 +12,7 @@ const protectedAdminRoutes = [
     '/admin/plans',
     '/admin/sessions',
     '/admin/transactions',
+    '/admin/courses',
   ];
 
   const protectTeacherRoutes = [
@@ -29,11 +30,11 @@ async function middleware(req: NextRequest) {
     const token = req.cookies.get('token');
     const id = req.cookies.get('id')
     
-    const getUserRole = await getCurrentTeacher(id?.value);
-    const role = getUserRole.data?.role
-
-    if(token) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/checkJWT/?token=${token.value}`, {
+    if(id && token) {
+      
+      const getUserRole = await getCurrentTeacher(id?.value);
+      const role = getUserRole.data?.role
+      const res = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/checkJWT/?token=${token.value}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -58,7 +59,7 @@ async function middleware(req: NextRequest) {
         
         }
       }
-    
+
     if ((accessAdminStatus === false && protectedAdminRoutes.includes(req.nextUrl.pathname) 
       || accessTeacherStatus === false && protectTeacherRoutes.includes(req.nextUrl.pathname))) {
         

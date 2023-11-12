@@ -7,7 +7,9 @@ import ModalCourse from "./ModalCourse";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-function OurCard({title, paragraph, modalTarget}: {title: string, paragraph: string; modalTarget: number}) {
+function OurCard({data}: {data: any}) {
+
+    const courseData = data && data;
 
     const [openModal, setOpenModal] = useState<string | undefined>(undefined);
 
@@ -18,23 +20,22 @@ function OurCard({title, paragraph, modalTarget}: {title: string, paragraph: str
             }
         }
     }
-
     const handleOpenModal = () => {
         setOpenModal('default');
     };
-
     const handleCloseModal = () => {
         setOpenModal(undefined);
     };
+
     const t = useTranslations("Hompage");
 return (
     <Card theme={customTheme.card} className="max-w-sm">
-        { 
-            openModal === 'default' && 
+        { openModal === 'default' && 
             <ModalCourse
-                modalTarget={modalTarget}
+                modalTarget={courseData.id}
                 handleOpen={openModal} 
-                handleCloseModal={handleCloseModal} />
+                handleCloseModal={handleCloseModal} 
+            />
         }
         <div 
             className="rounded-full w-fit bg-white-color m-auto flex justify-center items-center py-7 px-5">
@@ -47,11 +48,11 @@ return (
             />
         </div>
         <h3
-            className="my-2 text-2xl font-semibold tracking-tight text-black-color-one h-[70px]">{title}</h3>
+            className="my-2 text-2xl font-semibold tracking-tight text-black-color-one h-[70px]">{courseData.title}</h3>
         <p
             className="font-medium text-black-two-color text-base max-md:text-sm h-[130px]"
         >
-            {paragraph}
+            {courseData.description}
         </p>
         <PrimaryButton 
             text={t("course-btn")} 

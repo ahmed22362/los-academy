@@ -2,40 +2,50 @@
 
 import useCountDown from "@/helpers/useCountDown";
 import { useEffect, useState } from "react";
+import Cookies from "universal-cookie";
 
 export default function OnGoingBox() {
 
     const [countdownSeconds, setCountdownSeconds] = useState(0);
-
-    const ourSessionDate = "2023-11-10T18:30:00.000Z";
-
+    const cookies = new Cookies()
+    const ourSessionDate = "2023-11-10T18:30:00.000Z"; // up coming session
     // Convert session time to a Date object
     const sessionDate: any = new Date(ourSessionDate);
     // console.log(sessionDate)
     // Get the current time
     const currentDate: any = new Date();
-
      // Get the timezone offset in minutes and convert it to milliseconds
      const timezoneOffset = currentDate.getTimezoneOffset() * 60 * 1000;
-
     // Calculate the time difference in milliseconds
     const timeDifference = sessionDate.getTime() - currentDate.getTime() + timezoneOffset;
-
     // Convert milliseconds to seconds
     const secondsDifference = Math.max(0, Math.floor(timeDifference / 1000));
-
-
-
     // handle start the counter
     const handleIAmHereClick = () => {
         setCountdownSeconds(secondsDifference);
     };
 
+    const getUpComingSession = () => {
+
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/upcomingSession`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
 
     // Counter down Functionality
-
     useEffect(() => {
-
+        getUpComingSession()
         let timeoutId: any;
         const handleCountdown = () => {
             if (countdownSeconds > 0) {

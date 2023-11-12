@@ -104,7 +104,7 @@ export default function PaidSesstionsTable() {
                                 </div>
                             )
                         }) : (
-                            <p>There is no paid sessions</p>
+                            <p className="p-3 bg-warning-color text-white w-fit rounded-full font-bold">No paid sessions</p>
                         )
                 )}
             </div>

@@ -9,6 +9,8 @@ import { useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
 import {useRouter} from 'next/navigation';
+import { RadioButton } from "primereact/radiobutton";
+import './login.module.css'
 
 //theme
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -29,13 +31,16 @@ function page() {
   }
 
   const cookies = new Cookies();
+  const [gender, setGender] = useState('');
+  const [userData, setUserData] = useState();
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
 
-  const [userData, setUserData] = useState()
   interface FormData {
     name: string;
     age: String;
-    phoneNumber: String;
+    phone: String;
     email: string;
+    gender: String;
     password: string;
     passwordConfirmation: string;
   }
@@ -43,8 +48,9 @@ function page() {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     age: "",
-    phoneNumber: "",
+    phone: "",
     email: "",
+    gender:"",
     password: "",
     passwordConfirmation: "",
   });
@@ -54,9 +60,19 @@ function page() {
     const { name, value } = e.target;
   
     // Use parseFloat or parseInt to parse the values as numbers
-    setFormData({ ...formData, [name]: name === 'age' || name === 'phoneNumber' ? parseInt(value, 10) : value });
+    setFormData({ ...formData, [name]: name === 'age' || name === 'phone' ? parseInt(value, 10) : value });
   };
   const handleFormSubmit = () => {
+    if (!gender) {
+      showError('Please select your gender');
+      return;
+    }
+  
+    // Set the gender directly in the formData object
+    formData.gender = gender;
+    
+    console.log(formData);
+    
     fetch(`${url}user/auth/signup`, {
       method: "POST",
       headers: {
@@ -68,14 +84,20 @@ function page() {
       .then((data) => {
         if (data.status === "success") {
           showSuccess('Registration Successfully');
+          showSuccess(data.message)
           console.log(data);
           setTimeout(() => {
-            router.push('/student_profile');
+            router.push('/login');
           }, 3000);
           setUserData(data)
           cookies.set('token', data.token);
         } else {
           showError('Registration failed');
+          if (data?.message === "Duplicate field Please use another value!") {
+            showError("Email Already Exist Please Login");
+          } else {
+            showError(data?.message);
+          }
           console.log(data);
         }
       })
@@ -84,6 +106,10 @@ function page() {
         showError('An error occurred')
       });
   };
+
+
+// resend mail function
+
 
 
   // login
@@ -133,7 +159,13 @@ function page() {
           // Save user token in a cookie or state as needed
           cookies.set('token', data.token);
         } else {
-          showError(`${data.message}`);
+          if (data.message === "Can't log in before you verify you email if you miss the first mail you can always resend it!") {
+            // Display the div for email verification
+            showError(`${data.message}`);
+            setShowEmailVerification(true);
+          } else {
+            showError(`${data.message}`);
+          }
           console.log(data);
         }
       })
@@ -142,6 +174,7 @@ function page() {
         showError('An error occurred');
       });
   };
+  
   const customeTheme: CustomFlowbiteTheme = {
     tab: {
       tablist: {
@@ -158,6 +191,28 @@ function page() {
         },
       },
     },
+  };
+// resend mail
+  const handleResendMail = () => {
+    // Send a request to resend the confirmation email
+    fetch(`${url}user/auth/resendMailConfirmation?email=${email}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          showSuccess('Mail resent successfully');
+        } else {
+          showError(data.message);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        showError('An error occurred while resending the mail');
+      });
   };
 
   return (
@@ -210,6 +265,12 @@ function page() {
                   <Link className="font-semibold	 underline" href={"#"}>
                     Forget Password ?
                   </Link>
+                  {showEmailVerification && (
+            <div>
+              <div className="text-red-500 text-md font-medium text-center">Check Gmail and confirm your mail</div>
+              <div className="text-center font-sm">Didn't receive a mail? <button onClick={handleResendMail} className="underline text-lg font-medium">Resend mail</button></div>
+            </div>
+          )}
                   <PrimaryButton
                   onClick={handleLogin}
                     text="Login"
@@ -258,8 +319,9 @@ function page() {
                       placeholder="Age"
                     />
                   </div>
+               
                   <input
-                    name="phoneNumber"
+                    name="phone"
                     onChange={handleFormChange}
                     type="tel"
                     className="border-blue-600 gradiant-color rounded-3xl w-full appearance-none border-2"
@@ -289,6 +351,16 @@ function page() {
                     type="password"
                     placeholder="Confirm Password"
                   />
+                     <div className="flex justify-evenly  flex-wrap gap-3">
+    <div className="flex align-items-center ">
+        <RadioButton  inputId="male" name="gender" value="male" onChange={(e) => setGender(e.value)} checked={gender === 'male'} />
+        <label htmlFor="male" className="ml-2">Male</label>
+    </div>
+    <div className="flex align-items-center">
+        <RadioButton inputId="famle" name="gender" value="famle" onChange={(e) => setGender(e.value)} checked={gender === 'famle'} />
+        <label htmlFor="famle" className="ml-2">Famle</label>
+    </div>
+    </div>
                   <PrimaryButton
                     text="Register"
                     ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"

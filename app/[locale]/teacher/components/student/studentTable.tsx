@@ -4,11 +4,13 @@ import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import FetchStudentData from './fetchStudentData';
 import StudentComboBox from './studentComboBox';
+import Cookies from 'universal-cookie';
 
 
 export default function StudentTable() {
     const [allStudents, setAllStudents]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
+    const cookies = new Cookies();
 
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
@@ -20,13 +22,14 @@ export default function StudentTable() {
     }
 
     const fetchAllStudents = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/user`, {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/myStudents`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`,
             },
         }).then(response => response.json()).then(data => {
-            // console.log(data)
+            console.log(data)
             setAllStudents(data.data)
             setIsLoading(false)
         }).catch(err => {
@@ -66,9 +69,9 @@ export default function StudentTable() {
                 <Table.HeadCell theme={customTheme.head}>
                     Contact
                 </Table.HeadCell>
-                <Table.HeadCell theme={customTheme.head}>
+                {/* <Table.HeadCell theme={customTheme.head}>
                     options
-                </Table.HeadCell>
+                </Table.HeadCell> */}
             </Table.Head>
             <Table.Body className="divide-y">
                 {isLoading ? (
@@ -76,11 +79,13 @@ export default function StudentTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allStudents && allStudents.map((student: any, index: number) => {
+             (allStudents.length > 0 ? allStudents.map((student: any, index: number) => {
                     return(
                         <FetchStudentData key={index} studentData={student} updateComponent={fetchAllStudents}/>
                     )
-                }))
+                })
+                : <p className="p-3">No Students</p>
+                )
             }
             </Table.Body>
         </Table>

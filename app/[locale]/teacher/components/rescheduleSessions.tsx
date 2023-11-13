@@ -10,7 +10,7 @@ export default function RescheduleSessions() {
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
   const getReschedualSession = async () => {
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/myRescheduleRequests`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/myRescheduleRequests?status=pending`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -39,11 +39,11 @@ export default function RescheduleSessions() {
           ? 
             (<Spinner />) 
             :
-              allSessions.length > 0 ? allSessions.map((report: any, index: number) => {
+              allSessions && allSessions.length > 0 ? allSessions.map((report: any, index: number) => {
             return (
                 <SessionData data={report} key={index} updateComponent={getReschedualSession}/>
             )
-            }) : <p>No Sessions</p>}
+            }) : <p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">No Sessions</p>}
         </div>
     </div>
   )

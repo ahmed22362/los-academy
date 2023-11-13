@@ -12,14 +12,13 @@ export default function TeacherPage() {
     return (
         <main className={"ps-[255px] pt-[7rem] flex justify-between gap-5 flex-wrap max-md:justify-between max-md:items-center"}>
             <section className={"max-md:w-full max-md:flex max-md:flex-col max-md:gap-5 max-md:items-center w-[600px]"}>
-                <div className="flex items-center justify-between pb-[20px] max-md:flex-wrap">
-                    <Statistics />
-                </div>
-                <div className={"flex items-center gap-5 pb-[20px] max-md:flex-wrap"}>
+                <div className="flex items-center justify-between pb-[20px] gap-5 max-md:flex-wrap">
                     <Attendance />
                     <OnGoingBox/>
                 </div>
-                <TeacherSchedule />
+                <div className={"flex items-center gap-5 pb-[20px] max-md:flex-wrap"}>
+                    <TeacherSchedule />
+                </div>
                 <Reports />
             </section>
             <section className="mx-auto">
@@ -28,6 +27,7 @@ export default function TeacherPage() {
                 <div className="px-2">
                     <FreeSesstionsTable />
                     <PaidSesstionsTable />
+                    <Statistics />
                 </div>
             </section>
         </main>

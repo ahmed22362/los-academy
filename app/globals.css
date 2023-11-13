@@ -64,6 +64,25 @@ body{
   -webkit-text-fill-color: #7b42d5 !important;
 }
 
+.ourSlickStyle > .slick-arrow .slick-next::before{
+  content: "\F284" !important;
+}
+.ourSlickStyle > .slick-arrow .slick-prev::before{
+  content: "\F285" !important;
+}
+.ourSlickStyle > .slick-arrow .slick-prev::before, 
+.ourSlickStyle > .slick-arrow .slick-next::before {
+  font-family: "Bootstrap-icons" !important;
+  color: black !important;
+  z-index: 1000 !important;
+}
+
+.slick-slider {
+  width: 100% !important;
+}
+.slick-list {
+  width: 100% !important;
+}
 .slick-slide div {
   display: flex;
   justify-content: center !important;
@@ -74,28 +93,34 @@ body{
 /* ===========> Start of SlickArrows <============= */
 
 /* ltr classes */
-.slick-next-ltr:before{
+
+/* .slick-next-ltr:before{
   font-family: "Bootstrap-icons" !important;
   content: "\F285" !important;
   color: black !important;
+  background-color: #000015 !important;
+  z-index: 1000;
 }
-.slick-prev-ltr:before{
+ .slick-prev-ltr:before{
   font-family: "Bootstrap-icons" !important;
   content: "\F284" !important;
   color: black !important;
-}
+  background-color: black !important;
+  z-index: 1000;
+} */
 /* rtl classes */
 
-.slick-next-rtl:before{
-  font-family: "Bootstrap-icons" !important;
-  content: "\F284" !important;
+
+/* .slick-arrow .slick-prev {
+  background-color: #2F80ED !important;
+} */
+/* .slick-arrow {
   color: black !important;
-}
-.slick-prev-rtl:before{
-  font-family: "Bootstrap-icons" !important;
-  content: "\F285" !important;
-  color: black !important;
-}
+  z-index: 1000 !important;
+  background-color: #000015 !important;
+} */
+
+
 /* ===========> End of SlickArrows <============= */
 .adminBox {
   @apply flex shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-[15px]

@@ -2,16 +2,13 @@
 
 import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import PayOutComboBox from './payOutComboBox';
-import FetchPayOutData from './fetchPayOutData';
-import Cookies from 'universal-cookie';
+import CoursesComboBox from './coursesComboBox';
+import FetchCoursesData from './fetchCoursesData';
 
 
-
-export default function PayOutTable() {
-    const [allPayOuts, setAllPayOuts]: any = useState([])
+export default function CoursesTable() {
+    const [allCourses, setAllCourses]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
-    const cookies = new Cookies()
 
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
@@ -22,16 +19,14 @@ export default function PayOutTable() {
         }
     }
 
-    const fetchAllPayOuts = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/payout`, {
+    const fetchAllCourses = () => {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/course`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.get('token')}`
             },
         }).then(response => response.json()).then(data => {
-            console.log(data)
-            setAllPayOuts(data.data)
+            setAllCourses(data.data)
             setIsLoading(false)
         }).catch(err => {
             console.log(err)
@@ -40,12 +35,12 @@ export default function PayOutTable() {
     };
 
     useEffect(() => {
-        fetchAllPayOuts()
+        fetchAllCourses()
     }, [])
 
     return (
         <>
-        <PayOutComboBox  updateComponent={fetchAllPayOuts}/>
+        <CoursesComboBox  updateComponent={fetchAllCourses}/>
         <div className={"px-5 py-4"}>
         <Table>
             <Table.Head theme={customTheme.head}>
@@ -53,16 +48,13 @@ export default function PayOutTable() {
                     #ID
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Teacher Name
+                    Title
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Date
+                    Description
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Amount
-                </Table.HeadCell>
-                <Table.HeadCell theme={customTheme.head}>
-                    Status
+                    Created At
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
                     options
@@ -74,12 +66,12 @@ export default function PayOutTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allPayOuts > 0 ? allPayOuts.map((payOut: any, index: number) => {
+             (allCourses && allCourses.length > 0 ? allCourses.map((teacher: any, index: number) => {
                     return(
-                        <FetchPayOutData key={index} payOutData={payOut} updateComponent={fetchAllPayOuts}/>
+                        <FetchCoursesData key={index} coursesData={teacher} updateComponent={fetchAllCourses}/>
                     )
                 })
-                : <p className="p-3">No Transactions</p>
+                : <p className='p-3'>No Courses</p>
                 )
             }
             </Table.Body>

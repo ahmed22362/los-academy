@@ -2,40 +2,55 @@
 
 import useCountDown from "@/helpers/useCountDown";
 import { useEffect, useState } from "react";
+import Cookies from "universal-cookie";
 
 export default function OnGoingBox() {
-
+    const [session, setAllSessions] = useState<any>([]);
+    const [started, setIsStarted] = useState(false)
     const [countdownSeconds, setCountdownSeconds] = useState(0);
-
-    const ourSessionDate = "2023-11-10T18:30:00.000Z";
-
+    const cookies = new Cookies()
+    // const ourSessionDate: any = session; // up coming session
     // Convert session time to a Date object
-    const sessionDate: any = new Date(ourSessionDate);
+    const sessionDate: any = new Date(session);
     // console.log(sessionDate)
     // Get the current time
     const currentDate: any = new Date();
-
      // Get the timezone offset in minutes and convert it to milliseconds
      const timezoneOffset = currentDate.getTimezoneOffset() * 60 * 1000;
-
     // Calculate the time difference in milliseconds
     const timeDifference = sessionDate.getTime() - currentDate.getTime() + timezoneOffset;
-
     // Convert milliseconds to seconds
     const secondsDifference = Math.max(0, Math.floor(timeDifference / 1000));
-
-
-
     // handle start the counter
     const handleIAmHereClick = () => {
         setCountdownSeconds(secondsDifference);
+        setIsStarted(true)
     };
 
+    const getUpComingSession = () => {
+
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/upcomingSession`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            // console.log(data.data[0].sessionDate)
+            setAllSessions(data.data[0].sessionDate)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+    useEffect(() => {
+        getUpComingSession()
+    }, [])
 
     // Counter down Functionality
-
     useEffect(() => {
-
+        
         let timeoutId: any;
         const handleCountdown = () => {
             if (countdownSeconds > 0) {
@@ -55,9 +70,11 @@ export default function OnGoingBox() {
 
     // Format time in minutes and seconds
     const formatTime = (seconds: number) => {
-        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
         const remainingSeconds = seconds % 60;
-        return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+    
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
 
     return(
@@ -66,7 +83,10 @@ export default function OnGoingBox() {
             <div className={"bg-white-color p-5 rounded-[16px] "}>
                 <div className={"flex flex-col items-start text-md font-semibold text-[black-color-one]"}>
                 <span>
-                        {countdownSeconds > 0 ? `Session will start in ${formatTime(countdownSeconds)}` : "Session has started"}
+                        {
+                        started === false ? 
+                        "":
+                        countdownSeconds > 0 ? `Session will start in ${formatTime(countdownSeconds)}` : "Session has started"}
                 </span>          
                 </div>
                 <button className={"smallBtn"} onClick={handleIAmHereClick}>I am Here</button>          

@@ -10,6 +10,7 @@ import Link2 from 'next/link';
 import {usePathname} from "next/navigation";
 // import {FaUser} from "react-icons/fa";
 import {RiUserSharedFill} from "react-icons/ri"
+import Cookies from "universal-cookie"
 
 export default function CustomNavbar() {
 
@@ -17,11 +18,15 @@ export default function CustomNavbar() {
   const isAdminDashboard = router.startsWith('/admin');
   const isAdminLogin = router.startsWith('/los_auth');
   const isteacher = router.startsWith('/teacher');
-
+  const token = new Cookies().get('token')
+  
   if ( isAdminDashboard || isAdminLogin || isteacher ) {
     return null;
   }
 
+  
+
+  
 
   const t = useTranslations("CustomNavbar");
   const linkStyle = "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full rtl:lg:p-[15px]";

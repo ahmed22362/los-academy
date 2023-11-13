@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import Cookies from 'universal-cookie';
+import LoadingButton from '../../loadingButton';
 export default function EditMatrialModal({openAssignModal, handleCloseModal, matrialDetails, updateComponent}: 
     {
         openAssignModal: boolean;
@@ -18,6 +19,7 @@ export default function EditMatrialModal({openAssignModal, handleCloseModal, mat
     const [age, setAge] = useState(matrialDetails.age);
     const [course, setCourse] = useState(matrialDetails.course);
     const [status, setStatus] = useState(matrialDetails.status);
+    const [isProcessing, setIsProcessing] = useState(false)
 
     const cookie = new Cookies()
 
@@ -54,6 +56,7 @@ export default function EditMatrialModal({openAssignModal, handleCloseModal, mat
       }
 
       const updateBook = () => {
+        setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/material/${matrialDetails.id}`, {
             method: "PATCH",
             headers: {
@@ -73,6 +76,7 @@ export default function EditMatrialModal({openAssignModal, handleCloseModal, mat
           } else {
             showError()
           }
+          setIsProcessing(false)
         }).catch(err => {
           console.log(err)
         })
@@ -114,13 +118,12 @@ export default function EditMatrialModal({openAssignModal, handleCloseModal, mat
               {/* <TextInput id="course" defaultValue={course} onChange={(e) => setCourse(e.target.value)} type="text" /> */}
             </div>
             <div className="w-full">
-                <button
-                onClick={updateBook}
-                    type="submit"
-                    className="text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
-                >
-                  save
-                </button>
+            <LoadingButton 
+                title={"Save Changes"}
+                action={updateBook}
+                customStyle={"text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"}
+                isProcessing={isProcessing}
+              />
             </div>
           </div>
         </Modal.Body>

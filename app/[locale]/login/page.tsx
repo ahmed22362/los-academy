@@ -74,7 +74,6 @@ function page() {
           }, 3000);
           setUserData(data)
           cookies.set('token', data.token);
-
         } else {
           showError('Registration failed');
           console.log(data);

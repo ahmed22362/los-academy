@@ -19,9 +19,6 @@ export default function BookModal() {
 
   const toast = useRef<Toast>(null);
 
-  const cookie=new Cookies();
-  const url =process.env.NEXT_PUBLIC_APIURL;
-  const token =cookie.get('token') ;
   
   const customeTheme: CustomFlowbiteTheme = {
     tab: {

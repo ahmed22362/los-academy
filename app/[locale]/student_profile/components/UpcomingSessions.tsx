@@ -7,9 +7,9 @@ import Cookies from 'universal-cookie';
 import ContentLoader from 'react-content-loader';
 
 function UpcomingSessions() {
-  const cookie = new Cookies();
-  const url = 'https://los-academy.onrender.com/api/v1/';
-  const token = cookie.get('token');
+  const cookie=new Cookies();
+  const url =process.env.NEXT_PUBLIC_APIURL;
+  const token =cookie.get('token') ;
   const [upComingSession, setUpComingSession] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +28,7 @@ function UpcomingSessions() {
 
   // api data
   useEffect(() => {
-    fetch(`${url}user/upcomingSession`, {
+    fetch(`${url}/user/upcomingSession`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}` // Correct the header key to 'Authorization'

@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './page.module.css'
 import Image from 'next/image';
-import PrimaryButton from '../components/PrimaryButton';
 import Link from 'next/link';
 import RemainSessions from './components/RemainSessions';
 import StudentPlan from './components/StudentPlanModal';
@@ -12,8 +11,8 @@ import EditProfile from './components/edit_profile';
 import Subscribtion from './components/Subscribtion';
 import BookModal from './components/BookModal';
 import Cookies from 'universal-cookie';
-import SessionsModal from './components/SessionsModal';
 import StudentAttendence from './components/studebtAttendence';
+import SessionsModal from './components/SessionsModal';
 
 export default function page() {
 
@@ -66,7 +65,7 @@ export default function page() {
                    <h4 className={`${styles.secondary_head} `}>Remain Sessions</h4>
                    <RemainSessions/>
                    </div>
-                    <SessionsModal />
+                   <SessionsModal/>
                   </div>
                 </div>
                 <div className="card w-full  ">

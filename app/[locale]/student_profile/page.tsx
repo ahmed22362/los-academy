@@ -12,7 +12,7 @@ import Subscribtion from './components/Subscribtion';
 import BookModal from './components/BookModal';
 import Cookies from 'universal-cookie';
 import StudentAttendence from './components/studebtAttendence';
-import SessionsModal from './components/SessionsModal';
+import SessionsModal from './components/sessionsModal';
 
 export default function page() {
 

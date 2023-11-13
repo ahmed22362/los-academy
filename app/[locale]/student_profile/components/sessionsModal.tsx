@@ -11,7 +11,7 @@ import RemainSessions from './RemainSessions';
 
 
 
-export default function SeesionsModal() {
+export default function SessionsModal() {
   const [openModal, setOpenModal] = useState(false);
   const cookie=new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;

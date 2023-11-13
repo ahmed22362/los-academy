@@ -35,11 +35,11 @@ function CommunityStatistics() {
     <h4 className={`${styles.secondary_head} mb-5 ml-3`}>Community statistics :</h4>
     <div className={`flex justify-between gap-5 items-center mt-10`}>
       <PrimaryButton 
-    ourStyle="bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-3 shadow rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
+    ourStyle="bg-secondary-color max-md:px-3 hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-3 shadow rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
     text={`Done  (${historySeesions?.length || 0}) Sessions`}
   />
 <PrimaryButton
-ourStyle="bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-3 shadow rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
+ourStyle="bg-secondary-color max-md:px-3 hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-3 shadow rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
 text={'100% Attendence'}
 />
     </div>

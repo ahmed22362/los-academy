@@ -14,6 +14,7 @@ import CancelSubscription from './CancelSubscription';
 export default function Subscribtion() {
   const [openSubscribtionModal, setOpenSubscribtionModal] = useState(false);
   const cookie=new Cookies();
+  const url =process.env.NEXT_PUBLIC_APIURL;
   const token =cookie.get('token') ;
    const [mySubscription, setMySubscription] = useState<any>([]);
    const [showSubscriptionDetails, setShowSubscriptionDetails] = useState(true);
@@ -38,7 +39,7 @@ export default function Subscribtion() {
   // Subsribtion Sessions Api
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySubscription`, {
+    fetch(`${url}/user/mySubscription`, {
       method: 'GET', 
       headers: {
         Authorization: `Bearer ${token}` // Correct the header key to 'Authorization'

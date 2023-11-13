@@ -60,7 +60,7 @@ export default function BookModal() {
         <Modal.Body >
           <div>
             <h3 className='font-semibold text-lg mb-3'>Book Sessions</h3>
-            <div className="taps flex justify-center">
+            <div className="taps flex justify-center h-1/2">
             <Tabs.Group aria-label="Pills" theme={customeTheme.tab} style="pills">
             <Tabs.Item active title="Paid Session" >
                 <BookPaidSession/>

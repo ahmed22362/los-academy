@@ -63,8 +63,7 @@ function BookFreeSession() {
 
   return (
     
-    <div className="m-auto flex justify-center flex-col items-center gap-5">
-            Book  Free Session Now
+    <div className="m-full flex justify-center flex-col items-center gap-5">
             <Calendar
                     value={freedatetime12h}
                     onChange={(e: CalendarProps | any) => setFreeDateTime12h(e.value)} 
@@ -72,7 +71,8 @@ function BookFreeSession() {
                      hourFormat="12"
                     style={{
                       outline: "4px solid var(--secondary-color)",
-                      borderRadius: "16px"
+                      borderRadius: "16px" ,
+                      width:"408px"
                   }}
                   inline
                   selectionMode="multiple"

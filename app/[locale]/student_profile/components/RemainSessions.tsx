@@ -46,12 +46,12 @@ function RemainSessions() {
   return (
     <div>
           <div className={`${styles.sessions} `}>
-          {sessions === null ? (
+          {sessions.length === 0 ? (
               <MyLoader />
             ) : sessions?.length > 0 ? (
               sessions.map((session, index) => (
                 <div key={index} className={`${styles.session} flex justify-between gap- my-3`}>
-                  <p className=''>S #{session.id}</p>
+                  <p className=''>Session #{session.id}</p>
                   <p className=''>
                     {convertDateTimeZone(session.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "h:mm A")}
                     {' - '}

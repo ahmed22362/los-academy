@@ -72,11 +72,13 @@ export default function TeacherTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allTeachers && allTeachers.map((teacher: any, index: number) => {
+             (allTeachers && allTeachers > 0 ? allTeachers.map((teacher: any, index: number) => {
                     return(
                         <FetchTeacherData key={index} teacherData={teacher} updateComponent={fetchAllTechers}/>
                     )
-                }))
+                }): 
+                    (<p className='p-3'>There is No Teachers</p>)
+                )
             }
             </Table.Body>
         </Table>

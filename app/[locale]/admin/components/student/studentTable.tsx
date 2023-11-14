@@ -76,11 +76,13 @@ export default function StudentTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allStudents && allStudents.map((student: any, index: number) => {
+             (allStudents && allStudents.length > 0 ? allStudents.map((student: any, index: number) => {
                     return(
                         <FetchStudentData key={index} studentData={student} updateComponent={fetchAllStudents}/>
                     )
-                }))
+                }):
+                    (<p className="There is No Students"></p>)
+                )
             }
             </Table.Body>
         </Table>

@@ -78,11 +78,13 @@ export default function OnGoingSesstionsTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allSessions && allSessions.map((session: any, index: number) => {
+             (allSessions && allSessions.length > 0 ? allSessions.map((session: any, index: number) => {
                     return(
                         <FetchOnGoingSessionData key={index} sessionData={session} updateComponent={fetchAllSessions}/>
                     )
-                }))
+                }) : 
+                    (<p className="p-3">There is no Sessions</p>)
+                )
             }
             </Table.Body>
         </Table>

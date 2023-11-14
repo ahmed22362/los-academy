@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { PiStudentBold } from 'react-icons/pi';
+import LoadingButton from '../../loadingButton';
 
 export default function AddStudentModal({openAssignModal, handleCloseModal, updateComponent}: 
     {
@@ -22,6 +23,7 @@ export default function AddStudentModal({openAssignModal, handleCloseModal, upda
     const [password, setPassword] = useState('');
     const [remainSessions, setRemainSessions] = useState('');
     const [gender, setGender] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false)
 
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
@@ -57,6 +59,7 @@ export default function AddStudentModal({openAssignModal, handleCloseModal, upda
       }
 
       const addStudent = () => {
+        setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/user`, {
             method: "POST",
             headers: {
@@ -80,6 +83,7 @@ export default function AddStudentModal({openAssignModal, handleCloseModal, upda
           } else {
             showError()
           }
+          setIsProcessing(false)
         }).catch(err => {
           console.log(err)
         })
@@ -147,13 +151,12 @@ export default function AddStudentModal({openAssignModal, handleCloseModal, upda
               <TextInput id="remainSessions" type="text" placeholder='Remain Sessions' onChange={(e) => setRemainSessions(e.target.value)} />
             </div>
             <div className="w-full">
-                <button
-                    onClick={addStudent}
-                    type="submit"
-                    className="text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
-                >
-                  Add
-                </button>
+              <LoadingButton 
+                title={"Add Student"}
+                action={addStudent}
+                customStyle={"text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"}
+                isProcessing={isProcessing}
+              />
             </div>
           </div>
         </Modal.Body>

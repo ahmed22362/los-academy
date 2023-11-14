@@ -78,11 +78,13 @@ export default function SesstionsTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allSessions && allSessions.map((session: any, index: number) => {
+             (allSessions && allSessions.length > 0 ? allSessions.map((session: any, index: number) => {
                     return(
                         <FetchSessionData key={index} sessionData={session} updateComponent={fetchAllSessions}/>
                     )
-                }))
+                }) : 
+                    (<p className="p-3">There is No Sessions</p>)
+                )
             }
             </Table.Body>
         </Table>

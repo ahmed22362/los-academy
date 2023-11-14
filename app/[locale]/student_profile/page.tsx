@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './page.module.css'
 import Image from 'next/image';
-import Link from 'next/link';
 import RemainSessions from './components/RemainSessions';
 import StudentPlan from './components/StudentPlanModal';
 import CommunityStatistics from './components/CommunityStatistics';

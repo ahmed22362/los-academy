@@ -5,6 +5,8 @@ import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { GiTeacher } from 'react-icons/gi';
+import LoadingButton from '../../loadingButton';
+import Cookies from 'universal-cookie';
 export default function AddCourseModal({openAssignModal, handleCloseModal, updateComponent}: 
     {
         openAssignModal: boolean;
@@ -15,9 +17,9 @@ export default function AddCourseModal({openAssignModal, handleCloseModal, updat
     const modalRef = useRef<HTMLDivElement>(null);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-
+    const [isProcessing, setIsProcessing] = useState(false)
     const toast = useRef<Toast>(null);
-
+    const cookies = new Cookies();
 
 
     const showSuccess = () => {
@@ -52,10 +54,12 @@ export default function AddCourseModal({openAssignModal, handleCloseModal, updat
       }
 
       const addCourse = () => {
+        setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/course`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
                 title,
@@ -69,6 +73,7 @@ export default function AddCourseModal({openAssignModal, handleCloseModal, updat
           } else {
             showError()
           }
+          setIsProcessing(false)
         }).catch(err => {
           console.log(err)
         })
@@ -96,13 +101,12 @@ export default function AddCourseModal({openAssignModal, handleCloseModal, updat
               <TextInput id="description" placeholder={"Description"} onChange={(e) => setDescription(e.target.value)} type="text" />
             </div>
             <div className="w-full">
-                <button
-                    onClick={addCourse}
-                    type="submit"
-                    className="text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
-                >
-                  Add
-                </button>
+            <LoadingButton 
+                title='Add Course'
+                isProcessing={isProcessing}
+                customStyle='text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors'
+                action={addCourse}
+              />
             </div>
           </div>
         </Modal.Body>

@@ -1,13 +1,18 @@
+"use client"
 import React, { useEffect, useState } from 'react'
 import PrimaryButton from '../../components/PrimaryButton'
 import styles from '../page.module.css'
 import Cookies from 'universal-cookie';
 function CommunityStatistics() {
 
-    const cookie=new Cookies();
+    const cookie = new Cookies();
+    
     const url ='https://los-academy.onrender.com/api/v1/';
+    
     const token =cookie.get('token') ;
+    
     const [historySeesions, setHistorySeesions] = useState<any[]>([]);
+
     useEffect(() => {
         fetch(`${url}user/myHistorySessions`, {
           method: 'GET', 

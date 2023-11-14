@@ -8,7 +8,6 @@ import { Dropdown, Navbar } from "flowbite-react";
 import type { CustomFlowbiteTheme } from "flowbite-react";
 import Link2 from 'next/link';
 import {usePathname} from "next/navigation";
-// import {FaUser} from "react-icons/fa";
 import {RiUserSharedFill} from "react-icons/ri"
 import Cookies from "universal-cookie"
 
@@ -20,14 +19,6 @@ export default function CustomNavbar() {
   const isteacher = router.startsWith('/teacher');
   const token = new Cookies().get('token')
   
-  if ( isAdminDashboard || isAdminLogin || isteacher ) {
-    return null;
-  }
-
-  
-
-  
-
   const t = useTranslations("CustomNavbar");
   const linkStyle = "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full rtl:lg:p-[15px]";
   const linkText = t("login-btn");
@@ -62,81 +53,83 @@ export default function CustomNavbar() {
     },
   };
 
-  return (
-    <>
-      <Navbar rounded={true} theme={customNavTheme.root} className="fixed w-full top-0 z-10 border-b-2 border-white-color">
-        <Navbar.Brand href="/" className="flex flex-row flex-wrap justify-center gap-3 rtl:flex-row-reverse">
-          {/* Create gradient color for logo with animation*/}
-          <Image
-            src={"/logo.png"}
-            alt="logo image"
-            width={30}
-            height={30}
-            priority={true}
-            loading={"eager"}
-            className={"w-auto h-auto max-md:w-[30px]"}
-          />
-          <h2
-              className={"font-semibold"}
-              style={{
-                fontSize: "calc(16px + (24 - 16) * ((100vw - 320px) / (1920 - 320))"
-              }}
-          >LOS Academy</h2>
-        </Navbar.Brand>
+  if (!(isAdminDashboard || isAdminLogin || isteacher)) {
 
-        <Navbar.Collapse className="rtl:font-sans rtl:text-lg" theme={customNavTheme.collapse}>
-          <Navbar.Link
-            theme={customNavTheme.link}
-            href="/#hero"
-            active={true}
-            className="rtl:ml-5"
-          >
-            {t("home-link")}
-          </Navbar.Link>
-          <Navbar.Link href="/#aboutUs" theme={customNavTheme.link}>
-            {t("about-link")}
-          </Navbar.Link>
-          <Navbar.Link href="/#courses" theme={customNavTheme.link}>
-            {t("courses-link")}
-          </Navbar.Link>
-          <Navbar.Link href="/#prices" theme={customNavTheme.link}>
-            {t("prices-link")}
-          </Navbar.Link>
-          <Navbar.Link href="/#feedback" theme={customNavTheme.link}>
-            {t("feedback-link")}
-          </Navbar.Link>
-          <Navbar.Link href="/#contactus" theme={customNavTheme.link}>
-            {t("contact-link")}
-          </Navbar.Link>
-        </Navbar.Collapse>
-        <div className={
-          "flex items-center max-md:items-baseline gap-2 rtl:font-sans rtl:text-lg rtl:max-sm:me-0 rtl:max-sm:ms-auto rtl:lg:w-[185px]"
-          }>
-          <Navbar.Toggle theme={customNavTheme.toggle} />
-          <div className="flex flex-col items-center">
-            <Link2 href={"/login"} className={linkStyle + " hidden md:flex"}>
-              {linkText}
-            </Link2>
-            <div className="mt-2 md:hidden">
-              <Link2 href={"/login"}>
-                  <RiUserSharedFill className={"text-secondary-color hover:text-secondary-hover transition-colors text-2xl"}/>
-                </Link2>
+    return (
+      <>
+        <Navbar rounded={true} theme={customNavTheme.root} className="fixed w-full top-0 z-10 border-b-2 border-white-color">
+          <Navbar.Brand href="/" className="flex flex-row flex-wrap justify-center gap-3 rtl:flex-row-reverse">
+            <Image
+              src={"/logo.png"}
+              alt="logo image"
+              width={30}
+              height={30}
+              priority={true}
+              loading={"eager"}
+              className={"w-auto h-auto max-md:w-[30px]"}
+            />
+            <h2
+                className={"font-semibold"}
+                style={{
+                  fontSize: "calc(16px + (24 - 16) * ((100vw - 320px) / (1920 - 320))"
+                }}
+            >LOS Academy</h2>
+          </Navbar.Brand>
+
+          <Navbar.Collapse className="rtl:font-sans rtl:text-lg" theme={customNavTheme.collapse}>
+            <Navbar.Link
+              theme={customNavTheme.link}
+              href="/#hero"
+              active={true}
+              className="rtl:ml-5"
+            >
+              {t("home-link")}
+            </Navbar.Link>
+            <Navbar.Link href="/#aboutUs" theme={customNavTheme.link}>
+              {t("about-link")}
+            </Navbar.Link>
+            <Navbar.Link href="/#courses" theme={customNavTheme.link}>
+              {t("courses-link")}
+            </Navbar.Link>
+            <Navbar.Link href="/#prices" theme={customNavTheme.link}>
+              {t("prices-link")}
+            </Navbar.Link>
+            <Navbar.Link href="/#feedback" theme={customNavTheme.link}>
+              {t("feedback-link")}
+            </Navbar.Link>
+            <Navbar.Link href="/#contactus" theme={customNavTheme.link}>
+              {t("contact-link")}
+            </Navbar.Link>
+          </Navbar.Collapse>
+          <div className={
+            "flex items-center max-md:items-baseline gap-2 rtl:font-sans rtl:text-lg rtl:max-sm:me-0 rtl:max-sm:ms-auto rtl:lg:w-[185px]"
+            }>
+            <Navbar.Toggle theme={customNavTheme.toggle} />
+            <div className="flex flex-col items-center">
+              <Link2 href={"/login"} className={linkStyle + " hidden md:flex"}>
+                {linkText}
+              </Link2>
+              <div className="mt-2 md:hidden">
+                <Link2 href={"/login"}>
+                    <RiUserSharedFill className={"text-secondary-color hover:text-secondary-hover transition-colors text-2xl"}/>
+                  </Link2>
+              </div>
             </div>
+            <Dropdown label={<MdLanguage className="w-5 h-5" />} inline>
+              <Link locale="en" href={"/"}>
+                <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">
+                  en
+                </Dropdown.Item>
+              </Link>
+              <Link locale="ar" href={"/"}>
+                <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">
+                  ar
+                </Dropdown.Item>
+              </Link>
+            </Dropdown>
           </div>
-          <Dropdown label={<MdLanguage className="w-5 h-5" />} inline>
-            <Link locale="en" href={"/"}>
-              <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">
-                en
-              </Dropdown.Item>
-            </Link>
-            <Link locale="ar" href={"/"}>
-              <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">
-                ar
-              </Dropdown.Item>
-            </Link>
-          </Dropdown>
-        </div>
-      </Navbar>
-    </>
-  );
+        </Navbar>
+      </>
+    );
+  }
 }

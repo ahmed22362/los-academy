@@ -90,7 +90,6 @@ function page() {
             router.push('/login');
           }, 3000);
           setUserData(data)
-          cookies.set('token', data.token);
         } else {
           showError('Registration failed');
           if (data?.message === "Duplicate field Please use another value!") {
@@ -158,6 +157,7 @@ function page() {
           }, 3000);
           // Save user token in a cookie or state as needed
           cookies.set('token', data.token);
+          cookies.set('id', data.data.id);
         } else {
           if (data.message === "Can't log in before you verify you email if you miss the first mail you can always resend it!") {
             // Display the div for email verification

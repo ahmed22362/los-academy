@@ -32,7 +32,7 @@ async function middleware(req: NextRequest) {
     
     if(id && token) {
       
-      const getUserRole = await getCurrentTeacher(id?.value);
+      const getUserRole = await getCurrentTeacher(id?.value, token?.value);
       const role = getUserRole.data?.role
       const res = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/checkJWT/?token=${token.value}`, {
           method: 'GET',
@@ -45,23 +45,21 @@ async function middleware(req: NextRequest) {
         const validToken = await res.json()
         
         if(validToken.status === 'success' && role === 'admin') {
-          
           accessAdminStatus = true
         
         } else if (validToken.status === 'success' && role === 'teacher') {
-  
           accessTeacherStatus = true
-
         } else {
-
           accessAdminStatus = false
           accessTeacherStatus = false
-        
         }
       }
 
-    if ((accessAdminStatus === false && protectedAdminRoutes.includes(req.nextUrl.pathname) 
-      || accessTeacherStatus === false && protectTeacherRoutes.includes(req.nextUrl.pathname))) {
+    if (
+      (
+        accessAdminStatus === false && protectedAdminRoutes.includes(req.nextUrl.pathname) 
+      || 
+      accessTeacherStatus === false && protectTeacherRoutes.includes(req.nextUrl.pathname))) {
         
         const absoluteUrl = new URL("/", req.nextUrl.origin);
         return NextResponse.redirect(absoluteUrl.toString());

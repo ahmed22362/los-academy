@@ -74,11 +74,13 @@ export default function PlanTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allPlans && allPlans.map((plan: any, index: number) => {
+             (allPlans && allPlans.length > 0 ? allPlans.map((plan: any, index: number) => {
                     return(
                         <FetchPlanData key={index} planData={plan} updateComponent={fetchAllPlans}/>
                     )
-                }))
+                }):
+                    (<p className='p-3'>There is no plans</p>)
+                )
             }
             </Table.Body>
         </Table>

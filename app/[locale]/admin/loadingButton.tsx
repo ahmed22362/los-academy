@@ -6,7 +6,7 @@ function LoadingButton({title, isProcessing, customStyle, action}: {
     title: string;
     isProcessing: boolean;
     customStyle: string;
-    action: () => void;
+    action: () => void | any;
 }) {
 
     const buttonTheme: CustomFlowbiteTheme['button'] = {
@@ -14,7 +14,6 @@ function LoadingButton({title, isProcessing, customStyle, action}: {
             purple: "bg-secondary-color hover:bg-secondary-hover",
         }
     }
-
 
   return (
         <Button

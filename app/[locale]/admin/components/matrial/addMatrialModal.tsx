@@ -124,7 +124,7 @@ export default function AddMatrialModal({openAssignModal, handleCloseModal, upda
             <div className="w-full">
             <LoadingButton 
                 title={"Add Book"}
-                action={addBook}
+                action={() => addBook}
                 customStyle={"text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"}
                 isProcessing={isProcessing}
               />

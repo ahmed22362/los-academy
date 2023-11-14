@@ -114,11 +114,11 @@ export default function FetchMatrialData({matrialData, updateComponent} : {matri
             </Table.Cell>
             <Table.Cell>
                 {matrial.status === "new Arrival" ? 
-                            <div className='bg-danger-color p-2 rounded-full text-white font-semibold'>{matrial.status}</div> 
+                            <div className='bg-danger-color p-2 rounded-full text-white font-semibold capitalize'>{matrial.status}</div> 
                         : matrial.status === 'active' ?
-                            <div className='bg-success-color p-2 rounded-full text-white font-semibold'>{matrial.status}</div> 
+                            <div className='bg-success-color p-2 rounded-full text-white font-semibold capitalize'>{matrial.status}</div> 
                         : 
-                            <div className='bg-warning-color p-2 rounded-full text-white font-semibold'>{matrial.status}</div>
+                            <div className='bg-warning-color p-2 rounded-full text-white font-semibold capitalize'>{matrial.status}</div>
                         } 
             </Table.Cell>
             <Table.Cell>

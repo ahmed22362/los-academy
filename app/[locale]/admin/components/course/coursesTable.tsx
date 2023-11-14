@@ -71,7 +71,7 @@ export default function CoursesTable() {
                         <FetchCoursesData key={index} coursesData={teacher} updateComponent={fetchAllCourses}/>
                     )
                 })
-                : <p className='p-3'>No Courses</p>
+                : <p className='p-3'>There is No Courses</p>
                 )
             }
             </Table.Body>

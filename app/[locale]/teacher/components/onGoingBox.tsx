@@ -9,7 +9,6 @@ export default function OnGoingBox() {
     const [started, setIsStarted] = useState(false)
     const [countdownSeconds, setCountdownSeconds] = useState(0);
     const cookies = new Cookies()
-    // const ourSessionDate: any = session; // up coming session
     // Convert session time to a Date object
     const sessionDate: any = new Date(session);
     // console.log(sessionDate)
@@ -38,7 +37,6 @@ export default function OnGoingBox() {
         })
         .then(response => response.json())
         .then(data => {
-            // console.log(data.data[0].sessionDate)
             setAllSessions(data.data[0].sessionDate)
         }).catch(err => {
             console.log(err)
@@ -84,9 +82,12 @@ export default function OnGoingBox() {
                 <div className={"flex flex-col items-start text-md font-semibold text-[black-color-one]"}>
                 <span>
                         {
-                        started === false ? 
-                        "":
-                        countdownSeconds > 0 ? `Session will start in ${formatTime(countdownSeconds)}` : "Session has started"}
+                            started === false ?
+                            "":
+                            countdownSeconds > 0 
+                            ? `Session will start in ${formatTime(countdownSeconds)}` 
+                            : "Session has started"
+                        }
                 </span>          
                 </div>
                 <button className={"smallBtn"} onClick={handleIAmHereClick}>I am Here</button>          

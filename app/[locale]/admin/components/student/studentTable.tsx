@@ -4,12 +4,13 @@ import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import FetchStudentData from './fetchStudentData';
 import StudentComboBox from './studentComboBox';
+import Cookies from 'universal-cookie';
 
 
 export default function StudentTable() {
     const [allStudents, setAllStudents]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
-
+    const cookies = new Cookies()
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
             base: "group/head text-xs uppercase text-black-color-one bg-white-color p-[15px] text-center",
@@ -24,6 +25,7 @@ export default function StudentTable() {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
             // console.log(data)

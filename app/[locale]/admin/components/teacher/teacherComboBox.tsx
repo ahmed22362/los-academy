@@ -26,10 +26,6 @@ export default function TeacherComboBox({...props}: any) {
                     } type={"search"} placeholder={"search"} />
                 </form>
                 <div className={"flex flex-row justify-between items-center gap-5"}>
-                    {/* <Dropdown label={"All"} theme={customTheme} inline>
-                        <Dropdown.Item>one</Dropdown.Item>
-                        <Dropdown.Item>Two</Dropdown.Item>
-                    </Dropdown> */}
                     <button 
                     onClick={openModal}
                     className={

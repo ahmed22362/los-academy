@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { PiStudentBold } from 'react-icons/pi';
 import LoadingButton from '../../loadingButton';
+import Cookies from 'universal-cookie';
 
 export default function AddStudentModal({openAssignModal, handleCloseModal, updateComponent}: 
     {
@@ -24,7 +25,7 @@ export default function AddStudentModal({openAssignModal, handleCloseModal, upda
     const [remainSessions, setRemainSessions] = useState('');
     const [gender, setGender] = useState('');
     const [isProcessing, setIsProcessing] = useState(false)
-
+    const cookies = new Cookies()
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Add Success', life: 3000});
@@ -64,6 +65,7 @@ export default function AddStudentModal({openAssignModal, handleCloseModal, upda
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
                 name: name,

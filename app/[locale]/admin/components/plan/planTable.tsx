@@ -4,12 +4,13 @@ import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import PlanComboBox from './planComboBox';
 import FetchPlanData from './fetchPlanData';
+import Cookies from 'universal-cookie';
 
 
 export default function PlanTable() {
     const [allPlans, setAllPlan]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
-
+    const cookies = new Cookies();
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
             base: "group/head text-xs uppercase text-black-color-one bg-white-color p-[15px] text-center",
@@ -24,6 +25,7 @@ export default function PlanTable() {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
             const sortedData = data.data.sort((x: any, y: any) => x.id - y.id)

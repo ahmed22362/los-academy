@@ -4,6 +4,7 @@ import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-r
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
+import Cookies from 'universal-cookie';
 export default function EditPayOutModal({openAssignModal, handleCloseModal, payoutDetails, updateComponent}: 
     {
         openAssignModal: boolean;
@@ -22,6 +23,7 @@ export default function EditPayOutModal({openAssignModal, handleCloseModal, payo
     const [remainSessions, setRemainSessions] = useState(payoutDetails.remainSessions);
     const [gender, setGender] = useState(payoutDetails.gender);
     const toast = useRef<Toast>(null);
+    const cookies = new Cookies();
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
     }
@@ -58,6 +60,7 @@ export default function EditPayOutModal({openAssignModal, handleCloseModal, payo
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
                 name: name,

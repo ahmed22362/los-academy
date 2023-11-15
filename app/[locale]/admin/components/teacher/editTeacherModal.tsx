@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import LoadingButton from '../../loadingButton';
+import Cookies from 'universal-cookie';
 
 export default function EditTeacherModal({openAssignModal, handleCloseModal, teacherDetails, updateComponent}: 
     {
@@ -22,6 +23,7 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
     const [cost, setCost] = useState(teacherDetails.sessionCost);
     const [password, setPassword] = useState('');
     const [isProcessing, setIsProcessing] = useState(false)
+    const cookies = new Cookies()
     
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
@@ -60,6 +62,7 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
                 name: name,

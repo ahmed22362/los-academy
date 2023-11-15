@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import LoadingButton from '../../loadingButton';
+import Cookies from 'universal-cookie';
 
 export default function EditStudentModal({openAssignModal, handleCloseModal, studentDetails, updateComponent}: 
     {
@@ -24,7 +25,7 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
     const [remainSessions, setRemainSessions] = useState(studentDetails.remainSessions);
     const [gender, setGender] = useState(studentDetails.gender);
     const [isProcessing, setIsProcessing] = useState(false)
-
+    const cookies = new Cookies();
 
 
 
@@ -66,6 +67,7 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
                 name: name,

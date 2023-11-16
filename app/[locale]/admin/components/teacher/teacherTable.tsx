@@ -28,6 +28,7 @@ export default function TeacherTable() {
                 "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
+            console.log(data)
             setAllTeachers(data.data)
             setIsLoading(false)
         }).catch(err => {
@@ -74,12 +75,16 @@ export default function TeacherTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allTeachers && allTeachers > 0 ? allTeachers.map((teacher: any, index: number) => {
+             (allTeachers && allTeachers.length > 0 ? allTeachers.map((teacher: any, index: number) => {
                     return(
                         <FetchTeacherData key={index} teacherData={teacher} updateComponent={fetchAllTechers}/>
                     )
                 }): 
-                    (<p className='p-3'>There is No Teachers</p>)
+                    (
+                        (
+                        <tr><td className="p-5">There is No Teachers</td></tr>
+                        )
+                    )
                 )
             }
             </Table.Body>

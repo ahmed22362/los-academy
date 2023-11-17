@@ -23,7 +23,7 @@ export default function PayOutTable() {
     }
 
     const fetchAllPayOuts = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/myPayouts?status=pending`, {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/myPayouts`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

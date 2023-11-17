@@ -4,13 +4,18 @@ import { useTranslations } from "next-intl";
 import Link from "next-intl/link";
 import { MdLanguage } from "react-icons/md";
 import Image from "next/image";
-import { Dropdown, Navbar } from "flowbite-react";
+import { Button, Dropdown, Navbar } from "flowbite-react";
 import type { CustomFlowbiteTheme } from "flowbite-react";
 import Link2 from 'next/link';
 import {usePathname} from "next/navigation";
 import {RiUserSharedFill} from "react-icons/ri"
 import Cookies from "universal-cookie"
-
+import { useEffect, useState } from "react";
+import { LiaUserEditSolid } from "react-icons/lia";
+import { LiaEditSolid } from "react-icons/lia";
+import { CiCalendar } from "react-icons/ci";
+import { IoIosLogOut } from "react-icons/io";
+import { LiaCreditCardSolid } from "react-icons/lia";
 export default function CustomNavbar() {
 
   const router = usePathname();
@@ -18,10 +23,18 @@ export default function CustomNavbar() {
   const isAdminLogin = router.startsWith('/los_auth');
   const isteacher = router.startsWith('/teacher');
   const token = new Cookies().get('token')
-  
+  const id = new Cookies().get('id')
   const t = useTranslations("CustomNavbar");
   const linkStyle = "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full rtl:lg:p-[15px]";
   const linkText = t("login-btn");
+
+  const [userDate, setUserData] = useState<any>({});
+
+  const buttonTheme: CustomFlowbiteTheme['button'] = {
+    color: {
+        purple: "bg-secondary-color hover:bg-secondary-hover rounded-full",
+    }
+}
 
   const customNavTheme: CustomFlowbiteTheme["navbar"] = {
     root: {
@@ -52,6 +65,28 @@ export default function CustomNavbar() {
       },
     },
   };
+
+  const getCurrentStudent = () => {
+      fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/me`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.status === "success") {
+            setUserData(data.data)
+        }
+    })
+    .catch(err => console.log(err))
+  }
+
+  useEffect(() => {
+    getCurrentStudent()
+  }, [])
+
 
   if (!(isAdminDashboard || isAdminLogin || isteacher)) {
 
@@ -105,16 +140,47 @@ export default function CustomNavbar() {
             "flex items-center max-md:items-baseline gap-2 rtl:font-sans rtl:text-lg rtl:max-sm:me-0 rtl:max-sm:ms-auto rtl:lg:w-[185px]"
             }>
             <Navbar.Toggle theme={customNavTheme.toggle} />
-            <div className="flex flex-col items-center">
-              <Link2 href={"/login"} className={linkStyle + " hidden md:flex"}>
-                {linkText}
-              </Link2>
-              <div className="mt-2 md:hidden">
-                <Link2 href={"/login"}>
-                    <RiUserSharedFill className={"text-secondary-color hover:text-secondary-hover transition-colors text-2xl"}/>
+            {userDate.verified === true 
+              ? 
+                (<>
+                  <Dropdown label={<div className="bg-secondary-color hover:bg-secondary-hover rounded-full px-3 py-2 text-white font-semibold transition-colors cursor-pointer">{userDate.name}</div>} inline>
+                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                        <LiaUserEditSolid className="text-[26px] font-semibold" /> 
+                        <span>Edit Profile</span>
+                      </Dropdown.Item>
+                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                        <LiaEditSolid  className="text-[26px] font-semibold" /> 
+                        <span>Add Feedback</span>
+                      </Dropdown.Item>
+                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                      <CiCalendar  className="text-[26px] font-semibold" /> 
+                      <span>Sessions</span>
+                      </Dropdown.Item>
+                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                        <LiaCreditCardSolid  className="text-[26px] font-semibold" /> 
+                        <span>Subscription</span>
+                      </Dropdown.Item>
+                      <hr />
+                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                        <IoIosLogOut className="text-[26px] text-danger-color font-semibold" /> 
+                        <span>logout</span>
+                      </Dropdown.Item>
+                  </Dropdown>
+                </>) 
+              : 
+                (
+                <div className="flex flex-col items-center">
+                  <Link2 href={"/login"} className={linkStyle + " hidden md:flex"}>
+                    {linkText}
                   </Link2>
-              </div>
-            </div>
+                  <div className="mt-2 md:hidden">
+                    <Link2 href={"/login"}>
+                        <RiUserSharedFill className={"text-secondary-color hover:text-secondary-hover transition-colors text-2xl"}/>
+                      </Link2>
+                  </div>
+                </div>
+                )
+              }
             <Dropdown label={<MdLanguage className="w-5 h-5" />} inline>
               <Link locale="en" href={"/"}>
                 <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">

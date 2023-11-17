@@ -9,12 +9,14 @@ import Link from 'next/link';
 import { useState, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import EditPlanModal from './editPlanModal';
+import Cookies from 'universal-cookie';
 
 
 
 export default function FetchPlanData({planData, updateComponent} : {planData: any; updateComponent: () => void}) {
     const [handleModal, setHandleModal] = useState(false)
     const plan = planData
+    const cookies = new Cookies()
     // Toast reference
     const [visible, setVisible] = useState(false);
     const toast = useRef<Toast>(null);
@@ -80,6 +82,7 @@ export default function FetchPlanData({planData, updateComponent} : {planData: a
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
             if(data.status === 'success') {

@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import EditCoursesModal from './editCoursesModal';
 import { convertDateTimeZone } from '@/helpers/convertDateAndTime';
-
+import Cookies from 'universal-cookie';
 
 export default function FetchCoursesData({coursesData, updateComponent} : {coursesData: any; updateComponent: () => void}) {
     const [handleModal, setHandleModal] = useState(false)
@@ -17,6 +17,7 @@ export default function FetchCoursesData({coursesData, updateComponent} : {cours
     const toast = useRef<Toast>(null);
     const toastB = useRef<Toast>(null);
     const toastC = useRef<Toast>(null);
+    const cookies = new Cookies();
     const showError = () => {
         toast.current?.show({severity:'error', summary: 'Error', detail:'Deleted Success', life: 3000});
     }
@@ -76,6 +77,7 @@ export default function FetchCoursesData({coursesData, updateComponent} : {cours
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
             console.log(data)

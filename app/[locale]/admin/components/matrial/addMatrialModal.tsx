@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { PiStudentBold } from 'react-icons/pi';
 import Cookies from 'universal-cookie';
+import LoadingButton from '../../loadingButton';
 
 export default function AddMatrialModal({openAssignModal, handleCloseModal, updateComponent}: 
     {
@@ -19,6 +20,8 @@ export default function AddMatrialModal({openAssignModal, handleCloseModal, upda
     const [age, setAge] = useState('');
     const [course, setCourse] = useState('');
     const [file, setFile] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false)
+
     const cookie = new Cookies()
     const toast = useRef<Toast>(null);
  
@@ -56,6 +59,7 @@ export default function AddMatrialModal({openAssignModal, handleCloseModal, upda
       }
 
       const addBook= (e : any) => {
+        setIsProcessing(true)
         e.preventDefault(); 
         const formData = new FormData();
         formData.append('name', name);
@@ -78,6 +82,7 @@ export default function AddMatrialModal({openAssignModal, handleCloseModal, upda
             } else {
                 showError()
             }
+          setIsProcessing(false)
         }).catch((err) => {
             console.log(err)
         })
@@ -117,12 +122,12 @@ export default function AddMatrialModal({openAssignModal, handleCloseModal, upda
               <FileInput id="file" helperText="Accepted PDF files only" onChange={(e: any) => setFile(e.target.files[0])} />
             </div>
             <div className="w-full">
-                <button
-                    type="submit"
-                    className="text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
-                >
-                  Add
-                </button>
+            <LoadingButton 
+                title={"Add Book"}
+                action={() => addBook}
+                customStyle={"text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"}
+                isProcessing={isProcessing}
+              />
             </div>
           </div>
           </form>

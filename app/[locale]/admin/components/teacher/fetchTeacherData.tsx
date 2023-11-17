@@ -8,11 +8,13 @@ import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import EditTeacherModal from './editTeacherModal';
 import { Toast } from 'primereact/toast';
+import Cookies from 'universal-cookie';
 
 
 export default function FetchTeacherData({teacherData, updateComponent} : {teacherData: any; updateComponent: () => void}) {
     const [handleModal, setHandleModal] = useState(false)
     const teacher = teacherData
+    const cookies = new Cookies()
     // Toast reference
     const [visible, setVisible] = useState(false);
     const toast = useRef<Toast>(null);
@@ -77,6 +79,7 @@ export default function FetchTeacherData({teacherData, updateComponent} : {teach
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
             // console.log(data)

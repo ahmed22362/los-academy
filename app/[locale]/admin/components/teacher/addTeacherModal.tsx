@@ -5,6 +5,9 @@ import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { GiTeacher } from 'react-icons/gi';
+import LoadingButton from '../../loadingButton';
+import Cookies from 'universal-cookie';
+
 export default function AddTeacherModal({openAssignModal, handleCloseModal, updateComponent}: 
     {
         openAssignModal: boolean;
@@ -22,8 +25,8 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
     const [password, setPassword] = useState('');
     const [passwordConfirmaon, setPasswordConfirmation] = useState('');
     const toast = useRef<Toast>(null);
-
-
+    const [isProcessing, setIsProcessing] = useState(false)
+    const cookies = new Cookies()
 
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Added Success', life: 3000});
@@ -56,11 +59,15 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
         }
       }
 
-      const addTeacher = () => {
+    const addTeacher = () => {
+
+        setIsProcessing(true)
+        
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
                 name: name,
@@ -80,6 +87,7 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
           } else {
             showError()
           }
+          setIsProcessing(false)
         }).catch(err => {
           console.log(err)
         })
@@ -147,13 +155,12 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
               <TextInput id="cost" type="number" placeholder={"Cost currency is USD / $"} onChange={(e: any) => setCost(e.target.value)} />
             </div>
             <div className="w-full">
-                <button
-                    onClick={addTeacher}
-                    type="submit"
-                    className="text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
-                >
-                  Add
-                </button>
+              <LoadingButton
+                title={"Add Teacher"} 
+                isProcessing={isProcessing}
+                customStyle={"text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"}
+                action={addTeacher}
+              />
             </div>
           </div>
         </Modal.Body>

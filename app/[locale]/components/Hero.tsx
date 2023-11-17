@@ -22,7 +22,7 @@ const Hero = () => {
             </span>
           <PrimaryButton text={t('bookNow-btn')} ourStyle="bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 shadow rounded-full w-50 mx-auto mt-5" />
         </div>
-        <Image src="/vectors/Header1.svg" alt="header image" width={800} height={400} loading="lazy" className="w-[800px] h-auto max-md:w-full"/>
+        <Image src="/vectors/Header1.svg" alt="header image" width={800} height={400} loading="lazy" blurDataURL="/vectors/HeaderBlur.svg" className="w-[800px] h-auto max-md:w-full"/>
       </section>
   )
 }

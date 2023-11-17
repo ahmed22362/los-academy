@@ -74,11 +74,14 @@ export default function PayOutTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allPayOuts && allPayOuts.map((payOut: any, index: number) => {
+             (allPayOuts && allPayOuts.length > 0 ? allPayOuts.map((payOut: any, index: number) => {
                     return(
                         <FetchPayOutData key={index} payOutData={payOut} updateComponent={fetchAllPayOuts}/>
                     )
-                }))
+                })
+                :
+                    (<p className="p-3">There is No Transactions</p>)
+                )
             }
             </Table.Body>
         </Table>

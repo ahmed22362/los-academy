@@ -4,6 +4,9 @@ import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-r
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
+import LoadingButton from '../../loadingButton';
+import Cookies from 'universal-cookie';
+
 export default function EditTeacherModal({openAssignModal, handleCloseModal, teacherDetails, updateComponent}: 
     {
         openAssignModal: boolean;
@@ -19,6 +22,8 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
     const [role, setRole] = useState(teacherDetails.role);
     const [cost, setCost] = useState(teacherDetails.sessionCost);
     const [password, setPassword] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false)
+    const cookies = new Cookies()
     
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
@@ -52,10 +57,12 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
       }
 
       const updateTeacher = () => {
+        setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/${teacherDetails.id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
                 name: name,
@@ -72,6 +79,7 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
           } else {
             showError()
           }
+          setIsProcessing(false)
         }).catch(err => {
           console.log(err)
         })
@@ -123,13 +131,12 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
               <TextInput id="cost" type="text" defaultValue={teacherDetails.sessionCost} onChange={(e) => setCost(e.target.value)} />
             </div>
             <div className="w-full">
-                <button
-                    onClick={updateTeacher}
-                    type="submit"
-                    className="text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
-                >
-                  Save
-                </button>
+            <LoadingButton
+                title={"Save Changes"} 
+                isProcessing={isProcessing}
+                customStyle={"text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"}
+                action={updateTeacher}
+              />
             </div>
           </div>
         </Modal.Body>

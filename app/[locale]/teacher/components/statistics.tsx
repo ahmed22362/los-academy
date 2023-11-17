@@ -4,7 +4,8 @@ import { cookies } from 'next/headers';
 
 export default async function Statistics() {
     const id = cookies().get('id')?.value;
-    const getTeacher = await getCurrentTeacher(id)
+    const token = cookies().get('token')?.value;
+    const getTeacher = await getCurrentTeacher(id, token)
     
     return (
         <section className={"flex gap-5 pb-[20px] w-full max-md:w-full max-md:px-5 max-md:flex-col max-md:flex-wrap px-2"}>

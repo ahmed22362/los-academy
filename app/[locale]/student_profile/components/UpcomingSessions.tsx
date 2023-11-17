@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from 'react';
 import PrimaryButton from '../../components/PrimaryButton';
 import Link from 'next/link';

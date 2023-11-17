@@ -121,14 +121,14 @@ export default function AdminLoginForm() {
             />
         </div>
         <div className="flex items-center gap-2">
-        <div className="card flex justify-content-center border-[1px] border-gray-300 rounded-[25%] p-[1px]">
-            <Checkbox onChange={e => setChecked(e.checked)} checked={checked}></Checkbox>
-        </div>
+            <div className="card flex justify-content-center border-[1px] border-gray-300 rounded-[25%] p-[1px]">
+                <Checkbox onChange={e => setChecked(e.checked)} checked={checked} id='remember'></Checkbox>
+            </div>
             <Label htmlFor="remember">
                 Keep me login
             </Label>
         </div>
-        <Button
+    <Button
         type='submit'
         theme={buttonTheme}
         color='purple'
@@ -138,11 +138,11 @@ export default function AdminLoginForm() {
         className={
             "transition-colors rounded-full font-semibold px-5 py-2 text-white"
         }
-      >
+        >
         <p>
-          Login
+            Login
         </p>
-      </Button>
+    </Button>
     </form>
   )
 }

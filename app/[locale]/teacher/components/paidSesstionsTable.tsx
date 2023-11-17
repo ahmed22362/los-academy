@@ -55,7 +55,7 @@ export default function PaidSesstionsTable() {
             {loading ? (
                         <Spinner />
                         ) : (
-                            totalPaid &&totalPaid.length > 0 ? totalPaid.map((paidSession: any, index: number) => {
+                            totalPaid && totalPaid.length > 0 ? totalPaid.map((paidSession: any, index: number) => {
                             return(
                                 <div key={index} className={"p-1 my-2 font-semibold flex w-full justify-between items-center text-base"}>
                                     <details>
@@ -104,7 +104,7 @@ export default function PaidSesstionsTable() {
                                 </div>
                             )
                         }) : (
-                            <p className="p-3 bg-warning-color text-white w-fit rounded-full font-bold">No paid sessions</p>
+                            <p className="p-3 bg-warning-color text-white w-fit rounded-full font-bold">No paid sessions !</p>
                         )
                 )}
             </div>

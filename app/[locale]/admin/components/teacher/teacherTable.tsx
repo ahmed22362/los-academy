@@ -4,12 +4,13 @@ import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import FetchTeacherData from '../teacher/fetchTeacherData';
 import TeacherComboBox from './teacherComboBox';
+import Cookies from 'universal-cookie';
 
 
 export default function TeacherTable() {
     const [allTeachers, setAllTeachers]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
-
+    const cookies = new Cookies()
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
             base: "group/head text-xs uppercase text-black-color-one bg-white-color p-[15px] text-center",
@@ -24,8 +25,10 @@ export default function TeacherTable() {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
+            console.log(data)
             setAllTeachers(data.data)
             setIsLoading(false)
         }).catch(err => {
@@ -72,11 +75,17 @@ export default function TeacherTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allTeachers && allTeachers.map((teacher: any, index: number) => {
+             (allTeachers && allTeachers.length > 0 ? allTeachers.map((teacher: any, index: number) => {
                     return(
                         <FetchTeacherData key={index} teacherData={teacher} updateComponent={fetchAllTechers}/>
                     )
-                }))
+                }): 
+                    (
+                        (
+                        <tr><td className="p-5">There is No Teachers</td></tr>
+                        )
+                    )
+                )
             }
             </Table.Body>
         </Table>

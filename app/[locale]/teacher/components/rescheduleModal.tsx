@@ -25,7 +25,7 @@ export default function RescheduleModal(
         const [message, setMessage] = useState('')
         const sessionData = session && session
         const [isProcessing, setIsProcessing] = useState(false)
-        const [rangeDate, setRangeDate] = useState<Nullable<(Date | null)[]>>(null);
+        const [rangeDate, setRangeDate] = useState<Nullable<(Date | null)[]> | any>(null);
         const router = useRouter()
 
     const modalTheme: CustomFlowbiteTheme['modal'] = {
@@ -74,13 +74,16 @@ export default function RescheduleModal(
                     router.refresh()
                 }
                 setIsProcessing(false)
+                setInterval(() => {
+                  setMessage('')
+                }, 4000)
             }).catch(err => console.log(err))
           }
 
 
 
   return (
-    <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"xl"}>
+    <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"2xl"}>
         <Modal.Header theme={modalTheme.header}>Reschedule Session :</Modal.Header>
         {message ? 
           (<span className={`${message === 'fail' ? 
@@ -89,7 +92,7 @@ export default function RescheduleModal(
                 :
                 'Reschedule Success'}</span>) : (<></>)}
         <Modal.Body>
-            <div>
+            <div className='m-auto flex flex-col items-center justify-center'>
               <div className="mb-2 block">
                 <Label htmlFor="rengeDateEnd" value="Select Range Date " />
               </div>
@@ -103,16 +106,16 @@ export default function RescheduleModal(
                     hourFormat="12"
                     selectionMode="range"
                     className={"border-[5px] border-secondary-color rounded-xl"}
+                
               />
-            </div>
-
-            <div className="w-full mt-3">
+            <div className="w-full mt-3 flex items-center justify-center">
               <LoadingButton 
                 title={"Reschdeule Session"}
                 action={reschduleRequest}
                 customStyle={"text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"}
                 isProcessing={isProcessing}
               />
+            </div>
             </div>
     </Modal.Body>
   </Modal>

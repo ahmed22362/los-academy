@@ -23,7 +23,7 @@ export default function PayOutTable() {
     }
 
     const fetchAllPayOuts = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/payout`, {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/myPayouts?status=pending`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -50,10 +50,7 @@ export default function PayOutTable() {
         <Table>
             <Table.Head theme={customTheme.head}>
                 <Table.HeadCell theme={customTheme.head}>
-                    #ID
-                </Table.HeadCell>
-                <Table.HeadCell theme={customTheme.head}>
-                    Teacher Name
+                    #RequestID
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
                     Date
@@ -74,12 +71,13 @@ export default function PayOutTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allPayOuts > 0 ? allPayOuts.map((payOut: any, index: number) => {
-                    return(
-                        <FetchPayOutData key={index} payOutData={payOut} updateComponent={fetchAllPayOuts}/>
+             (allPayOuts && allPayOuts.length > 0 ? allPayOuts.map((payOut: any, index: number) => {
+                    
+                return(
+                        <FetchPayOutData  payOutData={payOut} key={index} updateComponent={fetchAllPayOuts}/>
                     )
                 })
-                : <p className="p-3">No Transactions</p>
+                : <tr><td className="p-5">There is No Transactions</td></tr>
                 )
             }
             </Table.Body>

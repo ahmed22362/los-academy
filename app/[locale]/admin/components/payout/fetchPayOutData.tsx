@@ -5,12 +5,14 @@ import {Table} from 'flowbite-react';
 import { useState, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import Cookies from 'universal-cookie';
+import { convertDateTimeZone } from '@/helpers/convertDateAndTime';
 
 
 
 export default function FetchPayOutData({payOutData, updateComponent} : {payOutData: any; updateComponent: () => void}) {
     const payout = payOutData
     const cookies = new Cookies();
+    const convertTime = convertDateTimeZone
     // Toast reference
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
@@ -56,10 +58,10 @@ export default function FetchPayOutData({payOutData, updateComponent} : {payOutD
                 {payout.teacher.name}
             </Table.Cell>
             <Table.Cell>
-                {payout.createdAt}
+                {convertTime(payout.createdAt, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "YYYY-MM-DD h:mm A")}
             </Table.Cell>
             <Table.Cell>
-            {payout.amount}$
+                {payout.amount}$
             </Table.Cell>
             <Table.Cell>
             {payout.status === "pending" 

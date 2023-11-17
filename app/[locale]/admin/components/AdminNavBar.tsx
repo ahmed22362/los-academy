@@ -23,7 +23,9 @@ export default function AdminNavBar() {
     };
 
     useEffect(() => {
-        getData();
+        if(userID && token) {
+            getData();
+        }
     }, []);
 
     return(

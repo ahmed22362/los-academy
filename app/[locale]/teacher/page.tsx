@@ -1,11 +1,11 @@
 import Attendance from "./components/attendance";
 import RescheduleSessions from "./components/rescheduleSessions";
 import FreeSesstionsTable from "./components/freeTrialTable";
-import OnGoingBox from "./components/onGoingBox";
 import PaidSesstionsTable from "./components/paidSesstionsTable";
 import Reports from "./components/reports";
 import Statistics from "./components/statistics";
 import TeacherSchedule from "./components/teacherSchedule";
+import FetchingUpComingSessions from "./components/fetchingUpComingSessions";
 
 export default function TeacherPage() {
   
@@ -14,7 +14,7 @@ export default function TeacherPage() {
             <section className={"max-md:w-full max-md:flex max-md:flex-col max-md:gap-5 max-md:items-center w-[600px]"}>
                 <div className="flex items-center justify-between pb-[20px] gap-5 max-md:flex-wrap">
                     <Attendance />
-                    <OnGoingBox/>
+                    <FetchingUpComingSessions/>
                 </div>
                 <div className={"flex items-center gap-5 pb-[20px] max-md:flex-wrap"}>
                     <TeacherSchedule />

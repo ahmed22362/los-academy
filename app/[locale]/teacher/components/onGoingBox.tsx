@@ -1,16 +1,26 @@
 "use client";
 
 import useCountDown from "@/helpers/useCountDown";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 
-export default function OnGoingBox() {
-    const [session, setAllSessions] = useState<any>([]);
+export default function OnGoingBox(session: any) {
+
+    const upComingSession = session.session && session.session
+
+    // handle buttons
+    const [isIamHere, setIsIamHere] = useState(true)
+    const [isJoin, setIsJoin] = useState(false)
+    const [isAbsentAndTaken, setIsAbsentAndTaken] = useState(false)
+    const [endMessage, setEndMessage] = useState(false)
+    const [sesstionLink, setSesstionLink] = useState('')
     const [started, setIsStarted] = useState(false)
     const [countdownSeconds, setCountdownSeconds] = useState(0);
     const cookies = new Cookies()
+    
     // Convert session time to a Date object
-    const sessionDate: any = new Date(session);
+    const sessionDate: any = new Date(upComingSession.sessionDate);
     // console.log(sessionDate)
     // Get the current time
     const currentDate: any = new Date();
@@ -26,29 +36,8 @@ export default function OnGoingBox() {
         setIsStarted(true)
     };
 
-    const getUpComingSession = () => {
-
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/upcomingSession`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.get("token")}`,
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            setAllSessions(data.data[0].sessionDate)
-        }).catch(err => {
-            console.log(err)
-        })
-    }
-    useEffect(() => {
-        getUpComingSession()
-    }, [])
-
     // Counter down Functionality
     useEffect(() => {
-        
         let timeoutId: any;
         const handleCountdown = () => {
             if (countdownSeconds > 0) {
@@ -71,27 +60,143 @@ export default function OnGoingBox() {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const remainingSeconds = seconds % 60;
-    
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
 
+    // Update session attendance For Teacher
+
+    const handleUpdateAttendance = () => {
+        console.log(upComingSession.id)
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/updateTeacherAttendance`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`,
+            },
+            body: JSON.stringify({
+                sessionId: upComingSession.id
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            if(data.status === 'success') {
+                // handleIAmHereClick()
+                setIsIamHere(false)
+                setIsJoin(true)
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    const updateSessionStatus = (status: string) => {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/status`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`,
+            },
+            body: JSON.stringify({
+                sessionId: upComingSession.id,
+                status: status
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            if(status !== 'ongoing') {
+                setIsAbsentAndTaken(false)
+                setEndMessage(true)
+                setIsIamHere(false)
+                setSesstionLink("")
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+    const generateMeetingLink = () => {
+        updateSessionStatus('ongoing')
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/generateLink`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`,
+            },
+            body: JSON.stringify({
+                sessionId: upComingSession.id
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            if(data.status === 'success') {
+                setIsJoin(false)
+                setSesstionLink(data.data.meetingLink)
+                setIsAbsentAndTaken(true)
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
     return(
-        <div className={"flex-col justify-center items-center gap-[16px] h-[240px] text-center adminBox"}>
-            <h3 className={"adminBoxTitle"}>Are you here and ready for the session ?</h3>
-            <div className={"bg-white-color p-5 rounded-[16px] "}>
-                <div className={"flex flex-col items-start text-md font-semibold text-[black-color-one]"}>
-                <span>
-                        {
-                            started === false ?
-                            "":
-                            countdownSeconds > 0 
-                            ? `Session will start in ${formatTime(countdownSeconds)}` 
-                            : "Session has started"
-                        }
-                </span>          
-                </div>
-                <button className={"smallBtn"} onClick={handleIAmHereClick}>I am Here</button>          
+        <div className={"bg-white-color p-5 rounded-[16px] "}>
+            <div className={"flex flex-col items-start text-md font-semibold text-[black-color-one]"}>
+            <span>
+                    {
+                        started === false ?
+                        "":
+                        countdownSeconds > 0 
+                        ? `Session will start in ${formatTime(countdownSeconds)}` 
+                        : "Session has started"
+                    }
+            </span>
+            <span className="text-success-color font-semibold">
+                    {
+                        endMessage === false ?
+                        "":
+                        "Session has ended"
+                    }
+            </span>
+                {sesstionLink && sesstionLink ? <Link href={sesstionLink} className="text-success-color font-semibold flex items-center justify-center mb-2 hover:underline">Click To Redirect To Session</Link> : ""}
             </div>
+            {/* 
+                // first step click on i am here will request attendance teacher to session
+                    - update session status to ongoing 
+                // click on join button to send requset to generate session link
+                // show two buttons absent and taken and every button will update session status by send request api
+            
+            */}
+            {
+                isJoin ?
+                (            
+                    <button 
+                        className={"smallBtn hover:bg-secondary-hover transition-colors"}
+                        onClick={generateMeetingLink}
+                        >Join</button>
+                ) :
+                isAbsentAndTaken ?
+                (
+                <div className="flex items-center justify-center gap-3 mt-3">
+                    <button 
+                        className={"smallBtn text-danger-color bg-white-color border-[1px] border-danger-color hover:bg-danger-color hover:text-white transition-colors"}
+                        onClick={() => updateSessionStatus('absent')}
+                    >Absent</button>
+                    <button 
+                        className={"smallBtn text-success-color bg-white-color border-[1px] border-success-color hover:bg-success-color hover:text-white transition-colors"}
+                        onClick={() => updateSessionStatus('taken')}
+                    >Taken</button>
+                </div>
+                ) : 
+                (
+                    <button 
+                    className={"smallBtn hover:bg-secondary-hover transition-colors"} 
+                    onClick={handleUpdateAttendance}
+                    >I am Here</button>  
+                )
+            }
+
         </div>
     )
 }

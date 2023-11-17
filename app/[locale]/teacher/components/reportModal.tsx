@@ -32,9 +32,9 @@ export default function ReportModal({openAssignModal, handleCloseModal, details}
             // Content list
         const contentList = [
             `Grade: ${details.grade}`,
-            `Arabic: ${details.arabic === null ? "Not Available" : details.arabic}`,
-            `Islamic: ${details.islamic === null ? "Not Available" : details.islamic}`,
-            `Quran: ${details.quran === null ? "Not Available" : details.quran}`,
+            details.arabic === null ? '' : 'Arabic: ' + details.arabic,
+            details.islamic === null ? '' : 'Islamic: ' + details.islamic,
+            details.quran === null ? '' : 'Quran: ' + details.quran,
         ];
 
         doc.setFontSize(10);
@@ -108,9 +108,9 @@ export default function ReportModal({openAssignModal, handleCloseModal, details}
                 <h3 className='text-black-color-one text-center font-semibold text-md'>Report Title: {details.title}</h3>
                 <ul className="ps-5">
                     <li><b>Grade:</b> {details.grade}</li>
-                    <li><b>Arabic:</b> {details.arabic === null ? "Not Available" : details.arabic}</li>
-                    <li><b>Islamic:</b> {details.islamic === null ? "Not Available" : details.islamic}</li>
-                    <li><b>Quran:</b> {details.quran === null ? "Not Available" : details.quran}</li>
+                    {details.arabic === null ? "" : (<li><b>Arabic:</b> {details.arabic} </li>)}
+                    {details.islamic === null ? "" : (<li><b>Islamic:</b> {details.islamic} </li>)}
+                    {details.quran === null ? "" : (<li><b>Quran:</b> {details.quran} </li>)}
                 </ul>
                 <p className="flex flex-col">
                     <b>Teacher Comment:</b> 

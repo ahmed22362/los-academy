@@ -10,6 +10,7 @@ export default async function TeacherSchedule() {
     const sortedSessiosns = allSessiosns.data?.sort((a: any, b: any) => {
         return new Date(a.sessionDate).getTime() - new Date(b.sessionDate).getTime();
     })
+    
 
     return(
         <div className={"adminBox w-full flex-col"}>

@@ -79,7 +79,7 @@ export default function MatrialTable() {
                         <FetchMatrialData key={index} matrialData={matrial} updateComponent={fetchAllMatrials}/>
                     )
                 })
-                : <p className="p-3">No Matrials</p>
+                : <tr><td className="p-5">There is No Matrials</td></tr>
                 )
             }
             </Table.Body>

@@ -22,7 +22,7 @@ interface UserInfo {
     // ... add other properties as needed
     age?: number; // make age optional if it may not be present in the API response
   }
-export default function EditProfile() {
+export default function EditProfile({setMyInfo}:any) {
   const [openModal, setOpenModal] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false); // New state
   const cookie=new Cookies();
@@ -53,7 +53,7 @@ export default function EditProfile() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data.data);
-      
+        setMyInfo(data?.data)
         setUserInfo(data.data)
         // Set the retrieved Seeions in the state
         

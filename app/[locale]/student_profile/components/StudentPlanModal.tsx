@@ -13,12 +13,11 @@ interface Plan {
   price: number;
   features: string[];
 }
-export default function StudentPlan() {
+export default function StudentPlanModal({openPlansModal, setOpenPlansModal}:any) {
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
   const token = cookie.get("token");
 
-  const [openPlansModal, setOpenPlansModal] = useState(false);
   const [allPlans, setAllPlan]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -67,10 +66,10 @@ export default function StudentPlan() {
 
   const activePlans = allPlans.filter((plan: any) => plan.active);
   let numberOfPlans = activePlans.length;
-  console.log(numberOfPlans);
 
   const getModalSizeClass = () => {
-    if (numberOfPlans++ >= 3) {
+    numberOfPlans++;
+    if (numberOfPlans >= 3) {
       return '7xl';
     } else if (numberOfPlans === 2) {
       return '4xl';
@@ -80,7 +79,7 @@ export default function StudentPlan() {
   };
   return (
     <>
-      <Button onClick={() => setOpenPlansModal(true)}>Toggle Plans modal</Button>
+      {/* <Button onClick={() => setOpenPlansModal(true)}>Toggle Plans modal</Button> */}
       <Modal
         show={openPlansModal}
         className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "
@@ -110,7 +109,7 @@ size={getModalSizeClass()}
                   planId={plan.id}
                   title={plan.title}
                   price={plan.price}
-                  recommended="Recommended"
+                  recommended={plan.recommended}
                   features={[
                     "Private one-to-one",
                     `${plan.sessionDuration} mins`,

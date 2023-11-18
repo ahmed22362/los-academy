@@ -3,16 +3,14 @@ import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import Image from "next/image";
 import RemainSessions from "./components/RemainSessions";
-import StudentPlan from "./components/StudentPlanModal";
 import CommunityStatistics from "./components/CommunityStatistics";
 import UpcomingSessions from "./components/UpcomingSessions";
 import EditProfile from "./components/edit_profile";
-import Subscribtion from "./components/Subscribtion";
 import BookModal from "./components/BookModal";
 import Cookies from "universal-cookie";
 import StudentAttendence from "./components/studentAttendence";
-import SessionsModal from "./components/sessionsModal";
-import UserFeedBack from "./components/userFeedBack";
+import MyInfo from "./components/myInfo";
+
 
 interface UserInfo {
   name: string;
@@ -54,23 +52,10 @@ export default function page() {
         "ps-10 pe-10 pt-[7rem]  max-md:justify-between max-md:items-center"
       }
     >
-      <StudentPlan />
-      <div className="flex flex-col md:pl-[150px] justify-center items-center gap-5 w-fit ">
-        <div className="rounded-full  bg-[#EBF6FE] w-20 h-20 flex justify-center items-end ">
-          <Image
-            className="rounded-full  bg-[#EBF6FE]"
-            src={myInfo?.gender==='male'?"/vectors/boy.png":"/vectors/girl.png" ||''}
-            width={60}
-            height={60}
-            alt="profile photo"
-          />
-        </div>
-        <h2 className="font-bold text-lg">{myInfo?.name}</h2>
-      </div>
+      <MyInfo myInfo={myInfo} />
       <div className="grid grid-cols-3 max-sm:grid-cols-1 max-md:grid-cols-2 justify-between gap-5	 mt-7">
         <div className="card w-full  ">
           <EditProfile setMyInfo={setMyInfo} />
-          <Subscribtion />
           <div>
             <h3 className={`${styles.main_head} mb-8`}>Infos</h3>
             {/* <p className={`mb-8 ml-5  mt-3 `}>
@@ -80,12 +65,11 @@ export default function page() {
             </p> */}
             <CommunityStatistics />
             <div
-              className={`my- shadow-2xl p-5 rounded-3xl hover:shadow-lg duration-300 w-full`}
+              className={`my-5 shadow-2xl p-5 rounded-3xl hover:shadow-lg duration-300 w-full`}
             >
               <h4 className={`${styles.secondary_head} `}>Remain Sessions</h4>
               <RemainSessions />
             </div>
-            <SessionsModal />
           </div>
         </div>
         <div className="card w-full  ">
@@ -100,7 +84,7 @@ export default function page() {
             <div
               className={`my-11 shadow-2xl		 p-5  rounded-3xl  hover:shadow-lg duration-300	`}
             >
-              <UserFeedBack />
+              
               <h4 className={`${styles.secondary_head} ml-3 my-2`}>
                 Book a Session
               </h4>

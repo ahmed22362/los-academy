@@ -11,8 +11,7 @@ import CancelSubscription from './CancelSubscription';
 
 
 
-export default function Subscribtion() {
-  const [openSubscribtionModal, setOpenSubscribtionModal] = useState(false);
+export default function Subscribtion({setOpenSubscribtionModal, openSubscribtionModal}:any) {
   const cookie=new Cookies();
   const url =process.env.NEXT_PUBLIC_APIURL;
   const token =cookie.get('token') ;
@@ -66,7 +65,7 @@ const handleClose=()=>{
  
   return (
     <>
-      <Button onClick={() => setOpenSubscribtionModal(true)}>Toggle Subscription modal</Button>
+      {/* <Button onClick={() => setOpenSubscribtionModal(true)}>Toggle Subscription modal</Button> */}
       <Modal   show={openSubscribtionModal} className='block space-y-0 md:flex md:space-y-0 md:space-x-4 ' size={'2xl'}  onClose={handleClose}>
       <Modal.Header className='p-0 m-0 border-0'></Modal.Header>
 

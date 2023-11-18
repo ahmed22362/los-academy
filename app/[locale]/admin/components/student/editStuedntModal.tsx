@@ -63,7 +63,7 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
 
       const updateStudent = () => {
         setIsProcessing(true)
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/${studentDetails.id}`, {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/${studentDetails.name}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

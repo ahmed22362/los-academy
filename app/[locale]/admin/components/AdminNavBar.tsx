@@ -4,28 +4,41 @@ import {Dropdown} from "flowbite-react";
 import Link from "next/link";
 import Cookies from "universal-cookie";
 import { useEffect, useState } from "react";
-import { getCurrentTeacher } from "@/helpers/getMe";
+import AdminProfile from "./adminProfileModal";
 
 export default function AdminNavBar() {
 
     const cookies = new Cookies();
-    const userID = cookies.get('id')
     const token = cookies.get('token')
     const [data, setData] = useState<null | any>(null)
-    
-    const getData = async () => {
-        try {
-            const result = await getCurrentTeacher(userID, token);
-            setData(result.data);
-        } catch (err) {
-            console.log(err);
-        }
-    };
+    const [handleModal, setHandleModal] = useState(false)
+
+    const handleOpenModal = () => {
+        setHandleModal(true)
+    }
+
+    const handleCloseModal = () => {
+        setHandleModal(false)
+    }
+    const getCurrentAdminData = () => {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/me`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data)
+            setData(data.data)
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
 
     useEffect(() => {
-        if(userID && token) {
-            getData();
-        }
+        getCurrentAdminData();
     }, []);
 
     return(
@@ -58,10 +71,19 @@ export default function AdminNavBar() {
                     {data && <h6>{data.name}</h6>}
                 </div>
                 <Dropdown label={""} inline>
-                    <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">
+                    <Dropdown.Item 
+                        href={"#"}
+                        onClick={handleOpenModal}
+                        className="rtl:flex-row-reverse ltr:flex-row">
                             Profile
                     </Dropdown.Item>
                 </Dropdown>
+                <AdminProfile
+                    openAssignModal={handleModal}
+                    handleCloseModal={handleCloseModal}
+                    user={data}
+                    updateComponent={getCurrentAdminData}
+                />
             </div>
         </nav>
     )

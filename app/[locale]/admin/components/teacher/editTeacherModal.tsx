@@ -87,7 +87,7 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
   return (
     <>
       <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"3xl"}>
-        <Modal.Header theme={modalTheme.header}>Edit Teacher: {teacherDetails.id}</Modal.Header>
+        <Modal.Header theme={modalTheme.header}>Edit Teacher: {teacherDetails.name}</Modal.Header>
         <Modal.Body>
         <div className="space-y-6">
         <Toast ref={toast} />

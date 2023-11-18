@@ -18,12 +18,16 @@ export default function OurSideBar() {
         },
     }
 
-    const logOut = () => {
-        cookies.remove('token');
-        cookies.remove('id');
-        if (!cookies.get('token') && !cookies.get('id')) {
+    const logOut = async () => {
+        
+        const token = await cookies.get('token')
+        const id = await cookies.get('id')
+        
+        if(token && id) {
+            cookies.remove('token', { path: '/', });
+            cookies.remove('id', { path: '/', });
             router.replace('/los_auth');
-        } else {
+        }  else {
             console.error('Error removing cookies');
         } 
     }

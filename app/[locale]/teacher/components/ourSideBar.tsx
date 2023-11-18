@@ -18,10 +18,17 @@ export default function OurSideBar() {
         },
     }
 
-    const logOut = () => {
-        cookies.remove('token');
-        cookies.remove('id');
-        router.replace('/los_auth');
+    const logOut = async () => {
+        const token = await cookies.get('token')
+        const id = await cookies.get('id')
+        
+        if(token && id) {
+            cookies.remove('token', { path: '/', });
+            cookies.remove('id', { path: '/', });
+            router.replace('/los_auth');
+        }  else {
+            console.error('Error removing cookies');
+        } 
     }
 
     return (
@@ -44,6 +51,15 @@ export default function OurSideBar() {
                     >
                         <p>
                             Students
+                        </p>
+                    </Sidebar.Item>
+                    <Sidebar.Item
+                        theme={customTheme.item}
+                        href="/teacher/sessions"
+                        active={pathName === "/teacher/sessions"}
+                    >
+                        <p>
+                            Sessions
                         </p>
                     </Sidebar.Item>
                     <Sidebar.Item

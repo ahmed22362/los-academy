@@ -1,7 +1,7 @@
 
-export const getCurrentTeacher = async (id: string | any, token: any) => {
-    if(id && token) {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/${id}`, {
+export const getCurrentTeacher = async (token: any) => {
+    if(token) {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/me`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

@@ -4,17 +4,14 @@ import {Dropdown} from "flowbite-react";
 import Link from "next/link";
 import Cookies from "universal-cookie";
 import { useEffect, useState } from "react";
-import { getCurrentTeacher } from "@/helpers/getMe";
 import TeacherProfile from "./teacherProfileModal"
 
-export default function AdminNavBar() {
+export default function TeacherNavBar() {
 
     const cookies = new Cookies();
-    const userID = cookies.get('id')
     const token = cookies.get('token')
     const [data, setData] = useState<null | any>(null)
     const [handleModal, setHandleModal] = useState(false)
-
     const handleOpenModal = () => {
         setHandleModal(true)
     }
@@ -23,25 +20,25 @@ export default function AdminNavBar() {
         setHandleModal(false)
     }
 
-    const getData = async () => {
-        try {
-            const result = await getCurrentTeacher(userID, token);
-            setData(result.data);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    useEffect(() => {
-       if(userID && token) {
-           getData();
-       }
-    }, []);
-
-    const updateComponent = () => {
-        getData()
+    const getCurrentTeacherData = () => {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/me`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            setData(data.data)
+        }).catch((err) => {
+            console.log(err)
+        })
     }
 
+    useEffect(() => {
+            getCurrentTeacherData()
+    }, []);
 
     return(
         <nav className={
@@ -84,7 +81,7 @@ export default function AdminNavBar() {
                     openAssignModal={handleModal}
                     handleCloseModal={handleCloseModal}
                     user={data}
-                    updateComponent={updateComponent}
+                    updateComponent={getCurrentTeacherData}
                 />
             </div>
         </nav>

@@ -1,6 +1,6 @@
 "use client";
 
-import PrimaryButton  from "./../components/PrimaryButton";
+import PrimaryButton from "./../components/PrimaryButton";
 import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
 import Image from "next/image";
@@ -8,30 +8,41 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
-import {useRouter} from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { RadioButton } from "primereact/radiobutton";
-import './login.module.css'
+import "./login.module.css";
+import "./login.css";
 
 //theme
 import "primereact/resources/themes/lara-light-indigo/theme.css";
-
-
-
+import ForgetPassword from "../student_profile/components/forgetPassword";
 
 function page() {
+  const [openForgetPasswordModal, setOpenForgetPasswordModal] =
+    useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const toast = useRef<Toast>(null);
-  const showSuccess = (msg :any) => {
-    toast.current?.show({severity:'success', summary: 'Success', detail:msg, life: 3000});
-}
+  const showSuccess = (msg: any) => {
+    toast.current?.show({
+      severity: "success",
+      summary: "Success",
+      detail: msg,
+      life: 3000,
+    });
+  };
   const showError = (msg: string) => {
-      toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
-  }
+    toast.current?.show({
+      severity: "error",
+      summary: "Error",
+      detail: msg,
+      life: 4000,
+    });
+  };
 
   const cookies = new Cookies();
-  const [gender, setGender] = useState('');
+  const [gender, setGender] = useState("");
   const [userData, setUserData] = useState();
   const [showEmailVerification, setShowEmailVerification] = useState(false);
 
@@ -50,30 +61,47 @@ function page() {
     age: "",
     phone: "",
     email: "",
-    gender:"",
+    gender: "",
     password: "",
     passwordConfirmation: "",
   });
 
-  const url ='https://los-academy.onrender.com/api/v1/';
+  const url = process.env.NEXT_PUBLIC_APIURL;
   const handleFormChange = (e: any) => {
     const { name, value } = e.target;
-  
+
     // Use parseFloat or parseInt to parse the values as numbers
-    setFormData({ ...formData, [name]: name === 'age' || name === 'phone' ? parseInt(value, 10) : value });
+    setFormData({
+      ...formData,
+      [name]: name === "age" ? parseInt(value, 10) : value,
+    });
   };
   const handleFormSubmit = () => {
-    if (!gender) {
-      showError('Please select your gender');
+    const requiredFields: (keyof FormData)[] = [
+      "name",
+      "age",
+      "phone",
+      "email",
+      "password",
+      "passwordConfirmation",
+    ];
+    const emptyField = requiredFields.find((field) => !formData[field]);
+
+    if (emptyField) {
+      showError(`Please fill in ${emptyField}`);
       return;
     }
-  
+
+    if (!gender) {
+      showError("Please select your gender");
+      return;
+    }
     // Set the gender directly in the formData object
     formData.gender = gender;
-    
+
     console.log(formData);
-    
-    fetch(`${url}user/auth/signup`, {
+
+    fetch(`${url}/user/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -83,57 +111,49 @@ function page() {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          showSuccess('Registration Successfully');
-          showSuccess(data.message)
+          showSuccess("Registration Successfully");
+          showSuccess(data.message);
           console.log(data);
           setTimeout(() => {
-            router.push('/login');
+            router.push("/student_profile");
           }, 3000);
-          setUserData(data)
-          cookies.set('token', data.token);
-
+          setUserData(data);
+          cookies.set("token", data.token);
         } else {
-          showError('Registration failed');
+          showError("Registration failed");
           if (data?.message === "Duplicate field Please use another value!") {
             showError("Email Already Exist Please Login");
           } else {
-            showError(data?.message);
           }
           console.log(data);
         }
       })
       .catch((error) => {
         console.log(error);
-        showError('An error occurred')
+        showError("An error occurred");
       });
   };
 
-
-// resend mail function
-
-
+  // resend mail function
 
   // login
 
+  const handleEmailChange = (e: any) => {
+    setEmail(e.target.value);
+  };
 
-      const handleEmailChange = (e :any) => {
-        setEmail(e.target.value);
-      };
+  const handlePasswordChange = (e: any) => {
+    setPassword(e.target.value);
+  };
 
-      const handlePasswordChange = (e :any) => {
-        setPassword(e.target.value);
-      };
-
-      const formDataLogin = {
-        email: email,
-        password: password,
-      };
-
+  const formDataLogin = {
+    email: email,
+    password: password,
+  };
 
   const handleLogin = () => {
-    alert('clicked')
-      console.log(formDataLogin);
-          
+    console.log(formDataLogin);
+
     // Perform basic client-side validation
     if (!email || !password) {
       showError("Please fill in all fields");
@@ -141,7 +161,7 @@ function page() {
     }
 
     // Send a POST request to the login endpoint
-    fetch(`${url}user/auth/login`, {
+    fetch(`${url}/user/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -151,16 +171,19 @@ function page() {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          showSuccess('Login Successfully');
+          showSuccess("Login Successfully");
           console.log(data);
           setTimeout(() => {
             // Redirect to a protected route upon successful login
-            router.push('/student_profile');
+            router.push("/student_profile");
           }, 3000);
           // Save user token in a cookie or state as needed
-          cookies.set('token', data.token);
+          cookies.set("token", data.token);
         } else {
-          if (data.message === "Can't log in before you verify you email if you miss the first mail you can always resend it!") {
+          if (
+            data.message ===
+            "Can't log in before you verify you email if you miss the first mail you can always resend it!"
+          ) {
             // Display the div for email verification
             showError(`${data.message}`);
             setShowEmailVerification(true);
@@ -172,10 +195,10 @@ function page() {
       })
       .catch((error) => {
         console.log(error);
-        showError('An error occurred');
+        showError("An error occurred");
       });
   };
-  
+
   const customeTheme: CustomFlowbiteTheme = {
     tab: {
       tablist: {
@@ -193,39 +216,37 @@ function page() {
       },
     },
   };
-// resend mail
+  // resend mail
   const handleResendMail = () => {
     // Send a request to resend the confirmation email
-    fetch(`${url}user/auth/resendMailConfirmation?email=${email}`, {
-      method: 'GET',
+    fetch(`${url}/user/auth/resendMailConfirmation?email=${email}`, {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.status === 'success') {
-          showSuccess('Mail resent successfully');
+        if (data.status === "success") {
+          showSuccess("Mail resent successfully");
         } else {
           showError(data.message);
         }
       })
       .catch((error) => {
         console.log(error);
-        showError('An error occurred while resending the mail');
+        showError("An error occurred while resending the mail");
       });
   };
 
   return (
     <section className="mt-8">
       <div className="flex items-center mt-40 justify-evenly gap-20 sm:flex-row flex-col-reverse ">
-      <Toast ref={toast}  />
+        <Toast ref={toast} />
 
         <div className="image transition-all duration-500 ">
           <Image
-            src={`${
-              activeTab ? "/vectors/login.svg" : "/vectors/signup.svg"
-            }`}
+            src={`${activeTab ? "/vectors/login.svg" : "/vectors/signup.svg"}`}
             className="transition-all duration-500 w-auto h-auto"
             width={400}
             height={300}
@@ -248,32 +269,50 @@ function page() {
               >
                 <h3 className="font-bold	 text-xl	"> Welcome Back ! </h3>
                 <div className="flex flex-col gap-4" style={{ width: "100%" }}>
-
                   <input
-                    className="border-blue-600 gradiant-color	 rounded-3xl w-full		border-2	"
+                    className="border-[--secondary-color] gradiant-color	 rounded-3xl w-full		border-2	"
                     type="email"
                     value={email}
                     onChange={handleEmailChange}
                     placeholder="Email address "
+                    onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                   />
                   <input
-                    className="border-blue-600 gradiant-color	 rounded-3xl w-full		border-2	"
+                    className="border-[--secondary-color] gradiant-color	 rounded-3xl w-full		border-2	"
                     type="password"
                     value={password}
                     onChange={handlePasswordChange}
                     placeholder="Password"
+                    onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                   />
-                  <Link className="font-semibold	 underline" href={"#"}>
+                  <button
+                    onClick={() => setOpenForgetPasswordModal(true)}
+                    className=" font-semibold	 underline"
+                  >
                     Forget Password ?
-                  </Link>
+                  </button>
+                  <ForgetPassword
+                    openForgetPassword={openForgetPasswordModal}
+                    setOpenForgetPasswordModal={setOpenForgetPasswordModal}
+                  />
                   {showEmailVerification && (
-            <div>
-              <div className="text-red-500 text-md font-medium text-center">Check Gmail and confirm your mail</div>
-              <div className="text-center font-sm">Didn't receive a mail? <button onClick={handleResendMail} className="underline text-lg font-medium">Resend mail</button></div>
-            </div>
-          )}
+                    <div>
+                      <div className="text-red-500 text-md font-medium text-center">
+                        Check Gmail and confirm your mail
+                      </div>
+                      <div className="text-center font-sm">
+                        Didn't receive a mail?{" "}
+                        <button
+                          onClick={handleResendMail}
+                          className="underline text-lg font-medium"
+                        >
+                          Resend mail
+                        </button>
+                      </div>
+                    </div>
+                  )}
                   <PrimaryButton
-                  onClick={handleLogin}
+                    onClick={handleLogin}
                     text="Login"
                     ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
                   />
@@ -296,8 +335,6 @@ function page() {
                 className=" flex justify-center items-center gap-3 flex-col flex-wrap "
                 style={{ minHeight: "300px", width: "100%" }}
               >
-
-
                 <h3 className="font-bold	 text-xl	">
                   {" "}
                   Welcome to LOS Accademy !{" "}
@@ -308,31 +345,35 @@ function page() {
                       name="name"
                       value={formData.name}
                       onChange={handleFormChange}
-                      className="border-blue-600 gradiant-color rounded-3xl w-full border-2"
+                      onKeyDown={(e) => e.key === "Enter" && handleFormSubmit()}
+                      className="border-[--secondary-color] gradiant-color rounded-3xl w-full border-2"
                       type="text"
                       placeholder="Full Name"
                     />
                     <input
                       name="age"
                       onChange={handleFormChange}
-                      className="border-blue-600 gradiant-color rounded-3xl w-full appearance-none border-2"
+                      onKeyDown={(e) => e.key === "Enter" && handleFormSubmit()}
+                      className="border-[--secondary-color] gradiant-color rounded-3xl w-full appearance-none border-2"
                       type="tel"
                       placeholder="Age"
                     />
                   </div>
-               
+
                   <input
                     name="phone"
                     onChange={handleFormChange}
+                    onKeyDown={(e) => e.key === "Enter" && handleFormSubmit()}
                     type="tel"
-                    className="border-blue-600 gradiant-color rounded-3xl w-full appearance-none border-2"
+                    className="border-[--secondary-color] gradiant-color rounded-3xl w-full appearance-none border-2"
                     placeholder="Phone number"
                   />
                   <input
                     name="email"
                     value={formData.email}
                     onChange={handleFormChange}
-                    className="border-blue-600 gradiant-color rounded-3xl w-full border-2"
+                    onKeyDown={(e) => e.key === "Enter" && handleFormSubmit()}
+                    className="border-[--secondary-color] gradiant-color rounded-3xl w-full border-2"
                     type="email"
                     placeholder="Email address"
                   />
@@ -340,7 +381,8 @@ function page() {
                     name="password"
                     value={formData.password}
                     onChange={handleFormChange}
-                    className="border-blue-600 gradiant-color rounded-3xl w-full border-2"
+                    onKeyDown={(e) => e.key === "Enter" && handleFormSubmit()}
+                    className="border-[--secondary-color] gradiant-color rounded-3xl w-full border-2"
                     type="password"
                     placeholder="Password"
                   />
@@ -348,20 +390,45 @@ function page() {
                     name="passwordConfirmation"
                     value={formData.passwordConfirmation}
                     onChange={handleFormChange}
-                    className="border-blue-600 gradiant-color rounded-3xl w-full border-2"
+                    onKeyDown={(e) => e.key === "Enter" && handleFormSubmit()}
+                    className="border-[--secondary-color] gradiant-color rounded-3xl w-full border-2"
                     type="password"
                     placeholder="Confirm Password"
                   />
-                     <div className="flex justify-evenly  flex-wrap gap-3">
-    <div className="flex align-items-center ">
-        <RadioButton  inputId="male" name="gender" value="male" onChange={(e) => setGender(e.value)} checked={gender === 'male'} />
-        <label htmlFor="male" className="ml-2">Male</label>
-    </div>
-    <div className="flex align-items-center">
-        <RadioButton inputId="famle" name="gender" value="famle" onChange={(e) => setGender(e.value)} checked={gender === 'famle'} />
-        <label htmlFor="famle" className="ml-2">Famle</label>
-    </div>
-    </div>
+                  <div className="flex justify-between  px-10 flex-wrap gap-3 py-3">
+                    <div className="flex align-items-center  ">
+                      <RadioButton
+                        className="border focus-within:border-none focus-within:bg-[--secondary-color] border-[--secondary-color]   rounded-full"
+                        inputId="male"
+                        name="gender"
+                        value="male"
+                        onChange={(e) => setGender(e.value)}
+                        onKeyDown={(e) =>
+                          e.key === "Enter" && handleFormSubmit()
+                        }
+                        checked={gender === "male"}
+                      />
+                      <label htmlFor="male" className="ml-2">
+                        Male
+                      </label>
+                    </div>
+                    <div className="flex align-items-center">
+                      <RadioButton
+                        className="border focus-within:border-none focus-within:bg-[--secondary-color] border-[--secondary-color]   rounded-full"
+                        inputId="famle"
+                        name="gender"
+                        value="famle"
+                        onChange={(e) => setGender(e.value)}
+                        onKeyDown={(e) =>
+                          e.key === "Enter" && handleFormSubmit()
+                        }
+                        checked={gender === "famle"}
+                      />
+                      <label htmlFor="famle" className="ml-2 ">
+                        Famle
+                      </label>
+                    </div>
+                  </div>
                   <PrimaryButton
                     text="Register"
                     ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"

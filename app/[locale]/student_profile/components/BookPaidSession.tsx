@@ -6,7 +6,7 @@ import { Nullable } from "primereact/ts-helpers";
 import PrimaryButton from '../../components/PrimaryButton';
 import { Toast } from 'primereact/toast';
 
-function BookPaidSession() {
+function BookPaidSession({setOpenBookModal} :any) {
     const [datetime12h, setDateTime12h] = useState<Nullable<Date> | any>(null);
 
     const toast = useRef<Toast>(null);
@@ -40,15 +40,19 @@ function BookPaidSession() {
               console.log(data);
              if(data.status=='success'){
                 showSuccessMessage('Booking successful');
-             }else{
+                setTimeout(()=>{
+                  setOpenBookModal(false)
+                },3000)             }else{
                 showErrorMessage(data.message);
+                setTimeout(()=>{
+                  setOpenBookModal(false)
+                },3000)
              }
     
               // Process the response as needed
             })
             .catch((error) => {
               console.error('Error fetching Paid sessions:', error);
-              showErrorMessage('Booking failed');
     
             });
         }

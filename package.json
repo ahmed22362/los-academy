@@ -26,6 +26,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.48.2",
     "react-icons": "^4.11.0",
+    "react-pro-sidebar": "^1.1.0-alpha.1",
     "react-slick": "^0.29.0",
     "slick-carousel": "^1.8.1",
     "universal-cookie": "^6.1.1",

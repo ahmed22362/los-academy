@@ -8,11 +8,12 @@ import Cookies from 'universal-cookie';
 import moment from 'moment-timezone';
 import MyLoader from './MyLoader';
 import RemainSessions from './RemainSessions';
+import Image from 'next/image';
 
 
 
 export default function SessionsModal() {
-  const [openModal, setOpenModal] = useState(false);
+  const [openSeesionModal, setOpenSeesionModal] = useState(false);
   const cookie=new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
   const token =cookie.get('token') ;
@@ -71,8 +72,8 @@ export default function SessionsModal() {
  
   return (
     <>
-      <Button onClick={() => setOpenModal(true)}>Toggle Sessions modal</Button>
-      <Modal   show={openModal} className='block space-y-0 md:flex md:space-y-0 md:space-x-4 ' size={'xl'}  onClose={() => setOpenModal(false)}>
+      <Button onClick={() => setOpenSeesionModal(true)}>Toggle Sessions modal</Button>
+      <Modal   show={openSeesionModal} className='block space-y-0 md:flex md:space-y-0 md:space-x-4 ' size={'xl'}  onClose={() => setOpenSeesionModal(false)}>
       <Modal.Header className='p-0 m-0 border-0'></Modal.Header>
 
         <Modal.Body >
@@ -84,12 +85,13 @@ export default function SessionsModal() {
               <RemainSessions />
              </Tabs.Item>
       <Tabs.Item title="History">
-      <div className={` `}>
+      <div className={` md:min-h-[300px] max-md:min-h-[150px]`}>
           {historySessions === null ? (
               <MyLoader />
             ) : historySessions?.length > 0 ? (
               historySessions.map((session, index) => (
-                <div key={index} className={`flex justify-between gap-5 my-3`}>
+                
+                <div key={index} className={`flex justify-between gap-5 my-3 items-center`}>
                   <p>Session #{session.id}</p>
                   <p>
                     {convertDateTimeZone(session.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "h:mm A")}
@@ -103,16 +105,25 @@ export default function SessionsModal() {
                       "h:mm A"
                     )}
                   </p>
-                  {convertDateTimeZone(session.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MMM D,YYYY")}
+                 <p> {convertDateTimeZone(session.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MMM D,YYYY")}</p>
+                 {session.type==="free" ? <p className='px-4 bg-white rounded-full py-2 border shadow'> {session.type}</p>:''}
                 </div>
               ))
               )
                : (
-                <p>No History Sessions</p>
+                <div className="flex justify-center mt-5 items-center flex-col gap-5">
+                <p className='font-meduim'> No History Sessions</p>
+                <Image src={'/vectors/list.png'} alt="no upcoming session" width={150} height={100} />
+                </div>
               )}
           </div>   
             </Tabs.Item>
     </Tabs.Group>
+            </div>
+            <div className='flex justify-center items-center'>
+              <button
+              onClick={()=> setOpenSeesionModal(false)}
+              className='bg-secondary-color  hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-10  rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45'>Done</button>
             </div>
           </div>
         </Modal.Body>

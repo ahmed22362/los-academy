@@ -9,22 +9,25 @@ import Cookies from 'universal-cookie';
 import LoadingButton from '../../admin/loadingButton';
 import { useRouter } from 'next/navigation';
 
-export default function AddReportModal({openAssignModal, handleCloseModal}: 
+export default function AddReportModal({openAssignModal, handleCloseModal, sessionID}: 
     {
+        sessionID: any;
         openAssignModal: boolean;
         handleCloseModal: () => void;
     }) {
-
+    
+    const idSession = sessionID && sessionID
     const modalRef = useRef<HTMLDivElement>(null);
-    const [id, setId] = useState('');
+    const [id, setId] = useState(idSession);
     const [title, setTitle] = useState('');
     const [grade, setGrade] = useState('');
     const [comment, setComment] = useState('');
-    const [subjet, setSubject] = useState('');
+    const [subject, setSubject] = useState<any>('');
     const [isProcessing, setIsProcessing] = useState(false)
     const router = useRouter()
     const cookies = new Cookies()
     const toast = useRef<Toast>(null);
+
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Add Success', life: 3000});
     }
@@ -60,9 +63,9 @@ export default function AddReportModal({openAssignModal, handleCloseModal}:
       const addReport = () => {
         console.log({
             sessionId: parseInt(id),
-            arabic: subjet === "arabic" ? "arabic" : null,
-            islamic: subjet === "islamic" ? "islamic" : null,
-            quran: subjet === "quran" ? "quran" : null,
+            arabic: subject === "arabic" ? "arabic" : undefined,
+            islamic: subject === "islamic" ? "islamic" : undefined,
+            quran: subject === "quran" ? "quran" : undefined,
             comment: comment,
             grade:  grade,
             title:  title
@@ -76,9 +79,9 @@ export default function AddReportModal({openAssignModal, handleCloseModal}:
             },
             body: JSON.stringify({
                 sessionId: parseInt(id),
-                arabic: subjet === "arabic" ? "arabic" : null,
-                islamic: subjet === "islamic" ? "islamic" : null,
-                quran: subjet === "quran" ? "quran" : null,
+                arabic: subject === "arabic" ? "arabic" : undefined,
+                islamic: subject === "islamic" ? "islamic" : undefined,
+                quran: subject === "quran" ? "quran" : undefined,
                 comment: comment,
                 grade:  grade,
                 title:  title
@@ -109,7 +112,7 @@ export default function AddReportModal({openAssignModal, handleCloseModal}:
                 <div className="mb-2 block">
                     <Label htmlFor="id" value="Session ID" />
                 </div>
-                    <TextInput id="id" placeholder='Session ID' onChange={(e) => setId(e.target.value)} type='text' />
+                    <TextInput id="id" defaultValue={id} onChange={(e) => setId(e.target.value)} type='text' />
             </div>
             <div>
                 <div className="mb-2 block">
@@ -121,14 +124,13 @@ export default function AddReportModal({openAssignModal, handleCloseModal}:
               <div className="mb-2 block">
                 <Label htmlFor="subject" value="Subject" />
               </div>
-              <Select id="subject" onChange={(e) => setSubject(e.target.value)}>
-                <option value="">Select Subject</option>
+              <Select id="subject" value={subject} onChange={(e) => setSubject(e.target.value)}>
+                <option value="">Select Subject {subject}</option>
                 <option value="arabic">Arabic</option>
                 <option value="isalmic">Islamic</option>
                 <option value="quran">Quran</option>
               </Select>
             </div>
-              {/* <TextInput id="gender" placeholder='Student Email' onChange={(e) => setEmail(e.target.value)} type="email" /> */}
               <fieldset
                     className="flex max-w-md flex-col gap-4"
                     id="radio"
@@ -215,7 +217,7 @@ export default function AddReportModal({openAssignModal, handleCloseModal}:
             </div>
             <div className="w-full">
               <LoadingButton 
-                title={"Add Student"}
+                title={"Add Report"}
                 action={addReport}
                 customStyle={"text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"}
                 isProcessing={isProcessing}

@@ -23,6 +23,7 @@ export default function CustomNavbar() {
   const isAdminDashboard = router.startsWith('/admin');
   const isAdminLogin = router.startsWith('/los_auth');
   const isteacher = router.startsWith('/teacher');
+  // const isStudent = router.startsWith('/student_profile');
   const cookies = new Cookies()
   const t = useTranslations("CustomNavbar");
   const linkStyle = "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full rtl:lg:p-[15px]";

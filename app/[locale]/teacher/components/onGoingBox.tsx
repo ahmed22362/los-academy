@@ -2,8 +2,10 @@
 
 import useCountDown from "@/helpers/useCountDown";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Toast } from "primereact/toast";
+import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
+import AddReportModal from "./addReportModal";
 
 export default function OnGoingBox(session: any) {
 
@@ -18,7 +20,24 @@ export default function OnGoingBox(session: any) {
     const [started, setIsStarted] = useState(false)
     const [countdownSeconds, setCountdownSeconds] = useState(0);
     const cookies = new Cookies()
-    
+    const toast = useRef<any>(null);
+    const [openModal, setOpenModal] = useState(false)
+
+    const handleOpen = () => {
+        setOpenModal(true)
+    }
+    const handleClose = () => {
+        setOpenModal(false)
+    }
+    const showSuccess = (message: string) => {
+        
+        toast.current?.show({severity:'success', summary: 'Success', detail: message, life: 3000});
+    }
+    const showError = (message: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: message, life: 4000});
+    }
+
+
     // Convert session time to a Date object
     const sessionDate: any = new Date(upComingSession.sessionDate);
     // console.log(sessionDate)
@@ -93,15 +112,23 @@ export default function OnGoingBox(session: any) {
             console.log(data)
             if(data.status === 'success') {
                 // handleIAmHereClick()
+                showSuccess(data.message)
                 setIsIamHere(false)
                 setIsJoin(true)
+            } else {
+                showError(data.message)
             }
         }).catch(err => {
             console.log(err)
+            showError(err.message)
         })
     }
 
     const updateSessionStatus = (status: string) => {
+        console.log({
+            sessionId: upComingSession.id,
+            status: status.toString()
+        })
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/status`, {
             method: "POST",
             headers: {
@@ -110,20 +137,25 @@ export default function OnGoingBox(session: any) {
             },
             body: JSON.stringify({
                 sessionId: upComingSession.id,
-                status: status
+                status: status.toString()
             })
         })
         .then(response => response.json())
         .then(data => {
             console.log(data)
             if(status !== 'ongoing') {
+                showSuccess(data.message)
                 setIsAbsentAndTaken(false)
                 setEndMessage(true)
                 setIsIamHere(false)
                 setSesstionLink("")
+            } 
+            if(data.status === 'success') {
+                showSuccess(data.message)
             }
         }).catch(err => {
             console.log(err)
+            showError(err.message)
         })
     }
     const generateMeetingLink = () => {
@@ -142,18 +174,24 @@ export default function OnGoingBox(session: any) {
         .then(data => {
             console.log(data)
             if(data.status === 'success') {
+                showSuccess(data.message)
                 setIsJoin(false)
                 setSesstionLink(data.data.meetingLink)
                 setIsAbsentAndTaken(true)
+            } else {
+                showError(data.message)
             }
         }).catch(err => {
             console.log(err)
+            showError(err.message)
         })
 
     }
 
     return(
         <div className={"bg-white-color p-5 rounded-[16px] "}>
+            <Toast ref={toast} />
+            <h3 className="mb-3">Session with: <b>{upComingSession && upComingSession.SessionInfo.user.name}</b></h3>
             <div className={"flex flex-col items-start text-md font-semibold text-[black-color-one]"}>
             <span>
                     {
@@ -171,7 +209,7 @@ export default function OnGoingBox(session: any) {
                         "Session has ended"
                     }
             </span>
-                {sesstionLink && sesstionLink ? <Link href={sesstionLink} className="text-success-color font-semibold flex items-center justify-center mb-2 hover:underline">Click To Redirect To Session</Link> : ""}
+                {sesstionLink && sesstionLink ? <Link href={sesstionLink} target="_blank" className="text-success-color font-semibold flex items-center justify-center mb-2 hover:underline">Click To Redirect To Session</Link> : ""}
             </div>
             {/* 
                 // first step click on i am here will request attendance teacher to session
@@ -197,7 +235,13 @@ export default function OnGoingBox(session: any) {
                     >Absent</button>
                     <button 
                         className={"smallBtn text-success-color bg-white-color border-[1px] border-success-color hover:bg-success-color hover:text-white transition-colors"}
-                        onClick={() => updateSessionStatus('taken')}
+                        onClick={() => {
+                            updateSessionStatus('taken')
+                            const timerReport = setTimeout(() => {
+                                handleOpen()
+                            }, 2000)
+                            return () => clearTimeout(timerReport)
+                            }}
                     >Taken</button>
                 </div>
                 ) : 
@@ -205,10 +249,15 @@ export default function OnGoingBox(session: any) {
                     <button 
                     className={"smallBtn hover:bg-secondary-hover transition-colors"} 
                     onClick={handleUpdateAttendance}
-                    >I am Here</button>  
+                    >I am Here</button>
                 )
             }
-
+            <AddReportModal 
+                sessionID={upComingSession.id}
+                openAssignModal={openModal}
+                handleCloseModal={handleClose}
+            
+            />
         </div>
     )
 }

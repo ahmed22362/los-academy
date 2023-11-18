@@ -34,10 +34,10 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
             setAllTeacher(data.data);
-            // console.log(data.data);
         }).catch(err => console.log(err))
     }
 
@@ -96,6 +96,7 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
                 sessionReqId: sessionReqId
             })
         }).then(response => response.json()).then(data => {
+          console.log(data)
             setMessage(data.status)
             if(data.status === 'success') {
                 updateComponent()

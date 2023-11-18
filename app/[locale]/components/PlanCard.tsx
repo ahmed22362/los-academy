@@ -53,13 +53,13 @@ function PlanCard({planData}: any) {
           console.log(data);
           if (data.status=='success') {
               showSuccess()
-              const routing = setTimeout(() => {
+              const timer = setTimeout(() => {
                 router.push(data.data.url)
               }, 4000)
+              return () => clearTimeout(timer)
           } else {
             showError(data.message)
           }
-          return () => clearTimeout(routing)
       })
       .catch((error) => {
         console.error('Error creating custom plan:', error);

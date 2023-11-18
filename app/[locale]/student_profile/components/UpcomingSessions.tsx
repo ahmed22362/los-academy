@@ -6,6 +6,8 @@ import Cookies from "universal-cookie";
 import ContentLoader from "react-content-loader";
 import RescheduleSession from "./rescheduleSession";
 import Image from "next/image";
+import Countdown from "react-countdown";
+import MyTimer from "./timer";
 
 
 function UpcomingSessions() {
@@ -28,7 +30,11 @@ function UpcomingSessions() {
       .tz(outputTimezone);
     return convertedTime.format(ourFormat);
   };
+  // <Countdown date={Date.now() + 1000000}>
 
+  // </Countdown>
+  const time = new Date();
+  time.setSeconds(time.getSeconds() + 600); // 10 minutes timer
   const isSessionRunning = (session :any) => {
     const currentTime = moment().tz(
       Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -132,6 +138,7 @@ function UpcomingSessions() {
                     "h:mm A"
                   )}
                 </p>
+                <MyTimer expiryTimestamp={time} />
               </div>
             </div>
             <div className={`flex gap-4 mb-3 mt-7`}>

@@ -181,26 +181,26 @@ export default function CustomNavbar() {
                     
                       <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                       <CiCalendar  className="text-[26px] font-semibold" /> 
-                      <span onClick={()=>setOpenSeesionModal(true)}>Sessions</span>
+                      <span className="py-2" onClick={()=>setOpenSeesionModal(true)}>Sessions</span>
                       </Dropdown.Item>
                       <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                       <CiCalendar  className="text-[26px] font-semibold" /> 
-                      <span onClick={()=>setOpenPlansModal(true)}>Plans</span>
+                      <span className="py-2" onClick={()=>setOpenPlansModal(true)}>Plans</span>
                       </Dropdown.Item>
                       <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                         <LiaCreditCardSolid  className="text-[26px] font-semibold" /> 
-                        <span onClick={()=>setOpenSubscribtionModal(true)}>My Subscription</span>
+                        <span className="py-2" onClick={()=>setOpenSubscribtionModal(true)}>My Subscription</span>
                       </Dropdown.Item>
                       <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                         <LiaEditSolid  className="text-[26px] font-semibold" /> 
-                        <span onClick={()=>setUserFeedbackModal(true)}>Add Feedback</span>
+                        <span className="py-2" onClick={()=>setUserFeedbackModal(true)}>Add Feedback</span>
                       </Dropdown.Item>
                       <hr />
                       <Dropdown.Item 
                           onClick={logOut}
                           className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                           <IoIosLogOut className="text-[26px] text-danger-color font-semibold" /> 
-                          <span>logout</span>
+                          <span className="py-2">logout</span>
                       </Dropdown.Item>
                   </Dropdown>
                 </>) 

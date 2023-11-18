@@ -115,7 +115,7 @@ function page() {
           showSuccess(data.message);
           console.log(data);
           setTimeout(() => {
-            router.push("/student_profile");
+            router.push("/login");
           }, 3000);
           setUserData(data);
           cookies.set("token", data.token);

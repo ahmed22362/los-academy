@@ -77,11 +77,13 @@ export default function MatrialTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allMatrial && allMatrial.map((matrial: any, index: number) => {
+                    (allMatrial && allMatrial.length > 0 ? allMatrial.map((matrial: any, index: number) => {
                     return(
                         <FetchMatrialData key={index} matrialData={matrial} updateComponent={fetchAllMatrials}/>
                     )
-                }))
+                }): (
+                    <p className="p-3">There is No Matrials</p>
+                ))
             }
             </Table.Body>
         </Table>

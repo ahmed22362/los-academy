@@ -10,11 +10,12 @@ export default function AdminNavBar() {
 
     const cookies = new Cookies();
     const userID = cookies.get('id')
+    const token = cookies.get('token')
     const [data, setData] = useState<null | any>(null)
     
     const getData = async () => {
         try {
-            const result = await getCurrentTeacher(userID);
+            const result = await getCurrentTeacher(userID, token);
             setData(result.data);
         } catch (err) {
             console.log(err);
@@ -22,7 +23,9 @@ export default function AdminNavBar() {
     };
 
     useEffect(() => {
-        getData();
+        if(userID && token) {
+            getData();
+        }
     }, []);
 
     return(

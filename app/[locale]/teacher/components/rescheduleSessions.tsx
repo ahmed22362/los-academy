@@ -9,8 +9,11 @@ export default function RescheduleSessions() {
   const [allSessions, setAllSessions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
+  
   const getReschedualSession = async () => {
+
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/myRescheduleRequests?status=pending`, {
+      
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +35,7 @@ export default function RescheduleSessions() {
   }, [])
 
   return (
-    <div className={"adminBox w-full flex-col my-5"}>
+    <div className={"adminBox w-full flex-col mb-5"}>
       <h3 className={"adminBoxTitle"}>Reschedule Sessions</h3>
       <div className="w-full flex-col gap-2 h-[200px] scrollAction ">
         {isLoading 

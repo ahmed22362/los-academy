@@ -4,12 +4,13 @@ import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import CoursesComboBox from './coursesComboBox';
 import FetchCoursesData from './fetchCoursesData';
+import Cookies from 'universal-cookie';
 
 
 export default function CoursesTable() {
     const [allCourses, setAllCourses]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
-
+    const cookies = new Cookies()
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
             base: "group/head text-xs uppercase text-black-color-one bg-white-color p-[15px] text-center",
@@ -24,6 +25,7 @@ export default function CoursesTable() {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
             setAllCourses(data.data)
@@ -71,7 +73,7 @@ export default function CoursesTable() {
                         <FetchCoursesData key={index} coursesData={teacher} updateComponent={fetchAllCourses}/>
                     )
                 })
-                : <p className='p-3'>No Courses</p>
+                : <p className='p-3'>There is No Courses</p>
                 )
             }
             </Table.Body>

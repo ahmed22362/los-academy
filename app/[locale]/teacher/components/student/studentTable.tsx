@@ -84,7 +84,7 @@ export default function StudentTable() {
                         <FetchStudentData key={index} studentData={student} updateComponent={fetchAllStudents}/>
                     )
                 })
-                : <p className="p-3">No Students</p>
+                : <tr><td className="p-5">There is No Students</td></tr>
                 )
             }
             </Table.Body>

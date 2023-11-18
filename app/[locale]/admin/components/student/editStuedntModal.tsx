@@ -4,6 +4,9 @@ import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-r
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
+import LoadingButton from '../../loadingButton';
+import Cookies from 'universal-cookie';
+
 export default function EditStudentModal({openAssignModal, handleCloseModal, studentDetails, updateComponent}: 
     {
         openAssignModal: boolean;
@@ -21,6 +24,11 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
     const [password, setPassword] = useState('');
     const [remainSessions, setRemainSessions] = useState(studentDetails.remainSessions);
     const [gender, setGender] = useState(studentDetails.gender);
+    const [isProcessing, setIsProcessing] = useState(false)
+    const cookies = new Cookies();
+
+
+
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
@@ -54,10 +62,12 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
       }
 
       const updateStudent = () => {
+        setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/${studentDetails.id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
                 name: name,
@@ -76,6 +86,7 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
           } else {
             showError()
           }
+          setIsProcessing(false)
         }).catch(err => {
           console.log(err)
         })
@@ -140,13 +151,12 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
               <TextInput id="remainSessions" type="text" defaultValue={studentDetails.remainSessions} onChange={(e) => setRemainSessions(e.target.value)} />
             </div>
             <div className="w-full">
-                <button
-                    onClick={updateStudent}
-                    type="submit"
-                    className="text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
-                >
-                  Save
-                </button>
+            <LoadingButton 
+                title={"Save Changes"}
+                action={updateStudent}
+                customStyle={"text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"}
+                isProcessing={isProcessing}
+              />
             </div>
           </div>
         </Modal.Body>

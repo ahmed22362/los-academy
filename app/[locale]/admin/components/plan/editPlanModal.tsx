@@ -4,6 +4,9 @@ import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-r
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
+import LoadingButton from '../../loadingButton';
+import Cookies from 'universal-cookie';
+
 export default function EditPlanModal({openAssignModal, handleCloseModal, planDetails, updateComponent}: 
     {
         openAssignModal: boolean;
@@ -15,6 +18,8 @@ export default function EditPlanModal({openAssignModal, handleCloseModal, planDe
     const modalRef = useRef<HTMLDivElement>(null);
     const [status, setStatus] = useState<boolean | any>(planDetails.active);
     const toast = useRef<Toast>(null);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const cookies = new Cookies()
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
     }
@@ -47,10 +52,12 @@ export default function EditPlanModal({openAssignModal, handleCloseModal, planDe
       }
 
       const updateStudent = () => {
+        setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/plan/${planDetails.id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
                 active: status,
@@ -62,6 +69,7 @@ export default function EditPlanModal({openAssignModal, handleCloseModal, planDe
           } else {
             showError()
           }
+          setIsProcessing(false)
         }).catch(err => {
           console.log(err)
         })
@@ -84,13 +92,12 @@ export default function EditPlanModal({openAssignModal, handleCloseModal, planDe
               {/* <TextInput id="title" defaultValue={planDetails.title} onChange={(e) => setStatus(e.target.value)} type='text' /> */}
             </div>
             <div className="w-full">
-                <button
-                    onClick={updateStudent}
-                    type="submit"
-                    className="text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
-                >
-                  Save
-                </button>
+            <LoadingButton 
+                title='Save Changes'
+                isProcessing={isProcessing}
+                customStyle='text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors'
+                action={updateStudent}
+              />
             </div>
           </div>
         </Modal.Body>

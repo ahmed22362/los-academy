@@ -9,12 +9,14 @@ import Link from 'next/link';
 import { useState, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import EditStudentModal from './editStuedntModal';
+import Cookies from 'universal-cookie';
 
 
 
 export default function FetchStudentData({studentData, updateComponent} : {studentData: any; updateComponent: () => void}) {
     const [handleModal, setHandleModal] = useState(false)
     const student = studentData
+    const cookies = new Cookies()
     // Toast reference
     const [visible, setVisible] = useState(false);
     const toast = useRef<Toast>(null);
@@ -80,6 +82,7 @@ export default function FetchStudentData({studentData, updateComponent} : {stude
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
             // console.log(data)

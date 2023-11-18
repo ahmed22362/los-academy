@@ -2,47 +2,24 @@
 
 import {Table} from 'flowbite-react';
 
-import { useState, useRef } from 'react';
-import { Toast } from 'primereact/toast';
-import Cookies from 'universal-cookie';
+import { convertDateTimeZone } from '@/helpers/convertDateAndTime';
+import { BiSolidEditAlt } from 'react-icons/bi';
+import { useState } from 'react';
+import EditRequestPayOut from './ediPayOutModal';
 
 
 
 export default function FetchPayOutData({payOutData, updateComponent} : {payOutData: any; updateComponent: () => void}) {
-    const payout = payOutData
-    const cookies = new Cookies();
-    // Toast reference
-    const toast = useRef<Toast>(null);
-    const showSuccess = () => {
-        toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
-    }
+    
+    const payout = payOutData && payOutData
+    const convertTime = convertDateTimeZone
+    const [handleModal, setHandleModal] = useState(false)
 
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Updated failed try again later or contact support', life: 4000});
+    const openModal = () => {
+        setHandleModal(true)
     }
-    const acceptRequest = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/payout/status`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.get('token')}`
-            },
-            body: JSON.stringify({
-                requestId: payout.id,
-                status: "done"
-            })
-        }).then(response => response.json()).then(data => {
-            console.log(data)
-            if(data.status === 'success') {
-                updateComponent()
-                showSuccess()
-            } else {
-                showError()
-            }
-        }).catch(err => {
-            console.log(err)
-            showError()
-        })
+    const closeModal = () => {
+        setHandleModal(false)
     }
 
 
@@ -53,10 +30,7 @@ export default function FetchPayOutData({payOutData, updateComponent} : {payOutD
                 {payout.id}
             </Table.Cell>
             <Table.Cell>
-                {payout.teacher.name}
-            </Table.Cell>
-            <Table.Cell>
-                {payout.createdAt}
+                {convertTime(payout.createdAt, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "YYYY-MM-DD h:mm A")}
             </Table.Cell>
             <Table.Cell>
             {payout.amount}$
@@ -73,16 +47,11 @@ export default function FetchPayOutData({payOutData, updateComponent} : {payOutD
                     <p className="p-2 bg-success-color text-white rounded-full font-semibold">Successful</p>
                 }
                 </Table.Cell>
-            <Table.Cell>
-                <div className="flex flex-row justify-center items-center gap-4">
-                    <Toast ref={toast} />
-                    {payout.status === "pending" ?
-                    <button
-                        onClick={acceptRequest}
-                        className={`px-3 py-2 bg-secondary-color hover:bg-secondary-hover transition-colors text-white rounded-full font-semibold`}
-                    >Accept Request</button>
-                    : <p className="p-2 bg-success-color text-white rounded-full font-semibold">accepted before</p>}
-                </div>
+                <Table.Cell>
+                    <div className="flex items-center justify-center">
+                        <BiSolidEditAlt className={"text-2xl cursor-pointer"} style={{color: "green"}} onClick={openModal}/>
+                        <EditRequestPayOut openAssignModal={handleModal} handleCloseModal={closeModal} payoutID={payout} updateComponent={updateComponent} />
+                    </div>
             </Table.Cell>
         </Table.Row>
   )

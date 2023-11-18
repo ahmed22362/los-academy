@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { PiStudentBold } from 'react-icons/pi';
 import Cookies from 'universal-cookie';
+import LoadingButton from '../../loadingButton';
 
 export default function AddPlanModal({openAssignModal, handleCloseModal, updateComponent}: 
     {
@@ -21,6 +22,7 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
     const [sessionsPerWeek, setSessionsPerWeek] = useState<any>(null);
     const cookies = new Cookies();
     const toast = useRef<Toast>(null);
+    const [isProcessing, setIsProcessing] = useState(false);
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Add Success', life: 3000});
     }
@@ -54,6 +56,7 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
       }
 
       const addPlan = () => {
+        setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/plan`, {
             method: "POST",
             headers: {
@@ -75,6 +78,7 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
           } else {
             showError()
           }
+          setIsProcessing(false)
         }).catch(err => {
           console.log(err)
         })
@@ -113,13 +117,12 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
               <TextInput id="sessionsPerWeek" placeholder='Sessions Per Week' onChange={(e) => setSessionsPerWeek(e.target.value)} type="number" />
             </div>
             <div className="w-full">
-                <button
-                    onClick={addPlan}
-                    type="submit"
-                    className="text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
-                >
-                  Add
-                </button>
+              <LoadingButton 
+                title='Add Plan'
+                isProcessing={isProcessing}
+                customStyle='text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors'
+                action={addPlan}
+              />
             </div>
           </div>
         </Modal.Body>

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
-import Link from "next/link";
 import moment from "moment-timezone";
 import styles from "../page.module.css";
 import Cookies from "universal-cookie";
 import ContentLoader from "react-content-loader";
 import RescheduleSession from "./rescheduleSession";
 import Image from "next/image";
+
 
 function UpcomingSessions() {
   const cookie = new Cookies();

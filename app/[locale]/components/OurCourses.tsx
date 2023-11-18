@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import OurCard from "./OurCard"
 import { useEffect, useState} from "react";
 import Slider from "react-slick";
-
+import { Skeleton } from 'primereact/skeleton';
 
 function OurCourses() {
 
@@ -80,13 +80,44 @@ function OurCourses() {
   return (
       <section className="py-12 px-20 max-sm:px-8" id="courses">
         <h3 className="text-center text-3xl mb-5 font-bold text-black-one-color">{t2('courses-title')}</h3>
-          <Slider {...settings} className="flex justify-center ourSlickStyle">
-            { isLoading ? <p>Loading...</p> :
-              courses.map((course: any, index: number) => (
+         
+            { isLoading ? 
+            (
+              <div className="flex flex-row justify-between gap-5 w-full">
+                <div className="w-full flex flex-col gap-3">
+                  <Skeleton width="10rem" height="4rem" borderRadius="16px"></Skeleton>
+                  <Skeleton className="mb-2" borderRadius="16px"></Skeleton>
+                  <Skeleton width="10rem" className="mb-2" borderRadius="16px"></Skeleton>
+                  <Skeleton width="5rem" borderRadius="16px" className="mb-2"></Skeleton>
+                  <Skeleton height="2rem" className="mb-2" borderRadius="16px"></Skeleton>
+                </div>
+                <div className="w-full flex flex-col gap-3">
+                  <Skeleton width="10rem" height="4rem" borderRadius="16px"></Skeleton>
+                  <Skeleton className="mb-2" borderRadius="16px"></Skeleton>
+                  <Skeleton width="10rem" className="mb-2" borderRadius="16px"></Skeleton>
+                  <Skeleton width="5rem" borderRadius="16px" className="mb-2"></Skeleton>
+                  <Skeleton height="2rem" className="mb-2" borderRadius="16px"></Skeleton>
+                </div>
+                <div className="w-full flex flex-col gap-3">
+                  <Skeleton width="10rem" height="4rem" borderRadius="16px"></Skeleton>
+                  <Skeleton className="mb-2" borderRadius="16px"></Skeleton>
+                  <Skeleton width="10rem" className="mb-2" borderRadius="16px"></Skeleton>
+                  <Skeleton width="5rem" borderRadius="16px" className="mb-2"></Skeleton>
+                  <Skeleton height="2rem" className="mb-2" borderRadius="16px"></Skeleton>
+                </div>
+              </div>
+            )
+            :
+            (
+            <Slider {...settings} className="flex justify-center ourSlickStyle">
+              {
+                courses && courses.map((course: any, index: number) => (
                 <OurCard data={course} key={index}/>
                 ))
             }
-          </Slider>
+            </Slider>
+            )
+            }
       </section>
   )
 }

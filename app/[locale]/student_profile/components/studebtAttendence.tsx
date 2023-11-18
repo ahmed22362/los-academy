@@ -4,34 +4,34 @@ import PrimaryButton from '../../components/PrimaryButton'
 import Cookies from 'universal-cookie';
 
 function StudentAttendence() {
-  const cookie=new Cookies();
-  const url =process.env.NEXT_PUBLIC_APIURL;
-  const token =cookie.get('token') ;
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  // const cookie=new Cookies();
+  // const url =process.env.NEXT_PUBLIC_APIURL;
+  // const token =cookie.get('token') ;
+ // const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
 
-  useEffect(() => {
-    fetch(`${url}/user/upcomingSession`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}` // Correct the header key to 'Authorization'
-      }
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching sessions:', error);
-      });
-  }, []);
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
+  // useEffect(() => {
+  //   fetch(`${url}/user/upcomingSession`, {
+  //     method: 'GET',
+  //     headers: {
+  //       Authorization: `Bearer ${token}` // Correct the header key to 'Authorization'
+  //     }
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching sessions:', error);
+  //     });
+  // }, []);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setTimeLeft(calculateTimeLeft());
+  //   }, 1000);
 
-    return () => clearInterval(timer);
-  }, []);
+  //   return () => clearInterval(timer);
+  // }, []);
   // function calculateTimeLeft() {
   //   const currentTime = new Date();
   //   const startTime = new Date();

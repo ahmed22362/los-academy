@@ -32,21 +32,21 @@ function StudentAttendence() {
 
     return () => clearInterval(timer);
   }, []);
-  function calculateTimeLeft() {
-    const currentTime = new Date();
-    const startTime = new Date(lectureStartTime);
-    const difference = startTime - currentTime;
+  // function calculateTimeLeft() {
+  //   const currentTime = new Date();
+  //   const startTime = new Date();
+  //   const difference = startTime - currentTime;
 
-    if (difference < 0) {
-      return { hours: 0, minutes: 0, seconds: 0 };
-    }
+  //   if (difference < 0) {
+  //     return { hours: 0, minutes: 0, seconds: 0 };
+  //   }
 
-    const hours = Math.floor(difference / 3600000);
-    const minutes = Math.floor((difference % 3600000) / 60000);
-    const seconds = Math.floor((difference % 60000) / 1000);
+  //   const hours = Math.floor(difference / 3600000);
+  //   const minutes = Math.floor((difference % 3600000) / 60000);
+  //   const seconds = Math.floor((difference % 60000) / 1000);
 
-    return { hours, minutes, seconds };
-  }
+  //   return { hours, minutes, seconds };
+  // }
 
 
   return (

@@ -13,11 +13,11 @@ export default async function Reports() {
         <div className={"adminBox w-full flex-col my-5"}>
             <SectionHeader />
             <div className="w-full flex-col gap-2 h-[200px] scrollAction ">
-               {theResult.length > 0 ? theResult.map((report: any, index: number) => {
+               {theResult && theResult.length > 0 ? theResult.map((report: any, index: number) => {
                    return (
                        <ReportData data={report} key={index} />
                    )
-               }) : <p>No Reports</p>}
+               }) : <p className="p-3 bg-warning-color text-white w-fit rounded-full font-bold">No Reports</p>}
             </div>
 
         </div>

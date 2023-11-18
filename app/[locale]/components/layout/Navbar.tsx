@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Button, Dropdown, Navbar } from "flowbite-react";
 import type { CustomFlowbiteTheme } from "flowbite-react";
 import Link2 from 'next/link';
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {RiUserSharedFill} from "react-icons/ri"
 import Cookies from "universal-cookie"
 import { useEffect, useState } from "react";
@@ -19,22 +19,15 @@ import { LiaCreditCardSolid } from "react-icons/lia";
 export default function CustomNavbar() {
 
   const router = usePathname();
+  const router2 = useRouter();
   const isAdminDashboard = router.startsWith('/admin');
   const isAdminLogin = router.startsWith('/los_auth');
   const isteacher = router.startsWith('/teacher');
-  const token = new Cookies().get('token')
-  const id = new Cookies().get('id')
+  const cookies = new Cookies()
   const t = useTranslations("CustomNavbar");
   const linkStyle = "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full rtl:lg:p-[15px]";
   const linkText = t("login-btn");
-
   const [userDate, setUserData] = useState<any>({});
-
-  const buttonTheme: CustomFlowbiteTheme['button'] = {
-    color: {
-        purple: "bg-secondary-color hover:bg-secondary-hover rounded-full",
-    }
-}
 
   const customNavTheme: CustomFlowbiteTheme["navbar"] = {
     root: {
@@ -71,21 +64,36 @@ export default function CustomNavbar() {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `Bearer ${cookies.get("token")}`,
         },
     })
     .then(res => res.json())
     .then(data => {
         if(data.status === "success") {
             setUserData(data.data)
+            router2.refresh()
         }
     })
     .catch(err => console.log(err))
   }
 
   useEffect(() => {
-    getCurrentStudent()
+      getCurrentStudent()
   }, [])
+
+  const logOut = async () => {
+    const token = await cookies.get('token')
+    const id = await cookies.get('id')
+    
+    if(token && id) {
+        cookies.remove('token', { path: '/', });
+        cookies.remove('id', { path: '/', });
+        router2.replace('/los_auth');
+    }  else {
+        console.error('Error removing cookies');
+    } 
+  }
+
 
 
   if (!(isAdminDashboard || isAdminLogin || isteacher)) {
@@ -140,10 +148,13 @@ export default function CustomNavbar() {
             "flex items-center max-md:items-baseline gap-2 rtl:font-sans rtl:text-lg rtl:max-sm:me-0 rtl:max-sm:ms-auto rtl:lg:w-[185px]"
             }>
             <Navbar.Toggle theme={customNavTheme.toggle} />
-            {userDate.verified === true 
+            {userDate && userDate.verified === true 
               ? 
                 (<>
-                  <Dropdown label={<div className="bg-secondary-color hover:bg-secondary-hover rounded-full px-3 py-2 text-white font-semibold transition-colors cursor-pointer">{userDate.name}</div>} inline>
+                  <Dropdown label={
+                      <div className="bg-secondary-color hover:bg-secondary-hover rounded-full px-3 py-2 text-white font-semibold transition-colors cursor-pointer">
+                          {userDate &&userDate.name}
+                      </div>} inline>
                       <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                         <LiaUserEditSolid className="text-[26px] font-semibold" /> 
                         <span>Edit Profile</span>
@@ -161,9 +172,11 @@ export default function CustomNavbar() {
                         <span>Subscription</span>
                       </Dropdown.Item>
                       <hr />
-                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
-                        <IoIosLogOut className="text-[26px] text-danger-color font-semibold" /> 
-                        <span>logout</span>
+                      <Dropdown.Item 
+                          onClick={logOut}
+                          className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                          <IoIosLogOut className="text-[26px] text-danger-color font-semibold" /> 
+                          <span>logout</span>
                       </Dropdown.Item>
                   </Dropdown>
                 </>) 

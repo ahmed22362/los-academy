@@ -1,7 +1,7 @@
 
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
-import AdminNavBar from "./components/AdminNavBar";
+import TeacherNavBar from "./components/teacherNavBar";
 import OurSideBar from "./components/ourSideBar";
 
 
@@ -12,11 +12,11 @@ export default function TeacherLayout(
     }) {
     return (
         <section>
-                <AdminNavBar />
-                <aside className={"fixed left-0 h-full"}>
-                    <OurSideBar />
-                </aside>
-            {children}
+            <TeacherNavBar />
+            <aside className={"fixed left-0 h-full"}>
+                <OurSideBar />
+            </aside>
+                {children}
         </section>
     )
 }

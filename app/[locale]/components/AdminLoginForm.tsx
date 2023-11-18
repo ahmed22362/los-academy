@@ -8,8 +8,9 @@ import { Checkbox } from 'primereact/checkbox';
 import Cookies from 'universal-cookie';
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
-
 export default function AdminLoginForm() {
+    
+
     const [isProcessing, setIsProcessing] = useState(false)
     const [checked, setChecked] = useState<boolean | any>(false);
     const url = process.env.NEXT_PUBLIC_APIURL;
@@ -49,7 +50,6 @@ export default function AdminLoginForm() {
         const email = form.email.value
         const password = form.password.value
         
-
         fetch(`${url}/teacher/login`, {
             method: "POST",
             headers: {
@@ -68,10 +68,10 @@ export default function AdminLoginForm() {
                     showSuccess();
                     router.replace('/admin')
                 } else if (data.data.role === 'teacher') {
-                            cookies.set('token', data.token, {secure: true, maxAge: checked ? 2592000000 : 3600});
-                            cookies.set('id', data.data.id, {secure: true, maxAge: checked ? 2592000000 : 3600});
-                            showSuccess();
-                            router.replace('/teacher')
+                    cookies.set('token', data.token, {secure: true, maxAge: checked ? 2592000000 : 3600});
+                    cookies.set('id', data.data.id, {secure: true, maxAge: checked ? 2592000000 : 3600});
+                    showSuccess();
+                    router.replace('/teacher')
                 } else {
                     showError('Login Failed you are not an admin');
                 }

@@ -28,11 +28,9 @@ async function middleware(req: NextRequest) {
     let accessTeacherStatus = false;
 
     const token = req.cookies.get('token');
-    const id = req.cookies.get('id')
     
-    if(id && token) {
-      
-      const getUserRole = await getCurrentTeacher(id?.value, token?.value);
+    if(token) {
+      const getUserRole = await getCurrentTeacher(token?.value);
       const role = getUserRole.data?.role
       const res = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/checkJWT/?token=${token.value}`, {
           method: 'GET',

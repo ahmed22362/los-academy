@@ -12,7 +12,7 @@ export default function RescheduleSessions() {
   
   const getReschedualSession = async () => {
 
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/myRescheduleRequests?status=pending`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/receivedRescheduleRequests/?status=pending`, {
       
       method: "GET",
       headers: {
@@ -35,9 +35,9 @@ export default function RescheduleSessions() {
   }, [])
 
   return (
-    <div className={"adminBox w-full flex-col mb-5"}>
+    <div className={"adminBox w-full h-[350px] flex-col mb-5"}>
       <h3 className={"adminBoxTitle"}>Reschedule Sessions</h3>
-      <div className="w-full flex-col gap-2 h-[200px] scrollAction ">
+      <div className="w-full flex-col gap-2 h-[300px] scrollAction ">
         {isLoading 
           ? 
             (<Spinner />) 

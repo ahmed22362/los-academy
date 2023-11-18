@@ -5,10 +5,10 @@ import Image from 'next/image';
 import { CustomFlowbiteTheme } from 'flowbite-react';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 import Cookies from 'universal-cookie';
-import LoadingButton from '../../admin/loadingButton';
+import LoadingButton from '../loadingButton';
 import { useRouter } from 'next/navigation';
 
-export default function TeacherProfile({openAssignModal, handleCloseModal, user, updateComponent}: 
+export default function AdminProfile({openAssignModal, handleCloseModal, user, updateComponent}: 
     {
         openAssignModal: boolean;
         handleCloseModal: () => void;

@@ -1,32 +1,31 @@
 "use client";
 
-import { CustomFlowbiteTheme, Datepicker, Label, Modal } from 'flowbite-react';
+import { CustomFlowbiteTheme, Label, Modal } from 'flowbite-react';
 import { useEffect, useRef, useState } from 'react';
 import Cookies from 'universal-cookie';
 import LoadingButton from '../../admin/loadingButton';
-import { useRouter } from 'next/navigation';
 import { Calendar } from 'primereact/calendar';
 import { Nullable } from "primereact/ts-helpers";
 import { Toast } from 'primereact/toast';
-
-export default function RescheduleModal(
+export default function AcceptRescheduleModal(
     {
-        openAssignModal,
+        openModal,
         handleCloseModal, 
-        session
+        session,
+        updateComponent
     }: 
     {
-        openAssignModal: boolean;
+        openModal: boolean;
         handleCloseModal: () => void;
         session: any;
+        updateComponent: () => void
     }) {
 
         const modalRef = useRef<HTMLDivElement>(null);
         const cookies = new Cookies();
-        const [message, setMessage] = useState('')
         const sessionData = session && session
         const [isProcessing, setIsProcessing] = useState(false)
-        const [rangeDate, setRangeDate] = useState<Nullable<(Date | null)[]> | any>(null);
+        const [newDate, setNewDate] = useState<Nullable<(Date | null)[]> | any>(null);
         const toast = useRef<any>(null);
 
         const showSuccess = (message: string) => {
@@ -34,7 +33,6 @@ export default function RescheduleModal(
             toast.current?.show({severity:'success', summary: 'Success', detail: message, life: 3000});
         
         }
-
         const showError = (message: string) => {
             toast.current?.show({severity:'error', summary: 'Error', detail: message, life: 4000});
           }
@@ -51,21 +49,21 @@ export default function RescheduleModal(
               }
             };
     
-            if (openAssignModal) {
+            if (openModal) {
               document.addEventListener('mousedown', handleClickOutside);
             }
             return () => {
               document.removeEventListener('mousedown', handleClickOutside);
             };
-          }, [openAssignModal, handleCloseModal]);
+          }, [openModal, handleCloseModal]);
         
-          if (!openAssignModal) {
+          if (!openModal) {
             return null;
           }
 
-          const reschduleRequest = () => {
+          const acceptReschedule = () => {
             setIsProcessing(true)
-            fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/requestReschedule`, {
+            fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/acceptReschedule`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -73,47 +71,53 @@ export default function RescheduleModal(
                 },
                 
                 body: JSON.stringify({
-                  sessionId: sessionData.id,
-                  newDateStartRange: rangeDate[0],
-                  newDateEndRange: rangeDate[1]
+                    rescheduleRequestId: sessionData.id,
+                    newDate: newDate,
                 })
                 
             }).then(response => response.json()).then(data => {
-              console.log(data)
-              if(data.status === 'success') {
-                  showSuccess(data.message)
-              } else {
-                  showError(data.message)
-              }
-            setIsProcessing(false)
-            }).catch(err => console.log(err))
-          }
+                if(data.status === 'success') {
+                    showSuccess(data.message)
+                } else {
+                    showError(data.message)
+                }
+                setIsProcessing(false)
+                // updateComponent()
+                // handleCloseModal()
+            }).catch((err) => {
+                console.log(err)
+                showError(err.message)
+            })
+        }
+
+
 
   return (
-    <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"2xl"}>
-        <Modal.Header theme={modalTheme.header}>Reschedule Session for Student : <span className='capitalize font-bold italic'>{sessionData.SessionInfo.user.name}</span></Modal.Header>
+    <Modal ref={modalRef} show={openModal} onClose={handleCloseModal} size={"2xl"}>
+        <Modal.Header theme={modalTheme.header}>Reschedule Session :</Modal.Header>
         <Toast ref={toast} />
         <Modal.Body>
             <div className='m-auto flex flex-col items-center justify-center'>
               <div className="mb-2 block">
-                <Label htmlFor="rengeDateEnd" value="Select Range Date " />
+                <Label htmlFor="newDate" value="Select New Date " />
               </div>
               <Calendar
+                    id='newDate'
                     inline
-                    value={rangeDate} 
-                    onChange={(e) => {
-                    setRangeDate(e.value)
+                    value={newDate} 
+                    onChange={(e:any) => {
+                    console.log(e.value)
+                    setNewDate(e.value)
                   }}
                     showTime
                     hourFormat="12"
-                    selectionMode="range"
                     className={"border-[5px] border-secondary-color rounded-xl"}
                 
               />
             <div className="w-full mt-3 flex items-center justify-center">
               <LoadingButton 
                 title={"Reschdeule Session"}
-                action={reschduleRequest}
+                action={acceptReschedule}
                 customStyle={"text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"}
                 isProcessing={isProcessing}
               />

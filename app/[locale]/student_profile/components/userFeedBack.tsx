@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
 
-function UserFeedBack() {
-  const [feedbackModal, setFeedbackModal] = useState<boolean>(false);
+function UserFeedBack({setUserFeedbackModal,userFeedbackModal}:any) {
+  // const [feedbackModal, setFeedbackModal] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
   const toast = useRef<Toast>(null);
@@ -57,7 +57,7 @@ function UserFeedBack() {
         if (data.status === "success") {
           showSuccess(`Feedback Sent Successfully`);
           console.log("Feedback submitted successfully", data);
-          setFeedbackModal(false);
+          setUserFeedbackModal(false);
         } else {
           console.log(data);
           showError(`${data.message}`);
@@ -77,14 +77,14 @@ function UserFeedBack() {
   return (
     <>
       <Toast ref={toast} />
-      <Button onClick={() => setFeedbackModal(true)}>
+      {/* <Button onClick={() => setUserFeedbackModal(true)}>
         Toggle Feedback modal
-      </Button>
+      </Button> */}
       <Modal
-        show={feedbackModal}
+        show={userFeedbackModal}
         className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "
         size={"xl"}
-        onClose={() => setFeedbackModal(false)}
+        onClose={() => setUserFeedbackModal(false)}
       >
         <Modal.Header className="p-0 m-0 border-0"></Modal.Header>
 

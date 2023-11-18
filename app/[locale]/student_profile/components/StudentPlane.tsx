@@ -8,7 +8,7 @@ interface StudentPlaneProps {
   title: string;
   price: number;
   features: string[];
-  recommended?: string;
+  recommended?: boolean;
   planId?: number;
 }
 

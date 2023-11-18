@@ -16,6 +16,19 @@ import { LiaEditSolid } from "react-icons/lia";
 import { CiCalendar } from "react-icons/ci";
 import { IoIosLogOut } from "react-icons/io";
 import { LiaCreditCardSolid } from "react-icons/lia";
+import UserFeedBack from "../../student_profile/components/userFeedBack";
+import Subscribtion from "../../student_profile/components/Subscribtion";
+import SessionsModal from "../../student_profile/components/sessionsModal";
+import EditProfile from "../../student_profile/components/edit_profile";
+import StudentPlanModal from "../../student_profile/components/StudentPlanModal";
+interface UserInfo {
+  name: string;
+  email: string;
+  phone: string;
+  id: number;
+  gender: string;
+  age?: number; // make age optional if it may not be present in the API response
+}
 export default function CustomNavbar() {
 
   const router = usePathname();
@@ -28,6 +41,12 @@ export default function CustomNavbar() {
   const linkStyle = "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full rtl:lg:p-[15px]";
   const linkText = t("login-btn");
   const [userDate, setUserData] = useState<any>({});
+  const [userFeedbackModal, setUserFeedbackModal] = useState<boolean>(false)
+  const [openSubscribtionModal, setOpenSubscribtionModal] = useState<boolean>(false);
+  const [openSeesionModal, setOpenSeesionModal] = useState<boolean>(false);
+  const [openEditeProfileModal, setOpenEditeProfileModal] = useState<boolean>(false);
+  const [myInfo, setMyInfo] = useState<UserInfo | undefined>();
+  const [openPlansModal, setOpenPlansModal] = useState<boolean>(false);
 
   const customNavTheme: CustomFlowbiteTheme["navbar"] = {
     root: {
@@ -158,19 +177,24 @@ export default function CustomNavbar() {
                       </div>} inline>
                       <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                         <LiaUserEditSolid className="text-[26px] font-semibold" /> 
-                        <span>Edit Profile</span>
+                        <span onClick={()=>setOpenEditeProfileModal(true)}>Edit Profile</span>
                       </Dropdown.Item>
+                    
                       <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
-                        <LiaEditSolid  className="text-[26px] font-semibold" /> 
-                        <span>Add Feedback</span>
+                      <CiCalendar  className="text-[26px] font-semibold" /> 
+                      <span onClick={()=>setOpenSeesionModal(true)}>Sessions</span>
                       </Dropdown.Item>
                       <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                       <CiCalendar  className="text-[26px] font-semibold" /> 
-                      <span>Sessions</span>
+                      <span onClick={()=>setOpenPlansModal(true)}>Plans</span>
                       </Dropdown.Item>
                       <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                         <LiaCreditCardSolid  className="text-[26px] font-semibold" /> 
-                        <span>Subscription</span>
+                        <span onClick={()=>setOpenSubscribtionModal(true)}>My Subscription</span>
+                      </Dropdown.Item>
+                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                        <LiaEditSolid  className="text-[26px] font-semibold" /> 
+                        <span onClick={()=>setUserFeedbackModal(true)}>Add Feedback</span>
                       </Dropdown.Item>
                       <hr />
                       <Dropdown.Item 
@@ -209,6 +233,11 @@ export default function CustomNavbar() {
             </Dropdown>
           </div>
         </Navbar>
+        <UserFeedBack setUserFeedbackModal={setUserFeedbackModal} userFeedbackModal={userFeedbackModal}/>
+        <Subscribtion setOpenSubscribtionModal={setOpenSubscribtionModal} openSubscribtionModal={openSubscribtionModal}/>
+        <SessionsModal setOpenSeesionModal={setOpenSeesionModal} openSeesionModal={openSeesionModal} />
+        <EditProfile setMyInfo={setMyInfo} setOpenEditeProfileModal={setOpenEditeProfileModal} openEditeProfileModal={openEditeProfileModal} />
+        <StudentPlanModal openPlansModal={openPlansModal} setOpenPlansModal={setOpenPlansModal}/>
       </>
     );
   }

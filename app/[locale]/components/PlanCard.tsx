@@ -2,14 +2,24 @@
 
 import { Card, CustomFlowbiteTheme } from "flowbite-react";
 import PrimaryButton from './PrimaryButton'
-import { useState } from "react";
+import { useState, useRef } from "react";
 import PriceModal from "./PriceModal/PriceModal";
+import Cookies from 'universal-cookie';
+import { Toast } from 'primereact/toast';
+import {useRouter} from "next/navigation"
 function PlanCard({planData}: any) {
   
   const plan = planData && planData
-
-
+  const cookeis = new Cookies()
+  const toast = useRef<Toast>(null);
   const [openModal, setOpenModal] = useState(false);
+  const router = useRouter()
+  const showSuccess = () => {
+    toast.current?.show({severity:'success', summary: 'Success', detail:'Add Success You will Redirect To Payment Page', life: 4000});
+  }
+  const showError = (msg: string) => {
+      toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
+    }
   const handleOpenModal = () => {
         setOpenModal(true);
     };
@@ -27,8 +37,39 @@ function PlanCard({planData}: any) {
     }
   }
 
+  const choosePlan = () => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/subscription/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${cookeis.get('token')}`,
+      },
+      body: JSON.stringify({
+        planId: plan.id
+      }),
+    })
+    .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          if (data.status=='success') {
+              showSuccess()
+              const timer = setTimeout(() => {
+                router.push(data.data.url)
+              }, 4000)
+              return () => clearTimeout(timer)
+          } else {
+            showError(data.message)
+          }
+      })
+      .catch((error) => {
+        console.error('Error creating custom plan:', error);
+      });
+  
+  }
+
   return (
     <Card theme={customTheme.card} className=" h-[auto] w-[300]">
+      <Toast ref={toast} />
       <h5 className="mb-4 text-xl font-medium text-black-color-two capitalize">
         {plan.title}
       </h5>
@@ -59,15 +100,10 @@ function PlanCard({planData}: any) {
       </ul>
       <button
         className="bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-4 px-12 rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
-        onClick={handleOpenModal}
+        onClick={choosePlan}
       >
         Get Plan
       </button>
-      <PriceModal
-            handleOpen={openModal} 
-            handleCloseModal={handleCloseModal}
-            targetComponent={plan.id}
-        />
     </Card>
   )
 }

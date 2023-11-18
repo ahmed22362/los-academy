@@ -78,7 +78,9 @@ export default function CustomNavbar() {
   }
 
   useEffect(() => {
+      
       getCurrentStudent()
+
   }, [])
 
   const logOut = async () => {
@@ -88,12 +90,11 @@ export default function CustomNavbar() {
     if(token && id) {
         cookies.remove('token', { path: '/', });
         cookies.remove('id', { path: '/', });
-        router2.replace('/los_auth');
+        router2.replace('/login');
     }  else {
         console.error('Error removing cookies');
     } 
   }
-
 
 
   if (!(isAdminDashboard || isAdminLogin || isteacher)) {
@@ -148,12 +149,12 @@ export default function CustomNavbar() {
             "flex items-center max-md:items-baseline gap-2 rtl:font-sans rtl:text-lg rtl:max-sm:me-0 rtl:max-sm:ms-auto rtl:lg:w-[185px]"
             }>
             <Navbar.Toggle theme={customNavTheme.toggle} />
-            {userDate && userDate.verified === true 
+            {userDate && userDate.name
               ? 
                 (<>
                   <Dropdown label={
                       <div className="bg-secondary-color hover:bg-secondary-hover rounded-full px-3 py-2 text-white font-semibold transition-colors cursor-pointer">
-                          {userDate &&userDate.name}
+                          {userDate && userDate.name}
                       </div>} inline>
                       <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                         <LiaUserEditSolid className="text-[26px] font-semibold" /> 

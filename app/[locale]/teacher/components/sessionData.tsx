@@ -33,25 +33,6 @@ export default function sessionData({data, updateComponent}:{data: any, updateCo
         setOpenModal(false)
       }
 
-    // const acceptDate = () => {
-    //     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/accept-reschedule`, {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             "Authorization": `Bearer ${cookies.get("token")}`,
-    //         },
-    //         body: JSON.stringify({
-    //             rescheduleRequestId: session.id
-    //         })
-    //     }).then(response => response.json())
-    //     .then(data => {
-    //         console.log(data)
-    //         showSuccess()
-    //         updateComponent()
-    //     }).catch(err => {
-    //         console.log(err)
-    //     })
-    // }
     const denyDate = () => {
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/decline-reschedule`, {
             method: "POST",

@@ -34,6 +34,7 @@ export default function OurTab() {
       fetch(`${process.env.NEXT_PUBLIC_APIURL}/plan`)
       .then(response => response.json())
       .then((data) => {
+        console.log(data)
         if(data.status === 'success') {
           setPlans(data.data)
         }

@@ -111,12 +111,12 @@ export default function FetchStudentData({studentData, updateComponent} : {stude
             {student.remainSessions}
             </Table.Cell>
             <Table.Cell>
-                <div className="flex flex-row justify-between gap-3">
-                    <LiaPhoneSolid className={"text-2xl cursor-pointer"} 
+                <div className="flex flex-row items-center justify-center gap-3">
+                    {/* <LiaPhoneSolid className={"text-2xl cursor-pointer"} 
                         onClick={() => {
                             location.href = `https://wa.me/+2${student.phone}`
                         }}
-                    />
+                    /> */}
                    <Link href={`mailto:${student.email}`}> <GoMail className={"text-2xl cursor-pointer"} /></Link>
                 </div>
             </Table.Cell>

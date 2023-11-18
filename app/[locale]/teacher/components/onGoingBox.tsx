@@ -8,7 +8,7 @@ import Cookies from "universal-cookie";
 export default function OnGoingBox(session: any) {
 
     const upComingSession = session.session && session.session
-
+    
     // handle buttons
     const [isIamHere, setIsIamHere] = useState(true)
     const [isJoin, setIsJoin] = useState(false)
@@ -62,6 +62,17 @@ export default function OnGoingBox(session: any) {
         const remainingSeconds = seconds % 60;
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
+
+
+    // update Component Based on Sessios Status 
+
+    // const stateOfComponent = () => {
+
+    //     if(upComingSession.status === 'ongoing') {
+    //         handleIAmHereClick()
+    //     } 
+
+    // }
 
     // Update session attendance For Teacher
 
@@ -138,6 +149,7 @@ export default function OnGoingBox(session: any) {
         }).catch(err => {
             console.log(err)
         })
+
     }
 
     return(

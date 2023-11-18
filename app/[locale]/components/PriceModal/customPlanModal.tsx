@@ -5,22 +5,22 @@ import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
-import {Calendar} from "primereact/calendar";
-import {Nullable} from "primereact/ts-helpers";
 import { Label, Radio } from 'flowbite-react';
 import Cookies from 'universal-cookie';
 import { Toast } from 'primereact/toast';
+import Link from 'next/link';
 
 export default function CustomPlanModal({handleOpen, handleCloseModal, targetComponent}: {
     
     handleOpen: boolean; handleCloseModal: () => void, targetComponent: number }) {
-    const [dateValue, setDateValue] = useState<Nullable<Date>>(new Date());
+    
     const modalRef = useRef<HTMLDivElement>(null);
-    const [sessionDuration, setSessionDuraion] = useState('');
-    const [sessionCount, setSessionCount] = useState('');
-    const [sessionPerWeek, setSessionPerWeek] = useState('');
+    
+    const [sessionsDuration, setSessionDuraion] = useState<any>('');
+    const [sessionsCount, setSessionCount] = useState<any>('');
+    const [sessionsPerWeek, setSessionPerWeek] = useState<any>('');
     const cookies = new Cookies();
-
+    const [resData, setResData] = useState<any>({})
     const toast = useRef<Toast>(null);
     const showSuccess = () => {
         toast.current?.show({severity:'success', summary: 'Success', detail:'Add Success', life: 3000});
@@ -58,6 +58,11 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
     }
 
     const submitPlan = () => {
+        console.log({
+            sessionDuration: parseInt(sessionsDuration),
+            sessionsCount: parseInt(sessionsCount),
+            sessionsPerWeek: parseInt(sessionsPerWeek)
+        })
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/subscription/`, {
             method: "POST",
             headers: {
@@ -65,14 +70,15 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
                 "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
-                sessionDuration: sessionDuration,
-                sessionCount: sessionCount,
-                sessionPerWeek: sessionPerWeek
+                sessionDuration: parseInt(sessionsDuration),
+                sessionsCount: parseInt(sessionsCount),
+                sessionsPerWeek: parseInt(sessionsPerWeek)
             })
         }).then(response => response.json()).then(data => {
             console.log(data)
             if(data.status === "success") {
                 showSuccess()
+                setResData(data)
             } else if (data.status === 'fail'){
                 showError(data.message)
             }
@@ -106,7 +112,7 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
                             <Radio
                                 id="15-min"
                                 name="radio"
-                                value="15"
+                                defaultValue="15"
                                 className="h-4 w-4"
                                 onClick={(e: any) => {
                                     setSessionDuraion(e.target.value)
@@ -324,18 +330,32 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
                     </div>
                     </div>
                 </fieldset>
-                <Calendar inline value={dateValue} onChange={(e) => {
-                    setDateValue(e.value)
-                    console.log(e.value)}}
-                            showTime
-                            hourFormat="12"
-                            className={"border-4 border-secondary-color rounded-xl"}></Calendar>
                 <button className={
                     "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] w-52 h-12 my-auto px-16 rounded-full"
                 }
                 onClick={submitPlan}
                 >Confirm</button>
             </div>
+            
+            {resData && resData.status === 'success' && resData.data ? (
+                <div className="flex flex-col justify-center items-start gap-8 mt-6">
+                    <h3 className="font-semibold">Your Subscription Details: </h3>
+                    <ul className="flex flex-col justify-center items-start gap-3 text-[16px]">
+                        <li>Subscription ID: {resData.data.id}</li>
+                        <li>Subscription Status: <span className={`px-3 py-1 rounded-full text-white font-bold ${resData.data.status === "open" ? "bg-success-color": "bg-warning-color"}`}>{resData.data.status}</span></li>
+                        <li>Total Amount: <span className="font-bold text-[16px]">{resData.data.amount_total ? resData.data.amount_total / 100 : 'N/A'}$</span></li>
+                    </ul>
+                    {resData.data.url && (
+                    <Link
+                        className="bg-secondary-color hover:bg-secondary-hover text-[16px] font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] px-10 py-4 rounded-full"
+                        href={resData.data.url} 
+                        target="_blank"
+                    >
+                        Go To Buy
+                    </Link>
+                    )}
+                </div>
+                ) : null}
             </Modal.Body>
       </Modal>
     </>

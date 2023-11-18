@@ -69,7 +69,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
         if (data.status == "success") {
           showSuccess('You Will Redirect To "Pay"')
           setTimeout(() => {
-            router.push(`${data?.data?.url}`);
+            router.push(`${data?.data?.stripeCheckSession?.url}`);
           }, 3000);        }
       })
       .catch((error) => {

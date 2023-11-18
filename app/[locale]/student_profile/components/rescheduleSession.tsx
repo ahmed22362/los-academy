@@ -44,7 +44,6 @@ function RescheduleSession({
   };
   // function
   const handleReschedule = () => {
-    alert("in");
     if (!selectedStartDate || !selectedEndDate) {
       showError("Please select both start date and end date.");
       return;
@@ -67,14 +66,15 @@ function RescheduleSession({
       .then((response) => response.json())
       .then((data) => {
         console.log("Session rescheduled successfully", data);
-        setRescheduleStatus(`success`);
         // Handle success response
         if (data.status === "success") {
+        setRescheduleStatus(`success`);
           setStatus(`${data?.data?.status}`);
           showSuccess(`${data.message}`);
           setRescheduleStatus(`${data.status}`);
         } else {
           showError(`${data.message}`);
+          setRescheduleStatus('none')
         }
       })
       .catch((error) => {

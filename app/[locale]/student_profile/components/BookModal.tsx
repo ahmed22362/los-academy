@@ -60,10 +60,10 @@ export default function BookModal() {
             <div className="taps flex justify-center h-1/2">
             <Tabs.Group aria-label="Pills" theme={customeTheme.tab} style="pills">
             <Tabs.Item active title="Paid Session" >
-                <BookPaidSession/>
+                <BookPaidSession setOpenBookModal={setOpenBookModal}/>
                 </Tabs.Item>
                 <Tabs.Item active title="Free Session">
-                <BookFreeSession/>
+                <BookFreeSession setOpenBookModal={setOpenBookModal} />
             </Tabs.Item>
          </Tabs.Group>
             </div>

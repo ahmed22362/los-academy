@@ -22,8 +22,7 @@ interface UserInfo {
     // ... add other properties as needed
     age?: number; // make age optional if it may not be present in the API response
   }
-export default function EditProfile() {
-  const [openModal, setOpenModal] = useState(false);
+export default function EditProfile({setMyInfo ,openEditeProfileModal ,setOpenEditeProfileModal}:any) {
   const [showChangePassword, setShowChangePassword] = useState(false); // New state
   const cookie=new Cookies();
   const url ='https://los-academy.onrender.com/api/v1/';
@@ -53,7 +52,7 @@ export default function EditProfile() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data.data);
-      
+        setMyInfo(data?.data)
         setUserInfo(data.data)
         // Set the retrieved Seeions in the state
         
@@ -91,7 +90,7 @@ const handleInputChange = (field: keyof UserInfo, value: string) => {
         console.log('Update successful:', data);
        
         setSuccessStatus(true);
-        setOpenModal(false); // Close the modal after a successful update
+        setOpenEditeProfileModal(false); // Close the modal after a successful update
       })
       .catch((error) => {
         showToast('success', 'Update Successful', 'Profile has been updated successfully.');
@@ -108,8 +107,8 @@ const handleInputChange = (field: keyof UserInfo, value: string) => {
     <>
           <Toast ref={toast} />
 
-      <Button onClick={() => setOpenModal(true)}>Toggle Profiel modal</Button>
-      <Modal   show={openModal} className='block space-y-0 md:flex md:space-y-0 md:space-x-4 ' size={'2xl'}  onClose={() => setOpenModal(false)}>
+      {/* <Button onClick={() => setOpenEditeProfileModal(true)}>Toggle Profiel modal</Button> */}
+      <Modal   show={openEditeProfileModal} className='block space-y-0 md:flex md:space-y-0 md:space-x-4 ' size={'2xl'}  onClose={() => setOpenEditeProfileModal(false)}>
       <Modal.Header className='p-0 m-0 border-0'></Modal.Header>
         <Modal.Body >
         {showChangePassword ? (
@@ -184,7 +183,7 @@ const handleInputChange = (field: keyof UserInfo, value: string) => {
               </div>
       <div className="buttons flex gap-4 justify-center mt-8 mb-0">
            <PrimaryButton
-                     onClick={() => setOpenModal(false)}
+                     onClick={() => setOpenEditeProfileModal(false)}
                     text="Discard"
                     ourStyle="border-[--secondary-color]  border-2 hover:bg-[--secondary-color]  font-semibold hover:text-white	py- border rounded-3xl text-md px-5	transition-all	duration-500 "
                   />

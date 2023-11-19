@@ -24,10 +24,7 @@ export default function SectionHeader() {
             >
             Add Report <PiPlusBold />
         </button>
-        <AddReportModal 
-            openAssignModal={handleModal}
-            handleCloseModal={handleCloseModal}
-        />
+        <AddReportModal openAssignModal={handleModal} handleCloseModal={handleCloseModal} />
     </div>
   )
 }

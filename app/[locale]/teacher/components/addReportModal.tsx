@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 
 export default function AddReportModal({openAssignModal, handleCloseModal, sessionID}: 
     {
-        sessionID: any;
+        sessionID?: any;
         openAssignModal: boolean;
         handleCloseModal: () => void;
     }) {

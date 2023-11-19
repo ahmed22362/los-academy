@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
 
-function UserFeedBack({setUserFeedbackModal,userFeedbackModal}:any) {
+function UserFeedBack({ setUserFeedbackModal, userFeedbackModal }: any) {
   // const [feedbackModal, setFeedbackModal] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
@@ -41,12 +41,12 @@ function UserFeedBack({setUserFeedbackModal,userFeedbackModal}:any) {
       name: name,
       feedback: feedback,
     };
+    console.log(feedbackData);
 
     // Perform API request to submit feedback
     fetch(`${url}/feedback/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(feedbackData),

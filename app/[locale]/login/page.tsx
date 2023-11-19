@@ -178,8 +178,8 @@ function page() {
             router.push("/student_profile");
           }, 3000);
           // Save user token in a cookie or state as needed
-          cookies.set('token', data.token);
-          cookies.set('id', data.data.id);
+          cookies.set("token", data.token);
+          cookies.set("id", data.data.id);
         } else {
           if (
             data.message ===

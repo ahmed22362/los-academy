@@ -174,26 +174,26 @@ export default function CustomNavbar() {
                       <div className="bg-secondary-color hover:bg-secondary-hover rounded-full px-3 py-2 text-white font-semibold transition-colors cursor-pointer">
                           {userDate &&userDate.name}
                       </div>} inline>
-                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                      <Dropdown.Item onClick={()=>setOpenEditeProfileModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                         <LiaUserEditSolid className="text-[26px] font-semibold" /> 
-                        <span onClick={()=>setOpenEditeProfileModal(true)}>Edit Profile</span>
+                        <span >Edit Profile</span>
                       </Dropdown.Item>
                     
-                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                      <Dropdown.Item onClick={()=>setOpenSeesionModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                       <CiCalendar  className="text-[26px] font-semibold" /> 
-                      <span className="py-2" onClick={()=>setOpenSeesionModal(true)}>Sessions</span>
+                      <span className="py-2" >Sessions</span>
                       </Dropdown.Item>
-                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                      <Dropdown.Item  onClick={()=>setOpenPlansModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                       <CiCalendar  className="text-[26px] font-semibold" /> 
-                      <span className="py-2" onClick={()=>setOpenPlansModal(true)}>Plans</span>
+                      <span className="py-2">Plans</span>
                       </Dropdown.Item>
-                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                      <Dropdown.Item onClick={()=>setOpenSubscribtionModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                         <LiaCreditCardSolid  className="text-[26px] font-semibold" /> 
-                        <span className="py-2" onClick={()=>setOpenSubscribtionModal(true)}>My Subscription</span>
+                        <span className="py-2" >My Subscription</span>
                       </Dropdown.Item>
-                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                      <Dropdown.Item onClick={()=>setUserFeedbackModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                         <LiaEditSolid  className="text-[26px] font-semibold" /> 
-                        <span className="py-2" onClick={()=>setUserFeedbackModal(true)}>Add Feedback</span>
+                        <span className="py-2" >Add Feedback</span>
                       </Dropdown.Item>
                       <hr />
                       <Dropdown.Item 

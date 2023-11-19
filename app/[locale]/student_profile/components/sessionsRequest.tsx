@@ -47,49 +47,48 @@ function SessionsRequest() {
       });
   }, [updateCalendar]);
 
-//   update Dates 
-const handleUpdateDates = (sessionId: number) => {
+  //   update Dates
+  const handleUpdateDates = (sessionId: number) => {
     if (!newDates || newDates.length === 0) {
       // Handle the case where no new dates are selected
       return;
     }
 
     if (newDates && Array.isArray(newDates) && newDates.length > 0) {
-        const updatedDates = newDates.map(date => date.toISOString());
-    
-        const updatedSession = {
-          sessionDates: updatedDates,
-        };
-    // const updatedSession = {
-    //   sessionDates: newDates.map((date: Date) => moment(date).format('YYYY-MM-DD')),
-    // };
+      const updatedDates = newDates.map((date) => date.toISOString());
 
-    fetch(`${url}/user/mySessionReq/${sessionId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(updatedSession),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Handle the response if needed
-        console.log('Updated session:', data);
-        // Fetch and update the sessions again to reflect the changes
-        setUpdateCalendar(true);
+      const updatedSession = {
+        sessionDates: updatedDates,
+      };
+      // const updatedSession = {
+      //   sessionDates: newDates.map((date: Date) => moment(date).format('YYYY-MM-DD')),
+      // };
+
+      fetch(`${url}/user/mySessionReq/${sessionId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedSession),
       })
-      .catch((error) => {
-        console.error('Error updating session:', error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          // Handle the response if needed
+          console.log("Updated session:", data);
+          // Fetch and update the sessions again to reflect the changes
+          setUpdateCalendar(true);
+        })
+        .catch((error) => {
+          console.error("Error updating session:", error);
+        });
+    }
   };
-}
   return (
     <>
       {updateCalendar ? (
         <div>
           <div className="flex justify-end">
-            
             <button
               onClick={() => setUpdateCalendar(false)}
               className="bg-[#13801b] py-2 px-5 rounded-lg text-white"
@@ -99,7 +98,6 @@ const handleUpdateDates = (sessionId: number) => {
           </div>
           {sessionsRequest.map((session) => (
             <div className="flex flex-col  gap-3" key={session.id}>
-             
               <p>Session Dates:</p>
               <ul>
                 {session.sessionDates.map((date: string) => (
@@ -107,11 +105,16 @@ const handleUpdateDates = (sessionId: number) => {
                     <span className="mx-3">
                       {moment(date).format("D-MMM-YYYY")}
                     </span>
-                    {convertDateTimeZone(session.sessionDate, 'UTC', Intl.DateTimeFormat().resolvedOptions().timeZone, 'h:mm A')}                   
+                    {convertDateTimeZone(
+                      session.sessionDate,
+                      "UTC",
+                      Intl.DateTimeFormat().resolvedOptions().timeZone,
+                      "h:mm A"
+                    )}
                   </li>
                 ))}
               </ul>
-             
+
               <p className="mr-3 font-semibold flex justify-between items-center">
                 Status:
                 <span
@@ -132,7 +135,6 @@ const handleUpdateDates = (sessionId: number) => {
                   {session.type === "paid" ? "Paid$" : "Free"}{" "}
                 </span>{" "}
               </p>
-              
             </div>
           ))}
         </div>
@@ -165,7 +167,7 @@ const handleUpdateDates = (sessionId: number) => {
               {sessionsRequest.map((session) => (
                 <button
                   key={session.id}
-                  className='bg-secondary-color  hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-10  rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45'
+                  className="bg-secondary-color  hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-10  rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
                   onClick={() => handleUpdateDates(session.id)}
                 >
                   Update Dates

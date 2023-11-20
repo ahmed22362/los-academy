@@ -13,7 +13,10 @@ interface Plan {
   price: number;
   features: string[];
 }
-export default function StudentPlanModal({openPlansModal, setOpenPlansModal}:any) {
+export default function StudentPlanModal({
+  openPlansModal,
+  setOpenPlansModal,
+}: any) {
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
   const token = cookie.get("token");
@@ -70,11 +73,11 @@ export default function StudentPlanModal({openPlansModal, setOpenPlansModal}:any
   const getModalSizeClass = () => {
     numberOfPlans++;
     if (numberOfPlans >= 3) {
-      return '7xl';
+      return "7xl";
     } else if (numberOfPlans === 2) {
-      return '4xl';
+      return "4xl";
     } else {
-      return '3xl';
+      return "3xl";
     }
   };
   return (
@@ -83,7 +86,7 @@ export default function StudentPlanModal({openPlansModal, setOpenPlansModal}:any
       <Modal
         show={openPlansModal}
         className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "
-size={getModalSizeClass()}
+        size={getModalSizeClass()}
         onClose={() => setOpenPlansModal(false)}
       >
         <Modal.Header className="p-0 m-0 border-0"></Modal.Header>
@@ -115,7 +118,7 @@ size={getModalSizeClass()}
                     `${plan.sessionDuration} mins`,
                     `${plan.sessionsPerWeek} Classes per week`,
                     `All Sessions Count ${plan.sessionsCount}`,
-                    `Professional & Qualified`
+                    `Professional & Qualified`,
                   ]}
                 />
               ))}

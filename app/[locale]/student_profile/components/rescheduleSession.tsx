@@ -44,6 +44,7 @@ function RescheduleSession({
   };
   // function
   const handleReschedule = () => {
+    alert(sessionId);
     if (!selectedStartDate || !selectedEndDate) {
       showError("Please select both start date and end date.");
       return;
@@ -53,6 +54,7 @@ function RescheduleSession({
       newDateStartRange: selectedStartDate.toISOString(),
       newDateEndRange: selectedEndDate.toISOString(),
     };
+    console.log(rescheduleData);
 
     // Perform API request to reschedule session using rescheduleData
     fetch(`${url}/user/requestReschedule`, {
@@ -68,13 +70,13 @@ function RescheduleSession({
         console.log("Session rescheduled successfully", data);
         // Handle success response
         if (data.status === "success") {
-        setRescheduleStatus(`success`);
+          setRescheduleStatus(`success`);
           setStatus(`${data?.data?.status}`);
           showSuccess(`${data.message}`);
           setRescheduleStatus(`${data.status}`);
         } else {
           showError(`${data.message}`);
-          setRescheduleStatus('none')
+          setRescheduleStatus("none");
         }
       })
       .catch((error) => {

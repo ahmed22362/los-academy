@@ -6,8 +6,12 @@ import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import RemainSessions from "./RemainSessions";
 import HistorySessions from "./historySessions";
 import SessionsRequest from "./sessionsRequest";
+import RescheduleRequests from "./rescheduleRequests";
 
-export default function SessionsModal({setOpenSeesionModal ,openSeesionModal}:any) {
+export default function SessionsModal({
+  setOpenSeesionModal,
+  openSeesionModal,
+}: any) {
   const customeTheme: CustomFlowbiteTheme = {
     tab: {
       tablist: {
@@ -34,7 +38,7 @@ export default function SessionsModal({setOpenSeesionModal ,openSeesionModal}:an
       <Modal
         show={openSeesionModal}
         className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "
-        size={"xl"}
+        size={"4xl"}
         onClose={() => setOpenSeesionModal(false)}
       >
         <Modal.Header className="p-0 m-0 border-0"></Modal.Header>
@@ -55,7 +59,10 @@ export default function SessionsModal({setOpenSeesionModal ,openSeesionModal}:an
                   <HistorySessions />
                 </Tabs.Item>
                 <Tabs.Item title="Sessions Requests">
-                  <SessionsRequest/>
+                  <SessionsRequest />
+                </Tabs.Item>
+                <Tabs.Item title="Rescheduling Requests">
+                  <RescheduleRequests />
                 </Tabs.Item>
               </Tabs.Group>
             </div>

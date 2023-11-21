@@ -122,7 +122,7 @@ export default function AdminLoginForm() {
         </div>
         <div className="flex items-center gap-2">
             <div className="card flex justify-content-center border-[1px] border-gray-300 rounded-[25%] p-[1px]">
-                <Checkbox onChange={e => setChecked(e.checked)} checked={checked} id='remember'></Checkbox>
+                <Checkbox onChange={e => setChecked(e.checked)} checked={checked} id='remember' />
             </div>
             <Label htmlFor="remember">
                 Keep me login

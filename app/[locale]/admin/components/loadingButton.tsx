@@ -6,7 +6,7 @@ function LoadingButton({title, isProcessing, customStyle, action}: {
     title: string;
     isProcessing: boolean;
     customStyle: string;
-    action: () => void | any;
+    action?: () => void | any;
 }) {
 
     const buttonTheme: CustomFlowbiteTheme['button'] = {

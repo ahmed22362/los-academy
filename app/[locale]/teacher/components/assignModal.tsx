@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { CustomFlowbiteTheme } from 'flowbite-react';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 import Cookies from 'universal-cookie';
-import LoadingButton from '../../admin/loadingButton';
+import LoadingButton from '../../admin/components/loadingButton';
 import { Toast } from 'primereact/toast';
 
 export default function AssignModal({openAssignModal, handleCloseModal, sessionReqId, user, updateComponent, api}: 

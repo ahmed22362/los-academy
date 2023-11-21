@@ -6,6 +6,7 @@ import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import AddReportModal from "./addReportModal";
+import { convertDateTimeZone } from "@/helpers/convertDateAndTime";
 
 export default function OnGoingBox(session: any) {
 
@@ -22,7 +23,7 @@ export default function OnGoingBox(session: any) {
     const cookies = new Cookies()
     const toast = useRef<any>(null);
     const [openModal, setOpenModal] = useState(false)
-
+    const convertTimeZone = convertDateTimeZone
     const handleOpen = () => {
         setOpenModal(true)
     }
@@ -37,22 +38,33 @@ export default function OnGoingBox(session: any) {
         toast.current?.show({severity:'error', summary: 'Error', detail: message, life: 4000});
     }
 
-
     // Convert session time to a Date object
-    const sessionDate: any = new Date(upComingSession.sessionDate);
+    const sessionDate: any = convertTimeZone(upComingSession.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MMM D,YYYY h:mm A");
     // console.log(sessionDate)
+    const ourSessionDate = new Date(sessionDate)
     // Get the current time
     const currentDate: any = new Date();
      // Get the timezone offset in minutes and convert it to milliseconds
      const timezoneOffset = currentDate.getTimezoneOffset() * 60 * 1000;
     // Calculate the time difference in milliseconds
-    const timeDifference = sessionDate.getTime() - currentDate.getTime() + timezoneOffset;
+    const timeDifference = ourSessionDate.getTime() - currentDate.getTime();
+    // console.log(timeDifference)
     // Convert milliseconds to seconds
     const secondsDifference = Math.max(0, Math.floor(timeDifference / 1000));
     // handle start the counter
+    // useEffect(() => {
+    //     console.log(sessionDate)
+    //     console.log(currentDate)
+    //     console.log(timezoneOffset)
+    //     console.log(timeDifference)
+    //     console.log(secondsDifference)
+    // }, [])
     const handleIAmHereClick = () => {
-        setCountdownSeconds(secondsDifference);
-        setIsStarted(true)
+        if(!started) {
+            setCountdownSeconds(secondsDifference);
+            setIsStarted(true)
+        }
+        
     };
 
     // Counter down Functionality
@@ -97,6 +109,7 @@ export default function OnGoingBox(session: any) {
 
     const handleUpdateAttendance = () => {
         console.log(upComingSession.id)
+        handleIAmHereClick()
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/updateTeacherAttendance`, {
             method: "POST",
             headers: {

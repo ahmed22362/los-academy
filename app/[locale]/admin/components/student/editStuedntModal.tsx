@@ -4,7 +4,7 @@ import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-r
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
-import LoadingButton from '../../loadingButton';
+import LoadingButton from '../loadingButton';
 import Cookies from 'universal-cookie';
 
 export default function EditStudentModal({openAssignModal, handleCloseModal, studentDetails, updateComponent}: 
@@ -63,7 +63,7 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
 
       const updateStudent = () => {
         setIsProcessing(true)
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/${studentDetails.name}`, {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/${studentDetails.id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -94,7 +94,7 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
   return (
     <>
       <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"3xl"}>
-        <Modal.Header theme={modalTheme.header}>Edit Student: {studentDetails.id}</Modal.Header>
+        <Modal.Header theme={modalTheme.header}>Edit Student: {studentDetails.name}</Modal.Header>
         <Modal.Body>
         <div className="space-y-6">
         <Toast ref={toast} />

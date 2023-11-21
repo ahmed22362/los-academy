@@ -1,6 +1,6 @@
 "use client"
 import { Skeleton } from 'primereact/skeleton';
-export default function OurSpinner() {
+export default function OurSkeleton() {
     return (
         <div className="flex flex-col items-center justify-center gap-3 w-full px-5">
             <Skeleton width="100%" height="100px"></Skeleton>

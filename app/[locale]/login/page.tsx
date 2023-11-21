@@ -416,17 +416,17 @@ function page() {
                     <div className="flex align-items-center">
                       <RadioButton
                         className="border focus-within:border-none focus-within:bg-[--secondary-color] border-[--secondary-color]   rounded-full"
-                        inputId="famle"
+                        inputId="female"
                         name="gender"
-                        value="famle"
+                        value="female"
                         onChange={(e) => setGender(e.value)}
                         onKeyDown={(e) =>
                           e.key === "Enter" && handleFormSubmit()
                         }
-                        checked={gender === "famle"}
+                        checked={gender === "female"}
                       />
-                      <label htmlFor="famle" className="ml-2 ">
-                        Famle
+                      <label htmlFor="female" className="ml-2 ">
+                        Female
                       </label>
                     </div>
                   </div>

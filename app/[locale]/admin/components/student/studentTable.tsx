@@ -84,7 +84,7 @@ export default function StudentTable() {
                     )
                 }):
                     (
-                    <tr><td>There is no students</td></tr>
+                    <tr className='p-3 text-[16px]'><td>There is no students</td></tr>
                     )
                 )
             }

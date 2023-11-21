@@ -3,7 +3,7 @@
 import { CustomFlowbiteTheme, Label, Modal } from 'flowbite-react';
 import { useEffect, useRef, useState } from 'react';
 import Cookies from 'universal-cookie';
-import LoadingButton from '../../admin/loadingButton';
+import LoadingButton from '../../admin/components/loadingButton';
 import { Calendar } from 'primereact/calendar';
 import { Nullable } from "primereact/ts-helpers";
 import { Toast } from 'primereact/toast';

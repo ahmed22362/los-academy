@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import Cookies from 'universal-cookie';
-import LoadingButton from '../../loadingButton';
+import LoadingButton from '../loadingButton';
 export default function EditMatrialModal({openAssignModal, handleCloseModal, matrialDetails, updateComponent}: 
     {
         openAssignModal: boolean;
@@ -108,9 +108,9 @@ export default function EditMatrialModal({openAssignModal, handleCloseModal, mat
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="course" value="Course" />
+                <Label htmlFor="courseStatus" value="Course Status" />
               </div>
-              <Select defaultValue={status} id="status" onChange={(e) => setStatus(e.target.value)}>
+              <Select defaultValue={status} id="courseStatus" onChange={(e) => setStatus(e.target.value)}>
                 <option value="new Arrival">new Arrival</option>
                 <option value="active">active</option>
                 <option value="archived">archived</option>

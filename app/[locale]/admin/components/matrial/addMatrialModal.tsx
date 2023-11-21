@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { PiStudentBold } from 'react-icons/pi';
 import Cookies from 'universal-cookie';
-import LoadingButton from '../../loadingButton';
+import LoadingButton from '../loadingButton';
 
 export default function AddMatrialModal({openAssignModal, handleCloseModal, updateComponent}: 
     {

@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { GiTeacher } from 'react-icons/gi';
-import LoadingButton from '../../loadingButton';
+import LoadingButton from '../loadingButton';
 import Cookies from 'universal-cookie';
 export default function AddCourseModal({openAssignModal, handleCloseModal, updateComponent}: 
     {

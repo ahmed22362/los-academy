@@ -4,7 +4,7 @@ import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-r
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
-import LoadingButton from '../../loadingButton';
+import LoadingButton from '../loadingButton';
 import Cookies from 'universal-cookie';
 
 export default function EditPlanModal({openAssignModal, handleCloseModal, planDetails, updateComponent}: 

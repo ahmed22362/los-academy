@@ -4,7 +4,7 @@ import { CustomFlowbiteTheme, Label, Modal, TextInput } from 'flowbite-react';
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
-import LoadingButton from '@/app/[locale]/admin/loadingButton';
+import LoadingButton from '@/app/[locale]/admin/components/loadingButton';
 import Cookies from 'universal-cookie';
 
 export default function EditRequestPayOut({openAssignModal, handleCloseModal, updateComponent, payoutID}: 

@@ -1,6 +1,7 @@
 'use client';
 
 import {CustomFlowbiteTheme, Sidebar} from 'flowbite-react';
+import Link from 'next/link';
 import {usePathname, useRouter} from "next/navigation";
 import {BiLogOut} from 'react-icons/bi';
 import Cookies from 'universal-cookie';
@@ -8,6 +9,7 @@ export default function OurSideBar() {
     const pathName = usePathname();
     const cookies = new Cookies();
     const router = useRouter();
+
     const customTheme: CustomFlowbiteTheme['sidebar'] = {
         root: {
             inner: "h-full overflow-y-auto overflow-x-hidden rounded py-4 px-3 bg-white",
@@ -36,87 +38,53 @@ export default function OurSideBar() {
         <Sidebar aria-label="Default sidebar example" theme={customTheme} className={"w-[14rem] pt-[70px]"}>
             <Sidebar.Items>
                 <Sidebar.ItemGroup className={"text-center"}>
-                    <Sidebar.Item
-                        href="/admin"
-                        theme={customTheme.item}
-                        active={pathName === "/admin"}
-                    >
+                    <Link href="/admin" className={`sideBarLink  ${pathName === "/admin" ? " active" : ""}`}>
                         <p>
                             Dashboard
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        href="/admin/teachers"
-                        theme={customTheme.item}
-                        active={pathName === "/admin/teachers"}
-                    >
+                    </Link>
+                    <Link href="/admin/teachers" className={`sideBarLink  ${pathName === "/admin/teachers" ? " active" : ""}`}>
                         <p>
                             Teachers
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        theme={customTheme.item}
-                        href="/admin/students"
-                        active={pathName === "/admin/students"}
-                    >
+                    </Link>
+
+                    <Link href="/admin/students" className={`sideBarLink  ${pathName === "/admin/students" ? " active" : ""}`}>
                         <p>
                             Students
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        theme={customTheme.item}
-                        href="/admin/material"
-                        active={pathName === "/admin/material"}
-                    >
+                        </Link>
+                    <Link href="/admin/material" className={`sideBarLink  ${pathName === "/admin/material" ? " active" : ""}`}>
                         <p>
                             Material
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        theme={customTheme.item}
-                        href="/admin/transactions"
-                        active={pathName === "/admin/transactions"}
-                    >
+                        </Link>
+                    <Link href="/admin/transactions" className={`sideBarLink  ${pathName === "/admin/transactions" ? " active" : ""}`}>
                         <p>
                             Transactions
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        theme={customTheme.item}
-                        href="/admin/sessions"
-                        active={pathName === "/admin/sessions"}
-                    >
+                        </Link>
+                    <Link href="/admin/sessions" className={`sideBarLink  ${pathName === "/admin/sessions" ? " active" : ""}`}>
                         <p>
                             Sessions
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        theme={customTheme.item}
-                        href="/admin/ongoing"
-                        active={pathName === "/admin/ongoing"}
-                    >
+                    </Link>
+                    <Link href="/admin/ongoing" className={`sideBarLink  ${pathName === "/admin/ongoing" ? " active" : ""}`}>
                         <p>
                             Ongoing Sessions
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        theme={customTheme.item}
-                        href="/admin/plans"
-                        active={pathName === "/admin/plans"}
-                    >
+                    </Link>
+                    <Link href="/admin/plans" className={`sideBarLink  ${pathName === "/admin/plans" ? " active" : ""}`}>
                         <p>
                             Plans
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        theme={customTheme.item}
-                        href="/admin/courses"
-                        active={pathName === "/admin/courses"}
-                    >
+                    </Link>
+
+                    <Link href="/admin/courses" className={`sideBarLink  ${pathName === "/admin/courses" ? " active" : ""}`}>
                         <p>
                             Courses
                         </p>
-                    </Sidebar.Item>
+                    </Link>
                     <Sidebar.Item
                         onClick={logOut}
                     >

@@ -1,6 +1,7 @@
 'use client';
 
 import {CustomFlowbiteTheme, Sidebar} from 'flowbite-react';
+import Link from 'next/link';
 import {usePathname, useRouter} from "next/navigation";
 import {BiLogOut} from 'react-icons/bi';
 import Cookies from 'universal-cookie';
@@ -35,51 +36,32 @@ export default function OurSideBar() {
         <Sidebar aria-label="Default sidebar example" theme={customTheme} className={"w-[14rem] pt-[70px]"}>
             <Sidebar.Items>
                 <Sidebar.ItemGroup className={"text-center"}>
-                    <Sidebar.Item
-                        href="/teacher"
-                        theme={customTheme.item}
-                        active={pathName === "/teacher"}
-                    >
+                    <Link href="/teacher" className={`sideBarLink  ${pathName === "/teacher" ? " active" : ""}`}>
                         <p>
                             Dashboard
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        theme={customTheme.item}
-                        href="/teacher/students"
-                        active={pathName === "/teacher/students"}
-                    >
+                    </Link>
+                    <Link href="/teacher/students" className={`sideBarLink  ${pathName === "/teacher/students" ? " active" : ""}`}>
                         <p>
                             Students
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        theme={customTheme.item}
-                        href="/teacher/sessions"
-                        active={pathName === "/teacher/sessions"}
-                    >
+                    </Link>
+                    <Link href="/teacher/sessions" className={`sideBarLink  ${pathName === "/teacher/sessions" ? " active" : ""}`}>
                         <p>
                             Sessions
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        theme={customTheme.item}
-                        href="/teacher/material"
-                        active={pathName === "/teacher/material"}
-                    >
+                    </Link>
+                    <Link href="/teacher/material" className={`sideBarLink  ${pathName === "/teacher/material" ? " active" : ""}`}>
                         <p>
                             Material
                         </p>
-                    </Sidebar.Item>
-                    <Sidebar.Item
-                        theme={customTheme.item}
-                        href="/teacher/transactions"
-                        active={pathName === "/teacher/transactions"}
-                    >
+                    </Link>
+
+                    <Link href="/teacher/transactions" className={`sideBarLink  ${pathName === "/teacher/transactions" ? " active" : ""}`}>
                         <p>
                             Transactions
                         </p>
-                    </Sidebar.Item>
+                    </Link>
                     <Sidebar.Item
                         onClick={logOut}
                     >

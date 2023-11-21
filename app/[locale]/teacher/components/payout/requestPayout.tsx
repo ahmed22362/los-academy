@@ -4,7 +4,7 @@ import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-r
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
-import LoadingButton from '@/app/[locale]/admin/loadingButton';
+import LoadingButton from '@/app/[locale]/admin/components/loadingButton';
 import Cookies from 'universal-cookie';
 export default function RequestPayOut({openAssignModal, handleCloseModal, updateComponent}: 
     {

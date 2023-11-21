@@ -17,11 +17,13 @@ export default async function TeacherSchedule() {
         <div className={"adminBox w-full flex-col"}>
             <h3 className={"adminBoxTitle"}>Teacher’s Schedule</h3>
             <div className="w-full flex-col h-[200px] scrollAction mb-[20px]">
-                {result.map((session: any, index: number) => {
+                {result && result.length > 0 ? result.map((session: any, index: number) => {
                     return(
                         <TeacherScheduleData data={session} key={index} />
                     )
-                })}
+                }): 
+                    (<p className="mt-3 p-3 bg-warning-color text-white w-fit rounded-full font-bold">No Sessions</p>)
+                }
             </div>
         </div>
     )

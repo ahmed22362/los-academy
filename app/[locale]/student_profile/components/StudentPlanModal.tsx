@@ -123,6 +123,7 @@ export default function StudentPlanModal({
                 />
               ))}
               <StudentPlane
+                planId={1}
                 title="Customize your Plan"
                 price={50}
                 features={[

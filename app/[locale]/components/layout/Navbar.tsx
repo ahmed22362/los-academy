@@ -15,6 +15,7 @@ import { LiaUserEditSolid } from "react-icons/lia";
 import { LiaEditSolid } from "react-icons/lia";
 import { CiCalendar } from "react-icons/ci";
 import { IoIosLogOut } from "react-icons/io";
+import { SiSessionize } from "react-icons/si";
 import { LiaCreditCardSolid } from "react-icons/lia";
 import UserFeedBack from "../../student_profile/components/userFeedBack";
 import Subscribtion from "../../student_profile/components/Subscribtion";
@@ -79,6 +80,7 @@ export default function CustomNavbar() {
     },
   };
 
+    
   const getCurrentStudent = () => {
       fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/me`, {
         method: "GET",
@@ -182,7 +184,7 @@ export default function CustomNavbar() {
                       </Dropdown.Item>
                     
                       <Dropdown.Item onClick={()=>setOpenSeesionModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">
-                      <CiCalendar  className="text-[26px] font-semibold" /> 
+                      <SiSessionize  className="text-[26px] font-semibold" /> 
                       <span className="py-2" >Sessions</span>
                       </Dropdown.Item>
                       <Dropdown.Item  onClick={()=>setOpenPlansModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">

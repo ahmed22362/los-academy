@@ -24,7 +24,7 @@ function ForgetPassword({
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 5000,
     });
   };
 

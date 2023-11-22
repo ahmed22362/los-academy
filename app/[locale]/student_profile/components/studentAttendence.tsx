@@ -33,7 +33,7 @@ function StudentAttendance() {
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 7000,
     });
   };
 

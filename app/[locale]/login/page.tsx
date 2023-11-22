@@ -2,10 +2,8 @@
 
 import PrimaryButton from "./../components/PrimaryButton";
 import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
-import { HiCheck } from "react-icons/hi";
 import Image from "next/image";
-import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
@@ -29,7 +27,7 @@ function page() {
       severity: "success",
       summary: "Success",
       detail: msg,
-      life: 3000,
+      life: 5000,
     });
   };
   const showError = (msg: string) => {
@@ -37,7 +35,7 @@ function page() {
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 5000,
     });
   };
 
@@ -114,16 +112,20 @@ function page() {
           showSuccess("Registration Successfully");
           showSuccess(data.message);
           console.log(data);
+          localStorage.setItem("registrationSuccessMessage", "Registration successful. Please log in.");
+
           setTimeout(() => {
+            window.location.reload();
             router.push("/login");
           }, 3000);
           setUserData(data);
           cookies.set("token", data.token);
         } else {
-          showError("Registration failed");
           if (data?.message === "Duplicate field Please use another value!") {
             showError("Email Already Exist Please Login");
           } else {
+            showError("Registration failed");
+
           }
           console.log(data);
         }
@@ -133,6 +135,19 @@ function page() {
         showError("An error occurred");
       });
   };
+
+  useEffect(() => {
+    // Check if we are on the client side before using window
+    if (typeof window !== 'undefined') {
+      const storedMessage = localStorage.getItem("registrationSuccessMessage");
+      if (storedMessage) {
+        showSuccess(storedMessage);
+
+        // Clear the stored message after displaying it
+        localStorage.removeItem("registrationSuccessMessage");
+      }
+    }
+  }, []);
 
   // resend mail function
 
@@ -173,6 +188,7 @@ function page() {
         if (data.status === "success") {
           showSuccess("Login Successfully");
           console.log(data);
+          localStorage.setItem("myName", data?.data?.name)
           setTimeout(() => {
             // Redirect to a protected route upon successful login
             router.push("/student_profile");
@@ -186,10 +202,10 @@ function page() {
             "Can't log in before you verify you email if you miss the first mail you can always resend it!"
           ) {
             // Display the div for email verification
-            showError(`${data.message}`);
+            showError(`${data.message }`);
             setShowEmailVerification(true);
           } else {
-            showError(`${data.message}`);
+            showError(`${data.message||'Login Faild '}`);
           }
           console.log(data);
         }

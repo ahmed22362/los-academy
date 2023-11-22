@@ -35,7 +35,7 @@ function TeacherRescduleRequests() {
       severity: "success",
       summary: "Success",
       detail: msg,
-      life: 3000,
+      life: 5000,
     });
   };
   const showError = (msg: string) => {
@@ -43,7 +43,7 @@ function TeacherRescduleRequests() {
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 5000,
     });
   };
 

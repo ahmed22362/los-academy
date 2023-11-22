@@ -2,11 +2,11 @@
 
 import { Button, Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import Cookies from "universal-cookie";
 import moment from "moment-timezone";
 import PrimaryButton from "../../components/PrimaryButton";
 import CancelSubscription from "./CancelSubscription";
+import StudentPlanModal from "./StudentPlanModal";
 
 export default function Subscribtion({
   setOpenSubscribtionModal,
@@ -17,6 +17,7 @@ export default function Subscribtion({
   const token = cookie.get("token");
   const [mySubscription, setMySubscription] = useState<any>([]);
   const [showSubscriptionDetails, setShowSubscriptionDetails] = useState(true);
+  const [openPlansModal, setOpenPlansModal] = useState<boolean>(false)
   const handleCancelSubscriptionClick = () => {
     setShowSubscriptionDetails(false);
   };
@@ -65,6 +66,10 @@ export default function Subscribtion({
 
   return (
     <>
+     <StudentPlanModal 
+       openPlansModal={openPlansModal}
+       setOpenPlansModal={setOpenPlansModal}
+       />
       {/* <Button onClick={() => setOpenSubscribtionModal(true)}>Toggle Subscription modal</Button> */}
       <Modal
         show={openSubscribtionModal}
@@ -75,7 +80,9 @@ export default function Subscribtion({
         <Modal.Header className="p-0 m-0 border-0"></Modal.Header>
 
         <Modal.Body>
-          {showSubscriptionDetails ? (
+          {mySubscription?.length==0?
+        <>
+        {showSubscriptionDetails ? (
             <div className="p-10 pt-3">
               <h3 className="font-semibold text-lg mb-3">Subscriptions</h3>
               <div className="content mt-5">
@@ -146,6 +153,18 @@ export default function Subscribtion({
           ) : (
             <CancelSubscription onCancel={handleStaySubscriptionClick} />
           )}
+        </>  
+        :
+         <>
+        <div className="flex flex-col items-center gap-5">
+        <p className="bg-red-500 text-white px-3 py-5 text-center w-full rounded-lg">
+                       No Plan
+                    </p>
+                    <button
+           onClick={()=>setOpenPlansModal(true)}
+           className="text-white px-3 py-3 rounded-xl bg-[--secondary-color] hover:bg-[#3f3aa6]">Subscribe Now</button>
+        </div>
+        </>}
         </Modal.Body>
       </Modal>
     </>

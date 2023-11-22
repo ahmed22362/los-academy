@@ -33,7 +33,7 @@ export default function EditProfile({
 }: any) {
   const [showChangePassword, setShowChangePassword] = useState(false); // New state
   const cookie = new Cookies();
-  const url = "https://los-academy.onrender.com/api/v1/";
+  const url = process.env.NEXT_PUBLIC_APIURL;
   const token = cookie.get("token");
   const [userInfo, setUserInfo] = useState<UserInfo | undefined>(); // Use UserInfo type
   const [successStatus, setSuccessStatus] = useState(false);
@@ -53,7 +53,7 @@ export default function EditProfile({
   // History Sessions Api
 
   useEffect(() => {
-    fetch(`${url}user/me`, {
+    fetch(`${url}/user/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'

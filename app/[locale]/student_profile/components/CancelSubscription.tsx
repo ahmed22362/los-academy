@@ -19,7 +19,7 @@ function CancelSubscription({ onCancel }: CancelSubscription) {
       severity: "success",
       summary: "Success",
       detail: msg,
-      life: 3000,
+      life: 5000,
     });
   };
   const showError = (msg: string) => {
@@ -27,7 +27,7 @@ function CancelSubscription({ onCancel }: CancelSubscription) {
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 5000,
     });
   };
 

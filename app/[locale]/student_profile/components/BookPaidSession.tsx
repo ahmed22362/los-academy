@@ -5,10 +5,14 @@ import { Calendar, CalendarProps } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 import PrimaryButton from "../../components/PrimaryButton";
 import { Toast } from "primereact/toast";
+import ViewCourses from "./viewCourses";
 
 function BookPaidSession({ setOpenBookModal }: any) {
   const [datetime12h, setDateTime12h] = useState<Nullable<Date> | any>(null);
-
+  const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
+  const handleSelectCourses = (courses: any[]) => {
+    setSelectedCourses(courses);
+  };
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -26,8 +30,11 @@ function BookPaidSession({ setOpenBookModal }: any) {
     if (datetime12h && Array.isArray(datetime12h) && datetime12h.length > 0) {
       const selectedDates = datetime12h.map((date) => date.toISOString());
 
+      const selectedCourseTitles = selectedCourses.map((course) => course.title.toLowerCase());
+
       const requestBody = {
         sessionDates: selectedDates,
+        courses: selectedCourseTitles,
       };
 
       fetch(`${url}/session/paid/request`, {
@@ -66,7 +73,7 @@ function BookPaidSession({ setOpenBookModal }: any) {
       severity: "success",
       summary: "Success",
       detail: message,
-      life: 3000,
+      life: 5000,
     });
   };
 
@@ -75,16 +82,16 @@ function BookPaidSession({ setOpenBookModal }: any) {
       severity: "error",
       summary: "Error",
       detail: message,
-      life: 3000,
+      life: 5000,
     });
   };
 
-  useEffect(() => {
-    console.log(datetime12h);
-  }, [datetime12h]);
 
   return (
     <div className="m-auto flex justify-center flex-col items-center gap-5">
+       <div className="courses w-full flex justify-center">
+        <ViewCourses onSelectCourses={handleSelectCourses}/>
+      </div>
       <Calendar
         value={datetime12h}
         onChange={(e: CalendarProps | any) => setDateTime12h(e.value)}
@@ -97,6 +104,7 @@ function BookPaidSession({ setOpenBookModal }: any) {
         inline
         selectionMode="multiple"
       />
+     
       <div>
         <PrimaryButton
           onClick={handleBookClick}
@@ -104,6 +112,7 @@ function BookPaidSession({ setOpenBookModal }: any) {
           text="Book Paid Sessions"
         />
       </div>
+      
       <Toast ref={toast} />
     </div>
   );

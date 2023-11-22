@@ -26,7 +26,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
       severity: "success",
       summary: "Success",
       detail: msg,
-      life: 3000,
+      life: 5000,
     });
   };
   const showError = (msg: string) => {
@@ -135,8 +135,8 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
         </ul>
         <button
           onClick={
-            title == " Customize your Plan"
-              ? () => setOpenCustomPlan(false)
+            title ==="Customize your Plan"
+              ? () => setOpenCustomPlan(true)
               : handleCustomPlan
           }
           type="button"

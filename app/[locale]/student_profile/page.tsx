@@ -10,6 +10,7 @@ import BookModal from "./components/BookModal";
 import Cookies from "universal-cookie";
 import StudentAttendence from "./components/studentAttendence";
 import MyInfo from "./components/myInfo";
+import BannerComponent from "./components/Banner";
 
 interface UserInfo {
   name: string;
@@ -24,6 +25,8 @@ export default function page() {
   const [reports, setReports] = useState([]);
   const [myInfo, setMyInfo] = useState<UserInfo | undefined>();
   const [teacherName, setTeacherName] = useState("");
+  const [showBanner, setShowBanner] = useState(true);
+
   const url = process.env.NEXT_PUBLIC_APIURL;
   const cookie = new Cookies();
   const token = cookie.get("token");
@@ -46,12 +49,30 @@ export default function page() {
         console.error("Error fetching reports:", error);
       });
   }, []);
+
+useEffect(() => {
+  const isFirstVisit = localStorage.getItem('isFirstVisit') === null;
+
+if (myInfo?.sessionPlaced==false) {
+  // Display tips for the first visit
+   
+  setShowBanner(true)
+  // Set the flag to indicate that the user has seen the tips
+}
+
+ 
+}, [])
+
+
   return (
     <main
       className={
         "ps-10 pe-10 pt-[7rem]  max-md:justify-between max-md:items-center"
       }
     >
+       {showBanner && (
+        <BannerComponent/>
+    )}
       <MyInfo myInfo={myInfo} />
       <div className="grid grid-cols-3 max-sm:grid-cols-1 max-md:grid-cols-2 justify-between gap-5	 mt-7">
         <div className="card w-full  ">
@@ -76,11 +97,11 @@ export default function page() {
         <div className="card w-full  ">
           <h3 className={`${styles.main_head} mb-8`}>Sessions</h3>
           <UpcomingSessions />
-          <div
+          {/* <div
             className={`my-11 p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
           >
             <StudentAttendence />
-          </div>
+          </div> */}
           <div
             className={` ${
               myInfo?.sessionPlaced == true ? "hidden" : ""
@@ -90,7 +111,7 @@ export default function page() {
               Book a Session
             </h4>
             <div className={`flex flex-col justify-center items-center`}>
-              <BookModal />
+              <BookModal myInfo={myInfo} />
             </div>
           </div>
         </div>

@@ -19,7 +19,7 @@ function UserFeedBack({ setUserFeedbackModal, userFeedbackModal }: any) {
       severity: "success",
       summary: "Success",
       detail: msg,
-      life: 3000,
+      life: 5000,
     });
   };
   const showError = (msg: string) => {
@@ -27,18 +27,17 @@ function UserFeedBack({ setUserFeedbackModal, userFeedbackModal }: any) {
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 5000,
     });
   };
   const handlePublish = () => {
     // Check if the name and feedback are not empty
-    if (!name.trim() || !feedback.trim()) {
-      showError("Please enter your name and feedback before publishing.");
+    if (!feedback.trim()) {
+      showError("Please enter your  feedback before publishing.");
       return;
     }
 
     const feedbackData = {
-      name: name,
       feedback: feedback,
     };
     console.log(feedbackData);
@@ -48,6 +47,8 @@ function UserFeedBack({ setUserFeedbackModal, userFeedbackModal }: any) {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json", // Add this line to specify JSON content type
+
       },
       body: JSON.stringify(feedbackData),
     })
@@ -91,14 +92,14 @@ function UserFeedBack({ setUserFeedbackModal, userFeedbackModal }: any) {
         <Modal.Body>
           <div className="pl-5">
             <h3 className="font-semibold text-lg mb-3 ">Add Feedback</h3>
-            <p className="font-medium mb-3">Your name </p>
+            {/* <p className="font-medium mb-3">Your name </p>
             <input
               type="text"
               placeholder="Enter Your Name"
               className="rounded-xl border-[#828282]"
               value={name}
               onChange={(e) => setName(e.target.value)}
-            />
+            /> */}
             <div className="feedback pe-3 mt-10">
               <label htmlFor="feedback" className="font-medium mb-4">
                 Your Feedback{" "}

@@ -9,6 +9,7 @@ import Image from "next/image";
 import Countdown from "react-countdown";
 import MyTimer from "./timer";
 import { Toast } from "primereact/toast";
+import { Tooltip } from "flowbite-react";
 
 function UpcomingSessions() {
   const cookie = new Cookies();
@@ -20,6 +21,7 @@ function UpcomingSessions() {
   const [sessionId, setsessionId] = useState("");
   const [alertVisible, setAlertVisible] = useState(false);
   const [isHere, setIsHere] = useState<boolean>(false);
+  const [isImHereButtonDisabled, setIsImHereButtonDisabled] = useState(true);
 
   const toast = useRef<Toast>(null);
   const showSuccess = (msg: any) => {
@@ -27,7 +29,7 @@ function UpcomingSessions() {
       severity: "success",
       summary: "Success",
       detail: msg,
-      life: 3000,
+      life: 5000,
     });
   };
   const showError = (msg: string) => {
@@ -35,7 +37,7 @@ function UpcomingSessions() {
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 5000,
     });
   };
 
@@ -70,6 +72,13 @@ function UpcomingSessions() {
   };
   // api data
   useEffect(() => {
+    if (upComingSession.length > 0) {
+      const sessionStartTime = moment(upComingSession[0].sessionDate);
+      const allowedStartTime = sessionStartTime.clone().add(30, "minutes");
+      const currentTime = moment().tz(Intl.DateTimeFormat().resolvedOptions().timeZone);
+
+      setIsImHereButtonDisabled(currentTime.isBefore(allowedStartTime));}
+
     fetch(`${url}/user/upcomingSession`, {
       method: "GET",
       headers: {
@@ -89,6 +98,28 @@ function UpcomingSessions() {
       });
   }, []);
 
+  // custom theme
+ const CustomTHeme= {
+    "target": "w-full",
+    "animation": "transition-opacity",
+    "arrow": {
+      "base": "absolute z-10 h-2 w-2 rotate-45",
+      "style": {
+        "dark": "bg-gray-900 dark:bg-gray-700",
+        "light": "bg-white",
+        "auto": "bg-white dark:bg-gray-700"
+      },
+      "placement": "-4px"
+    },
+    "base": "absolute inline-block z-10 rounded-lg py-2 px-3 text-sm font-medium shadow-sm",
+    "hidden": "invisible opacity-0",
+    "style": {
+      "dark": "bg-gray-900 text-white dark:bg-gray-700",
+      "light": "border border-gray-200 bg-white text-gray-900",
+      "auto": "border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white"
+    },
+    "content": "relative z-20"
+  }
   //  Im Here =======================
   const updateAttendance = () => {
     console.log(sessionId);
@@ -183,7 +214,7 @@ function UpcomingSessions() {
                         return (
                           <span>
                             {hours}:{minutes}:{seconds}
-                          </span>
+                          </span> 
                         );
                       }
                     }}
@@ -218,12 +249,18 @@ function UpcomingSessions() {
                 {/* <MyTimer expiryTimestamp={time} /> */}
               </div>
             </div>
-            <div className={`flex gap-4 mb-3 mt-7`}>
-              <PrimaryButton
+            <div className={`flex justify-center items-center gap-4 mb-3 mt-7`}>
+            <Tooltip theme={CustomTHeme} className=" px-5" content={isImHereButtonDisabled?`The session cannot be attended until 30 minutes in advance `:'update your'}>
+            <PrimaryButton
                 onClick={isHere ? updateAttendance : updateAttendance}
-                ourStyle="bg-secondary-color max-md-px-1 hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45"
+                ourStyle={`w-full max-md-px-1  text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45 ${
+                  isImHereButtonDisabled ? " bg-gray-500 cursor-not-allowed" : "bg-secondary-color hover:bg-secondary-hover"
+                }`}
                 text={`${isHere ? "Join Meeting" : `I'm Here`}`}
+                disabled={isImHereButtonDisabled}
               />
+         </Tooltip>
+            
               <button
                 onClick={() => setopenRescheduleModal(true)}
                 className="hover:bg-[#0a01c09a] hover:text-white max-md-px-1 text-sm font-semibold transition-colors shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 px-3 w-full  rounded-full w-50 mx-auto max-md:px-4 max-md:w-45"

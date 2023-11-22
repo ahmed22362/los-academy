@@ -31,7 +31,7 @@ function RescheduleSession({
       severity: "success",
       summary: "Success",
       detail: msg,
-      life: 3000,
+      life: 5000,
     });
   };
   const showError = (msg: string) => {
@@ -39,7 +39,7 @@ function RescheduleSession({
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 5000,
     });
   };
   // function
@@ -89,17 +89,9 @@ function RescheduleSession({
 
   const renderModalContent = () => {
     if (rescheduleStatus === "success") {
-      return (
-        <div>
-          <p>Reschedule Requested successfully!</p>
-        </div>
-      );
+     showSuccess('Session Reschedualing Successfully')
     } else if (rescheduleStatus === "error") {
-      return (
-        <div>
-          <p>Error rescheduling session. Please try again.</p>
-        </div>
-      );
+     showError('Error rescheduling session. Please try again.')
     } else {
       return (
         <div className="flex justify-center flex-col items-center gap-5">
@@ -113,7 +105,7 @@ function RescheduleSession({
               borderRadius: "16px",
               width: "408px",
             }}
-            placeholder="Select Start Date and Time"
+            placeholder="Select First Avilable Date and Time"
           />
           <Calendar
             value={selectedEndDate}
@@ -125,7 +117,7 @@ function RescheduleSession({
               borderRadius: "16px",
               width: "408px",
             }}
-            placeholder="Select End Date and Time"
+            placeholder="Select Second Avilable Date and Time"
           />
           <div>
             <PrimaryButton

@@ -81,15 +81,22 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
             body: JSON.stringify({
                 sessionReqId: sessionReqId
             })
-        }).then(response => response.json()).then(data => {
-            if (data.success) {
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)  
+          if (data.status === "success") {
                 showSuccess(data.message)
                 updateComponent()
-            } else {
+              } else {
                 showError(data.message)
+                updateComponent()
             }
             setIsProcessing(false)
-        }).catch(err => console.log(err))
+        }).catch(err => {
+            console.log(err)
+            showError(err)
+        })
       }
 
   return (

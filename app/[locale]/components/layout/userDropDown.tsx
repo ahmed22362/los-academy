@@ -22,7 +22,7 @@ interface UserInfo {
     gender: string;
     age?: number; // make age optional if it may not be present in the API response
   }
-export default function UserDropDown({userName}: {userName: string}) {
+export default function UserDropDown({userName, logOut}: {userName: string; logOut: () => void}) {
     const [userFeedbackModal, setUserFeedbackModal] = useState<boolean>(false)
     const [openSubscribtionModal, setOpenSubscribtionModal] = useState<boolean>(false);
     const [openSeesionModal, setOpenSeesionModal] = useState<boolean>(false);
@@ -31,23 +31,7 @@ export default function UserDropDown({userName}: {userName: string}) {
     const [openEditeProfileModal, setOpenEditeProfileModal] = useState<boolean>(false);
     const cookies = new Cookies()
     
-    const logOut = async () => {
-        const token = await cookies.get('token')
-        const id = await cookies.get('id')
-        const name = await cookies.get('name')
-        const router = useRouter()
-        if(token && id && name) {
-            cookies.remove('token', { path: '/', });
-            cookies.remove('id', { path: '/', });
-            cookies.remove('name', { path: '/', });
-            if(!token && !id && !name) {
-                router.replace('/login');
-            }
-            router.replace('/login');
-        }  else {
-            console.error('Error removing cookies');
-        } 
-      }
+
 
 
     return (
@@ -56,26 +40,36 @@ export default function UserDropDown({userName}: {userName: string}) {
                     {userName}'s Profile
                   </Link>
                   <Dropdown label={""} inline>   
-                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                      <Dropdown.Item 
+                        onClick={()=> setOpenEditeProfileModal(true)}
+                        className="gap-3 rtl:flex-row-reverse ltr:flex-row">    
                         <LiaUserEditSolid className="text-[26px] font-semibold" /> 
-                        <span onClick={()=> setOpenEditeProfileModal(true)}>Edit Profile</span>
+                        <span>Edit Profile</span>
                       </Dropdown.Item>
                     
-                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                      <Dropdown.Item 
+                        onClick={()=> setOpenSeesionModal(true)}
+                        className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                       <CiCalendar  className="text-[26px] font-semibold" /> 
-                      <span className="py-2" onClick={()=> setOpenSeesionModal(true)}>Sessions</span>
+                      <span className="py-2">Sessions</span>
                       </Dropdown.Item>
-                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                      <Dropdown.Item 
+                        onClick={()=> setOpenPlansModal(true)}
+                        className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                       <CiCalendar  className="text-[26px] font-semibold" /> 
-                      <span className="py-2" onClick={()=> setOpenPlansModal(true)}>Plans</span>
+                      <span className="py-2">Plans</span>
                       </Dropdown.Item>
-                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                      <Dropdown.Item 
+                        onClick={()=> setOpenSubscribtionModal(true)}
+                        className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                         <LiaCreditCardSolid  className="text-[26px] font-semibold" /> 
-                        <span className="py-2" onClick={()=> setOpenSubscribtionModal(true)}>My Subscription</span>
+                        <span className="py-2">My Subscription</span>
                       </Dropdown.Item>
-                      <Dropdown.Item className="gap-3 rtl:flex-row-reverse ltr:flex-row">
+                      <Dropdown.Item 
+                        onClick={()=> setUserFeedbackModal(true)}
+                        className="gap-3 rtl:flex-row-reverse ltr:flex-row">
                         <LiaEditSolid  className="text-[26px] font-semibold" /> 
-                        <span className="py-2" onClick={()=> setUserFeedbackModal(true)}>Add Feedback</span>
+                        <span className="py-2">Add Feedback</span>
                       </Dropdown.Item>
                       <hr />
                       <Dropdown.Item 

@@ -32,7 +32,6 @@ export default function AddReportModal({
   const modalRef = useRef<HTMLDivElement>(null);
 
   const [id, setId] = useState(idSession);
-  const [title, setTitle] = useState("");
   const [grade, setGrade] = useState("");
   const [comment, setComment] = useState("");
   const [arabicGrade, setArabicGrade] = useState("");
@@ -94,7 +93,6 @@ export default function AddReportModal({
       sessionId: parseInt(id),
       comment: comment,
       grade: grade,
-      title: title,
       arabic: arabicGrade,
       quran: quranGrade,
       islamic: islamicGrade,
@@ -113,7 +111,6 @@ export default function AddReportModal({
         sessionId: parseInt(id),
         comment: comment,
         grade: grade,
-        title: title,
         arabic: arabicGrade,
         quran: quranGrade,
         islamic: islamicGrade,
@@ -162,17 +159,6 @@ export default function AddReportModal({
               type="text"
             />
           </div>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="title" value="Report Title" />
-            </div>
-            <TextInput
-              id="title"
-              placeholder="Report Title"
-              onChange={(e) => setTitle(e.target.value)}
-              type="text"
-            />
-          </div>
           <h3 className="mb-3">Select Courses: </h3>
           <div id="checkbox" className="flex flex-col gap-4">
             <div className="mb-2 block">
@@ -187,7 +173,7 @@ export default function AddReportModal({
                   className="w-full"
                 >
                   <option value="">Select Arabic Grade </option>
-                  <option value="excellent">excellent</option>
+                  <option value="excellent">Excellent</option>
                   <option value="very good">Very Good</option>
                   <option value="good">Good</option>
                   <option value="average">Average</option>

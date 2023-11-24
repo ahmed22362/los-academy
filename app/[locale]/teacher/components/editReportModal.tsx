@@ -9,6 +9,7 @@ import {
   TextInput,
   Textarea,
 } from "flowbite-react";
+
 import React, { useState } from "react";
 import { useEffect, useRef } from "react";
 import { Toast } from "primereact/toast";
@@ -18,51 +19,55 @@ import { useRouter } from "next/navigation";
 import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
 import { FaRegFileLines } from "react-icons/fa6";
 
-export default function AddReportModal({
+export default function EditReportModal({
   openAssignModal,
   handleCloseModal,
-  sessionID,
+  reportDetails,
 }: {
-  sessionID?: any;
-  openAssignModal: boolean;
-  handleCloseModal: () => void;
+    reportDetails: any;
+    openAssignModal: boolean;
+    handleCloseModal: () => void;
 }) {
-
-  const idSession = sessionID && sessionID;
+  
+  const report = reportDetails && reportDetails;
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const [id, setId] = useState(idSession);
-  const [title, setTitle] = useState("");
-  const [grade, setGrade] = useState("");
-  const [comment, setComment] = useState("");
-  const [arabicGrade, setArabicGrade] = useState("");
-  const [quranGrade, setQuranGrade] = useState("");
-  const [islamicGrade, setIslamicGrade] = useState("");
-  const [arabicComment, setArabicComment] = useState("");
-  const [quranComment, setQuranComment] = useState("");
-  const [islamicComment, setIslamicComment] = useState("");
+  const [reportId, setReportId] = useState(report.id);
+  const [title, setTitle] = useState(report.title);
+  const [grade, setGrade] = useState(report.grade);
+  const [comment, setComment] = useState(report.comment);
+  const [arabicGrade, setArabicGrade] = useState(report.arabic);
+  const [quranGrade, setQuranGrade] = useState(report.quran);
+  const [islamicGrade, setIslamicGrade] = useState(report.islamic);
+  const [arabicComment, setArabicComment] = useState(report.arabicComment);
+  const [quranComment, setQuranComment] = useState(report.quranComment);
+  const [islamicComment, setIslamicComment] = useState(report.islamicComment);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
   const cookies = new Cookies();
   const toast = useRef<Toast>(null);
 
-  const showSuccess = () => {
+  const showSuccess = (msg: string) => {
     toast.current?.show({
       severity: "success",
       summary: "Success",
-      detail: "Add Success",
-      life: 3000,
-    });
-  };
-  const showError = () => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: "Add failed make sure all fields are correct",
+      detail: msg,
       life: 4000,
     });
   };
+  const showError = (msg: string) => {
+    toast.current?.show({
+      severity: "error",
+      summary: "Error",
+      detail: msg,
+      life: 4000,
+    });
+  };
+
+  useEffect(() => {
+    console.log(report)
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | any) => {
@@ -89,9 +94,9 @@ export default function AddReportModal({
     },
   };
 
-  const addReport = () => {
+  const editReport = () => {
     console.log({
-      sessionId: parseInt(id),
+      sessionId: parseInt(reportId),
       comment: comment,
       grade: grade,
       title: title,
@@ -103,14 +108,14 @@ export default function AddReportModal({
       islamicComment
     });
     setIsProcessing(true);
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/report`, {
-      method: "POST",
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/report/${report.id}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${cookies.get("token")}`,
       },
       body: JSON.stringify({
-        sessionId: parseInt(id),
+        sessionId: parseInt(reportId),
         comment: comment,
         grade: grade,
         title: title,
@@ -126,15 +131,16 @@ export default function AddReportModal({
       .then((data) => {
         console.log(data);
         if (data.status === "success") {
-          showSuccess();
+          showSuccess(data.message);
           router.refresh();
         } else {
-          showError();
+          showError(data.message);
         }
         setIsProcessing(false);
       })
       .catch((err) => {
         console.log(err);
+        showError(err);
       });
   };
 
@@ -146,7 +152,7 @@ export default function AddReportModal({
       size={"3xl"}
     >
       <Modal.Header theme={modalTheme.header}>
-        Add Report <FaRegFileLines />
+        Edit Report <FaRegFileLines />
       </Modal.Header>
       <Modal.Body>
         <div className="space-y-6">
@@ -157,8 +163,8 @@ export default function AddReportModal({
             </div>
             <TextInput
               id="id"
-              defaultValue={id}
-              onChange={(e) => setId(e.target.value)}
+              defaultValue={reportId}
+              onChange={(e) => setReportId(e.target.value)}
               type="text"
             />
           </div>
@@ -168,7 +174,7 @@ export default function AddReportModal({
             </div>
             <TextInput
               id="title"
-              placeholder="Report Title"
+              defaultValue={title}
               onChange={(e) => setTitle(e.target.value)}
               type="text"
             />
@@ -196,7 +202,7 @@ export default function AddReportModal({
               </div>
               <TextInput
                 id="arabicComment"
-                placeholder="Arabic Comment"
+                defaultValue={arabicComment}
                 type="text"
                 className="my-2"
                 onChange={(e) => setArabicComment(e.target.value)}
@@ -223,7 +229,7 @@ export default function AddReportModal({
               </div>
               <TextInput
                 id="quranComment"
-                placeholder="Quran Comment"
+                defaultValue={quranComment}
                 type="text"
                 className="my-2"
                 onChange={(e) => setQuranComment(e.target.value)}
@@ -250,7 +256,7 @@ export default function AddReportModal({
               </div>
               <TextInput
                 id="islamicComment"
-                placeholder="Islamic Comment"
+                defaultValue={islamicComment}
                 type="text"
                 className="my-2"
                 onChange={(e) => setIslamicComment(e.target.value)}
@@ -266,6 +272,7 @@ export default function AddReportModal({
                     id="excellent"
                     name="radio"
                     value="excellent"
+                    defaultChecked={grade === "excellent" ? true : false}
                     className="h-4 w-4"
                     onClick={(e: any) => {
                       setGrade(e.target.value);
@@ -280,6 +287,7 @@ export default function AddReportModal({
                     id="Good"
                     name="radio"
                     value="good"
+                    defaultChecked={grade === "good" ? true : false}
                     className="h-4 w-4"
                     onClick={(e: any) => {
                       setGrade(e.target.value);
@@ -294,6 +302,7 @@ export default function AddReportModal({
                     id="Average"
                     name="radio"
                     value="average"
+                    defaultChecked={grade === "average" ? true : false}
                     className="h-4 w-4"
                     onClick={(e: any) => {
                       setGrade(e.target.value);
@@ -308,6 +317,7 @@ export default function AddReportModal({
                     id="Below Average"
                     name="radio"
                     value="below average"
+                    defaultChecked={grade === "below average" ? true : false}
                     className="h-4 w-4"
                     onClick={(e: any) => {
                       setGrade(e.target.value);
@@ -324,7 +334,7 @@ export default function AddReportModal({
             </div>
             <Textarea
               id="comment"
-              placeholder="Leave a comment..."
+              defaultValue={comment}
               required
               rows={4}
               onChange={(e) => setComment(e.target.value)}
@@ -332,8 +342,8 @@ export default function AddReportModal({
           </div>
           <div className="w-full">
             <LoadingButton
-              title={"Add Report"}
-              action={addReport}
+              title={"Edit Report"}
+              action={editReport}
               customStyle={
                 "text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
               }

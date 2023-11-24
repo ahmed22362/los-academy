@@ -1,54 +1,33 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import Link from "next-intl/link";
+import LinkIntl from "next-intl/link";
 import { MdLanguage } from "react-icons/md";
 import Image from "next/image";
-import { Button, Dropdown, Navbar } from "flowbite-react";
+import { Dropdown, Navbar } from "flowbite-react";
 import type { CustomFlowbiteTheme } from "flowbite-react";
-import Link2 from 'next/link';
-import {usePathname, useRouter} from "next/navigation";
-import {RiUserSharedFill} from "react-icons/ri"
+import {usePathname} from "next/navigation";
 import Cookies from "universal-cookie"
-import { useEffect, useState } from "react";
-import { LiaUserEditSolid } from "react-icons/lia";
-import { LiaEditSolid } from "react-icons/lia";
-import { CiCalendar } from "react-icons/ci";
-import { IoIosLogOut } from "react-icons/io";
-import { SiSessionize } from "react-icons/si";
-import { LiaCreditCardSolid } from "react-icons/lia";
-import UserFeedBack from "../../student_profile/components/userFeedBack";
-import Subscribtion from "../../student_profile/components/Subscribtion";
-import SessionsModal from "../../student_profile/components/sessionsModal";
-import EditProfile from "../../student_profile/components/edit_profile";
-import StudentPlanModal from "../../student_profile/components/StudentPlanModal";
-interface UserInfo {
-  name: string;
-  email: string;
-  phone: string;
-  id: number;
-  gender: string;
-  age?: number; // make age optional if it may not be present in the API response
-}
+
+import dynamic from "next/dynamic";
+import Link from "next/link";
+
 export default function CustomNavbar() {
 
-  const router = usePathname();
-  const router2 = useRouter();
-  const isAdminDashboard = router.startsWith('/admin');
-  const isAdminLogin = router.startsWith('/los_auth');
-  const isteacher = router.startsWith('/teacher');
-  // const isStudent = router.startsWith('/student_profile');
+  const UserDropDown = dynamic(() => import("./userDropDown"), {
+    ssr: false,
+  });
+
+  const LoginButton = dynamic(() => import("./loginButton"), {
+    ssr: false,
+  }); 
+
+  const pathname = usePathname();
+  const isAdminDashboard = pathname.startsWith('/admin');
+  const isAdminLogin = pathname.startsWith('/los_auth');
+  const isteacher = pathname.startsWith('/teacher');
   const cookies = new Cookies()
   const t = useTranslations("CustomNavbar");
-  const linkStyle = "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full rtl:lg:p-[15px]";
-  const linkText = t("login-btn");
-  const [userDate, setUserData] = useState<any>({});
-  const [userFeedbackModal, setUserFeedbackModal] = useState<boolean>(false)
-  const [openSubscribtionModal, setOpenSubscribtionModal] = useState<boolean>(false);
-  const [openSeesionModal, setOpenSeesionModal] = useState<boolean>(false);
-  const [openEditeProfileModal, setOpenEditeProfileModal] = useState<boolean>(false);
-  const [myInfo, setMyInfo] = useState<UserInfo | undefined>();
-  const [openPlansModal, setOpenPlansModal] = useState<boolean>(false);
 
   const customNavTheme: CustomFlowbiteTheme["navbar"] = {
     root: {
@@ -80,45 +59,8 @@ export default function CustomNavbar() {
     },
   };
 
+  const userName = cookies.get('name')
     
-  const getCurrentStudent = () => {
-      fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/me`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${cookies.get("token")}`,
-        },
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.status === "success") {
-            setUserData(data.data)
-            router2.refresh()
-        }
-    })
-    .catch(err => console.log(err))
-  }
-
-  useEffect(() => {
-      
-      getCurrentStudent()
-
-  }, [])
-
-  const logOut = async () => {
-    const token = await cookies.get('token')
-    const id = await cookies.get('id')
-    
-    if(token && id) {
-        cookies.remove('token', { path: '/', });
-        cookies.remove('id', { path: '/', });
-        router2.replace('/login');
-    }  else {
-        console.error('Error removing cookies');
-    } 
-  }
-
-
   if (!(isAdminDashboard || isAdminLogin || isteacher)) {
 
     return (
@@ -143,104 +85,67 @@ export default function CustomNavbar() {
           </Navbar.Brand>
 
           <Navbar.Collapse className="rtl:font-sans rtl:text-lg" theme={customNavTheme.collapse}>
-            <Navbar.Link
-              theme={customNavTheme.link}
-              href="/#hero"
-              active={true}
-              className="rtl:ml-5"
-            >
-              {t("home-link")}
-            </Navbar.Link>
-            <Navbar.Link href="/#aboutUs" theme={customNavTheme.link}>
-              {t("about-link")}
-            </Navbar.Link>
-            <Navbar.Link href="/#courses" theme={customNavTheme.link}>
+              <Link href="/#hero" 
+                className={` navBarLink rtl:ml-5 ${ pathname === "/#hero" || pathname === "/" ? 'active' : ' '}`}  >
+                {t("home-link")}
+              </Link>
+            
+            <Link 
+              href="/#courses" 
+              className={`navBarLink rtl:ml-5 ${pathname === "/#courses" ? 'active' : ''}`}>
               {t("courses-link")}
-            </Navbar.Link>
-            <Navbar.Link href="/#prices" theme={customNavTheme.link}>
+            </Link>
+
+            <Link href="/#aboutUs"
+              className={` navBarLink rtl:ml-5 ${pathname === "/#aboutUs" ? 'active' : ' '}`}
+              >
+              {t("about-link")}
+            </Link>
+
+            <Link 
+              href="/#prices" 
+              className={`navBarLink rtl:ml-5 ${pathname === "/#prices" ? 'active' :''}`}
+              >
               {t("prices-link")}
-            </Navbar.Link>
-            <Navbar.Link href="/#feedback" theme={customNavTheme.link}>
+            </Link>
+            <Link href="/#feedback" 
+              className={`navBarLink rtl:ml-5 ${pathname === "/#feedback" ? 'active' : ''}`}
+              >
               {t("feedback-link")}
-            </Navbar.Link>
-            <Navbar.Link href="/#contactus" theme={customNavTheme.link}>
+            </Link>
+            <Link 
+              href="/#contactus" 
+              className={`navBarLink rtl:ml-5 ${pathname === "/#contactus" ? 'active' : ''}`}
+                >
               {t("contact-link")}
-            </Navbar.Link>
+            </Link>
           </Navbar.Collapse>
           <div className={
             "flex items-center max-md:items-baseline gap-2 rtl:font-sans rtl:text-lg rtl:max-sm:me-0 rtl:max-sm:ms-auto rtl:lg:w-[185px]"
             }>
             <Navbar.Toggle theme={customNavTheme.toggle} />
-            {userDate && userDate.name
+            {userName && userName
               ? 
-                (<>
-                  <Dropdown label={
-                      <div className="bg-secondary-color hover:bg-secondary-hover rounded-full px-3 py-2 text-white font-semibold transition-colors cursor-pointer">
-                          {userDate && userDate.name}
-                      </div>} inline>
-                      <Dropdown.Item onClick={()=>setOpenEditeProfileModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">
-                        <LiaUserEditSolid className="text-[26px] font-semibold" /> 
-                        <span >Edit Profile</span>
-                      </Dropdown.Item>
-                    
-                      <Dropdown.Item onClick={()=>setOpenSeesionModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">
-                      <SiSessionize  className="text-[26px] font-semibold" /> 
-                      <span className="py-2" >Sessions</span>
-                      </Dropdown.Item>
-                      <Dropdown.Item  onClick={()=>setOpenPlansModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">
-                      <CiCalendar  className="text-[26px] font-semibold" /> 
-                      <span className="py-2">Plans</span>
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={()=>setOpenSubscribtionModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">
-                        <LiaCreditCardSolid  className="text-[26px] font-semibold" /> 
-                        <span className="py-2" >My Subscription</span>
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={()=>setUserFeedbackModal(true)} className="gap-3 rtl:flex-row-reverse ltr:flex-row">
-                        <LiaEditSolid  className="text-[26px] font-semibold" /> 
-                        <span className="py-2" >Add Feedback</span>
-                      </Dropdown.Item>
-                      <hr />
-                      <Dropdown.Item 
-                          onClick={logOut}
-                          className="gap-3 rtl:flex-row-reverse ltr:flex-row">
-                          <IoIosLogOut className="text-[26px] text-danger-color font-semibold" /> 
-                          <span className="py-2">logout</span>
-                      </Dropdown.Item>
-                  </Dropdown>
-                </>) 
+                (<UserDropDown userName={userName} />) 
               : 
                 (
-                <div className="flex flex-col items-center">
-                  <Link2 href={"/login"} className={linkStyle + " hidden md:flex"}>
-                    {linkText}
-                  </Link2>
-                  <div className="mt-2 md:hidden">
-                    <Link2 href={"/login"}>
-                        <RiUserSharedFill className={"text-secondary-color hover:text-secondary-hover transition-colors text-2xl"}/>
-                      </Link2>
-                  </div>
-                </div>
+                  <LoginButton />
                 )
               }
             <Dropdown label={<MdLanguage className="w-5 h-5" />} inline>
-              <Link locale="en" href={"/"}>
+              <LinkIntl locale="en" href={"/"}>
                 <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">
                   en
                 </Dropdown.Item>
-              </Link>
-              <Link locale="ar" href={"/"}>
+              </LinkIntl>
+              <LinkIntl locale="ar" href={"/"}>
                 <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">
                   ar
                 </Dropdown.Item>
-              </Link>
+              </LinkIntl>
             </Dropdown>
           </div>
         </Navbar>
-        <UserFeedBack setUserFeedbackModal={setUserFeedbackModal} userFeedbackModal={userFeedbackModal}/>
-        <Subscribtion setOpenSubscribtionModal={setOpenSubscribtionModal} openSubscribtionModal={openSubscribtionModal}/>
-        <SessionsModal setOpenSeesionModal={setOpenSeesionModal} openSeesionModal={openSeesionModal} />
-        <EditProfile setMyInfo={setMyInfo} setOpenEditeProfileModal={setOpenEditeProfileModal} openEditeProfileModal={openEditeProfileModal} />
-        <StudentPlanModal openPlansModal={openPlansModal} setOpenPlansModal={setOpenPlansModal}/>
       </>
     );
   }

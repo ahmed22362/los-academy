@@ -31,7 +31,6 @@ export default function ReportData({data}:{data: any}) {
                 <button className={"smallBtn"}
                     onClick={handleOpen}
                     >View</button>
-                <BsFileEarmarkArrowDown className={"text-[26px]"}/>
             </div>
             <ReportModal openAssignModal={selectedReport} handleCloseModal={handleCloseModal} details={reports}/>
         </div>

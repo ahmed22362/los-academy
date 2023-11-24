@@ -12,36 +12,38 @@ export default function ReportModal({openAssignModal, handleCloseModal, details}
         handleCloseModal: () => void;
         details: string | any
     }) {
-
+    useEffect(() => {
+      console.log(details)
+    }, [])
     const modalRef = useRef<HTMLDivElement>(null);
     
     const downloadPdf = () => {
-        const doc: any = new jsPDF()
+      
+      const doc: any = new jsPDF()
         // Set properties for the PDF, such as title and author
-        doc.setProperties({
-            title: 'Report',
-            author: 'Your Name',
-        });
-
-            // Add content to the PDF
-        doc.setFontSize(12);
-
-            // Title
-        doc.text(20, 20, `Report Title: ${details.title}`);
+      
+      // Set properties for the document
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(18);
+      doc.text('Grade Report', 105, 15, { align: 'center' });
 
             // Content list
         const contentList = [
-            `Grade: ${details.grade}`,
+            `TotalGrade: ${details.grade}`, 
             details.arabic === null ? '' : 'Arabic: ' + details.arabic,
+            details.arabicComment === '' ? '' : 'Arabic Comment: ' + details.arabicComment,
             details.islamic === null ? '' : 'Islamic: ' + details.islamic,
+            details.islamicComment === '' ? '' : 'Islamic Comment: ' + details.islamicComment,
             details.quran === null ? '' : 'Quran: ' + details.quran,
+            details.quranComment === '' ? '' : 'Quran Comment: ' + details.quranComment,
         ];
 
         doc.setFontSize(10);
         let y = 40;
         contentList.forEach((item) => {
-            doc.text(20, y, item);
-            y += 10;
+            const itemLines = doc.splitTextToSize(item, 180); // Adjust the width as needed
+            doc.text(20, y, itemLines);
+            y += itemLines.length * 6 + 5;
         });
 
         // Teacher Comment
@@ -50,7 +52,10 @@ export default function ReportModal({openAssignModal, handleCloseModal, details}
         doc.text(20, y, 'Teacher Comment:');
         y += 10;
         doc.setFontSize(10);
-        doc.text(40, y, details.comment);
+
+        const teacherCommentLines = doc.splitTextToSize(details.comment, 180); // Adjust the width as needed
+        doc.text(40, y, teacherCommentLines);
+        y += teacherCommentLines.length * 6 + 5; // Adjust line height and spacing
 
         // Session Info
         y += 40;
@@ -102,15 +107,22 @@ export default function ReportModal({openAssignModal, handleCloseModal, details}
   return (
     <>
       <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"3xl"}>
-        <Modal.Header theme={modalTheme.header}>Report Details {details.id}:</Modal.Header>
+        <Modal.Header theme={modalTheme.header}>Report Details (ID: {details.id})</Modal.Header>
         <Modal.Body>
             <div className="flex flex-col items-start justify-center gap-3">
-                <h3 className='text-black-color-one text-center font-semibold text-md'>Report Title: {details.title}</h3>
+                <h3 className='text-black-color-one text-center font-semibold text-md'></h3>
                 <ul className="ps-5">
-                    <li><b>Grade:</b> {details.grade}</li>
-                    {details.arabic === null ? "" : (<li><b>Arabic:</b> {details.arabic} </li>)}
-                    {details.islamic === null ? "" : (<li><b>Islamic:</b> {details.islamic} </li>)}
-                    {details.quran === null ? "" : (<li><b>Quran:</b> {details.quran} </li>)}
+                    <li className="text-center"><b>Total Grade:</b> <span className="capitalize">{details.grade}</span></li>
+                    {details.arabic === null ? "" : (<li><b>Arabic:</b> <span className="capitalize">{details.arabic}</span> </li>)}
+                    {details.arabicComment === '' ? "" : (<li><b>Arabic Comment:</b> <br/>{details.arabicComment} </li>)}
+                    <hr className="font-bold h-[2px]"/>
+                    <hr className="font-bold h-[2px]"/>
+                    {details.islamic === null ? "" : (<li><b>Islamic:</b> <span className="capitalize">{details.islamic}</span> </li>)}
+                    {details.islamicComment === '' ? "" : (<li><b>Islamic Comment:</b> <br/>{details.islamicComment} </li>)}
+                    <hr className="font-bold h-[2px]"/>
+                    <hr className="font-bold h-[2px]"/>
+                    {details.quran === null ? "" : (<li><b>Quran:</b> <span className="capitalize">{details.quran}</span> </li>)}
+                    {details.quranComment === '' ? "" : (<li><b>Quran Comment:</b> <br/>{details.quranComment} </li>)}
                 </ul>
                 <p className="flex flex-col">
                     <b>Teacher Comment:</b> 

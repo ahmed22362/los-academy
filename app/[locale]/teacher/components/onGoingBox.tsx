@@ -172,7 +172,6 @@ export default function OnGoingBox(session: any) {
         })
     }
     const generateMeetingLink = () => {
-        updateSessionStatus('ongoing')
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/generateLink`, {
             method: "POST",
             headers: {
@@ -189,6 +188,7 @@ export default function OnGoingBox(session: any) {
             if(data.status === 'success') {
                 showSuccess(data.message)
                 setIsJoin(false)
+                updateSessionStatus('ongoing')
                 setSesstionLink(data.data.meetingLink)
                 setIsAbsentAndTaken(true)
             } else {

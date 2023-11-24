@@ -2,20 +2,32 @@
 
 import { AiOutlineFileText } from 'react-icons/ai';
 import { BsFileEarmarkArrowDown } from 'react-icons/bs';
+import { BiSolidEditAlt } from 'react-icons/bi';
 import { convertDateTimeZone } from '@/helpers/convertDateAndTime';
 import ReportModal from './reportModal';
 import { useState } from 'react';
+import { Tooltip } from 'flowbite-react';
+import EditReportModal from './editReportModal'
 
 export default function ReportData({data}:{data: any}) {
 
     const reports = data && data;
+
     const convertDate = convertDateTimeZone;
     const [selectedReport, setselectedReport]: any = useState(false);
+    const [selectedEditReport, setselectedEditReport]: any = useState(false);
+
     const handleOpen = () => {
         setselectedReport(true);
     };
     const handleCloseModal = () => {
         setselectedReport(false);
+    };
+    const handleOpenEdit = () => {
+        setselectedEditReport(true);
+    };
+    const handleCloseEditModal = () => {
+        setselectedEditReport(false);
     };
 
   return (
@@ -31,7 +43,10 @@ export default function ReportData({data}:{data: any}) {
                 <button className={"smallBtn"}
                     onClick={handleOpen}
                     >View</button>
-                <BsFileEarmarkArrowDown className={"text-[26px]"}/>
+                <Tooltip content="Edit Report">
+                    <BiSolidEditAlt className={"text-2xl cursor-pointer"} style={{color: "green"}} onClick={handleOpenEdit}/>
+                </Tooltip>
+                <EditReportModal openAssignModal={selectedEditReport} handleCloseModal={handleCloseEditModal} reportDetails={reports} />
             </div>
             <ReportModal openAssignModal={selectedReport} handleCloseModal={handleCloseModal} details={reports}/>
         </div>

@@ -102,6 +102,9 @@ export default function FetchCoursesData({coursesData, updateComponent} : {cours
                 {course.description}
             </Table.Cell>
             <Table.Cell>
+                {course.details.length > 100 ? course.details.substring(0, 100) + "..." : course.details}
+            </Table.Cell>
+            <Table.Cell>
                 {convertTime(course.createdAt, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "YYYY-MM-DD h:mm A")}
             </Table.Cell>
             <Table.Cell>

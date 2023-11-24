@@ -3,43 +3,19 @@
 import { useTranslations } from "next-intl";
 import OurCard from "./OurCard"
 import { useEffect, useState} from "react";
-import Slider from "react-slick";
+// import Slider from "react-slick";
+import { Splide, SplideSlide } from '@splidejs/react-splide';
 import { Skeleton } from 'primereact/skeleton';
+import { usePathname } from "next/navigation";
 
 function OurCourses() {
 
 
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true)
-
+  const pathname = usePathname();
   const t = useTranslations('courses');
   const t2 = useTranslations('Hompage');
-
-  const [settings] = useState({
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1230,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        }
-      },
-      {
-        breakpoint: 855,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        }
-      },
-    ]
-  });
-
 
   const getCourses = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/course`, {
@@ -109,13 +85,41 @@ function OurCourses() {
             )
             :
             (
-            <Slider {...settings} className="flex justify-center ourSlickStyle">
+              <Splide options={
+                {
+                  classes: {
+                    arrows: 'splide__arrows',
+                    arrow: 'splide__arrow',
+                    prev  : 'splide__arrow--prev',
+                    next  : 'splide__arrow--next',
+                  },
+                  direction: pathname === '/ar' ? 'rtl' : 'ltr',
+                  perPage: 3,
+                  gap    : '2rem',
+                  position: 'center',
+                  focus  : 'center',
+                  breakpoints: {
+                    640: {
+                      perPage: 2,
+                      gap    : '.7rem',
+                      height : '6rem',
+                    },
+                    480: {
+                      perPage: 1,
+                      gap    : '.7rem',
+                      height : '6rem',
+                    },
+                  },
+                } 
+              }>
               {
                 courses && courses.map((course: any, index: number) => (
-                <OurCard data={course} key={index}/>
+                  <SplideSlide key={index}>
+                    <OurCard data={course} />
+                  </SplideSlide>
                 ))
             }
-            </Slider>
+              </Splide>
             )
             }
       </section>

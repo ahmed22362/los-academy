@@ -17,17 +17,7 @@ function StudentAttendance() {
   const [lectureStartTime, setLectureStartTime] = useState<string>("");
   const [sessionId, setSessionId] = useState<number | null>(null);
   const [loading, setloading] = useState<boolean>(true);
-  const [isHere, setIsHere] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      // Check if window (browser environment) is defined
-      // Load isHere state from localStorage, default to false if not found
-      const storedIsHere = localStorage.getItem("isHere");
-      return storedIsHere ? JSON.parse(storedIsHere) : false;
-    } else {
-      // If running on the server (initial render), default to false
-      return false;
-    }
-  });
+  const [isHere, setIsHere] = useState<boolean>(false);
 
   const toast = useRef<Toast>(null);
   const showSuccess = (msg: any) => {
@@ -43,7 +33,7 @@ function StudentAttendance() {
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 7000,
     });
   };
 
@@ -135,7 +125,6 @@ function StudentAttendance() {
         if (data.status === "success") {
           console.log("POST request successful:", data);
           setIsHere(true);
-          localStorage.setItem("isHere", JSON.stringify(true));
           showSuccess(`${data.message}`);
         } else {
           console.error(data);

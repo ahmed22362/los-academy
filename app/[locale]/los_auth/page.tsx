@@ -12,10 +12,15 @@ function AdminLogin() {
                     <Image 
                             src={"/vectors/adminLogin.svg"} 
                             width={600} height={600} 
-                            loading='lazy' 
-                            alt='login image'
-                            className="w-full h-full"
+                            placeholder="blur"
                             blurDataURL='/vectors/adminLoginBlur.svg'
+                            loading='lazy' 
+                            alt='admin login image'
+                            className="w-full h-full" 
+                            sizes='(max-width: 768px) 100vw,
+                            (max-width: 1200px) 50vw,
+                            33vw'
+                            
                         />
                 </div>
                 <div className="w-[600px] px-5 max-md:w-full max-md:h-full">

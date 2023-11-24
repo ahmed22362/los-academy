@@ -1,4 +1,6 @@
 "use client"
+// import "primereact/resources/themes/lara-light-indigo/theme.css";
+// import "primereact/resources/primereact.min.css";
 
 import { Button, CustomFlowbiteTheme, Label, TextInput } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
@@ -6,10 +8,8 @@ import { useState, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import { Checkbox } from 'primereact/checkbox';
 import Cookies from 'universal-cookie';
-import "primereact/resources/themes/lara-light-indigo/theme.css";
-import "primereact/resources/primereact.min.css";
+
 export default function AdminLoginForm() {
-    
 
     const [isProcessing, setIsProcessing] = useState(false)
     const [checked, setChecked] = useState<boolean | any>(false);
@@ -90,43 +90,48 @@ export default function AdminLoginForm() {
         <h5 className='text-center font-semibold'>Welcome back !</h5>
         <div>
             <div className="mb-2 block">
-            <Label
-                htmlFor="email1"
-            />
+            <label htmlFor="login-email"></label>
+            {/* <Label
+                htmlFor="email"
+            /> */}
             </div>
             <TextInput
                 theme={inputTheme}
-                id="email1"
+                id="login-email"
                 placeholder="Email address"
                 required
                 type="email"
                 name='email'
                 className='rounded-full'
+                autoFocus={true}
+                autoComplete="on"
             />
         </div>
         <div>
             <div className="mb-2 block">
-            <Label
-                htmlFor="password1"
-            />
+            <label
+                htmlFor="login-password"
+            >
+            </label>
             </div>
             <TextInput
                 theme={inputTheme}
-                id="password1"
+                id="login-password"
                 required
                 type="password"
                 name='password'
                 placeholder="Password"
                 className='rounded-full'
+                autoComplete="off"
             />
         </div>
         <div className="flex items-center gap-2">
-            <div className="card flex justify-content-center border-[1px] border-gray-300 rounded-[25%] p-[1px]">
-                <Checkbox onChange={e => setChecked(e.checked)} checked={checked} id='remember' />
+            <div className="flex justify-content-center border-[1px] border-gray-300 rounded-[25%] p-[1px]">
+                <Checkbox onChange={e => setChecked(e.checked)} checked={checked} id='remember' ></Checkbox>
             </div>
-            <Label htmlFor="remember">
+            <label htmlFor="remember">
                 Keep me login
-            </Label>
+            </label>
         </div>
     <Button
         type='submit'
@@ -139,9 +144,7 @@ export default function AdminLoginForm() {
             "transition-colors rounded-full font-semibold px-5 py-2 text-white"
         }
         >
-        <p>
-            Login
-        </p>
+        Login
     </Button>
     </form>
   )

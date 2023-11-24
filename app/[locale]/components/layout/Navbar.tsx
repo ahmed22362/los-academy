@@ -6,7 +6,7 @@ import { MdLanguage } from "react-icons/md";
 import Image from "next/image";
 import { Dropdown, Navbar } from "flowbite-react";
 import type { CustomFlowbiteTheme } from "flowbite-react";
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import Cookies from "universal-cookie"
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -24,6 +24,7 @@ export default function CustomNavbar() {
   }); 
 
   const pathname = usePathname();
+  const router = useRouter()
   const isAdminDashboard = pathname.startsWith('/admin');
   const isAdminLogin = pathname.startsWith('/los_auth');
   const isteacher = pathname.startsWith('/teacher');
@@ -61,6 +62,26 @@ export default function CustomNavbar() {
   };
 
   const userName = cookies.get('name')
+
+
+  const logOut = async () => {
+    const token = await cookies.get('token')
+    const id = await cookies.get('id')
+    const name = await cookies.get('name')
+
+    if(token && id && name) {
+        cookies.remove('token', { path: '/', });
+        cookies.remove('id', { path: '/', });
+        cookies.remove('name', { path: '/', });
+        if(!token && !id && !name) {
+            router.replace('/login');
+        }
+        router.replace('/login');
+    }  else {
+        console.error('Error removing cookies');
+    } 
+  }
+
 
   if (!(isAdminDashboard || isAdminLogin || isteacher)) {
 
@@ -127,7 +148,7 @@ export default function CustomNavbar() {
             <Navbar.Toggle theme={customNavTheme.toggle} />
             {userName && userName
               ? 
-                (<UserDropDown userName={userName} />) 
+                (<UserDropDown userName={userName} logOut={logOut}/>) 
               : 
                 (
                   <LoginButton />

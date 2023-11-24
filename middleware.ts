@@ -27,6 +27,7 @@ const protectedAdminRoutes = [
     '/student_profile'
   ]
 
+
 async function middleware(req: NextRequest) {
     
     let accessAdminStatus = false;

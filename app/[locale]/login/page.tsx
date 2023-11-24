@@ -19,11 +19,13 @@ import ForgetPassword from "../student_profile/components/forgetPassword";
 import LoadingButton from "../admin/components/loadingButton";
 
 function page() {
+  const cookies = new Cookies();
+  const router = useRouter();
   const [openForgetPasswordModal, setOpenForgetPasswordModal] =
     useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
+
   const toast = useRef<Toast>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const showSuccess = (msg: any) => {
@@ -43,7 +45,7 @@ function page() {
     });
   };
 
-  const cookies = new Cookies();
+
   const [gender, setGender] = useState("");
   const [userData, setUserData] = useState();
   const [showEmailVerification, setShowEmailVerification] = useState(false);
@@ -102,7 +104,7 @@ function page() {
     formData.gender = gender;
 
     console.log(formData);
-
+    setIsProcessing(true);
     fetch(`${url}/user/auth/signup`, {
       method: "POST",
       headers: {
@@ -117,10 +119,8 @@ function page() {
           showSuccess(data.message);
           console.log(data);
           setTimeout(() => {
-            router.push("/login");
+            router.refresh();
           }, 3000);
-          setUserData(data);
-          cookies.set("token", data.token);
         } else {
           showError("Registration failed");
           if (data?.message === "Duplicate field Please use another value!") {
@@ -129,6 +129,7 @@ function page() {
           }
           console.log(data);
         }
+        setIsProcessing(false);
       })
       .catch((error) => {
         console.log(error);
@@ -440,11 +441,19 @@ function page() {
                       </label>
                     </div>
                   </div>
-                  <PrimaryButton
+                  <LoadingButton
+                    title={"Register"}
+                    action={handleFormSubmit}
+                    customStyle={
+                      "text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
+                    }
+                    isProcessing={isProcessing}
+                  />
+                  {/* <PrimaryButton
                     text="Register"
                     ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
                     onClick={handleFormSubmit}
-                  />
+                  /> */}
                   <span className="text-center">Or Register with </span>
                   <div className="flex gap-3">
                     <PrimaryButton

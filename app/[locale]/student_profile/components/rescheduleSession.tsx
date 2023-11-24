@@ -31,7 +31,7 @@ function RescheduleSession({
       severity: "success",
       summary: "Success",
       detail: msg,
-      life: 3000,
+      life: 5000,
     });
   };
   const showError = (msg: string) => {
@@ -39,11 +39,12 @@ function RescheduleSession({
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 5000,
     });
   };
   // function
   const handleReschedule = () => {
+    alert(sessionId);
     if (!selectedStartDate || !selectedEndDate) {
       showError("Please select both start date and end date.");
       return;
@@ -53,6 +54,7 @@ function RescheduleSession({
       newDateStartRange: selectedStartDate.toISOString(),
       newDateEndRange: selectedEndDate.toISOString(),
     };
+    console.log(rescheduleData);
 
     // Perform API request to reschedule session using rescheduleData
     fetch(`${url}/user/requestReschedule`, {
@@ -68,13 +70,13 @@ function RescheduleSession({
         console.log("Session rescheduled successfully", data);
         // Handle success response
         if (data.status === "success") {
-        setRescheduleStatus(`success`);
+          setRescheduleStatus(`success`);
           setStatus(`${data?.data?.status}`);
           showSuccess(`${data.message}`);
           setRescheduleStatus(`${data.status}`);
         } else {
           showError(`${data.message}`);
-          setRescheduleStatus('none')
+          setRescheduleStatus("none");
         }
       })
       .catch((error) => {
@@ -87,17 +89,9 @@ function RescheduleSession({
 
   const renderModalContent = () => {
     if (rescheduleStatus === "success") {
-      return (
-        <div>
-          <p>Reschedule Requested successfully!</p>
-        </div>
-      );
+     showSuccess('Session Reschedualing Successfully')
     } else if (rescheduleStatus === "error") {
-      return (
-        <div>
-          <p>Error rescheduling session. Please try again.</p>
-        </div>
-      );
+     showError('Error rescheduling session. Please try again.')
     } else {
       return (
         <div className="flex justify-center flex-col items-center gap-5">
@@ -111,7 +105,7 @@ function RescheduleSession({
               borderRadius: "16px",
               width: "408px",
             }}
-            placeholder="Select Start Date and Time"
+            placeholder="Select First Avilable Date and Time"
           />
           <Calendar
             value={selectedEndDate}
@@ -123,7 +117,7 @@ function RescheduleSession({
               borderRadius: "16px",
               width: "408px",
             }}
-            placeholder="Select End Date and Time"
+            placeholder="Select Second Avilable Date and Time"
           />
           <div>
             <PrimaryButton

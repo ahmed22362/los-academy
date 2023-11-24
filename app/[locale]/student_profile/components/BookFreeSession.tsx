@@ -5,11 +5,16 @@ import { Calendar, CalendarProps } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 import PrimaryButton from "../../components/PrimaryButton";
 import { Toast } from "primereact/toast";
+import ViewCourses from "./viewCourses";
 
 function BookFreeSession({ setOpenBookModal }: any) {
   const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date> | any>(
     null
   );
+  const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
+  const handleSelectCourses = (courses: any[]) => {
+    setSelectedCourses(courses);
+  };
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -20,7 +25,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
       severity: "success",
       summary: "Success",
       detail: message,
-      life: 3000,
+      life: 5000,
     });
   };
 
@@ -29,7 +34,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
       severity: "error",
       summary: "Error",
       detail: message,
-      life: 3000,
+      life: 5000,
     });
   };
   const handleBookFreeClick = () => {
@@ -43,9 +48,12 @@ function BookFreeSession({ setOpenBookModal }: any) {
     }
 
     const selectedDates = freedatetime12h.map((date) => date.toISOString());
-    const requestBody = {
-      sessionDates: selectedDates,
-    };
+    const selectedCourseTitles = selectedCourses.map((course) => course.title.toLowerCase());
+
+      const requestBody = {
+        sessionDates: selectedDates,
+        courses: selectedCourseTitles,
+      };
 
     fetch(`${url}/session/free/request`, {
       method: "POST",
@@ -79,6 +87,9 @@ function BookFreeSession({ setOpenBookModal }: any) {
 
   return (
     <div className=" flex justify-center flex-col items-center gap-5">
+       <div className="courses w-full flex justify-center">
+        <ViewCourses onSelectCourses={handleSelectCourses}/>
+      </div>
       <Calendar
         value={freedatetime12h}
         onChange={(e: CalendarProps | any) => setFreeDateTime12h(e.value)}

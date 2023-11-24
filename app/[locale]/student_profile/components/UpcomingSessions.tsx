@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
 import moment from "moment-timezone";
 import styles from "../page.module.css";
@@ -8,7 +8,8 @@ import RescheduleSession from "./rescheduleSession";
 import Image from "next/image";
 import Countdown from "react-countdown";
 import MyTimer from "./timer";
-
+import { Toast } from "primereact/toast";
+import { Tooltip } from "flowbite-react";
 
 function UpcomingSessions() {
   const cookie = new Cookies();
@@ -16,8 +17,30 @@ function UpcomingSessions() {
   const token = cookie.get("token");
   const [upComingSession, setUpComingSession] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [openRescheduleModal, setopenRescheduleModal] = useState(false)
-  const [sessionId, setsessionId] = useState('')
+  const [openRescheduleModal, setopenRescheduleModal] = useState(false);
+  const [sessionId, setsessionId] = useState("");
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [isHere, setIsHere] = useState<boolean>(false);
+  const [isImHereButtonDisabled, setIsImHereButtonDisabled] = useState(true);
+
+  const toast = useRef<Toast>(null);
+  const showSuccess = (msg: any) => {
+    toast.current?.show({
+      severity: "success",
+      summary: "Success",
+      detail: msg,
+      life: 5000,
+    });
+  };
+  const showError = (msg: string) => {
+    toast.current?.show({
+      severity: "error",
+      summary: "Error",
+      detail: msg,
+      life: 5000,
+    });
+  };
+
   const convertDateTimeZone = (
     inputTime: moment.MomentInput,
     inputTimezone: string,
@@ -35,19 +58,27 @@ function UpcomingSessions() {
   // </Countdown>
   const time = new Date();
   time.setSeconds(time.getSeconds() + 600); // 10 minutes timer
-  const isSessionRunning = (session :any) => {
+  const isSessionRunning = (session: any) => {
     const currentTime = moment().tz(
       Intl.DateTimeFormat().resolvedOptions().timeZone
     );
     const sessionStartTime = moment(session.sessionDate);
-    const sessionEndTime = moment(session.sessionDate)
-      .add(session.sessionDuration, "minutes");
+    const sessionEndTime = moment(session.sessionDate).add(
+      session.sessionDuration,
+      "minutes"
+    );
 
     return currentTime.isBetween(sessionStartTime, sessionEndTime);
   };
-
   // api data
   useEffect(() => {
+    if (upComingSession.length > 0) {
+      const sessionStartTime = moment(upComingSession[0].sessionDate);
+      const allowedStartTime = sessionStartTime.clone().add(30, "minutes");
+      const currentTime = moment().tz(Intl.DateTimeFormat().resolvedOptions().timeZone);
+
+      setIsImHereButtonDisabled(currentTime.isBefore(allowedStartTime));}
+
     fetch(`${url}/user/upcomingSession`, {
       method: "GET",
       headers: {
@@ -58,7 +89,7 @@ function UpcomingSessions() {
       .then((data) => {
         console.log(data.data);
         setUpComingSession(data.data);
-        setsessionId(data?.data[0]?.id)
+        setsessionId(data?.data[0]?.id);
         setLoading(false);
       })
       .catch((error) => {
@@ -67,37 +98,92 @@ function UpcomingSessions() {
       });
   }, []);
 
+  // custom theme
+ const CustomTHeme= {
+    "target": "w-full",
+    "animation": "transition-opacity",
+    "arrow": {
+      "base": "absolute z-10 h-2 w-2 rotate-45",
+      "style": {
+        "dark": "bg-gray-900 dark:bg-gray-700",
+        "light": "bg-white",
+        "auto": "bg-white dark:bg-gray-700"
+      },
+      "placement": "-4px"
+    },
+    "base": "absolute inline-block z-10 rounded-lg py-2 px-3 text-sm font-medium shadow-sm",
+    "hidden": "invisible opacity-0",
+    "style": {
+      "dark": "bg-gray-900 text-white dark:bg-gray-700",
+      "light": "border border-gray-200 bg-white text-gray-900",
+      "auto": "border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white"
+    },
+    "content": "relative z-20"
+  }
+  //  Im Here =======================
+  const updateAttendance = () => {
+    console.log(sessionId);
 
+    fetch(`${url}/session/updateUserAttendance`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sessionId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+
+        if (data.status === "success") {
+          console.log("POST request successful:", data);
+          setIsHere(true);
+          showSuccess(`${data.message}`);
+        } else {
+          console.error(data);
+          showError(`${data.message}`);
+        }
+      })
+      .catch((error) => {
+        console.error("Error during POST request:", error);
+        // Handle error
+      });
+  };
   if (loading) {
-    return    <div
-    className={`shadow-2xl w-full p-5 rounded-3xl hover:shadow-lg duration-300`}
-    style={{overflow:'hidden'}}
-  >
-    <ContentLoader
-    speed={2}
-    width={340}
-    height={100}
-    viewBox="0 0 340 100"
-    backgroundColor="#f3f3f3"
-    foregroundColor="#ecebeb"
-  >
-    <rect x="232" y="-10" rx="3" ry="3" width="152" height="10" />
-    <rect x="139" y="30" rx="3" ry="3" width="78" height="13" />
-    <rect x="8" y="29" rx="3" ry="3" width="113" height="15" />
-    <rect x="9" y="63" rx="3" ry="3" width="113" height="15" />
-    <rect x="142" y="64" rx="3" ry="3" width="78" height="13" />
-    <rect x="239" y="62" rx="3" ry="3" width="78" height="13" />
-  </ContentLoader>
-   </div> ; // You can replace this with a loading spinner or any other loading indicator
+    return (
+      <div
+        className={` w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
+        style={{ overflow: "hidden" }}
+      >
+        <ContentLoader
+          speed={2}
+          width={340}
+          height={100}
+          viewBox="0 0 340 100"
+          backgroundColor="#f3f3f3"
+          foregroundColor="#ecebeb"
+        >
+          <rect x="232" y="-10" rx="3" ry="3" width="152" height="10" />
+          <rect x="139" y="30" rx="3" ry="3" width="78" height="13" />
+          <rect x="8" y="29" rx="3" ry="3" width="113" height="15" />
+          <rect x="9" y="63" rx="3" ry="3" width="113" height="15" />
+          <rect x="142" y="64" rx="3" ry="3" width="78" height="13" />
+          <rect x="239" y="62" rx="3" ry="3" width="78" height="13" />
+        </ContentLoader>
+      </div>
+    ); // You can replace this with a loading spinner or any other loading indicator
   }
 
   return (
     <div
-      className={`shadow-2xl w-full p-5 rounded-3xl hover:shadow-lg duration-300`}
+      className={` w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
     >
+      <Toast ref={toast} />
+
       <h4 className={`${styles.secondary_head} my-2`}>Upcoming Sessions</h4>
-      { upComingSession.length >0 ? (
-         upComingSession?.map((session, index) => (
+      {upComingSession?.length > 0 ? (
+        upComingSession?.map((session, index) => (
           <div key={index}>
             <p>{`Session #${session.id} with title ${session.type}`}</p>
             <div className={`${styles.date} flex justify-gap-5 my-2`}>
@@ -112,6 +198,28 @@ function UpcomingSessions() {
                 <p className={`ml-3 mr-1`}>
                   {moment(session.sessionDate).format("D-MMM-YYYY")}
                 </p>
+                {isSessionRunning(session) ? (
+                  <Countdown
+                    date={moment(session.sessionDate)
+                      .add(session.sessionDuration, "minutes")
+                      .toDate()}
+                    renderer={({ hours, minutes, seconds, completed }) => {
+                      if (completed) {
+                        setAlertVisible(true);
+                        alert("message");
+                        // Render something when the timer completes
+                        return <span>Session ended</span>;
+                      } else {
+                        // Render the timer
+                        return (
+                          <span>
+                            {hours}:{minutes}:{seconds}
+                          </span> 
+                        );
+                      }
+                    }}
+                  />
+                ) : null}
               </div>
               <div className={`flex justify-center items-center`}>
                 <svg
@@ -138,32 +246,49 @@ function UpcomingSessions() {
                     "h:mm A"
                   )}
                 </p>
-                <MyTimer expiryTimestamp={time} />
+                {/* <MyTimer expiryTimestamp={time} /> */}
               </div>
             </div>
-            <div className={`flex gap-4 mb-3 mt-7`}>
-              <PrimaryButton
-                ourStyle="bg-secondary-color max-md-px-1 hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45"
-                text={"Join Meeting"}
+            <div className={`flex justify-center items-center gap-4 mb-3 mt-7`}>
+            <Tooltip theme={CustomTHeme} className=" px-5" content={isImHereButtonDisabled?`The session cannot be attended until 30 minutes in advance `:'update your'}>
+            <PrimaryButton
+                onClick={isHere ? updateAttendance : updateAttendance}
+                ourStyle={`w-full max-md-px-1  text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45 ${
+                  isImHereButtonDisabled ? " bg-gray-500 cursor-not-allowed" : "bg-secondary-color hover:bg-secondary-hover"
+                }`}
+                text={`${isHere ? "Join Meeting" : `I'm Here`}`}
+                disabled={isImHereButtonDisabled}
               />
+         </Tooltip>
+            
               <button
-              onClick={ ()=>setopenRescheduleModal(true)}
-                className="hover:bg-secondary-hover max-md-px-1 text-sm font-semibold transition-colors shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 px-3 w-full  rounded-full w-50 mx-auto max-md:px-4 max-md:w-45"
+                onClick={() => setopenRescheduleModal(true)}
+                className="hover:bg-[#0a01c09a] hover:text-white max-md-px-1 text-sm font-semibold transition-colors shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 px-3 w-full  rounded-full w-50 mx-auto max-md:px-4 max-md:w-45"
               >
                 Reschedule Session
-                </button>
+              </button>
             </div>
-                  <RescheduleSession sessionId={sessionId} openRescheduleModal={openRescheduleModal} setopenRescheduleModal={setopenRescheduleModal}/>
+
+            <RescheduleSession
+              sessionId={sessionId}
+              openRescheduleModal={openRescheduleModal}
+              setopenRescheduleModal={setopenRescheduleModal}
+            />
           </div>
-      )
-       
         ))
-     :<>
-      <div className="flex justify-center mt-5 items-center flex-col gap-5">
-      <p className="font-meduim">No Upcoming Sessions</p>
-      <Image src={'/vectors/empty-calendar.png'} alt="no upcoming session" width={150} height={100} />
-      </div>
-     </> }
+      ) : (
+        <>
+          <div className="flex justify-center mt-5 items-center flex-col gap-5">
+            <p className="font-meduim">No Upcoming Sessions</p>
+            <Image
+              src={"/vectors/empty-calendar.png"}
+              alt="no upcoming session"
+              width={150}
+              height={100}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }

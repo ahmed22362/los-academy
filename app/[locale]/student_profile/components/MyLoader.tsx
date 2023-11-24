@@ -1,7 +1,7 @@
-import React from 'react';
-import ContentLoader from 'react-content-loader';
+import React from "react";
+import ContentLoader from "react-content-loader";
 
-const MyLoader = (props:any) => {
+const MyLoader = (props: any) => {
   const rectangleProps = [
     { x: 15, y: 15, rx: 4, ry: 4, width: 130, height: 10 },
     { x: 155, y: 15, rx: 3, ry: 3, width: 130, height: 10 },
@@ -10,6 +10,7 @@ const MyLoader = (props:any) => {
 
   return (
     <ContentLoader
+      className="flex justify-center w-full"
       height={200}
       width={400}
       viewBox="0 0 400 200"
@@ -20,7 +21,12 @@ const MyLoader = (props:any) => {
       {[...Array(10)].map((_, index) => (
         <React.Fragment key={index}>
           {rectangleProps.map((rectProps, i) => (
-            <rect key={i} {...rectProps} y={rectProps.y + index * 20} />
+            <rect
+              className=""
+              key={i}
+              {...rectProps}
+              y={rectProps.y + index * 20}
+            />
           ))}
         </React.Fragment>
       ))}
@@ -29,10 +35,10 @@ const MyLoader = (props:any) => {
 };
 
 MyLoader.metadata = {
-  name: 'Ashiru Olawale',
-  github: 'walebant',
-  description: 'A responsive article loader that fits every screen 🎉',
-  filename: 'MyLoader',
+  name: "Ashiru Olawale",
+  github: "walebant",
+  description: "A responsive article loader that fits every screen 🎉",
+  filename: "MyLoader",
 };
 
 export default MyLoader;

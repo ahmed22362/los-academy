@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
-import ContentLoader from 'react-content-loader';
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import ContentLoader from "react-content-loader";
 
 function MyInfo({ myInfo }: any) {
   const [loading, setloading] = useState<boolean>(true);
@@ -40,13 +40,19 @@ function MyInfo({ myInfo }: any) {
         <div className="rounded-full  bg-[#EBF6FE]  flex justify-center items-end">
           <Image
             className="rounded-full  bg-[#EBF6FE]"
-            src={myInfo?.gender === 'male' ? '/vectors/boy.png' : '/vectors/girl.png'}
+            src={
+              myInfo?.gender === "male"
+                ? "/vectors/boy.png"
+                : "/vectors/girl.png"
+            }
             width={60}
             height={60}
             alt="profile photo"
           />
         </div>
-        <h2 className="p-0 m-0 font-bold text-lg">{myInfo?.name || 'My Name'} </h2>
+        <h2 className="p-0 m-0 font-bold text-lg">
+          {myInfo?.name || "My Name"}{" "}
+        </h2>
       </div>
     </>
   );

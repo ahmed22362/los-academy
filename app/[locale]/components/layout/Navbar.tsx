@@ -8,10 +8,9 @@ import { Dropdown, Navbar } from "flowbite-react";
 import type { CustomFlowbiteTheme } from "flowbite-react";
 import {usePathname} from "next/navigation";
 import Cookies from "universal-cookie"
+
 import dynamic from "next/dynamic";
 import Link from "next/link";
-
-
 
 export default function CustomNavbar() {
 
@@ -61,7 +60,7 @@ export default function CustomNavbar() {
   };
 
   const userName = cookies.get('name')
-
+    
   if (!(isAdminDashboard || isAdminLogin || isteacher)) {
 
     return (

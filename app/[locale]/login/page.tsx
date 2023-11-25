@@ -21,7 +21,7 @@ function page() {
   const router = useRouter();
   const [openForgetPasswordModal, setOpenForgetPasswordModal] =
     useState<boolean>(false);
-  const [isProcessing, setisProcessing] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -105,7 +105,6 @@ function page() {
       showError("Please select your gender");
       return;
     }
-    setisProcessing(true);
     // Set the gender directly in the formData object
     formData.gender = gender;
 
@@ -121,7 +120,7 @@ function page() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setisProcessing(false);
+        setIsProcessing(false);
         if (data.status === "success") {
           showSuccess("Registration Successfully");
           showSuccess(data.message);
@@ -189,7 +188,7 @@ function page() {
       return;
     }
           
-    setisProcessing(true);
+    setIsProcessing(true);
 
     // Send a POST request to the login endpoint
     fetch(`${url}/user/auth/login`, {
@@ -201,7 +200,7 @@ function page() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setisProcessing(false);
+        setIsProcessing(false);
         if (data.status === "success") {
           showSuccess("Login Successfully");
           console.log(data);

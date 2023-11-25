@@ -5,6 +5,7 @@ import Link from "next/link";
 import Cookies from "universal-cookie";
 import { useEffect, useState } from "react";
 import TeacherProfile from "./teacherProfileModal"
+import AdminProfile from "../../admin/components/adminProfileModal";
 
 export default function TeacherNavBar() {
 
@@ -39,6 +40,10 @@ export default function TeacherNavBar() {
     useEffect(() => {
             getCurrentTeacherData()
     }, []);
+
+    const updateComponent = () => {
+        getCurrentTeacherData()
+    }
 
     return(
         <nav className={
@@ -77,12 +82,18 @@ export default function TeacherNavBar() {
                             Profile
                     </Dropdown.Item>
                 </Dropdown>
-                <TeacherProfile
+                <AdminProfile
+                    openAssignModal={handleModal}
+                    handleCloseModal={handleCloseModal}
+                    user={data}
+                    updateComponent={updateComponent}
+                />
+                {/* <TeacherProfile
                     openAssignModal={handleModal}
                     handleCloseModal={handleCloseModal}
                     user={data}
                     updateComponent={getCurrentTeacherData}
-                />
+                /> */}
             </div>
         </nav>
     )

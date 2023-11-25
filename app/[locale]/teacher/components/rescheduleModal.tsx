@@ -26,7 +26,8 @@ export default function RescheduleModal(
         const [message, setMessage] = useState('')
         const sessionData = session && session
         const [isProcessing, setIsProcessing] = useState(false)
-        const [rangeDate, setRangeDate] = useState<Nullable<(Date | null)[]> | any>(null);
+        const [startRangeDate, setStartRangeDate] = useState<Nullable<(Date | null)[]> | any>(null);
+        const [endRangeDate, setEndRangeDate] = useState<Nullable<(Date | null)[]> | any>(null);
         const toast = useRef<any>(null);
 
         const showSuccess = (message: string) => {
@@ -64,6 +65,11 @@ export default function RescheduleModal(
           }
 
           const reschduleRequest = () => {
+            console.log({
+              sessionId: sessionData.id,
+              newDateStartRange: [new Date(startRangeDate).toISOString(), new Date(endRangeDate).toISOString()],
+              
+            })
             setIsProcessing(true)
             fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/requestReschedule`, {
                 method: "POST",
@@ -74,8 +80,7 @@ export default function RescheduleModal(
                 
                 body: JSON.stringify({
                   sessionId: sessionData.id,
-                  newDateStartRange: rangeDate[0],
-                  newDateEndRange: rangeDate[1]
+                  newDatesOptions: [new Date(startRangeDate).toISOString(), new Date(endRangeDate).toISOString()]
                 })
                 
             }).then(response => response.json()).then(data => {
@@ -96,20 +101,13 @@ export default function RescheduleModal(
         <Modal.Body>
             <div className='m-auto flex flex-col items-center justify-center'>
               <div className="mb-2 block">
-                <Label htmlFor="rengeDateEnd" value="Select Range Date " />
+                <Label htmlFor="rengeDateEnd" value="Select Start Date " />
               </div>
-              <Calendar
-                    inline
-                    value={rangeDate} 
-                    onChange={(e) => {
-                    setRangeDate(e.value)
-                  }}
-                    showTime
-                    hourFormat="12"
-                    selectionMode="range"
-                    className={"border-[5px] border-secondary-color rounded-xl"}
-                
-              />
+              <input type="datetime-local" className="border-[5px] border-secondary-color rounded-xl" defaultValue={startRangeDate} onChange={(e) => setStartRangeDate(e.target.value)} />
+              <div className="mb-2 block">
+                <Label htmlFor="rengeDateEnd" value="Select End Date " />
+              </div>
+              <input type="datetime-local" className="border-[5px] border-secondary-color rounded-xl" defaultValue={endRangeDate} onChange={(e) => setEndRangeDate(e.target.value)} />
             <div className="w-full mt-3 flex items-center justify-center">
               <LoadingButton 
                 title={"Reschdeule Session"}

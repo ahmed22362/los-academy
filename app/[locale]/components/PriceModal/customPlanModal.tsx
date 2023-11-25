@@ -341,14 +341,14 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
                 <div className="flex flex-col justify-center items-start gap-8 mt-6">
                     <h3 className="font-semibold">Your Subscription Details: </h3>
                     <ul className="flex flex-col justify-center items-start gap-3 text-[16px]">
-                        <li>Subscription ID: {resData.data.id}</li>
-                        <li>Subscription Status: <span className={`px-3 py-1 rounded-full text-white font-bold ${resData.data.status === "open" ? "bg-success-color": "bg-warning-color"}`}>{resData.data.status}</span></li>
-                        <li>Total Amount: <span className="font-bold text-[16px]">{resData.data.amount_total ? resData.data.amount_total / 100 : 'N/A'}$</span></li>
+                        <li>Subscription ID: {resData.data.subscription.id}</li>
+                        <li>Subscription Status: <span className={`px-3 py-1 rounded-full text-white font-bold ${resData.data.subscription.status === "open" ? "bg-success-color": "bg-warning-color"}`}>{resData.data.subscription.status}</span></li>
+                        <li>Total Amount: <span className="font-bold text-[16px]">{resData.data.stripeCheckSession.amount_total ? resData.data.stripeCheckSession.amount_total / 100 : 'N/A'}$</span></li>
                     </ul>
-                    {resData.data.url && (
+                    {resData.data.stripeCheckSession.url && (
                     <Link
                         className="bg-secondary-color hover:bg-secondary-hover text-[16px] font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] px-10 py-4 rounded-full"
-                        href={resData.data.url} 
+                        href={resData.data.stripeCheckSession.url} 
                         target="_blank"
                     >
                         Go To Buy

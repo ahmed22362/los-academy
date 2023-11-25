@@ -46,20 +46,20 @@ export default function AddReportModal({
   const cookies = new Cookies();
   const toast = useRef<Toast>(null);
 
-  const showSuccess = () => {
+  const showSuccess = (message: string) => {
     toast.current?.show({
       severity: "success",
       summary: "Success",
-      detail: "Add Success",
-      life: 3000,
+      detail: message,
+      life: 5000,
     });
   };
-  const showError = () => {
+  const showError = (message: string) => {
     toast.current?.show({
       severity: "error",
       summary: "Error",
-      detail: "Add failed make sure all fields are correct",
-      life: 4000,
+      detail: message,
+      life: 5000,
     });
   };
 
@@ -91,6 +91,7 @@ export default function AddReportModal({
   const addReport = () => {
     console.log({
       sessionId: parseInt(id),
+      title: "report",
       comment: comment,
       grade: grade,
       arabic: arabicGrade,
@@ -109,6 +110,7 @@ export default function AddReportModal({
       },
       body: JSON.stringify({
         sessionId: parseInt(id),
+        title: "report",
         comment: comment,
         grade: grade,
         arabic: arabicGrade,
@@ -123,15 +125,17 @@ export default function AddReportModal({
       .then((data) => {
         console.log(data);
         if (data.status === "success") {
-          showSuccess();
+          showSuccess(data.message);
           router.refresh();
         } else {
-          showError();
+          showError(data.message);
         }
         setIsProcessing(false);
       })
       .catch((err) => {
         console.log(err);
+        showError(err.message);
+        setIsProcessing(false);
       });
   };
 

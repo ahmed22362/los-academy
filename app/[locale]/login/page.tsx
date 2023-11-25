@@ -33,8 +33,6 @@ function page() {
     },
   };
 
-  const [isProcessing, setIsProcessing] = useState(false);
-
   const showSuccess = (msg: any) => {
     toast.current?.show({
       severity: "success",
@@ -363,14 +361,7 @@ function page() {
                   >
                     <p>Login</p>
                   </Button>
-                  
-<!--                   <LoadingButton 
-                    title="Login"
-                    isProcessing={isProcessing}
-                    customStyle="bg-secondary-color text-white py-1 border rounded-3xl text-[16px] w-full"
-                    action={handleLogin}
-                  />
- -->
+
                   <span className="text-center">Or Login with </span>
                   <div className="flex gap-3">
                     <PrimaryButton
@@ -498,15 +489,7 @@ function page() {
                   >
                     <p>Register</p>
                   </Button>
-<!-- 
-                  <LoadingButton
-                    title={"Register"}
-                    action={handleFormSubmit}
-                    customStyle={
-                      "text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
-                    }
-                    isProcessing={isProcessing}
-                  /> -->
+
                   <span className="text-center">Or Register with </span>
                   <div className="flex gap-3">
                     <PrimaryButton

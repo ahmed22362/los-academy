@@ -13,9 +13,11 @@ import { Toast } from "primereact/toast";
 import { Tooltip } from "flowbite-react";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Button } from "primereact/button";
-import { classNames } from "primereact/utils";
+import ContinueWithModal from "./continueWithModal";
+import { useRouter } from "next/navigation";
 
 function UpcomingSessions() {
+  const router=useRouter();
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
   const token = cookie.get("token");
@@ -26,13 +28,13 @@ function UpcomingSessions() {
   const [alertVisible, setAlertVisible] = useState(false);
   const [isHere, setIsHere] = useState<boolean>(false);
   const [isImHereButtonDisabled, setIsImHereButtonDisabled] = useState(true);
+  const [openContinueWithModal, setopenContinueWithModal] = useState(false)
+  const [selectedFreeSessionId, setSelectedFreeSessionId] = useState("");
 
   
 
   const accept = (sessionId: any) => {
-    toast.current?.show({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
-
-    const continueWithTeacher = (sessionId :any) => {
+    setSelectedFreeSessionId(sessionId);
       fetch(`${url}/session/continueWithTeacher`, {
         method: "POST",
         headers: {
@@ -47,7 +49,9 @@ function UpcomingSessions() {
     
         if (data.status === "success") {
           console.log("POST request successful:", data);
-          // Handle success if needed
+          setopenContinueWithModal(true);
+          toast.current?.show({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
+
         } else {
           console.error(data);
           // Handle error if needed
@@ -56,7 +60,8 @@ function UpcomingSessions() {
       .catch((error) => {
         console.error("Error during POST request:", error);
       });
-    };
+   
+   
   }
 
 const reject = () => {
@@ -93,9 +98,7 @@ const reject = () => {
       .tz(outputTimezone);
     return convertedTime.format(ourFormat);
   };
-  // <Countdown date={Date.now() + 1000000}>
 
-  // </Countdown>
   const time = new Date();
   time.setSeconds(time.getSeconds() + 600); // 10 minutes timer
   const isSessionRunning = (session: any) => {
@@ -110,30 +113,11 @@ const reject = () => {
 
     return currentTime.isBetween(sessionStartTime, sessionEndTime);
   };
-  // api data
-  // useEffect(() => {
-  //   fetch(`${url}/user/upcomingSession`, {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log(data.data);
-  //       setUpComingSession(data.data);
-  //       setsessionId(data?.data[0]?.id);
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching sessions:", error);
-  //       setLoading(false);
-  //     });
-  // }, []);
+
   useEffect(() => {
     if (upComingSession.length > 0) {
       const sessionStartTime = moment.utc(upComingSession[0].sessionDate);
-      const allowedStartTime = sessionStartTime.clone().subtract(30, "minutes");
+      const allowedStartTime = sessionStartTime.clone().subtract(5, "minutes");
       const currentTime = moment().tz(
         Intl.DateTimeFormat().resolvedOptions().timeZone
       );
@@ -164,11 +148,12 @@ const reject = () => {
     content: "relative z-20",
   };
   //  Im Here =======================
-  const fetchUpcomingSessions = () => {
+
+  useEffect(() => {
     fetch(`${url}/user/upcomingSession`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
       },
     })
       .then((response) => response.json())
@@ -182,18 +167,39 @@ const reject = () => {
         console.error("Error fetching sessions:", error);
         setLoading(false);
       });
+  }, []);
+
+
+  const getOngoingSession = () => {
+    fetch(`${url}/user/ongoingSession`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.data);
+        setUpComingSession(data.data);
+        setsessionId(data?.data[0]?.id);
+        // router.push(data?.data?.link)
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching sessions:", error);
+        setLoading(false);
+      });
   };
 
   // Use useEffect to fetch upcoming sessions when the component is mounted
-  useEffect(() => {
-    fetchUpcomingSessions();
-  }, []);
+  
 
   // ... (your existing code)
 
   // Updated updateAttendance function
   const updateAttendance = () => {
     console.log(sessionId);
+      getOngoingSession();
 
     fetch(`${url}/session/updateUserAttendance`, {
       method: "POST",
@@ -211,19 +217,7 @@ const reject = () => {
           console.log("POST request successful:", data);
           setIsHere(true);
           showSuccess(`${data.message}`);
-          // After updating attendance, fetch upcoming sessions again
-          fetchUpcomingSessions();
-          
-          // Check if there is an ongoing session with a meeting link
-          const ongoingSession = data.data.find((session :any) => session.status === "ongoing" && session.meetingLink);
-          
-          // If there is an ongoing session, redirect to the meeting link
-          if (ongoingSession) {
-            window.location.href = ongoingSession.meetingLink;
-          }
-        } else {
-          console.error(data);
-          showError(`${data.message}`);
+          getOngoingSession();
         }
       })
       .catch((error) => {
@@ -354,7 +348,7 @@ const reject = () => {
                 className=" px-5"
                 content={
                   isImHereButtonDisabled
-                    ? `The session cannot be attended until 30 minutes in advance `
+                    ? `The session cannot be attended until session starts `
                     : "update your Attendence"
                 }
               >
@@ -366,7 +360,6 @@ const reject = () => {
                       : "bg-secondary-color hover:bg-secondary-hover"
                   }`}
                   text={`${"Join Meeting"}`}
-                  disabled={isImHereButtonDisabled}
                 />
               </Tooltip>
 
@@ -382,6 +375,10 @@ const reject = () => {
               sessionId={sessionId}
               openRescheduleModal={openRescheduleModal}
               setopenRescheduleModal={setopenRescheduleModal}
+            />
+            <ContinueWithModal
+            openContinueWithModal={openContinueWithModal}
+            setopenContinueWithModal={setopenContinueWithModal}
             />
           </div>
         ))

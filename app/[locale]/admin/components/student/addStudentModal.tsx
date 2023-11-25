@@ -118,7 +118,11 @@ export default function AddStudentModal({
         console.log(data);
         if (data.status === "success") {
           showSuccess();
+          const timeToClose = setTimeout(() => {
+            handleCloseModal();
+          }, 2000);
           updateComponent();
+          return () => clearTimeout(timeToClose)
         } else {
           showError();
         }

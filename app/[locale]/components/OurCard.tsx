@@ -32,7 +32,7 @@ return (
     <Card theme={customTheme.card} className="max-w-sm">
         { openModal === 'default' && 
             <ModalCourse
-                modalTarget={courseData.id}
+                courseDetails={courseData}
                 handleOpen={openModal} 
                 handleCloseModal={handleCloseModal} 
             />

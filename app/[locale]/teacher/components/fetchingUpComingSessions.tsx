@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import OnGoingBox from "./onGoingBox";
 import { Spinner } from "flowbite-react";
+import Link from "next/link";
 
 export default function FetchingUpComingSessions() {
     const [sessions, setAllSessions] = useState<any>([]);
+    
     const [isLoading, setIsLoading] = useState(true);
     const cookies = new Cookies();
     const getUpComingSession = () => {
@@ -30,6 +32,7 @@ export default function FetchingUpComingSessions() {
     }
 
     useEffect(() => {
+        // getOngoing()
         getUpComingSession()
     }, [])
 
@@ -38,8 +41,24 @@ export default function FetchingUpComingSessions() {
         <div className={"flex-col justify-center items-center gap-[16px] h-[240px] text-center adminBox"}>
             <h3 className={"adminBoxTitle"}>Are you here and ready for the session ?</h3>
             {isLoading ? <Spinner /> : (sessions && sessions.length > 0 ? sessions.map((session: any, index: number) => (
+                
                 <OnGoingBox session={session} key={index}/>)
-            ): (<p className="p-3">No Upcoming Sessions</p>))}
+            )
+            : 
+            (
+                <p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">No Upcoming Sessions</p>
+            )
+                )}
+{/* 
+            {onGoingSession && onGoingSession.length > 0 ? onGoingSession.map((session: any, index: number) => {
+
+                return (
+                    <div>
+                        <Link href={session.meetingLink} className="text-success-color hover:underline" target="_blank">Goin Meeting</Link>
+                    </div>
+                )
+            }   
+            ) : ""} */}
         </div>
     </section>
   )

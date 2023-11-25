@@ -14,20 +14,27 @@ import "./login.css";
 //theme
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import ForgetPassword from "../student_profile/components/forgetPassword";
+import LoadingButton from "../admin/components/loadingButton";
 
 function page() {
+  const cookies = new Cookies();
+  const router = useRouter();
   const [openForgetPasswordModal, setOpenForgetPasswordModal] =
     useState<boolean>(false);
   const [isProcessing, setisProcessing] = useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
+
   const toast = useRef<Toast>(null);
+
   const buttonTheme: CustomFlowbiteTheme["button"] = {
     color: {
       purple: "bg-secondary-color hover:bg-secondary-hover",
     },
   };
+
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const showSuccess = (msg: any) => {
     toast.current?.show({
       severity: "success",
@@ -45,7 +52,7 @@ function page() {
     });
   };
 
-  const cookies = new Cookies();
+
   const [gender, setGender] = useState("");
   const [userData, setUserData] = useState();
   const [showEmailVerification, setShowEmailVerification] = useState(false);
@@ -104,6 +111,9 @@ function page() {
     // Set the gender directly in the formData object
     formData.gender = gender;
 
+    console.log(formData);
+    setIsProcessing(true);
+
     fetch(`${url}/user/auth/signup`, {
       method: "POST",
       headers: {
@@ -124,11 +134,8 @@ function page() {
           );
 
           setTimeout(() => {
-            window.location.reload();
-            router.push("/login");
+            router.refresh();
           }, 3000);
-          setUserData(data);
-          cookies.set("token", data.token);
         } else {
           if (data?.message === "Duplicate field Please use another value!") {
             showError("Email Already Exist Please Login");
@@ -137,6 +144,7 @@ function page() {
           }
           console.log(data);
         }
+        setIsProcessing(false);
       })
       .catch((error) => {
         console.log(error);
@@ -182,7 +190,9 @@ function page() {
       showError("Please fill in all fields");
       return;
     }
+          
     setisProcessing(true);
+
     // Send a POST request to the login endpoint
     fetch(`${url}/user/auth/login`, {
       method: "POST",
@@ -203,8 +213,9 @@ function page() {
             router.push("/student_profile");
           }, 3000);
           // Save user token in a cookie or state as needed
-          cookies.set("token", data.token);
-          cookies.set("id", data.data.id);
+          cookies.set('token', data.token);
+          cookies.set('id', data.data.id);
+          cookies.set('name', data.data.name);
         } else {
           if (
             data.message ===
@@ -218,6 +229,7 @@ function page() {
           }
           console.log(data);
         }
+        setIsProcessing(false)
       })
       .catch((error) => {
         console.log(error);
@@ -337,6 +349,7 @@ function page() {
                       </div>
                     </div>
                   )}
+
                   <Button
                     onClick={handleLogin}
                     theme={buttonTheme}
@@ -351,6 +364,13 @@ function page() {
                     <p>Login</p>
                   </Button>
                   
+<!--                   <LoadingButton 
+                    title="Login"
+                    isProcessing={isProcessing}
+                    customStyle="bg-secondary-color text-white py-1 border rounded-3xl text-[16px] w-full"
+                    action={handleLogin}
+                  />
+ -->
                   <span className="text-center">Or Login with </span>
                   <div className="flex gap-3">
                     <PrimaryButton
@@ -464,6 +484,7 @@ function page() {
                       </label>
                     </div>
                   </div>
+
                   <Button
                     onClick={handleFormSubmit}
                     theme={buttonTheme}
@@ -477,7 +498,15 @@ function page() {
                   >
                     <p>Register</p>
                   </Button>
-
+<!-- 
+                  <LoadingButton
+                    title={"Register"}
+                    action={handleFormSubmit}
+                    customStyle={
+                      "text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
+                    }
+                    isProcessing={isProcessing}
+                  /> -->
                   <span className="text-center">Or Register with </span>
                   <div className="flex gap-3">
                     <PrimaryButton

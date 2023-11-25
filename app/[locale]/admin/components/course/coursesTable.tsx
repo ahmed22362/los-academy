@@ -56,6 +56,9 @@ export default function CoursesTable() {
                     Description
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
+                    Details
+                </Table.HeadCell>
+                <Table.HeadCell theme={customTheme.head}>
                     Created At
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
@@ -73,7 +76,9 @@ export default function CoursesTable() {
                         <FetchCoursesData key={index} coursesData={teacher} updateComponent={fetchAllCourses}/>
                     )
                 })
-                : <p className='p-3'>There is No Courses</p>
+                : <tr>
+                    <td className='p-3'>No courses found</td>
+                </tr>
                 )
             }
             </Table.Body>

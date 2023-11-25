@@ -7,6 +7,7 @@ import { SetStateAction, useEffect, useRef, useState } from 'react';
 import Cookies from 'universal-cookie';
 import LoadingButton from '../../admin/components/loadingButton';
 import { Toast } from 'primereact/toast';
+import { useRouter } from 'next/navigation';
 
 export default function AssignModal({openAssignModal, handleCloseModal, sessionReqId, user, updateComponent, api}: 
     {
@@ -22,6 +23,7 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
       const cookies = new Cookies();
       const [isProcessing, setIsProcessing] = useState(false)
       const toast = useRef<any>(null);
+      const router = useRouter();
 
       const showSuccess = (message: string) => {
           
@@ -81,15 +83,23 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
             body: JSON.stringify({
                 sessionReqId: sessionReqId
             })
-        }).then(response => response.json()).then(data => {
-            if (data.success) {
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)  
+          if (data.status === "success") {
                 showSuccess(data.message)
                 updateComponent()
-            } else {
+                router.refresh()
+              } else {
                 showError(data.message)
+                updateComponent()
             }
             setIsProcessing(false)
-        }).catch(err => console.log(err))
+        }).catch(err => {
+            console.log(err)
+            showError(err)
+        })
       }
 
   return (

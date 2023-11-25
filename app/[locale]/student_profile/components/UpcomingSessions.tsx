@@ -29,23 +29,40 @@ function UpcomingSessions() {
 
   
 
-  const accept = () => {
+  const accept = (sessionId: any) => {
     toast.current?.show({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
-}
+
+    const continueWithTeacher = (sessionId :any) => {
+      fetch(`${url}/session/continueWithTeacher`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionId, willContinue: true }),
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+    
+        if (data.status === "success") {
+          console.log("POST request successful:", data);
+          // Handle success if needed
+        } else {
+          console.error(data);
+          // Handle error if needed
+        }
+      })
+      .catch((error) => {
+        console.error("Error during POST request:", error);
+      });
+    };
+  }
 
 const reject = () => {
     toast.current?.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
 }
-  const confirm = () => {
-    confirmDialog({
-        message: 'Do you want to delete this record?',
-        header: 'Delete Confirmation',
-        icon: 'pi pi-info-circle',
-        position:"top" ,
-        accept,
-        reject
-    });
-  }
+ 
   const toast = useRef<Toast>(null);
   const showSuccess = (msg: any) => {
     toast.current?.show({
@@ -313,7 +330,7 @@ const reject = () => {
                           header: 'Continue With This Teacher',
                           icon: 'bi bi-info-circle',
                           position: 'top',
-                          accept: accept,
+                          accept: () => accept(session.id) ,
                           reject: reject
                         });
                       }

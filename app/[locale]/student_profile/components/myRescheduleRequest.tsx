@@ -60,6 +60,10 @@ function MyRescheduleRequest() {
             {/* Add your loader shapes here */}
           </ContentLoader>
         ) : (
+          <>
+          {myReschedule?.length === 0 ? (
+            <p>No reschedule requests available.</p>
+          ) : (
           <ul>
             {myReschedule.map((request, index) => (
               <li className="" key={request.id}>
@@ -87,7 +91,7 @@ function MyRescheduleRequest() {
                   </span>
                 </p>
                 <p className="my-1 py-2 font-medium">
-                  Requested By: {request.requestedBy.toUpperCase()}
+                  Requested By: {request.requestedBy==='user'?'Me':(request.requestedBy).toUpperCase()}
                 </p>
                 <p className="my-1 py-2 font-medium flex  gap-4">
                   Old Date:
@@ -142,7 +146,9 @@ function MyRescheduleRequest() {
               </li>
             ))}
           </ul>
-        )}
+         )}
+         </>   
+         )}
       </div>
     </div>
   );

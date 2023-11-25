@@ -11,7 +11,7 @@ function SessionsRequest() {
   const [sessionsRequest, setSessionsRequest] = useState<any[]>([]);
   const [updateCalendar, setUpdateCalendar] = useState<boolean>(true);
   const [newDates, setNewDates] = useState<Nullable<Date> | any>(null);
-
+const [sessionStatus, setSessionStatus] = useState('')
   const convertDateTimeZone = (
     inputTime: moment.MomentInput,
     inputTimezone: string,
@@ -40,6 +40,7 @@ function SessionsRequest() {
         console.log(data.data);
 
         setSessionsRequest(data.data);
+        setSessionStatus(data?.data?.status)
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
@@ -85,18 +86,18 @@ function SessionsRequest() {
     }
   };
   return (
-    <>
+    <div className="md:min-h-[190px] max-md:min-h-[150px]">
       {updateCalendar ? (
-        <div>
+        <div className="">
           <div className="flex justify-end">
             <button
               onClick={() => setUpdateCalendar(false)}
-              className="bg-[#13801b] py-2 px-5 rounded-lg text-white"
+              className={`${sessionStatus==='pending'? '': 'hidden'}bg-[#13801b] py-2 px-5 rounded-lg text-white`}
             >
               Update
             </button>
           </div>
-          {sessionsRequest.map((session) => (
+          {sessionsRequest?.map((session) => (
             <div className="flex flex-col  gap-3" key={session.id}>
               <p>Session Dates:</p>
               <ul>
@@ -177,7 +178,7 @@ function SessionsRequest() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

@@ -121,6 +121,10 @@ function TeacherRescduleRequests() {
             {/* Add more rectangles or shapes as needed */}
           </ContentLoader>
         ) : (
+          <>
+          {teatcherreschedule?.length === 0 ? (
+            <p>No reschedule requests available.</p>
+          ) : (
           <ul className="h-full">
             {teatcherreschedule.map((request) => (
               <li className="" key={request.id}>
@@ -203,6 +207,8 @@ function TeacherRescduleRequests() {
               </li>
             ))}
           </ul>
+        )}
+        </>   
         )}
       </div>
     </div>

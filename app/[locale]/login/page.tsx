@@ -1,7 +1,7 @@
 "use client";
 
 import PrimaryButton from "./../components/PrimaryButton";
-import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
+import { Button, CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
@@ -18,10 +18,16 @@ import ForgetPassword from "../student_profile/components/forgetPassword";
 function page() {
   const [openForgetPasswordModal, setOpenForgetPasswordModal] =
     useState<boolean>(false);
+  const [isProcessing, setisProcessing] = useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const toast = useRef<Toast>(null);
+  const buttonTheme: CustomFlowbiteTheme["button"] = {
+    color: {
+      purple: "bg-secondary-color hover:bg-secondary-hover",
+    },
+  };
   const showSuccess = (msg: any) => {
     toast.current?.show({
       severity: "success",
@@ -94,10 +100,9 @@ function page() {
       showError("Please select your gender");
       return;
     }
+    setisProcessing(true);
     // Set the gender directly in the formData object
     formData.gender = gender;
-
-    console.log(formData);
 
     fetch(`${url}/user/auth/signup`, {
       method: "POST",
@@ -108,11 +113,15 @@ function page() {
     })
       .then((response) => response.json())
       .then((data) => {
+        setisProcessing(false);
         if (data.status === "success") {
           showSuccess("Registration Successfully");
           showSuccess(data.message);
           console.log(data);
-          localStorage.setItem("registrationSuccessMessage", "Registration successful. Please log in.");
+          localStorage.setItem(
+            "registrationSuccessMessage",
+            "Registration successful. Please log in."
+          );
 
           setTimeout(() => {
             window.location.reload();
@@ -125,7 +134,6 @@ function page() {
             showError("Email Already Exist Please Login");
           } else {
             showError("Registration failed");
-
           }
           console.log(data);
         }
@@ -138,7 +146,7 @@ function page() {
 
   useEffect(() => {
     // Check if we are on the client side before using window
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const storedMessage = localStorage.getItem("registrationSuccessMessage");
       if (storedMessage) {
         showSuccess(storedMessage);
@@ -174,7 +182,7 @@ function page() {
       showError("Please fill in all fields");
       return;
     }
-
+    setisProcessing(true);
     // Send a POST request to the login endpoint
     fetch(`${url}/user/auth/login`, {
       method: "POST",
@@ -185,10 +193,11 @@ function page() {
     })
       .then((response) => response.json())
       .then((data) => {
+        setisProcessing(false);
         if (data.status === "success") {
           showSuccess("Login Successfully");
           console.log(data);
-          localStorage.setItem("myName", data?.data?.name)
+          localStorage.setItem("myName", data?.data?.name);
           setTimeout(() => {
             // Redirect to a protected route upon successful login
             router.push("/student_profile");
@@ -202,10 +211,10 @@ function page() {
             "Can't log in before you verify you email if you miss the first mail you can always resend it!"
           ) {
             // Display the div for email verification
-            showError(`${data.message }`);
+            showError(`${data.message}`);
             setShowEmailVerification(true);
           } else {
-            showError(`${data.message||'Login Faild '}`);
+            showError(`${data.message || "Login Faild "}`);
           }
           console.log(data);
         }
@@ -328,11 +337,20 @@ function page() {
                       </div>
                     </div>
                   )}
-                  <PrimaryButton
+                  <Button
                     onClick={handleLogin}
-                    text="Login"
-                    ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
-                  />
+                    theme={buttonTheme}
+                    color="purple"
+                    isProcessing={isProcessing}
+                    pill
+                    size="lg"
+                    className={
+                      "transition-colors rounded-full font-semibold px-5 py-2 text-white"
+                    }
+                  >
+                    <p>Login</p>
+                  </Button>
+                  
                   <span className="text-center">Or Login with </span>
                   <div className="flex gap-3">
                     <PrimaryButton
@@ -446,11 +464,20 @@ function page() {
                       </label>
                     </div>
                   </div>
-                  <PrimaryButton
-                    text="Register"
-                    ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
+                  <Button
                     onClick={handleFormSubmit}
-                  />
+                    theme={buttonTheme}
+                    color="purple"
+                    isProcessing={isProcessing}
+                    pill
+                    size="lg"
+                    className={
+                      "transition-colors rounded-full font-semibold px-5 py-2 text-white"
+                    }
+                  >
+                    <p>Register</p>
+                  </Button>
+
                   <span className="text-center">Or Register with </span>
                   <div className="flex gap-3">
                     <PrimaryButton

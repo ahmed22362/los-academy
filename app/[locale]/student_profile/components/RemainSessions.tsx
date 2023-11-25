@@ -103,7 +103,15 @@ function RemainSessions({ setTeacherName }: any) {
                       "MMM D,YYYY"
                     )}
                   </p>
+                  <div
+                    className={
+                      session.teacherAttended ? "hidden" : "text-red-500  py-1 "
+                    }
+                  >
+                    {session.teacherAttended ? "" : "Teacher Ubsent"}
+                  </div>
                 </div>
+
                 <button
                   onClick={() => handleRescheduleClick(session.id)}
                   className="bg-[--secondary-color] hover:bg-[#453ed2] h-fit text-sm rounded-full py-2 text-white px-2"

@@ -3,6 +3,7 @@ import PrimaryButton from "../../components/PrimaryButton";
 import moment from "moment-timezone";
 import styles from "../page.module.css";
 import Cookies from "universal-cookie";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
 import ContentLoader from "react-content-loader";
 import RescheduleSession from "./rescheduleSession";
 import Image from "next/image";
@@ -10,6 +11,9 @@ import Countdown from "react-countdown";
 import MyTimer from "./timer";
 import { Toast } from "primereact/toast";
 import { Tooltip } from "flowbite-react";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Button } from "primereact/button";
+import { classNames } from "primereact/utils";
 
 function UpcomingSessions() {
   const cookie = new Cookies();
@@ -23,6 +27,25 @@ function UpcomingSessions() {
   const [isHere, setIsHere] = useState<boolean>(false);
   const [isImHereButtonDisabled, setIsImHereButtonDisabled] = useState(true);
 
+  
+
+  const accept = () => {
+    toast.current?.show({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
+}
+
+const reject = () => {
+    toast.current?.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+}
+  const confirm = () => {
+    confirmDialog({
+        message: 'Do you want to delete this record?',
+        header: 'Delete Confirmation',
+        icon: 'pi pi-info-circle',
+        position:"top" ,
+        accept,
+        reject
+    });
+  }
   const toast = useRef<Toast>(null);
   const showSuccess = (msg: any) => {
     toast.current?.show({
@@ -71,18 +94,64 @@ function UpcomingSessions() {
     return currentTime.isBetween(sessionStartTime, sessionEndTime);
   };
   // api data
+  // useEffect(() => {
+  //   fetch(`${url}/user/upcomingSession`, {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data.data);
+  //       setUpComingSession(data.data);
+  //       setsessionId(data?.data[0]?.id);
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching sessions:", error);
+  //       setLoading(false);
+  //     });
+  // }, []);
   useEffect(() => {
     if (upComingSession.length > 0) {
-      const sessionStartTime = moment(upComingSession[0].sessionDate);
-      const allowedStartTime = sessionStartTime.clone().add(30, "minutes");
-      const currentTime = moment().tz(Intl.DateTimeFormat().resolvedOptions().timeZone);
+      const sessionStartTime = moment.utc(upComingSession[0].sessionDate);
+      const allowedStartTime = sessionStartTime.clone().subtract(30, "minutes");
+      const currentTime = moment().tz(
+        Intl.DateTimeFormat().resolvedOptions().timeZone
+      );
 
-      setIsImHereButtonDisabled(currentTime.isBefore(allowedStartTime));}
-
+      setIsImHereButtonDisabled(currentTime.isBefore(allowedStartTime));
+    }
+  }, [upComingSession]);
+  // custom theme
+  const CustomTHeme = {
+    target: "w-full",
+    animation: "transition-opacity",
+    arrow: {
+      base: "absolute z-10 h-2 w-2 rotate-45",
+      style: {
+        dark: "bg-gray-900 dark:bg-gray-700",
+        light: "bg-white",
+        auto: "bg-white dark:bg-gray-700",
+      },
+      placement: "-4px",
+    },
+    base: "absolute inline-block z-10 rounded-lg py-2 px-3 text-sm font-medium shadow-sm",
+    hidden: "invisible opacity-0",
+    style: {
+      dark: "bg-gray-900 text-white dark:bg-gray-700",
+      light: "border border-gray-200 bg-white text-gray-900",
+      auto: "border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white",
+    },
+    content: "relative z-20",
+  };
+  //  Im Here =======================
+  const fetchUpcomingSessions = () => {
     fetch(`${url}/user/upcomingSession`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
@@ -96,31 +165,16 @@ function UpcomingSessions() {
         console.error("Error fetching sessions:", error);
         setLoading(false);
       });
+  };
+
+  // Use useEffect to fetch upcoming sessions when the component is mounted
+  useEffect(() => {
+    fetchUpcomingSessions();
   }, []);
 
-  // custom theme
- const CustomTHeme= {
-    "target": "w-full",
-    "animation": "transition-opacity",
-    "arrow": {
-      "base": "absolute z-10 h-2 w-2 rotate-45",
-      "style": {
-        "dark": "bg-gray-900 dark:bg-gray-700",
-        "light": "bg-white",
-        "auto": "bg-white dark:bg-gray-700"
-      },
-      "placement": "-4px"
-    },
-    "base": "absolute inline-block z-10 rounded-lg py-2 px-3 text-sm font-medium shadow-sm",
-    "hidden": "invisible opacity-0",
-    "style": {
-      "dark": "bg-gray-900 text-white dark:bg-gray-700",
-      "light": "border border-gray-200 bg-white text-gray-900",
-      "auto": "border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white"
-    },
-    "content": "relative z-20"
-  }
-  //  Im Here =======================
+  // ... (your existing code)
+
+  // Updated updateAttendance function
   const updateAttendance = () => {
     console.log(sessionId);
 
@@ -140,6 +194,16 @@ function UpcomingSessions() {
           console.log("POST request successful:", data);
           setIsHere(true);
           showSuccess(`${data.message}`);
+          // After updating attendance, fetch upcoming sessions again
+          fetchUpcomingSessions();
+          
+          // Check if there is an ongoing session with a meeting link
+          const ongoingSession = data.data.find((session :any) => session.status === "ongoing" && session.meetingLink);
+          
+          // If there is an ongoing session, redirect to the meeting link
+          if (ongoingSession) {
+            window.location.href = ongoingSession.meetingLink;
+          }
         } else {
           console.error(data);
           showError(`${data.message}`);
@@ -147,9 +211,11 @@ function UpcomingSessions() {
       })
       .catch((error) => {
         console.error("Error during POST request:", error);
-        // Handle error
       });
   };
+
+
+
   if (loading) {
     return (
       <div
@@ -174,20 +240,24 @@ function UpcomingSessions() {
       </div>
     ); // You can replace this with a loading spinner or any other loading indicator
   }
+// 
 
+
+
+      
   return (
     <div
       className={` w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
     >
       <Toast ref={toast} />
 
-      <h4 className={`${styles.secondary_head} my-2`}>Upcoming Sessions</h4>
+      <h4 className={`${styles.secondary_head} my-2`}>{upComingSession[0]?.status} session</h4>
       {upComingSession?.length > 0 ? (
         upComingSession?.map((session, index) => (
           <div key={index}>
             <p>{`Session #${session.id} with title ${session.type}`}</p>
             <div className={`${styles.date} flex justify-gap-5 my-2`}>
-              <div className={`flex justify-center items-center `}>
+              <div className={`flex justify-center  items-center `}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="1em"
@@ -198,28 +268,6 @@ function UpcomingSessions() {
                 <p className={`ml-3 mr-1`}>
                   {moment(session.sessionDate).format("D-MMM-YYYY")}
                 </p>
-                {isSessionRunning(session) ? (
-                  <Countdown
-                    date={moment(session.sessionDate)
-                      .add(session.sessionDuration, "minutes")
-                      .toDate()}
-                    renderer={({ hours, minutes, seconds, completed }) => {
-                      if (completed) {
-                        setAlertVisible(true);
-                        alert("message");
-                        // Render something when the timer completes
-                        return <span>Session ended</span>;
-                      } else {
-                        // Render the timer
-                        return (
-                          <span>
-                            {hours}:{minutes}:{seconds}
-                          </span> 
-                        );
-                      }
-                    }}
-                  />
-                ) : null}
               </div>
               <div className={`flex justify-center items-center`}>
                 <svg
@@ -249,18 +297,62 @@ function UpcomingSessions() {
                 {/* <MyTimer expiryTimestamp={time} /> */}
               </div>
             </div>
+            <div className="flex justify-center items-center">
+              {isSessionRunning(session) ? (
+                <Countdown
+                  date={moment(session.sessionDate)
+                    .add(session.sessionDuration, "minutes")
+                    .toDate()}
+                  renderer={({ hours, minutes, seconds, completed }) => {
+                    if (completed) {
+                      setAlertVisible(true);
+                      if (upComingSession[0].type === "free") {
+                        // Show the ConfirmDialog after the session has ended
+                        confirmDialog({
+                          message: 'Do you want to Continue With This Teacher?',
+                          header: 'Continue With This Teacher',
+                          icon: 'bi bi-info-circle',
+                          position: 'top',
+                          accept: accept,
+                          reject: reject
+                        });
+                      }
+                      // Render something when the timer completes
+                      return <span>Session ended</span>;
+                    } else {
+                      // Render the timer
+                      return (
+                        <span className="bg-secondary-color rounded-3xl px-3 py-1 text-white">
+                          The Session Will End After {hours}:{minutes}:{seconds}
+                        </span>
+                      );
+                    }
+                  }}
+                />
+              ) : null}
+            </div>
             <div className={`flex justify-center items-center gap-4 mb-3 mt-7`}>
-            <Tooltip theme={CustomTHeme} className=" px-5" content={isImHereButtonDisabled?`The session cannot be attended until 30 minutes in advance `:'update your'}>
-            <PrimaryButton
-                onClick={isHere ? updateAttendance : updateAttendance}
-                ourStyle={`w-full max-md-px-1  text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45 ${
-                  isImHereButtonDisabled ? " bg-gray-500 cursor-not-allowed" : "bg-secondary-color hover:bg-secondary-hover"
-                }`}
-                text={`${isHere ? "Join Meeting" : `I'm Here`}`}
-                disabled={isImHereButtonDisabled}
-              />
-         </Tooltip>
-            
+              <Tooltip
+                theme={CustomTHeme}
+                className=" px-5"
+                content={
+                  isImHereButtonDisabled
+                    ? `The session cannot be attended until 30 minutes in advance `
+                    : "update your Attendence"
+                }
+              >
+                <PrimaryButton
+                  onClick={isHere ? updateAttendance : updateAttendance}
+                  ourStyle={`w-full max-md-px-1  text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45 ${
+                    isImHereButtonDisabled
+                      ? " bg-gray-500 cursor-not-allowed"
+                      : "bg-secondary-color hover:bg-secondary-hover"
+                  }`}
+                  text={`${"Join Meeting"}`}
+                  disabled={isImHereButtonDisabled}
+                />
+              </Tooltip>
+
               <button
                 onClick={() => setopenRescheduleModal(true)}
                 className="hover:bg-[#0a01c09a] hover:text-white max-md-px-1 text-sm font-semibold transition-colors shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 px-3 w-full  rounded-full w-50 mx-auto max-md:px-4 max-md:w-45"

@@ -1,6 +1,6 @@
 'use client';
 
-import { CustomFlowbiteTheme, Label, Modal, Select, TextInput } from 'flowbite-react';
+import { CustomFlowbiteTheme, Label, Modal, Select, TextInput, Textarea } from 'flowbite-react';
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
@@ -17,16 +17,17 @@ export default function AddCourseModal({openAssignModal, handleCloseModal, updat
     const modalRef = useRef<HTMLDivElement>(null);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [details, setDetails] = useState('');
     const [isProcessing, setIsProcessing] = useState(false)
     const toast = useRef<Toast>(null);
     const cookies = new Cookies();
 
 
-    const showSuccess = () => {
-        toast.current?.show({severity:'success', summary: 'Success', detail:'Added Success', life: 3000});
+    const showSuccess = (msg: string) => {
+        toast.current?.show({severity:'success', summary: 'Success', detail: msg, life: 3000});
     }
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'make sure all fields are correct', life: 4000});
+    const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
       }
 
     useEffect(() => {
@@ -63,19 +64,25 @@ export default function AddCourseModal({openAssignModal, handleCloseModal, updat
             },
             body: JSON.stringify({
                 title,
-                description
+                description,
+                details
             }),
         }).then(response => response.json()).then(data => {
             console.log(data)
           if(data.status === "success") {
-            showSuccess()
+            showSuccess(data.message)
             updateComponent()
+            const timerToClose = setTimeout(() => {
+              handleCloseModal()
+              clearTimeout(timerToClose)
+            }, 3000)
           } else {
-            showError()
+            showError(data.message)
           }
           setIsProcessing(false)
         }).catch(err => {
           console.log(err)
+          showError(err)
         })
       }
 
@@ -99,6 +106,12 @@ export default function AddCourseModal({openAssignModal, handleCloseModal, updat
                 <Label htmlFor="description" value="Course Description" />
               </div>
               <TextInput id="description" placeholder={"Description"} onChange={(e) => setDescription(e.target.value)} type="text" />
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="details" value="Course Details" />
+              </div>
+              <Textarea id="details" placeholder={"Details"} className='h-[150px]' onChange={(e) => setDetails(e.target.value)} />
             </div>
             <div className="w-full">
             <LoadingButton 

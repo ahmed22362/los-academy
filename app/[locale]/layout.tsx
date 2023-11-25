@@ -1,8 +1,8 @@
 import '../globals.css'
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
 import 'bootstrap-icons/font/bootstrap-icons.min.css'
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-
+import '@splidejs/react-splide/css/core';
 import type { Metadata } from 'next'
 import { Work_Sans } from 'next/font/google'
 import {notFound} from 'next/navigation';

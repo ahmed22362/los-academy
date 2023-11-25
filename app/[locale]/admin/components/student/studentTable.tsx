@@ -28,7 +28,7 @@ export default function StudentTable() {
                 "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
-            // console.log(data)
+            console.log(data)
             setAllStudents(data.data)
             setIsLoading(false)
         }).catch(err => {
@@ -84,7 +84,9 @@ export default function StudentTable() {
                     )
                 }):
                     (
-                    <tr className='p-3 text-[16px]'><td>There is no students</td></tr>
+                    <tr>
+                        <td className='p-5 text-[16px]'>There is no students</td>
+                    </tr>
                     )
                 )
             }

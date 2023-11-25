@@ -56,7 +56,7 @@ export default function MatrialTable() {
                     Course
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Age
+                    Up to Age
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
                     Added on

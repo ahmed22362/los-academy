@@ -14,20 +14,18 @@ import "./login.css";
 //theme
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import ForgetPassword from "../student_profile/components/forgetPassword";
+import LoadingButton from "../admin/components/loadingButton";
 
 function page() {
+  const cookies = new Cookies();
+  const router = useRouter();
   const [openForgetPasswordModal, setOpenForgetPasswordModal] =
     useState<boolean>(false);
   const [isProcessing, setisProcessing] = useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
+
   const toast = useRef<Toast>(null);
-  const buttonTheme: CustomFlowbiteTheme["button"] = {
-    color: {
-      purple: "bg-secondary-color hover:bg-secondary-hover",
-    },
-  };
   const showSuccess = (msg: any) => {
     toast.current?.show({
       severity: "success",
@@ -45,7 +43,7 @@ function page() {
     });
   };
 
-  const cookies = new Cookies();
+
   const [gender, setGender] = useState("");
   const [userData, setUserData] = useState();
   const [showEmailVerification, setShowEmailVerification] = useState(false);
@@ -124,11 +122,8 @@ function page() {
           );
 
           setTimeout(() => {
-            window.location.reload();
-            router.push("/login");
+            router.refresh();
           }, 3000);
-          setUserData(data);
-          cookies.set("token", data.token);
         } else {
           if (data?.message === "Duplicate field Please use another value!") {
             showError("Email Already Exist Please Login");
@@ -137,6 +132,7 @@ function page() {
           }
           console.log(data);
         }
+        setisProcessing(false);
       })
       .catch((error) => {
         console.log(error);
@@ -182,7 +178,7 @@ function page() {
       showError("Please fill in all fields");
       return;
     }
-    setisProcessing(true);
+
     // Send a POST request to the login endpoint
     fetch(`${url}/user/auth/login`, {
       method: "POST",
@@ -203,8 +199,9 @@ function page() {
             router.push("/student_profile");
           }, 3000);
           // Save user token in a cookie or state as needed
-          cookies.set("token", data.token);
-          cookies.set("id", data.data.id);
+          cookies.set('token', data.token);
+          cookies.set('id', data.data.id);
+          cookies.set('name', data.data.name);
         } else {
           if (
             data.message ===
@@ -218,6 +215,7 @@ function page() {
           }
           console.log(data);
         }
+        setisProcessing(false)
       })
       .catch((error) => {
         console.log(error);
@@ -337,20 +335,11 @@ function page() {
                       </div>
                     </div>
                   )}
-                  <Button
+                  <PrimaryButton
                     onClick={handleLogin}
-                    theme={buttonTheme}
-                    color="purple"
-                    isProcessing={isProcessing}
-                    pill
-                    size="lg"
-                    className={
-                      "transition-colors rounded-full font-semibold px-5 py-2 text-white"
-                    }
-                  >
-                    <p>Login</p>
-                  </Button>
-                  
+                    text="Login"
+                    ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
+                  />
                   <span className="text-center">Or Login with </span>
                   <div className="flex gap-3">
                     <PrimaryButton
@@ -464,20 +453,11 @@ function page() {
                       </label>
                     </div>
                   </div>
-                  <Button
+                  <PrimaryButton
+                    text="Register"
+                    ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
                     onClick={handleFormSubmit}
-                    theme={buttonTheme}
-                    color="purple"
-                    isProcessing={isProcessing}
-                    pill
-                    size="lg"
-                    className={
-                      "transition-colors rounded-full font-semibold px-5 py-2 text-white"
-                    }
-                  >
-                    <p>Register</p>
-                  </Button>
-
+                  />
                   <span className="text-center">Or Register with </span>
                   <div className="flex gap-3">
                     <PrimaryButton

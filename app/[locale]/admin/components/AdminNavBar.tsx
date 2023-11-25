@@ -30,7 +30,7 @@ export default function AdminNavBar() {
         })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data)
+            // console.log(data)
             setData(data.data)
         }).catch((err) => {
             console.log(err)
@@ -41,6 +41,9 @@ export default function AdminNavBar() {
         getCurrentAdminData();
     }, []);
 
+    const updateComponent = () => {
+        getCurrentAdminData();
+    }
     return(
         <nav className={
             "flex justify-between align-center w-full px-[18px] py-[12px] fixed top-0 z-50 bg-white shadow shadow-secondary-color"
@@ -82,7 +85,7 @@ export default function AdminNavBar() {
                     openAssignModal={handleModal}
                     handleCloseModal={handleCloseModal}
                     user={data}
-                    updateComponent={getCurrentAdminData}
+                    updateComponent={updateComponent}
                 />
             </div>
         </nav>

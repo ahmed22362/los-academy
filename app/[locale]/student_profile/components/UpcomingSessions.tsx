@@ -30,7 +30,7 @@ function UpcomingSessions() {
   const [isImHereButtonDisabled, setIsImHereButtonDisabled] = useState(true);
   const [openContinueWithModal, setopenContinueWithModal] = useState(false)
   const [selectedFreeSessionId, setSelectedFreeSessionId] = useState("");
-
+const [sessionLink, setSessionLink] = useState("");
   
 
   const accept = (sessionId: any) => {
@@ -49,8 +49,10 @@ function UpcomingSessions() {
     
         if (data.status === "success") {
           console.log("POST request successful:", data);
-          setopenContinueWithModal(true);
           toast.current?.show({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
+          setTimeout(() => {
+            setopenContinueWithModal(true);
+          }, 3000);
 
         } else {
           console.error(data);
@@ -117,7 +119,7 @@ const reject = () => {
   useEffect(() => {
     if (upComingSession.length > 0) {
       const sessionStartTime = moment.utc(upComingSession[0].sessionDate);
-      const allowedStartTime = sessionStartTime.clone().subtract(5, "minutes");
+      const allowedStartTime = sessionStartTime.clone().subtract(2, "minutes");
       const currentTime = moment().tz(
         Intl.DateTimeFormat().resolvedOptions().timeZone
       );
@@ -149,57 +151,107 @@ const reject = () => {
   };
   //  Im Here =======================
 
-  useEffect(() => {
-    fetch(`${url}/user/upcomingSession`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.data);
-        setUpComingSession(data.data);
-        setsessionId(data?.data[0]?.id);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching sessions:", error);
-        setLoading(false);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`${url}/user/upcomingSession`, {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data.data);
+  //       setUpComingSession(data.data);
+  //       setsessionId(data?.data[0]?.id);
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching sessions:", error);
+  //       setLoading(false);
+  //     });
+  // }, []);
 
 
-  const getOngoingSession = () => {
-    fetch(`${url}/user/ongoingSession`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.data);
-        setUpComingSession(data.data);
-        setsessionId(data?.data[0]?.id);
-        // router.push(data?.data?.link)
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching sessions:", error);
-        setLoading(false);
-      });
-  };
-
-  // Use useEffect to fetch upcoming sessions when the component is mounted
-  
+  // const getOngoingSession = () => {
+  //   fetch(`${url}/user/ongoingSession`, {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data.data);
+  //       setUpComingSession(data.data);
+  //       setsessionId(data?.data[0]?.id);
+  //       // router.push(data?.data?.link)
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching sessions:", error);
+  //       setLoading(false);
+  //     });
+  // };
 
   // ... (your existing code)
+
+useEffect(() => {
+  // Fetch ongoing sessions
+  fetch(`${url}/user/ongoingSession`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.data);
+
+      if (data.data.length > 0) {
+        // If there are ongoing sessions, display them
+        setUpComingSession(data.data);
+        setsessionId(data?.data[0]?.id);
+        setLoading(false);
+        setSessionLink(data?.data[0]?.meetingLink)
+      } else {
+        // If there are no ongoing sessions, fetch upcoming sessions
+        fetchUpcomingSessions();
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching ongoing sessions:", error);
+      // If there's an error, fetch upcoming sessions
+      fetchUpcomingSessions();
+    });
+}, []);
+
+const fetchUpcomingSessions = () => {
+  fetch(`${url}/user/upcomingSession`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.data);
+      setUpComingSession(data.data);
+      setsessionId(data?.data[0]?.id);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error("Error fetching upcoming sessions:", error);
+      setLoading(false);
+    });
+};
+
+// ... (your existing code)
+
+
 
   // Updated updateAttendance function
   const updateAttendance = () => {
     console.log(sessionId);
-      getOngoingSession();
 
     fetch(`${url}/session/updateUserAttendance`, {
       method: "POST",
@@ -217,7 +269,7 @@ const reject = () => {
           console.log("POST request successful:", data);
           setIsHere(true);
           showSuccess(`${data.message}`);
-          getOngoingSession();
+          router.push(sessionLink)
         }
       })
       .catch((error) => {
@@ -316,26 +368,35 @@ const reject = () => {
                     .toDate()}
                   renderer={({ hours, minutes, seconds, completed }) => {
                     if (completed) {
-                      setAlertVisible(true);
                       if (upComingSession[0].type === "free") {
                         // Show the ConfirmDialog after the session has ended
-                        confirmDialog({
-                          message: 'Do you want to Continue With This Teacher?',
-                          header: 'Continue With This Teacher',
-                          icon: 'bi bi-info-circle',
-                          position: 'top',
-                          accept: () => accept(session.id) ,
-                          reject: reject
-                        });
+                        setAlertVisible(true);
+                        return(
+                          <>
+                           <ConfirmDialog 
+                      visible={alertVisible||true}
+                      message={'Do you want to Continue With This Teacher?'}
+                      header='Continue With This Teacher'
+                      icon= 'bi bi-info-circle'
+                      position="top"
+                      accept={() => accept(session.id)}
+                      reject={reject}
+                      />
+                          </>
+                        )
+                        
                       }
                       // Render something when the timer completes
-                      return <span>Session ended</span>;
+                      return <span> 
+                         
+                      </span>;
                     } else {
                       // Render the timer
                       return (
-                        <span className="bg-secondary-color rounded-3xl px-3 py-1 text-white">
-                          The Session Will End After {hours}:{minutes}:{seconds}
+                        <span className=" flex flex-col items-center gap-5 rounded-3xl px-3 py-1 ">
+                          <p className="text-[#333]">This Session will End within</p> <p>  <span className="font-bold text-lg">{minutes} mins</span> <span className="font-bold text-lg">{seconds} sec</span></p>
                         </span>
+                        // <span className="font-bold text-lg">{hours} hours</span>
                       );
                     }
                   }}
@@ -353,6 +414,7 @@ const reject = () => {
                 }
               >
                 <PrimaryButton
+                disabled={isImHereButtonDisabled}
                   onClick={isHere ? updateAttendance : updateAttendance}
                   ourStyle={`w-full max-md-px-1  text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45 ${
                     isImHereButtonDisabled
@@ -369,8 +431,9 @@ const reject = () => {
               >
                 Reschedule Session
               </button>
+              
             </div>
-
+           
             <RescheduleSession
               sessionId={sessionId}
               openRescheduleModal={openRescheduleModal}

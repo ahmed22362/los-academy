@@ -7,6 +7,7 @@ import RemainSessions from "./RemainSessions";
 import HistorySessions from "./historySessions";
 import SessionsRequest from "./sessionsRequest";
 import RescheduleRequests from "./rescheduleRequests";
+import TeacherUbsent from "./teacherUbsent";
 
 export default function SessionsModal({
   setOpenSeesionModal,
@@ -63,6 +64,9 @@ export default function SessionsModal({
                 </Tabs.Item>
                 <Tabs.Item title="Rescheduling Requests">
                   <RescheduleRequests />
+                </Tabs.Item>
+                <Tabs.Item title="Teacher Ubsent Sessions">
+                  <TeacherUbsent />
                 </Tabs.Item>
               </Tabs.Group>
             </div>

@@ -77,12 +77,12 @@ if (myInfo?.sessionPlaced==false) {
       <div className="grid grid-cols-3 max-sm:grid-cols-1 max-md:grid-cols-2 justify-between gap-5	 mt-7">
         <div className="card w-full  ">
           <EditProfile setMyInfo={setMyInfo} />
-          <div>
+          <div className="">
             <h3 className={`${styles.main_head} mb-8`}>Infos</h3>
 
             <CommunityStatistics />
             <div
-              className={` mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full`}
+              className={`mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full`}
             >
               <h4 className={`${styles.secondary_head} `}>
                 Remain Sessions:{" "}

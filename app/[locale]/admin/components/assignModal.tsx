@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { CustomFlowbiteTheme } from 'flowbite-react';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 import Cookies from 'universal-cookie';
+import { Toast } from 'primereact/toast';
+import LoadingButton from './loadingButton';
 
 export default function AssignModal({openAssignModal, handleCloseModal, sessionReqId, user, updateComponent}: 
     {
@@ -20,7 +22,14 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
       const [allTeacher, setAllTeacher] = useState([]);
       const [teacher, setTeacher] = useState("select teacher");
       const [teacherid, setTeacherid] = useState(null)
-      const [message, setMessage] = useState('')
+      const toast = useRef<Toast>(null);
+      const [isProcessing, setIsProcessing] = useState(false);
+      const showSuccess = (msg: string) => {
+        toast.current?.show({severity:'success', summary: 'Success', detail: msg, life: 5000});
+      }
+      const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 5000});
+      }
 
       const selectTeacher = (selectedTeacherName: SetStateAction<string>) => {
         setTeacher(selectedTeacherName);
@@ -85,6 +94,7 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
       }
 
     const assignTeacher = () => {
+      setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/assignTeacher`, {
             method: "POST",
             headers: {
@@ -97,18 +107,25 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
             })
         }).then(response => response.json()).then(data => {
           console.log(data)
-            setMessage(data.status)
             if(data.status === 'success') {
-                updateComponent()
+              showSuccess(data.message)  
+              updateComponent()
+            } else {
+              showError(data.message)
             }
-        }).catch(err => console.log(err))
+            setIsProcessing(false)
+        }).catch(err => {
+            console.log(err)
+            showError(err)
+            setIsProcessing(false)
+        })
       }
 
   return (
     <>
       <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"lg"}>
         <Modal.Header theme={modalTheme.header}>Assign to this Student :</Modal.Header>
-            {message ? (<span className={`${message === 'fail' ? 'bg-danger-color': 'bg-success-color'} text-center py-4 px-8 text-green-100`}>{message === 'fail' ? 'The User and Teacher together had free session before' : 'Assign Success'}</span>) : (<></>)}
+          <Toast ref={toast} />
         <Modal.Body>
             <div className="flex items-center gap-5">
                 <Image src={'/vectors/feedback3.svg'} alt={'student'} width={50} height={50} />
@@ -130,10 +147,12 @@ export default function AssignModal({openAssignModal, handleCloseModal, sessionR
               </Dropdown>
             </div>
             <div className="flex justify-center items-center">
-                <button
-                    className="text-white bg-gray-two-color hover:bg-gray-three-color rounded-full py-2 px-5 transition-colors"
-                    onClick={assignTeacher}
-                >Assign</button>
+                <LoadingButton 
+                  isProcessing={isProcessing}
+                  action={assignTeacher}
+                  customStyle='text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-1 px-5 transition-colors'
+                  title="Assign"
+                />
             </div>
         </Modal.Body>
       </Modal>

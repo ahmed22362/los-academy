@@ -24,6 +24,7 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
     const [password, setPassword] = useState('');
     const [remainSessions, setRemainSessions] = useState(studentDetails.remainSessions);
     const [gender, setGender] = useState(studentDetails.gender);
+    const [verified, setVerified] = useState(studentDetails.verified);
     const [isProcessing, setIsProcessing] = useState(false)
     const cookies = new Cookies();
 
@@ -77,7 +78,8 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
                 remainSessions: remainSessions,
                 age: age,
                 password: password,
-                gender: gender
+                gender: gender,
+                verified: verified
             }),
         }).then(response => response.json()).then(data => {
           if(data.status === "success") {
@@ -149,6 +151,20 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
                 <Label htmlFor="remainSessions" value="Remain Sessions" />
               </div>
               <TextInput id="remainSessions" type="text" defaultValue={studentDetails.remainSessions} onChange={(e) => setRemainSessions(e.target.value)} />
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="verified" value="Verified" />
+              </div>
+              <Select
+                id="verified"
+                defaultValue={studentDetails.verified}
+                onChange={(e) => setVerified(e.target.value)}
+              >
+                <option value="">Verified</option>
+                <option value="true">True</option>
+                <option value="false">false</option>
+              </Select>
             </div>
             <div className="w-full">
             <LoadingButton 

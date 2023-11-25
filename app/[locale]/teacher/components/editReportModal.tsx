@@ -33,7 +33,6 @@ export default function EditReportModal({
   const modalRef = useRef<HTMLDivElement>(null);
 
   const [reportId, setReportId] = useState(report.id);
-  const [title, setTitle] = useState(report.title);
   const [grade, setGrade] = useState(report.grade);
   const [comment, setComment] = useState(report.comment);
   const [arabicGrade, setArabicGrade] = useState(report.arabic);
@@ -95,18 +94,42 @@ export default function EditReportModal({
   };
 
   const editReport = () => {
-    console.log({
-      sessionId: parseInt(reportId),
-      comment: comment,
-      grade: grade,
-      title: title,
-      arabic: arabicGrade,
-      quran: quranGrade,
-      islamic: islamicGrade,
-      arabicComment,
-      quranComment,
-      islamicComment
-    });
+    // Create an object to store updated fields
+    const updatedFields: { [key: string]: any } = {};
+
+    // Compare and assign updated fields to the object
+    if (grade !== report.grade && grade !== "") {
+      updatedFields.grade = grade;
+    }
+    if (comment !== report.comment && comment !== "") {
+      updatedFields.comment = comment;
+    }
+    if (arabicGrade !== report.arabic && arabicGrade !== "") {
+      updatedFields.arabic = arabicGrade;
+    }
+    if (quranGrade !== report.quran && quranGrade !== "") {
+      updatedFields.quran = quranGrade;
+    }
+    if (islamicGrade !== report.islamic && islamicGrade !== "") {
+      updatedFields.islamic = islamicGrade;
+    }
+    if (arabicComment !== report.arabicComment && arabicComment !== "") {
+      updatedFields.arabicComment = arabicComment;
+    }
+    if (quranComment !== report.quranComment && quranComment !== "") {
+      updatedFields.quranComment = quranComment;
+    }
+    if (islamicComment !== report.islamicComment && islamicComment !== "") {
+      updatedFields.islamicComment = islamicComment;
+    }
+
+    if (Object.keys(updatedFields).length === 0) {
+      setIsProcessing(false);
+      showError('No updates made');
+      return;
+    }
+
+    console.log(JSON.stringify(updatedFields));
     setIsProcessing(true);
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/report/${report.id}`, {
       method: "PATCH",
@@ -114,18 +137,7 @@ export default function EditReportModal({
         "Content-Type": "application/json",
         Authorization: `Bearer ${cookies.get("token")}`,
       },
-      body: JSON.stringify({
-        sessionId: parseInt(reportId),
-        comment: comment,
-        grade: grade,
-        title: title,
-        arabic: arabicGrade,
-        quran: quranGrade,
-        islamic: islamicGrade,
-        arabicComment,
-        quranComment,
-        islamicComment
-      }),
+      body: JSON.stringify(updatedFields),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -165,17 +177,6 @@ export default function EditReportModal({
               id="id"
               defaultValue={reportId}
               onChange={(e) => setReportId(e.target.value)}
-              type="text"
-            />
-          </div>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="title" value="Report Title" />
-            </div>
-            <TextInput
-              id="title"
-              defaultValue={title}
-              onChange={(e) => setTitle(e.target.value)}
               type="text"
             />
           </div>

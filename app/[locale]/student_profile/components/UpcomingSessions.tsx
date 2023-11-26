@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useRef, useState } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
 import moment from "moment-timezone";
@@ -48,10 +49,10 @@ function UpcomingSessions() {
 
   const accept = (sessionId: any) => {
     setSelectedFreeSessionId(sessionId);
-    fetch(`${url}/session/continueWithTeacher`, {
+    fetch(${url}/session/continueWithTeacher, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: Bearer ${token},
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ sessionId, willContinue: true }),
@@ -83,10 +84,10 @@ function UpcomingSessions() {
 
   const reject = (sessionId: any) => {
 
-    fetch(`${url}/session/continueWithTeacher`, {
+    fetch(${url}/session/continueWithTeacher, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: Bearer ${token},
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ sessionId, willContinue: false }),
@@ -114,7 +115,7 @@ function UpcomingSessions() {
       });
   };
 
-  const toast = useRef<Toast>(null);
+const toast = useRef<Toast>(null);
   const showSuccess = (msg: any) => {
     toast.current?.show({
       severity: "success",
@@ -243,36 +244,10 @@ function UpcomingSessions() {
     }, 60000); // Check every minute
 
     // Cleanup function to clear the interval
-    return () => clearInterval(intervalId);{
-          // If there are ongoing sessions, display them
-          console.log(localStorage.getItem("confirmDialog"));
-          localStorage.setItem("sessionId", data?.data[0]?.id);
-          
-          setsessionId(data?.data[0]?.id);
-          setLoading(false);
-          setSessionLink(data?.data[0]?.meetingLink);
-        } else {
-          // If there are no ongoing sessions, fetch upcoming sessions
-          fetchUpcomingSessions();
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching ongoing sessions:", error);
-        // If there's an error, fetch upcoming sessions
-        fetchUpcomingSessions();
-      });
-  }, []);
-
-  const fetchUpcomingSessions = () => {
-    fetch(`${url}/user/upcomingSession`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
-
+    return () => clearInterval(intervalId);
   }, [sessionWillStartTime]);
 
-  useEffect(() => {
+useEffect(() => {
     if (upComingSession.length > 0) {
       // Extract and store the time part of the session start time
       const startTime = moment(upComingSession[0].sessionDate);
@@ -282,10 +257,10 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
 
   const fetchOngoingSessions = () => {
     // Fetch ongoing sessions
-    fetch(`${url}/user/ongoingSession`, {
+    fetch(${url}/user/ongoingSession, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: Bearer ${token},
       },
     })
       .then((response) => response.json())
@@ -306,14 +281,13 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
       });
   };
 
-  // ... (your existing code)
 
   useEffect(() => {
     // Fetch ongoing sessions
-    fetch(`${url}/user/ongoingSession`, {
+    fetch(${url}/user/ongoingSession, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: Bearer ${token},
       },
     })
       .then((response) => response.json())
@@ -342,10 +316,10 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
   }, []);
 
   const fetchUpcomingSessions = () => {
-    fetch(`${url}/user/upcomingSession`, {
+    fetch(${url}/user/upcomingSession, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: Bearer ${token},
       },
     })
       .then((response) => response.json())
@@ -365,10 +339,10 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
   const updateAttendance = () => {
     console.log(sessionId);
 
-    fetch(`${url}/session/updateUserAttendance`, {
+    fetch(${url}/session/updateUserAttendance, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: Bearer ${token},
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ sessionId }),
@@ -380,7 +354,7 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
         if (data.status === "success") {
           console.log("POST request successful:", data);
           setIsHere(true);
-          showSuccess(`${data.message}`);
+          showSuccess(${data.message});
           window.open(sessionLink, "_blank");
         }
       })
@@ -389,10 +363,10 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
       });
   };
 
-  if (loading) {
+if (loading) {
     return (
       <div
-        className={` w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
+        className={ w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]}
         style={{ overflow: "hidden" }}
       >
         <ContentLoader
@@ -417,19 +391,19 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
 
   return (
     <div
-      className={` w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
+      className={ w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]}
     >
       <Toast ref={toast} />
 
-      <h4 className={`${styles.secondary_head} my-2`}>
+      <h4 className={${styles.secondary_head} my-2}>
         {upComingSession[0]?.status || "upcoming session"}
       </h4>
       {upComingSession?.length > 0 ? (
         upComingSession?.map((session, index) => (
           <div key={index}>
-            <p>{`Session #${session.id} with title ${session.type}`}</p>
-            <div className={`${styles.date} flex justify-gap-5 my-2`}>
-              <div className={`flex justify-center  items-center `}>
+            <p>{Session #${session.id} with title ${session.type}}</p>
+            <div className={${styles.date} flex justify-gap-5 my-2}>
+              <div className={flex justify-center  items-center }>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="1em"
@@ -437,11 +411,11 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
                 >
                   <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zm64 80v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16zm128 0v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H208c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H336zM64 400v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H208zm112 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H336c-8.8 0-16 7.2-16 16z" />
                 </svg>
-                <p className={`ml-3 mr-1`}>
+                <p className={ml-3 mr-1}>
                   {moment(session.sessionDate).format("D-MMM-YYYY")}
                 </p>
               </div>
-              <div className={`flex justify-center items-center`}>
+              <div className={flex justify-center items-center}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="1em"
@@ -449,7 +423,7 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
                 >
                   <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
                 </svg>
-                <p className={`ml-3`}>
+                <p className={ml-3}>
                   {convertDateTimeZone(
                     session.sessionDate,
                     "UTC",
@@ -470,7 +444,8 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
               </div>
             </div>
             <div className="flex justify-center items-center">
-              {isSessionRunning(session) ? (
+
+{isSessionRunning(session) ? (
                 <Countdown
                   date={moment(session.sessionDate)
                     .add(session.sessionDuration, "minutes")
@@ -525,13 +500,13 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
                 />
               ) : null}
             </div>
-            <div className={`flex justify-center items-center gap-4 mb-3 mt-7`}>
+            <div className={flex justify-center items-center gap-4 mb-3 mt-7}>
               <Tooltip
                 theme={CustomTHeme}
                 className=" px-5"
                 content={
                   isImHereButtonDisabled
-                    ? `The session cannot be attended until session starts `
+                    ? The session cannot be attended until session starts 
                     : "update your Attendence"
                 }
               >
@@ -543,11 +518,11 @@ Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use e
                       ? " bg-gray-500 cursor-not-allowed"
                       : "bg-secondary-color hover:bg-secondary-hover"
                   }`}
-                  text={`${"Join Meeting"}`}
+                  text={${"Join Meeting"}}
                 />
               </Tooltip>
 
-              <button
+<button
                 onClick={() => setopenRescheduleModal(true)}
                 className={` max-md-px-1 text-sm font-semibold transition-colors shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 px-3 w-full  rounded-full w-50 mx-auto max-md:px-4 max-md:w-45 ${
                   isRescheduleButtonDisabled

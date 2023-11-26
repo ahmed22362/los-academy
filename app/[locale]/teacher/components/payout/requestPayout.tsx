@@ -18,11 +18,11 @@ export default function RequestPayOut({openAssignModal, handleCloseModal, update
     const toast = useRef<Toast>(null);
     const cookies = new Cookies()
     const [isProcessing, setIsProcessing] = useState(false)
-    const showSuccess = () => {
-        toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
+    const showSuccess = (mesg: string) => {
+        toast.current?.show({severity:'success', summary: 'Success', detail:mesg, life: 3000});
     }
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Updated failed make sure all fields are correct', life: 4000});
+    const showError = (mesg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail:mesg, life: 4000});
       }
 
     useEffect(() => {
@@ -58,18 +58,21 @@ export default function RequestPayOut({openAssignModal, handleCloseModal, update
                 "Authorization": `Bearer ${cookies.get("token")}`
             },
             body: JSON.stringify({
-                amount: amount
+                amount: parseInt(amount)
             }),
         }).then(response => response.json()).then(data => {
+          console.log(data)
           if(data.status === "success") {
-            showSuccess()
+            showSuccess(data.message)
             updateComponent()
           } else {
-            showError()
+            showError(data.message)
           }
           setIsProcessing(false)
         }).catch(err => {
           console.log(err)
+          showError(err)
+          setIsProcessing(false)
         })
       }
   return (

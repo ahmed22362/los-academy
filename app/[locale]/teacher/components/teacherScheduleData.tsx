@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { convertDateTimeZone } from './../../../../helpers/convertDateAndTime';
-import RescheduleModal from './rescheduleModal';
+import RescheduleModal from './requestRescheduleModal';
 function TeacherScheduleData({data}: {data: any}) {
 
     const [openModal, setOpenModal]: any = useState(false);

@@ -10,9 +10,9 @@ export default function RescheduleSessions() {
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
   
-  const getReschedualSession = async () => {
+  const getReschedualSession = () => {
 
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/receivedRescheduleRequests/?status=pending`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/receivedRescheduleRequests?status=pending`, {
       
       method: "GET",
       headers: {
@@ -34,6 +34,11 @@ export default function RescheduleSessions() {
     getReschedualSession()
   }, [])
 
+  const updateComponet = () =>{
+    getReschedualSession()
+  }
+
+
   return (
     <div className={"adminBox w-full h-[350px] flex-col mb-5"}>
       <h3 className={"adminBoxTitle"}>Reschedule Sessions</h3>
@@ -44,7 +49,7 @@ export default function RescheduleSessions() {
             :
               allSessions && allSessions.length > 0 ? allSessions.map((report: any, index: number) => {
             return (
-                <SessionData data={report} key={index} updateComponent={getReschedualSession}/>
+                <SessionData data={report} key={index} updateComponent={updateComponet}/>
             )
             }) : <p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">No Sessions</p>}
         </div>

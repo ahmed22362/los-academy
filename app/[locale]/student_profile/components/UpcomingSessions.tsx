@@ -243,7 +243,33 @@ function UpcomingSessions() {
     }, 60000); // Check every minute
 
     // Cleanup function to clear the interval
-    return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId);{
+          // If there are ongoing sessions, display them
+          console.log(localStorage.getItem("confirmDialog"));
+          localStorage.setItem("sessionId", data?.data[0]?.id);
+          
+          setsessionId(data?.data[0]?.id);
+          setLoading(false);
+          setSessionLink(data?.data[0]?.meetingLink);
+        } else {
+          // If there are no ongoing sessions, fetch upcoming sessions
+          fetchUpcomingSessions();
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching ongoing sessions:", error);
+        // If there's an error, fetch upcoming sessions
+        fetchUpcomingSessions();
+      });
+  }, []);
+
+  const fetchUpcomingSessions = () => {
+    fetch(`${url}/user/upcomingSession`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
+
   }, [sessionWillStartTime]);
 
   useEffect(() => {
@@ -254,31 +280,31 @@ function UpcomingSessions() {
     }
   }, [upComingSession]);
 
-  // const fetchOngoingSessions = () => {
-  //   // Fetch ongoing sessions
-  //   fetch(`${url}/user/ongoingSession`, {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log(data.data);
+  const fetchOngoingSessions = () => {
+    // Fetch ongoing sessions
+    fetch(`${url}/user/ongoingSession`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.data);
 
-  //       if (data.data.length > 0) {
-  //         // If there are ongoing sessions, display them
-  //         setUpComingSession(data.data);
-  //         setsessionId(data?.data[0]?.id);
-  //         setLoading(false);
-  //         setSessionLink(data?.data[0]?.meetingLink);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching ongoing sessions:", error);
-  //       // Handle error if needed
-  //     });
-  // };
+        if (data.data.length > 0) {
+          // If there are ongoing sessions, display them
+          setUpComingSession(data.data);
+          setsessionId(data?.data[0]?.id);
+          setLoading(false);
+          setSessionLink(data?.data[0]?.meetingLink);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching ongoing sessions:", error);
+        // Handle error if needed
+      });
+  };
 
   // ... (your existing code)
 

@@ -254,33 +254,32 @@ function UpcomingSessions() {
     }
   }, [upComingSession]);
 
-  // const fetchOngoingSessions = () => {
-  //   // Fetch ongoing sessions
-  //   fetch(`${url}/user/ongoingSession`, {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log(data.data);
+  const fetchOngoingSessions = () => {
+    // Fetch ongoing sessions
+    fetch(`${url}/user/ongoingSession`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.data);
 
-  //       if (data.data.length > 0) {
-  //         // If there are ongoing sessions, display them
-  //         setUpComingSession(data.data);
-  //         setsessionId(data?.data[0]?.id);
-  //         setLoading(false);
-  //         setSessionLink(data?.data[0]?.meetingLink);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching ongoing sessions:", error);
-  //       // Handle error if needed
-  //     });
-  // };
+        if (data.data.length > 0) {
+          // If there are ongoing sessions, display them
+          setUpComingSession(data.data);
+          setsessionId(data?.data[0]?.id);
+          setLoading(false);
+          setSessionLink(data?.data[0]?.meetingLink);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching ongoing sessions:", error);
+        // Handle error if needed
+      });
+  };
 
-  // ... (your existing code)
 
   useEffect(() => {
     // Fetch ongoing sessions

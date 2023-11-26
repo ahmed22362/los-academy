@@ -58,12 +58,13 @@ function ContinueWithModal({openContinueWithModal ,setopenContinueWithModal}:any
           if (data.status === "success") {
             showSuccess('session with this teacher placed successfully')
             console.log("POST request successful:", data);
-            // Handle success if needed
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('confirmDialog', 'false');
+            }           
           } else {
             console.error(data);
             showError(data.message)
-            // Handle error if needed
-          }
+               } 
         })
         .catch((error) => {
           console.error("Error during POST request:", error);
@@ -88,6 +89,22 @@ function ContinueWithModal({openContinueWithModal ,setopenContinueWithModal}:any
               value={continueWithFirstDate}
               onChange={(e: CalendarProps | any) => setContinueWithFirstDate(e.value)}
               showTime
+              inline
+              hourFormat="12"
+              style={{
+                outline: "4px solid var(--secondary-color)",
+                borderRadius: "16px",
+                width: "100%",
+              }}
+              placeholder="Select First Avilable Date and Time"
+            />
+            </div>
+            <div className="taps flex justify-center h-1/2">
+              <Calendar
+              value={continueWithSecondDate}
+              onChange={(e: CalendarProps | any) => setContinueWithSecondDate(e.value)}
+              showTime
+              inline
               hourFormat="12"
               style={{
                 outline: "4px solid var(--secondary-color)",

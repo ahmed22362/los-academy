@@ -107,7 +107,7 @@ function page() {
     }
     // Set the gender directly in the formData object
     formData.gender = gender;
-
+    setIsProcessing(true);
     fetch(`${url}/user/auth/signup`, {
       method: "POST",
       headers: {
@@ -138,7 +138,7 @@ function page() {
           }
           console.log(data);
         }
-        setisProcessing(false);
+        setIsProcessing(false);
       })
       .catch((error) => {
         console.log(error);
@@ -184,7 +184,7 @@ function page() {
       showError("Please fill in all fields");
       return;
     }
-
+    setIsProcessing(true);
     // Send a POST request to the login endpoint
     fetch(`${url}/user/auth/login`, {
       method: "POST",
@@ -341,7 +341,6 @@ function page() {
                       </div>
                     </div>
                   )}
-<<<<<<<<< Temporary merge branch 1
                   <Button
                     onClick={handleLogin}
                     theme={buttonTheme}
@@ -356,19 +355,13 @@ function page() {
                     <p>Login</p>
                   </Button>
                   
-=========
-                  <LoadingButton 
+                  {/* <LoadingButton 
                     title="Login"
                     isProcessing={isProcessing}
                     customStyle="bg-secondary-color text-white py-1 border rounded-3xl text-[16px] w-full"
                     action={handleLogin}
-                  />
-                  {/* <PrimaryButton
-                    onClick={handleLogin}
-                    text="Login"
-                    ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
                   /> */}
->>>>>>>>> Temporary merge branch 2
+
                   <span className="text-center">Or Login with </span>
                   <div className="flex gap-3">
                     <PrimaryButton
@@ -482,8 +475,8 @@ function page() {
                       </label>
                     </div>
                   </div>
-<<<<<<<<< Temporary merge branch 1
-                  <Button
+
+                  {/* <Button
                     onClick={handleFormSubmit}
                     theme={buttonTheme}
                     color="purple"
@@ -495,9 +488,8 @@ function page() {
                     }
                   >
                     <p>Register</p>
-                  </Button>
+                  </Button> */}
 
-=========
                   <LoadingButton
                     title={"Register"}
                     action={handleFormSubmit}
@@ -511,7 +503,6 @@ function page() {
                     ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
                     onClick={handleFormSubmit}
                   /> */}
->>>>>>>>> Temporary merge branch 2
                   <span className="text-center">Or Register with </span>
                   <div className="flex gap-3">
                     <PrimaryButton

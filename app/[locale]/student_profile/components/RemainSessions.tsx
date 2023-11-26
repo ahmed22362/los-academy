@@ -108,7 +108,7 @@ function RemainSessions({ setTeacherName }: any) {
                       session.teacherAttended ? "hidden" : "text-red-500  py-1 "
                     }
                   >
-                    {session.teacherAttended ? "" : "Teacher Ubsent"}
+                    {/* {session.teacherAttended ? "" : "Teacher Ubsent"} */}
                   </div>
                 </div>
 

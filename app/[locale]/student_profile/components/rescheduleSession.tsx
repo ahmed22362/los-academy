@@ -38,7 +38,7 @@ function RescheduleSession({
 
   const handleReschedule = () => {
     if (!selectedStartDate || !selectedEndDate) {
-      showError("Please select both start date and end date.");
+      showError("Please select both first date and end second date.");
       return;
     }
 
@@ -68,7 +68,9 @@ function RescheduleSession({
         if (data.status === "success") {
           showSuccess(`${data.message}`);
           // Close the modal after a successful reschedule
-          setopenRescheduleModal(false);
+          setTimeout(()=>{
+            setopenRescheduleModal(false);
+          },4000)
         } else {
           showError(`${data.message}`);
         }

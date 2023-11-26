@@ -82,7 +82,7 @@ if (myInfo?.sessionPlaced==false) {
 
             <CommunityStatistics />
             <div
-              className={` mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full`}
+              className={`mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full`}
             >
               <h4 className={`${styles.secondary_head} `}>
                 Remain Sessions:{" "}

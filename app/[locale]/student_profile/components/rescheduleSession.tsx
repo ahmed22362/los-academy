@@ -11,16 +11,8 @@ function RescheduleSession({
   openRescheduleModal,
   sessionId,
 }: any) {
-  // const [rescheduledatetime12h, setRescheduleDateTime12h] = useState<Nullable<Date> | any>(null);
-  const [selectedStartDate, setSelectedStartDate] = useState<
-    Nullable<Date> | any
-  >(null);
-  const [selectedEndDate, setSelectedEndDate] = useState<Nullable<Date> | any>(
-    null
-  );
-  const [rescheduleStatus, setRescheduleStatus] = useState<string | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(true);
+  const [selectedStartDate, setSelectedStartDate] = useState<Nullable<Date> | any>(null);
+  const [selectedEndDate, setSelectedEndDate] = useState<Nullable<Date> | any>(null);
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -34,6 +26,7 @@ function RescheduleSession({
       life: 5000,
     });
   };
+
   const showError = (msg: string) => {
     toast.current?.show({
       severity: "error",
@@ -42,19 +35,20 @@ function RescheduleSession({
       life: 5000,
     });
   };
-  // function
+
   const handleReschedule = () => {
-    alert(sessionId);
     if (!selectedStartDate || !selectedEndDate) {
       showError("Please select both start date and end date.");
       return;
     }
+
     const rescheduleData = {
       sessionId: sessionId,
-      newDateStartRange: selectedStartDate.toISOString(),
-      newDateEndRange: selectedEndDate.toISOString(),
+      newDatesOptions: [
+        selectedStartDate.toISOString(),
+        selectedEndDate.toISOString(),
+      ],
     };
-    console.log(rescheduleData);
 
     // Perform API request to reschedule session using rescheduleData
     fetch(`${url}/user/requestReschedule`, {
@@ -68,68 +62,27 @@ function RescheduleSession({
       .then((response) => response.json())
       .then((data) => {
         console.log("Session rescheduled successfully", data);
+     
+        
         // Handle success response
         if (data.status === "success") {
-          setRescheduleStatus(`success`);
-          setStatus(`${data?.data?.status}`);
           showSuccess(`${data.message}`);
-          setRescheduleStatus(`${data.status}`);
+          // Close the modal after a successful reschedule
+          setopenRescheduleModal(false);
         } else {
           showError(`${data.message}`);
-          setRescheduleStatus("none");
         }
+        setTimeout(()=>{
+          setopenRescheduleModal(false);
+        },6000)
       })
       .catch((error) => {
         // Handle error
         console.error("Error rescheduling session:", error);
         showError("Error rescheduling session. Please try again.");
-        setRescheduleStatus("error");
-      });
-  };
+        setopenRescheduleModal(false);
 
-  const renderModalContent = () => {
-    if (rescheduleStatus === "success") {
-     showSuccess('Session Reschedualing Successfully')
-    } else if (rescheduleStatus === "error") {
-     showError('Error rescheduling session. Please try again.')
-    } else {
-      return (
-        <div className="flex justify-center flex-col items-center gap-5">
-          <Calendar
-            value={selectedStartDate}
-            onChange={(e: CalendarProps | any) => setSelectedStartDate(e.value)}
-            showTime
-            hourFormat="12"
-            style={{
-              outline: "4px solid var(--secondary-color)",
-              borderRadius: "16px",
-              width: "408px",
-            }}
-            placeholder="Select First Avilable Date and Time"
-          />
-          <Calendar
-            value={selectedEndDate}
-            onChange={(e: CalendarProps | any) => setSelectedEndDate(e.value)}
-            showTime
-            hourFormat="12"
-            style={{
-              outline: "4px solid var(--secondary-color)",
-              borderRadius: "16px",
-              width: "408px",
-            }}
-            placeholder="Select Second Avilable Date and Time"
-          />
-          <div>
-            <PrimaryButton
-              ourStyle="bg-secondary-color hover:bg-[#3b369a] text-white w-[250px] py-3 border rounded-3xl text-md px-10 transition-all duration-500"
-              text="Reschedule Session"
-              onClick={handleReschedule}
-            />
-          </div>
-          <Toast ref={toast} />
-        </div>
-      );
-    }
+      });
   };
 
   return (
@@ -142,7 +95,40 @@ function RescheduleSession({
       >
         <Modal.Header className="p-0 m-0 border-0"></Modal.Header>
         <Modal.Body>
-          {showModal && <div>{renderModalContent()}</div>}
+          <div className="flex justify-center flex-col items-center gap-5">
+            <Calendar
+              value={selectedStartDate}
+              onChange={(e: CalendarProps | any) => setSelectedStartDate(e.value)}
+              showTime
+              hourFormat="12"
+              style={{
+                outline: "4px solid var(--secondary-color)",
+                borderRadius: "16px",
+                width: "408px",
+              }}
+              placeholder="Select First Avilable Date and Time"
+            />
+            <Calendar
+              value={selectedEndDate}
+              onChange={(e: CalendarProps | any) => setSelectedEndDate(e.value)}
+              showTime
+              hourFormat="12"
+              style={{
+                outline: "4px solid var(--secondary-color)",
+                borderRadius: "16px",
+                width: "408px",
+              }}
+              placeholder="Select Second Avilable Date and Time"
+            />
+            <div>
+              <PrimaryButton
+                ourStyle="bg-secondary-color hover:bg-[#3b369a] text-white w-[250px] py-3 border rounded-3xl text-md px-10 transition-all duration-500"
+                text="Reschedule Session"
+                onClick={handleReschedule}
+              />
+            </div>
+            <Toast ref={toast} />
+          </div>
         </Modal.Body>
       </Modal>
     </>

@@ -20,10 +20,11 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
     const [sessionsCount, setSessionCount] = useState<any>('');
     const [sessionsPerWeek, setSessionPerWeek] = useState<any>('');
     const cookies = new Cookies();
+    const [isDisabled, setIsDisabled] = useState(false)
     const [resData, setResData] = useState<any>({})
     const toast = useRef<Toast>(null);
-    const showSuccess = () => {
-        toast.current?.show({severity:'success', summary: 'Success', detail:'Add Success', life: 3000});
+    const showSuccess = (msg: string) => {
+        toast.current?.show({severity:'success', summary: 'Success', detail:msg, life: 3000});
     }
     const showError = (msg: string) => {
         toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
@@ -63,6 +64,10 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
             sessionsCount: parseInt(sessionsCount),
             sessionsPerWeek: parseInt(sessionsPerWeek)
         })
+        if(!sessionsDuration || !sessionsCount || !sessionsPerWeek) {
+            showError("Please fill all the fields")
+            return
+        }
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/subscription/`, {
             method: "POST",
             headers: {
@@ -77,13 +82,15 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
         }).then(response => response.json()).then(data => {
             console.log(data)
             if(data.status === "success") {
-                showSuccess()
+                showSuccess(data.message)
                 setResData(data)
-            } else if (data.status === 'fail'){
+                setIsDisabled(true)
+            } else{
                 showError(data.message)
             }
         }).catch(err => {
             console.log(err)
+            showError(err)
         })
     }
 
@@ -94,6 +101,21 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
         <Modal.Header theme={customeTheme.header}></Modal.Header>
         <Modal.Body theme={customeTheme.body}>
         <Toast ref={toast} />
+        {isDisabled ? 
+            (<>
+                <div className='flex flex-col justify-center items-center gap-4'>
+                    <h3 className='font-bold'>Your plan has been created</h3>
+                    <ul>
+                        <li>Plan ID: {resData.data?.id}</li>
+                        <li>Plan Price: <span className='font-bold'>{resData.data?.amount_total / 100}$</span></li>
+                    </ul>
+                    <Link
+                        href={resData.data?.url}
+                        target='_blank'
+                        className="flex items-center justify-center gap-2 smallBtn ms-auto font-semibold hover:bg-secondary-hover cursor-pointer mb-4"
+                    >Go to Buy</Link>
+                </div>
+            </>) : (<>
             <div className={"flex flex-col justify-center items-center gap-8"}>
                 <h2 className='text-3xl text-black-color-one'>Create Your Plan</h2>
                 <fieldset
@@ -331,32 +353,15 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
                     </div>
                 </fieldset>
                 <button className={
-                    "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] w-52 h-12 my-auto px-16 rounded-full"
+                    "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] w-52 h-12 my-auto px-16 rounded-full disabled:bg-green-300"
                 }
                 onClick={submitPlan}
+                disabled={isDisabled}
                 >Confirm</button>
             </div>
-            
-            {resData && resData.status === 'success' && resData.data ? (
-                <div className="flex flex-col justify-center items-start gap-8 mt-6">
-                    <h3 className="font-semibold">Your Subscription Details: </h3>
-                    <ul className="flex flex-col justify-center items-start gap-3 text-[16px]">
-                        <li>Subscription ID: {resData.data.subscription.id}</li>
-                        <li>Subscription Status: <span className={`px-3 py-1 rounded-full text-white font-bold ${resData.data.subscription.status === "open" ? "bg-success-color": "bg-warning-color"}`}>{resData.data.subscription.status}</span></li>
-                        <li>Total Amount: <span className="font-bold text-[16px]">{resData.data.stripeCheckSession.amount_total ? resData.data.stripeCheckSession.amount_total / 100 : 'N/A'}$</span></li>
-                    </ul>
-                    {resData.data.stripeCheckSession.url && (
-                    <Link
-                        className="bg-secondary-color hover:bg-secondary-hover text-[16px] font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] px-10 py-4 rounded-full"
-                        href={resData.data.stripeCheckSession.url} 
-                        target="_blank"
-                    >
-                        Go To Buy
-                    </Link>
-                    )}
-                </div>
-                ) : null}
-            </Modal.Body>
+        </>)}
+
+        </Modal.Body>
       </Modal>
     </>
   )

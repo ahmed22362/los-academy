@@ -101,11 +101,11 @@ export default function RescheduleModal(
         <Modal.Body>
             <div className='m-auto flex flex-col items-center justify-center'>
               <div className="mb-2 block">
-                <Label htmlFor="rengeDateEnd" value="Select Start Date " />
+                <Label htmlFor="rengeDateEnd" value="Select Option Date One " />
               </div>
               <input type="datetime-local" className="border-[5px] border-secondary-color rounded-xl" defaultValue={startRangeDate} onChange={(e) => setStartRangeDate(e.target.value)} />
               <div className="mb-2 block">
-                <Label htmlFor="rengeDateEnd" value="Select End Date " />
+                <Label htmlFor="rengeDateEnd" value="Select Option Date Two " />
               </div>
               <input type="datetime-local" className="border-[5px] border-secondary-color rounded-xl" defaultValue={endRangeDate} onChange={(e) => setEndRangeDate(e.target.value)} />
             <div className="w-full mt-3 flex items-center justify-center">

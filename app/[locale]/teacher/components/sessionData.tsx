@@ -5,6 +5,7 @@ import Cookies from "universal-cookie";
 import { Toast } from 'primereact/toast';
 import { useRef, useState } from 'react';
 import AcceptRescheduleModal from "./acceptReschedule";
+import { useRouter } from "next/navigation";
 
 export default function sessionData({data, updateComponent}:{data: any, updateComponent: () => void}) {
 
@@ -15,14 +16,15 @@ export default function sessionData({data, updateComponent}:{data: any, updateCo
     const cookies = new Cookies()
 
     const toast = useRef<Toast>(null);
+    const router = useRouter()
     const [openModal, setOpenModal] = useState(false)
     const showSuccess = () => {
         
         toast.current?.show({severity:'success', summary: 'Success', detail:'Accepted Success', life: 3000});
     
     }
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Deny Success', life: 4000});
+    const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
       }
 
       const handleOpenModal = () => {
@@ -46,8 +48,14 @@ export default function sessionData({data, updateComponent}:{data: any, updateCo
         }).then(response => response.json())
         .then(data => {
             console.log(data)
-            showError()
-            updateComponent()
+            if(data.status === "success") {
+                showError(data.message)
+                const timer = setTimeout(() => {
+                    updateComponent()
+                    clearTimeout(timer)
+                }, 3000)
+            }
+
         }).catch(err => {
             console.log(err)
         })
@@ -59,9 +67,9 @@ export default function sessionData({data, updateComponent}:{data: any, updateCo
         <span>Session ID: {session.sessionId}</span>
         <div className={"flex flex-col gap-2"}>
             <p className={"font-semibold text-base"}>{`Old Date:(${convertDate(session.oldDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "D-MMM-YYYY hh:mm A")})`}</p>
-            <p className={"font-semibold text-base"}>New Date Range :</p>
-            <span>From: {convertDate(session.newDateStartRange, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "D-MMM-YYYY hh:mm A")}</span>
-            <span>To: {convertDate(session.newDateEndRange, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "D-MMM-YYYY hh:mm A")}</span>
+            <p className={"font-semibold text-base"}>New Date Options :</p>
+            <span>option [1]: {convertDate(session.newDatesOptions[0], "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "D-MMM-YYYY hh:mm A")}</span>
+            <span>option [2]: {convertDate(session.newDatesOptions[1], "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "D-MMM-YYYY hh:mm A")}</span>
         </div>
         <div className={"flex gap-5 items-center"}>
             <button className={"smallBtn bg-success-color hover:bg-green-300"}

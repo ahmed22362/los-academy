@@ -6,6 +6,7 @@ import Reports from "@/app/[locale]/admin/components/reports";
 import CalendarSection from "@/app/[locale]/admin/components/calendarSection";
 import PaidSesstionsTable from "@/app/[locale]/admin/components/paidSesstionsTable";
 import FreeSesstionsTable from "./components/freeTrialTable";
+import ReplaceTeacher from "./components/replaceTeacher";
 
 export default function AdminPage() {
     return(
@@ -24,6 +25,7 @@ export default function AdminPage() {
                 <div className="px-2">
                     <FreeSesstionsTable />
                     <PaidSesstionsTable />
+                    <ReplaceTeacher />
                 </div>
             </section>
         </main>

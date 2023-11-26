@@ -21,11 +21,18 @@ function page() {
   const router = useRouter();
   const [openForgetPasswordModal, setOpenForgetPasswordModal] =
     useState<boolean>(false);
-  const [isProcessing, setisProcessing] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const toast = useRef<Toast>(null);
+
+  const buttonTheme: CustomFlowbiteTheme["button"] = {
+    color: {
+      purple: "bg-secondary-color hover:bg-secondary-hover",
+    },
+  };
+
   const showSuccess = (msg: any) => {
     toast.current?.show({
       severity: "success",
@@ -98,7 +105,6 @@ function page() {
       showError("Please select your gender");
       return;
     }
-    setisProcessing(true);
     // Set the gender directly in the formData object
     formData.gender = gender;
 
@@ -111,7 +117,7 @@ function page() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setisProcessing(false);
+        setIsProcessing(false);
         if (data.status === "success") {
           showSuccess("Registration Successfully");
           showSuccess(data.message);
@@ -189,7 +195,7 @@ function page() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setisProcessing(false);
+        setIsProcessing(false);
         if (data.status === "success") {
           showSuccess("Login Successfully");
           console.log(data);
@@ -215,7 +221,7 @@ function page() {
           }
           console.log(data);
         }
-        setisProcessing(false)
+        setIsProcessing(false)
       })
       .catch((error) => {
         console.log(error);
@@ -335,11 +341,34 @@ function page() {
                       </div>
                     </div>
                   )}
-                  <PrimaryButton
+<<<<<<<<< Temporary merge branch 1
+                  <Button
+                    onClick={handleLogin}
+                    theme={buttonTheme}
+                    color="purple"
+                    isProcessing={isProcessing}
+                    pill
+                    size="lg"
+                    className={
+                      "transition-colors rounded-full font-semibold px-5 py-2 text-white"
+                    }
+                  >
+                    <p>Login</p>
+                  </Button>
+                  
+=========
+                  <LoadingButton 
+                    title="Login"
+                    isProcessing={isProcessing}
+                    customStyle="bg-secondary-color text-white py-1 border rounded-3xl text-[16px] w-full"
+                    action={handleLogin}
+                  />
+                  {/* <PrimaryButton
                     onClick={handleLogin}
                     text="Login"
                     ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
-                  />
+                  /> */}
+>>>>>>>>> Temporary merge branch 2
                   <span className="text-center">Or Login with </span>
                   <div className="flex gap-3">
                     <PrimaryButton
@@ -453,11 +482,36 @@ function page() {
                       </label>
                     </div>
                   </div>
-                  <PrimaryButton
+<<<<<<<<< Temporary merge branch 1
+                  <Button
+                    onClick={handleFormSubmit}
+                    theme={buttonTheme}
+                    color="purple"
+                    isProcessing={isProcessing}
+                    pill
+                    size="lg"
+                    className={
+                      "transition-colors rounded-full font-semibold px-5 py-2 text-white"
+                    }
+                  >
+                    <p>Register</p>
+                  </Button>
+
+=========
+                  <LoadingButton
+                    title={"Register"}
+                    action={handleFormSubmit}
+                    customStyle={
+                      "text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
+                    }
+                    isProcessing={isProcessing}
+                  />
+                  {/* <PrimaryButton
                     text="Register"
                     ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
                     onClick={handleFormSubmit}
-                  />
+                  /> */}
+>>>>>>>>> Temporary merge branch 2
                   <span className="text-center">Or Register with </span>
                   <div className="flex gap-3">
                     <PrimaryButton

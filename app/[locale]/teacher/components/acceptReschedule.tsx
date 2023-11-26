@@ -1,12 +1,14 @@
 "use client";
 
-import { CustomFlowbiteTheme, Label, Modal } from 'flowbite-react';
+import { CustomFlowbiteTheme, Label, Modal, Select } from 'flowbite-react';
 import { useEffect, useRef, useState } from 'react';
 import Cookies from 'universal-cookie';
 import LoadingButton from '../../admin/components/loadingButton';
 import { Calendar } from 'primereact/calendar';
 import { Nullable } from "primereact/ts-helpers";
 import { Toast } from 'primereact/toast';
+import { convertDateTimeZone } from '@/helpers/convertDateAndTime';
+import { useRouter } from 'next/navigation';
 export default function AcceptRescheduleModal(
     {
         openModal,
@@ -27,7 +29,12 @@ export default function AcceptRescheduleModal(
         const [isProcessing, setIsProcessing] = useState(false)
         const [newDate, setNewDate] = useState<Nullable<(Date | null)[]> | any>(null);
         const toast = useRef<any>(null);
+        const router = useRouter()
+        const convertDate = convertDateTimeZone
 
+        useEffect(() => {
+          console.log(sessionData.newDatesOptions)
+        }, [])
         const showSuccess = (message: string) => {
             
             toast.current?.show({severity:'success', summary: 'Success', detail: message, life: 3000});
@@ -62,6 +69,10 @@ export default function AcceptRescheduleModal(
           }
 
           const acceptReschedule = () => {
+            if(!newDate) {
+                return showError("Please select new date")
+            }
+
             setIsProcessing(true)
             fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/acceptReschedule`, {
                 method: "POST",
@@ -77,7 +88,12 @@ export default function AcceptRescheduleModal(
                 
             }).then(response => response.json()).then(data => {
                 if(data.status === 'success') {
-                    showSuccess(data.message)
+                  showSuccess(data.message)
+                  const timer = setTimeout(() => {
+                    handleCloseModal()
+                    updateComponent()
+                    clearTimeout(timer)
+                    }, 4000)
                 } else {
                     showError(data.message)
                 }
@@ -97,11 +113,17 @@ export default function AcceptRescheduleModal(
         <Modal.Header theme={modalTheme.header}>Reschedule Session :</Modal.Header>
         <Toast ref={toast} />
         <Modal.Body>
-            <div className='m-auto flex flex-col items-center justify-center'>
+            <div className='m-auto flex flex-col items-center justify-center w-[260px]'>
               <div className="mb-2 block">
                 <Label htmlFor="newDate" value="Select New Date " />
               </div>
-              <Calendar
+              <Select className='w-full' id="newDate" value={newDate} onChange={(e) => setNewDate(e.target.value)}>
+                <option value="">Select option</option>
+                <option value={sessionData.newDatesOptions[0]}>{convertDate(session.newDatesOptions[0], "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "D-MMM-YYYY hh:mm A")}</option>
+                <option value={sessionData.newDatesOptions[1]}>{convertDate(session.newDatesOptions[1], "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "D-MMM-YYYY hh:mm A")}</option>
+
+              </Select>
+              {/* <Calendar
                     id='newDate'
                     inline
                     value={newDate} 
@@ -113,7 +135,7 @@ export default function AcceptRescheduleModal(
                     hourFormat="12"
                     className={"border-[5px] border-secondary-color rounded-xl"}
                 
-              />
+              /> */}
             <div className="w-full mt-3 flex items-center justify-center">
               <LoadingButton 
                 title={"Reschdeule Session"}

@@ -1,5 +1,5 @@
 import Attendance from "./components/attendance";
-import RescheduleSessions from "./components/rescheduleSessions";
+import RescheduleSessions from "./components/getRescheduleRequests";
 import FreeSesstionsTable from "./components/freeTrialTable";
 import PaidSesstionsTable from "./components/paidSesstionsTable";
 import Reports from "./components/reports";

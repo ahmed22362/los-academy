@@ -36,7 +36,7 @@ export default function sessionData({data, updateComponent}:{data: any, updateCo
       }
 
     const denyDate = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/decline-reschedule`, {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/declineReschedule`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -1,20 +1,39 @@
 "use client";
 
 import { Button, Modal } from "flowbite-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import { Nullable } from "primereact/ts-helpers";
 import { Toast } from "primereact/toast";
-import BookFreeSession from "./BookFreeSession";
-import BookPaidSession from "./BookPaidSession";
 import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
-import PrimaryButton from "../../components/PrimaryButton";
+import BookFreeSession from "../student_profile/components/BookFreeSession";
+import BookPaidSession from "../student_profile/components/BookPaidSession";
 
-export default function BookModal({myInfo}:any) {
-  const [openBookModal, setOpenBookModal] = useState(false);
-  const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date>>(null);
+export default function BookSessionFromHome({openModal, closeModal}: {openModal: boolean, closeModal: () => void}) {
+    const [openBookModal, setOpenBookModal] = useState(false);
+//   const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date>>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
 
   const toast = useRef<Toast>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | any) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+
+    if (openModal) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openModal, closeModal]);
+
+  if (!openModal) {
+    return null;
+  }
+
 
   const customeTheme: CustomFlowbiteTheme = {
     tab: {
@@ -36,18 +55,12 @@ export default function BookModal({myInfo}:any) {
 
   return (
     <>
-      <button
-        className="bg-secondary-color hover:bg-secondary-hover text-md w-[150px] font-semibold transition-colors text-white  h-10  px-8 m-auto my-3 shadow rounded-full  mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
-        onClick={() => setOpenBookModal(true)}
-        disabled={myInfo?.sessionPlaced}
-        >
-          {myInfo?.sessionPlaced?`Can't Book Untill Your Plan End`:"Book"}
-          </button>
       <Modal
-        show={openBookModal}
+        ref={modalRef}
+        show={openModal}
         className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "
         size={"xl"}
-        onClose={() => setOpenBookModal(false)}
+        onClose={closeModal}
       >
         <Modal.Header className="p-0 m-0 border-0"></Modal.Header>
 

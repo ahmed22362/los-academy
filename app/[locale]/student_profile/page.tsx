@@ -78,7 +78,7 @@ if (myInfo?.sessionPlaced==false) {
         <div className="card w-full  ">
           <EditProfile setMyInfo={setMyInfo} />
           <div>
-            <h3 className={`${styles.main_head} mb-8`}>Infos</h3>
+            <h3 className={`${styles.main_head} mb-8`}>Info</h3>
 
             <CommunityStatistics />
             <div

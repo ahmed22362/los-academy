@@ -62,6 +62,11 @@ export default function OurSideBar() {
                             Transactions
                         </p>
                     </Link>
+                    <Link href="/teacher/monthly-report" className={`sideBarLink  ${pathName === "/teacher/monthly-report" ? " active" : ""}`}>
+                        <p>
+                            Monthly Reports
+                        </p>
+                    </Link>
                     <Sidebar.Item
                         onClick={logOut}
                     >

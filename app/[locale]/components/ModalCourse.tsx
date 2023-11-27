@@ -7,6 +7,7 @@ import ModalThree from './CoursesModalBody/ModalThree';
 import { useRef, useEffect } from 'react';
 import PrimaryButton from './PrimaryButton';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 
 export default function ModalCourse({handleOpen, handleCloseModal, courseDetails}: {
@@ -54,15 +55,20 @@ export default function ModalCourse({handleOpen, handleCloseModal, courseDetails
       <Modal ref={modalRef} show={true} onClose={handleCloseModal} size={"5xl"}>
         <Modal.Header theme={customeTheme.header}></Modal.Header>
         <Modal.Body theme={customeTheme.body}>
-          <div className='flex flex-col w-[550px]'>
-        <h2 className="text-black-color-one text-3xl font-bold mb-6">{course.title}</h2>
-        <p className="text-black-color-two text-md font-normal mb-2">
-            {course.description}
-        </p>
-    </div>
+      <div className='flex flex-col'>
+        <div className='flex justify-between items-center px-4'>
+          <h2 className="text-black-color-one text-3xl font-bold mb-6 underline">{course.title}</h2>
+          <div className='flex items-center justify-center bg-white-color w-[80px] h-[80px] rounded-full'>
+            <Image src={"/vectors/courses.png"} alt="course image" width={50} height={50} loading={"lazy"} className={"w-auto h-auto"} />
+          </div>
+        </div>
+          <p className="px-8 text-black-color-two text-md font-normal mb-2 capitalize w-[530px] leading-7">
+              {course.description}
+          </p>
+        </div>
     <div className='flex flex-col gap-5'>
-      <hr />
-      <p>
+      <hr style={{backgroundColor: "#E5E5E5", height: "2px", width: "100%", marginTop: "10px"}} />
+      <p className='px-8 text-black-color-two text-md font-normal capitalize leading-7'>
         {course.details}
       </p>
         

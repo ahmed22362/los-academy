@@ -63,6 +63,16 @@ export default function PaidSesstionsTable() {
                                         <div className="flex justify-center items-center gap-3">
                                             <ul className="ps-4">
                                                 <li>
+                                                    courses:<br/>
+                                                    {paidSession.courses.map((course: any, index: number) => {
+                                                        return(
+                                                            <span key={index}>
+                                                                {course}<br/>
+                                                            </span>
+                                                        )
+                                                    })}
+                                                </li>
+                                                <li>
                                                     <span>
                                                         start time: {convertDate(paidSession.sessionDates[0], "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "h:mm A")}
                                                     </span>

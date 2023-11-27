@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useRef, useState } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
 import moment from "moment-timezone";

@@ -107,10 +107,7 @@ function page() {
     }
     // Set the gender directly in the formData object
     formData.gender = gender;
-
-    console.log(formData);
     setIsProcessing(true);
-
     fetch(`${url}/user/auth/signup`, {
       method: "POST",
       headers: {
@@ -187,9 +184,7 @@ function page() {
       showError("Please fill in all fields");
       return;
     }
-          
     setIsProcessing(true);
-
     // Send a POST request to the login endpoint
     fetch(`${url}/user/auth/login`, {
       method: "POST",
@@ -346,7 +341,6 @@ function page() {
                       </div>
                     </div>
                   )}
-
                   <Button
                     onClick={handleLogin}
                     theme={buttonTheme}
@@ -360,6 +354,13 @@ function page() {
                   >
                     <p>Login</p>
                   </Button>
+                  
+                  {/* <LoadingButton 
+                    title="Login"
+                    isProcessing={isProcessing}
+                    customStyle="bg-secondary-color text-white py-1 border rounded-3xl text-[16px] w-full"
+                    action={handleLogin}
+                  /> */}
 
                   <span className="text-center">Or Login with </span>
                   <div className="flex gap-3">
@@ -475,7 +476,7 @@ function page() {
                     </div>
                   </div>
 
-                  <Button
+                  {/* <Button
                     onClick={handleFormSubmit}
                     theme={buttonTheme}
                     color="purple"
@@ -487,8 +488,21 @@ function page() {
                     }
                   >
                     <p>Register</p>
-                  </Button>
+                  </Button> */}
 
+                  <LoadingButton
+                    title={"Register"}
+                    action={handleFormSubmit}
+                    customStyle={
+                      "text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
+                    }
+                    isProcessing={isProcessing}
+                  />
+                  {/* <PrimaryButton
+                    text="Register"
+                    ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
+                    onClick={handleFormSubmit}
+                  /> */}
                   <span className="text-center">Or Register with </span>
                   <div className="flex gap-3">
                     <PrimaryButton

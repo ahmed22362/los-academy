@@ -6,7 +6,8 @@ import {useRouter} from "next/navigation";
 import { useState } from "react";
 import { CiCalendar } from "react-icons/ci";
 import { IoIosLogOut } from "react-icons/io";
-import { LiaCreditCardSolid, LiaEditSolid, LiaUserEditSolid } from "react-icons/lia";
+import { SiSessionize } from "react-icons/si";
+import { LiaCreditCardSolid, LiaEditSolid, LiaUserEditSolid  } from "react-icons/lia";
 import Cookies from "universal-cookie";
 import UserFeedBack from "../../student_profile/components/userFeedBack";
 import StudentPlanModal from "../../student_profile/components/StudentPlanModal";
@@ -50,7 +51,7 @@ export default function UserDropDown({userName, logOut}: {userName: string; logO
                       <Dropdown.Item 
                         onClick={()=> setOpenSeesionModal(true)}
                         className="gap-3 rtl:flex-row-reverse ltr:flex-row">
-                      <CiCalendar  className="text-[26px] font-semibold" /> 
+                      <SiSessionize  className="text-[26px] font-semibold" /> 
                       <span className="py-2">Sessions</span>
                       </Dropdown.Item>
                       <Dropdown.Item 

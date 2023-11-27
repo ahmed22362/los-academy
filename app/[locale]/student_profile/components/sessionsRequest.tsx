@@ -3,7 +3,13 @@ import { Calendar, CalendarProps } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 import React, { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
-
+interface Session {
+  id: number;
+  sessionDates: string[];
+  status: string;
+  type: string;
+  sessionDate: string; // You might need to adjust the type based on your actual data structure
+}
 function SessionsRequest() {
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -12,22 +18,19 @@ function SessionsRequest() {
   const [updateCalendar, setUpdateCalendar] = useState<boolean>(true);
   const [newDates, setNewDates] = useState<Nullable<Date> | any>(null);
 const [sessionStatus, setSessionStatus] = useState('')
-  const convertDateTimeZone = (
-    inputTime: moment.MomentInput,
-    inputTimezone: string,
-    outputTimezone: string,
-    ourFormat: string
-  ) => {
-    const convertedTime = moment(
-      `${moment().format("YYYY-MM-DD")}T${inputTime}`,
-      "YYYY-MM-DDTHH:mm:ss.SSS"
-    )
-      .tz(inputTimezone)
-      .clone()
-      .tz(outputTimezone);
-    return convertedTime.format(ourFormat);
-  };
 
+const convertDateTimeZone = (
+  inputTime: moment.MomentInput,
+  inputTimezone: string,
+  outputTimezone: string,
+  ourFormat: string
+) => {
+  const convertedTime = moment(inputTime)
+    .tz(inputTimezone)
+    .clone()
+    .tz(outputTimezone);
+  return convertedTime.format(ourFormat);
+};
   useEffect(() => {
     fetch(`${url}/user/mySessionReq`, {
       method: "GET",
@@ -37,10 +40,20 @@ const [sessionStatus, setSessionStatus] = useState('')
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        const sortedSessions = data.data.map((session: Session) => ({
+          ...session,
+          sessionDates: session.sessionDates.map((date) =>
+            moment(date).toDate()
+          ),
+        }));
 
-        setSessionsRequest(data.data);
-        setSessionStatus(data?.data?.status)
+        sortedSessions.sort((a:Session, b:Session) => {
+          const dateA = new Date(Math.max(...a.sessionDates.map((date:any) => date.getTime())));
+          const dateB = new Date(Math.max(...b.sessionDates.map((date:any) => date.getTime())));
+          return dateB.getTime() - dateA.getTime();
+        });
+
+        setSessionsRequest(sortedSessions);        setSessionStatus(data?.data?.status)
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
@@ -98,16 +111,17 @@ const [sessionStatus, setSessionStatus] = useState('')
             </button>
           </div>
           {sessionsRequest?.map((session) => (
-            <div className="flex flex-col  gap-3" key={session.id}>
+            <div className="flex flex-col my-2 gap-3" key={session.id}>
               <p>Session Dates:</p>
               <ul>
                 {session.sessionDates.map((date: string) => (
                   <li key={date}>
                     <span className="mx-3">
+                      
                       {moment(date).format("D-MMM-YYYY")}
                     </span>
                     {convertDateTimeZone(
-                      session.sessionDate,
+                      date,
                       "UTC",
                       Intl.DateTimeFormat().resolvedOptions().timeZone,
                       "h:mm A"
@@ -136,6 +150,7 @@ const [sessionStatus, setSessionStatus] = useState('')
                   {session.type === "paid" ? "Paid$" : "Free"}{" "}
                 </span>{" "}
               </p>
+              <hr />
             </div>
           ))}
         </div>

@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useRef, useState } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
 import moment from "moment-timezone";
@@ -8,14 +9,15 @@ import ContentLoader from "react-content-loader";
 import RescheduleSession from "./rescheduleSession";
 import Image from "next/image";
 import Countdown from "react-countdown";
-import MyTimer from "./timer";
 import { Toast } from "primereact/toast";
 import { Tooltip } from "flowbite-react";
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Button } from "primereact/button";
-import { classNames } from "primereact/utils";
+import ContinueWithModal from "./continueWithModal";
+import { useRouter } from "next/navigation";
 
 function UpcomingSessions() {
+  const router = useRouter();
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
   const token = cookie.get("token");
@@ -26,28 +28,50 @@ function UpcomingSessions() {
   const [alertVisible, setAlertVisible] = useState(false);
   const [isHere, setIsHere] = useState<boolean>(false);
   const [isImHereButtonDisabled, setIsImHereButtonDisabled] = useState(true);
+  const [openContinueWithModal, setopenContinueWithModal] = useState(false);
+  const [selectedFreeSessionId, setSelectedFreeSessionId] = useState("");
+  const [sessionLink, setSessionLink] = useState("");
+  const [isRescheduleButtonDisabled, setIsRescheduleButtonDisabled] =
+    useState(false);
+  const [sessionWillStartTime, setSessionWillStartTime] =
+    useState<moment.Moment | null>(null);
+  const [isConfirmDialogVisible, setIsConfirmDialogVisible] =
+    useState<boolean>(false);
 
-  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Check if the local storage item is set to true
+      const storedConfirmDialogValue =
+        localStorage.getItem("confirmDialog") === "true";
+      setIsConfirmDialogVisible(storedConfirmDialogValue);
+    }
+  }, []);
 
   const accept = (sessionId: any) => {
-    toast.current?.show({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
-
-    const continueWithTeacher = (sessionId :any) => {
-      fetch(`${url}/session/continueWithTeacher`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sessionId, willContinue: true }),
-      })
+    setSelectedFreeSessionId(sessionId);
+    fetch(`${url}/session/continueWithTeacher`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sessionId, willContinue: true }),
+    })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-    
+
         if (data.status === "success") {
           console.log("POST request successful:", data);
-          // Handle success if needed
+          toast.current?.show({
+            severity: "info",
+            summary: "Confirmed",
+            detail: "You have accepted",
+            life: 3000,
+          });
+          setTimeout(() => {
+            setopenContinueWithModal(true);
+          }, 3000);
         } else {
           console.error(data);
           // Handle error if needed
@@ -56,13 +80,41 @@ function UpcomingSessions() {
       .catch((error) => {
         console.error("Error during POST request:", error);
       });
-    };
-  }
+  };
 
-const reject = () => {
-    toast.current?.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
-}
- 
+  const reject = (sessionId: any) => {
+
+    fetch(`${url}/session/continueWithTeacher`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sessionId, willContinue: false }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+
+        if (data.status === "success") {
+          console.log("POST request successful:", data);
+          toast.current?.show({
+            severity: "warn",
+            summary: "Rejected",
+            detail: "You have rejected",
+            life: 3000,
+          });
+          localStorage.setItem("confirmDialog", "false");
+        } else {
+          console.error(data);
+          // Handle error if needed
+        }
+      })
+      .catch((error) => {
+        console.error("Error during POST request:", error);
+      });
+  };
+
   const toast = useRef<Toast>(null);
   const showSuccess = (msg: any) => {
     toast.current?.show({
@@ -93,9 +145,7 @@ const reject = () => {
       .tz(outputTimezone);
     return convertedTime.format(ourFormat);
   };
-  // <Countdown date={Date.now() + 1000000}>
 
-  // </Countdown>
   const time = new Date();
   time.setSeconds(time.getSeconds() + 600); // 10 minutes timer
   const isSessionRunning = (session: any) => {
@@ -110,37 +160,42 @@ const reject = () => {
 
     return currentTime.isBetween(sessionStartTime, sessionEndTime);
   };
-  // api data
-  // useEffect(() => {
-  //   fetch(`${url}/user/upcomingSession`, {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log(data.data);
-  //       setUpComingSession(data.data);
-  //       setsessionId(data?.data[0]?.id);
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching sessions:", error);
-  //       setLoading(false);
-  //     });
-  // }, []);
-  useEffect(() => {
-    if (upComingSession.length > 0) {
-      const sessionStartTime = moment.utc(upComingSession[0].sessionDate);
-      const allowedStartTime = sessionStartTime.clone().subtract(30, "minutes");
-      const currentTime = moment().tz(
-        Intl.DateTimeFormat().resolvedOptions().timeZone
-      );
 
-      setIsImHereButtonDisabled(currentTime.isBefore(allowedStartTime));
-    }
-  }, [upComingSession]);
+  useEffect(() => {
+    const updateButtonsState = () => {
+      if (upComingSession.length > 0) {
+        const sessionStartTime = moment.utc(upComingSession[0].sessionDate);
+        const allowedStartTimeForJoin = sessionStartTime
+          .clone()
+          .subtract(1, "minute");
+        const allowedStartTimeForReschedule = sessionStartTime
+          .clone()
+          .subtract(10, "minute");
+
+        const currentTime = moment().tz(
+          Intl.DateTimeFormat().resolvedOptions().timeZone
+        );
+
+        setIsImHereButtonDisabled(
+          currentTime.isBefore(allowedStartTimeForJoin)
+        );
+        setIsRescheduleButtonDisabled(
+          currentTime.isAfter(allowedStartTimeForReschedule)
+        );
+      }
+    };
+
+    // Schedule the update after the component has been rendered
+    const timerId = setTimeout(updateButtonsState, 0);
+
+    // Cleanup function to clear the timer
+    return () => clearTimeout(timerId);
+  }, [
+    upComingSession,
+    setIsImHereButtonDisabled,
+    setIsRescheduleButtonDisabled,
+  ]);
+
   // custom theme
   const CustomTHeme = {
     target: "w-full",
@@ -163,7 +218,103 @@ const reject = () => {
     },
     content: "relative z-20",
   };
-  //  Im Here =======================
+
+  useEffect(() => {
+    if (upComingSession.length > 0) {
+      // Extract and store the time part of the session start time as a moment object
+      const startTime = moment(upComingSession[0].sessionDate);
+      setSessionWillStartTime(startTime);
+      console.log("start time" ,startTime);
+       // Store it as a moment object
+    }
+  }, [upComingSession]);
+
+  useEffect(() => {
+    // Set up an interval to check the current time and fetch ongoing sessions
+    const intervalId = setInterval(() => {
+      const currentTime = moment().tz(
+        Intl.DateTimeFormat().resolvedOptions().timeZone
+      );
+        console.log("current time ", currentTime);
+        
+      if (currentTime.isSame(sessionWillStartTime, "minute")) {
+        // Call the fetching ongoing session function
+        fetchOngoingSessions();
+      }
+    }, 60000); // Check every minute
+
+    // Cleanup function to clear the interval
+    return () => clearInterval(intervalId);
+  }, [sessionWillStartTime]);
+
+  useEffect(() => {
+    if (upComingSession.length > 0) {
+      // Extract and store the time part of the session start time
+      const startTime = moment(upComingSession[0].sessionDate);
+      setSessionWillStartTime(startTime); // HH:mm format for time only
+    }
+  }, [upComingSession]);
+
+  const fetchOngoingSessions = () => {
+    // Fetch ongoing sessions
+    fetch(`${url}/user/ongoingSession`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.data);
+
+        if (data.data.length > 0) {
+          // If there are ongoing sessions, display them
+          setUpComingSession(data.data);
+          setsessionId(data?.data[0]?.id);
+          setLoading(false);
+          setSessionLink(data?.data[0]?.meetingLink);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching ongoing sessions:", error);
+        // Handle error if needed
+      });
+  };
+
+
+  useEffect(() => {
+    // Fetch ongoing sessions
+    fetch(`${url}/user/ongoingSession`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("ongoingSession",data);
+        setUpComingSession(data.data);
+        // Check if the local storage item is set to true
+        if (data.data.length > 0) {
+          // If there are ongoing sessions, display them
+          console.log(localStorage.getItem("confirmDialog"));
+          localStorage.setItem("sessionId", data?.data[0]?.id);
+          
+          setsessionId(data?.data[0]?.id);
+          setLoading(false);
+          setSessionLink(data?.data[0]?.meetingLink);
+        } else {
+          // If there are no ongoing sessions, fetch upcoming sessions
+          fetchUpcomingSessions();
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching ongoing sessions:", error);
+        // If there's an error, fetch upcoming sessions
+        fetchUpcomingSessions();
+      });
+  }, []);
+
   const fetchUpcomingSessions = () => {
     fetch(`${url}/user/upcomingSession`, {
       method: "GET",
@@ -179,17 +330,10 @@ const reject = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching sessions:", error);
+        console.error("Error fetching upcoming sessions:", error);
         setLoading(false);
       });
   };
-
-  // Use useEffect to fetch upcoming sessions when the component is mounted
-  useEffect(() => {
-    fetchUpcomingSessions();
-  }, []);
-
-  // ... (your existing code)
 
   // Updated updateAttendance function
   const updateAttendance = () => {
@@ -211,27 +355,13 @@ const reject = () => {
           console.log("POST request successful:", data);
           setIsHere(true);
           showSuccess(`${data.message}`);
-          // After updating attendance, fetch upcoming sessions again
-          fetchUpcomingSessions();
-          
-          // Check if there is an ongoing session with a meeting link
-          const ongoingSession = data.data.find((session :any) => session.status === "ongoing" && session.meetingLink);
-          
-          // If there is an ongoing session, redirect to the meeting link
-          if (ongoingSession) {
-            window.location.href = ongoingSession.meetingLink;
-          }
-        } else {
-          console.error(data);
-          showError(`${data.message}`);
+          window.open(sessionLink, "_blank");
         }
       })
       .catch((error) => {
         console.error("Error during POST request:", error);
       });
   };
-
-
 
   if (loading) {
     return (
@@ -257,18 +387,17 @@ const reject = () => {
       </div>
     ); // You can replace this with a loading spinner or any other loading indicator
   }
-// 
+  //
 
-
-
-      
   return (
     <div
       className={` w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
     >
       <Toast ref={toast} />
 
-      <h4 className={`${styles.secondary_head} my-2`}>{upComingSession[0]?.status} session</h4>
+      <h4 className={`${styles.secondary_head} my-2`}>
+        {upComingSession[0]?.status || "upcoming session"}
+      </h4>
       {upComingSession?.length > 0 ? (
         upComingSession?.map((session, index) => (
           <div key={index}>
@@ -322,26 +451,48 @@ const reject = () => {
                     .toDate()}
                   renderer={({ hours, minutes, seconds, completed }) => {
                     if (completed) {
-                      setAlertVisible(true);
                       if (upComingSession[0].type === "free") {
-                        // Show the ConfirmDialog after the session has ended
-                        confirmDialog({
-                          message: 'Do you want to Continue With This Teacher?',
-                          header: 'Continue With This Teacher',
-                          icon: 'bi bi-info-circle',
-                          position: 'top',
-                          accept: () => accept(session.id) ,
-                          reject: reject
-                        });
+                        setAlertVisible(true);
+                        localStorage.setItem("confirmDialog", "true");
                       }
-                      // Render something when the timer completes
-                      return <span>Session ended</span>;
+                      return (
+                        <span>
+                          {isConfirmDialogVisible && (
+                            <ConfirmDialog
+                            closable={false}
+                              visible={isConfirmDialogVisible}
+                              message={
+                                "Do you want to Continue With This Teacher?"
+                              }
+                              acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
+                              rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
+                              header="Continue With This Teacher"
+                              icon="bi bi-info-circle"
+                              position="top"
+                              accept={() => accept(session.id)}
+                              reject={() => reject(session.id)}
+                            />
+                          )}
+                        </span>
+                      );
                     } else {
                       // Render the timer
                       return (
-                        <span className="bg-secondary-color rounded-3xl px-3 py-1 text-white">
-                          The Session Will End After {hours}:{minutes}:{seconds}
+                        <span className=" flex flex-col items-center gap-5 rounded-3xl px-3 py-1 ">
+                          <p className="text-[#333]">
+                            This Session will End within
+                          </p>{" "}
+                          <p>
+                            {" "}
+                            <span className="font-bold text-lg">
+                              {minutes} mins
+                            </span>{" "}
+                            <span className="font-bold text-lg">
+                              {seconds} sec
+                            </span>
+                          </p>
                         </span>
+                        // <span className="font-bold text-lg">{hours} hours</span>
                       );
                     }
                   }}
@@ -354,11 +505,12 @@ const reject = () => {
                 className=" px-5"
                 content={
                   isImHereButtonDisabled
-                    ? `The session cannot be attended until 30 minutes in advance `
+                    ? `The session cannot be attended until session starts `
                     : "update your Attendence"
                 }
               >
                 <PrimaryButton
+                  disabled={isImHereButtonDisabled}
                   onClick={isHere ? updateAttendance : updateAttendance}
                   ourStyle={`w-full max-md-px-1  text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45 ${
                     isImHereButtonDisabled
@@ -366,22 +518,45 @@ const reject = () => {
                       : "bg-secondary-color hover:bg-secondary-hover"
                   }`}
                   text={`${"Join Meeting"}`}
-                  disabled={isImHereButtonDisabled}
                 />
               </Tooltip>
 
               <button
                 onClick={() => setopenRescheduleModal(true)}
-                className="hover:bg-[#0a01c09a] hover:text-white max-md-px-1 text-sm font-semibold transition-colors shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 px-3 w-full  rounded-full w-50 mx-auto max-md:px-4 max-md:w-45"
+                className={` max-md-px-1 text-sm font-semibold transition-colors shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 px-3 w-full  rounded-full w-50 mx-auto max-md:px-4 max-md:w-45 ${
+                  isRescheduleButtonDisabled
+                    ? "bg-gray-500 cursor-not-allowed text-white"
+                    : "hover:bg-[#0a01c09a] hover:text-white"
+                }`}
+                disabled={isRescheduleButtonDisabled}
               >
                 Reschedule Session
               </button>
             </div>
-
+            <span>
+              {isConfirmDialogVisible && session.type === "free" && (
+                <ConfirmDialog
+                  closable={false}
+                  visible={isConfirmDialogVisible}
+                  message={"Do you want to Continue With This Teacher?"}
+                  acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
+                  rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
+                  header="Continue With This Teacher"
+                  icon="bi bi-info-circle"
+                  position="top"
+                  accept={() => accept(session.id)}
+                  reject={() => reject(session.id)}
+                />
+              )}
+            </span>
             <RescheduleSession
               sessionId={sessionId}
               openRescheduleModal={openRescheduleModal}
               setopenRescheduleModal={setopenRescheduleModal}
+            />
+            <ContinueWithModal
+              openContinueWithModal={openContinueWithModal}
+              setopenContinueWithModal={setopenContinueWithModal}
             />
           </div>
         ))
@@ -389,6 +564,22 @@ const reject = () => {
         <>
           <div className="flex justify-center mt-5 items-center flex-col gap-5">
             <p className="font-meduim">No Upcoming Sessions</p>
+            <span>
+              {isConfirmDialogVisible && (
+                <ConfirmDialog
+                closable={false}
+                  visible={isConfirmDialogVisible}
+                  message={"Do you want to Continue With This Teacher?"}
+                  acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
+                  rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
+                  header="Continue With This Teacher"
+                  icon="bi bi-info-circle"
+                  position="top"
+                  accept={() => accept(localStorage.getItem("sessionId"))}
+                  reject={() => reject(localStorage.getItem("sessionId"))}
+                />
+              )}
+            </span>
             <Image
               src={"/vectors/empty-calendar.png"}
               alt="no upcoming session"

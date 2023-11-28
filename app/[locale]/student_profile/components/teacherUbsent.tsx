@@ -10,13 +10,12 @@ function TeacherUbsent() {
   const token = cookie.get("token");
   const [teacherUbsentSessions, setTeacherUbsentSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
+  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
+    null
+  );
   const [openRescheduleModal, setOpenRescheduleModal] = useState(false);
 
-
-
   const handleRescheduleClick = (sessionId: number) => {
-
     setSelectedSessionId(sessionId);
     // Open the reschedule modal
     setOpenRescheduleModal(true);
@@ -77,72 +76,74 @@ function TeacherUbsent() {
               {/* Add your loader shapes here */}
             </ContentLoader>
           ) : (
-            <ul>
+            <ul className="">
               {teacherUbsentSessions?.map((sessionInfo, index) => (
-                <li className="flex flex-col gap-4 " key={sessionInfo.id}>
-                  <p className="my-1 py-2 font-medium">
-                    Session ID:{" "}
-                    <span className="bg-[--secondary-color] text-white p-1 rounded-2xl">
-                      {sessionInfo.id}
-                    </span>
-                  </p>
-                  <p>
-                    Type :{" "}
-                    <span
-                      className={`${
-                        sessionInfo.type != "free"
-                          ? "bg-red-500"
-                          : "bg-green-600"
-                      } px-3 py-1 text-white rounded-lg`}
-                    >
-                      {" "}
-                      {sessionInfo.type.toUpperCase()}
-                    </span>
-                  </p>
-                  <p className="my-1 flex justify-between items-center py-2 font-medium">
-                    <div>
-                      Status:{" "}
+                <li className="flex flex-col gap-4  pr-2" key={sessionInfo.id}>
+                  <div className="bg-white-color p-2 rounded-xl">
+                    <p className="my-1 py-2 font-medium">
+                      Session ID:{" "}
+                      <span className="bg-[--secondary-color] text-white p-1 rounded-2xl">
+                        {sessionInfo.id}
+                      </span>
+                    </p>
+                    <p>
+                      Type :{" "}
                       <span
-                        className={`
+                        className={`${
+                          sessionInfo.type != "free"
+                            ? "bg-red-500"
+                            : "bg-green-600"
+                        } px-3 py-1 text-white rounded-lg`}
+                      >
+                        {" "}
+                        {sessionInfo.type.toUpperCase()}
+                      </span>
+                    </p>
+                    <p className="my-1 flex justify-between items-center py-2 font-medium">
+                      <div>
+                        Status:{" "}
+                        <span
+                          className={`
                              
                          px-3 py-1 text-red-500 rounded-lg`}
+                        >
+                          {sessionInfo.status}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleRescheduleClick(sessionInfo.id)}
+                        className="bg-[--secondary-color] hover:bg-[#453ed2] h-fit text-sm rounded-full py-2 text-white px-2"
                       >
-                        {sessionInfo.status}
+                        Reschedule
+                      </button>
+                    </p>
+                    <p className="my-1 py-2 font-medium">
+                      Teacher Name: {sessionInfo?.SessionInfo?.teacher?.name}
+                    </p>
+                    <p className="my-1 py-2 font-medium flex  gap-4">
+                      Old Date:
+                      <span className="text-red-600">
+                        {convertDateTimeZone(
+                          sessionInfo.sessionDate,
+                          "UTC",
+                          Intl.DateTimeFormat().resolvedOptions().timeZone,
+                          "DD/MMM/YYYY h:mm A"
+                        )}
                       </span>
-                    </div>
-                    <button
-                  onClick={() => handleRescheduleClick(sessionInfo.id)}
-                  className="bg-[--secondary-color] hover:bg-[#453ed2] h-fit text-sm rounded-full py-2 text-white px-2"
-                >
-                  Reschedule
-                </button>
-                  </p>
-                  <p className="my-1 py-2 font-medium">
-                    Teacher Name: {sessionInfo?.SessionInfo?.teacher?.name}
-                  </p>
-                  <p className="my-1 py-2 font-medium flex  gap-4">
-                    Old Date:
-                    <span className="text-red-600">
-                      {convertDateTimeZone(
-                        sessionInfo.sessionDate,
-                        "UTC",
-                        Intl.DateTimeFormat().resolvedOptions().timeZone,
-                        "DD/MMM/YYYY h:mm A"
-                      )}
-                    </span>
-                  </p>
+                    </p>
+                  </div>
 
-                  <hr />
+                  <hr className=" h-[2px]" />
                 </li>
               ))}
             </ul>
           )}
         </div>
         <RescheduleSession
-        sessionId={selectedSessionId}
-        openRescheduleModal={openRescheduleModal}
-        setopenRescheduleModal={setOpenRescheduleModal}
-      />
+          sessionId={selectedSessionId}
+          openRescheduleModal={openRescheduleModal}
+          setopenRescheduleModal={setOpenRescheduleModal}
+        />
       </div>
     </>
   );

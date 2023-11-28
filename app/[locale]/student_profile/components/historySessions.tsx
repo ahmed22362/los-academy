@@ -52,10 +52,10 @@ function HistorySessions() {
         historySessions.map((session, index) => (
           <div
             key={index}
-            className={`flex justify-between gap-5 my-3 items-center`}
+            className={`flex justify-between max-md:flex-col bg-white-color p-3 rounded-xl max-md:gap-3 gap-5 my-3 md:items-center`}
           >
             <p>Session #{session.id}</p>
-            <p>
+            <p>Time: {" "}
               {convertDateTimeZone(
                 session.sessionDate,
                 "UTC",
@@ -72,7 +72,7 @@ function HistorySessions() {
                 "h:mm A"
               )}
             </p>
-            <p>
+            <p>Date:
               {" "}
               {convertDateTimeZone(
                 session.sessionDate,
@@ -82,9 +82,9 @@ function HistorySessions() {
               )}
             </p>
             {session.type === "free" ? (
-              <p className="px-4 bg-white rounded-full py-2 border shadow">
+              <p className="px-4 bg-white rounded-full max-md:w-fit py-2 border shadow">
                 {" "}
-                {session.type}
+                {session.type} session
               </p>
             ) : (
               ""

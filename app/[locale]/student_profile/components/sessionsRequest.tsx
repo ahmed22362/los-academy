@@ -17,20 +17,20 @@ function SessionsRequest() {
   const [sessionsRequest, setSessionsRequest] = useState<any[]>([]);
   const [updateCalendar, setUpdateCalendar] = useState<boolean>(true);
   const [newDates, setNewDates] = useState<Nullable<Date> | any>(null);
-const [sessionStatus, setSessionStatus] = useState('')
+  const [sessionStatus, setSessionStatus] = useState("");
 
-const convertDateTimeZone = (
-  inputTime: moment.MomentInput,
-  inputTimezone: string,
-  outputTimezone: string,
-  ourFormat: string
-) => {
-  const convertedTime = moment(inputTime)
-    .tz(inputTimezone)
-    .clone()
-    .tz(outputTimezone);
-  return convertedTime.format(ourFormat);
-};
+  const convertDateTimeZone = (
+    inputTime: moment.MomentInput,
+    inputTimezone: string,
+    outputTimezone: string,
+    ourFormat: string
+  ) => {
+    const convertedTime = moment(inputTime)
+      .tz(inputTimezone)
+      .clone()
+      .tz(outputTimezone);
+    return convertedTime.format(ourFormat);
+  };
   useEffect(() => {
     fetch(`${url}/user/mySessionReq`, {
       method: "GET",
@@ -47,13 +47,18 @@ const convertDateTimeZone = (
           ),
         }));
 
-        sortedSessions.sort((a:Session, b:Session) => {
-          const dateA = new Date(Math.max(...a.sessionDates.map((date:any) => date.getTime())));
-          const dateB = new Date(Math.max(...b.sessionDates.map((date:any) => date.getTime())));
+        sortedSessions.sort((a: Session, b: Session) => {
+          const dateA = new Date(
+            Math.max(...a.sessionDates.map((date: any) => date.getTime()))
+          );
+          const dateB = new Date(
+            Math.max(...b.sessionDates.map((date: any) => date.getTime()))
+          );
           return dateB.getTime() - dateA.getTime();
         });
 
-        setSessionsRequest(sortedSessions);        setSessionStatus(data?.data?.status)
+        setSessionsRequest(sortedSessions);
+        setSessionStatus(data?.data?.status);
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
@@ -105,19 +110,23 @@ const convertDateTimeZone = (
           <div className="flex justify-end">
             <button
               onClick={() => setUpdateCalendar(false)}
-              className={`${sessionStatus==='pending'? '': 'hidden'}bg-[#13801b] py-2 px-5 rounded-lg text-white`}
+              className={`${
+                sessionStatus === "pending" ? "" : "hidden"
+              }bg-[#13801b] py-2 px-5 rounded-lg text-white`}
             >
               Update
             </button>
           </div>
           {sessionsRequest?.map((session) => (
-            <div className="flex flex-col my-2 gap-3" key={session.id}>
+            <div
+              className="flex flex-col my-2 gap-3 bg-white-color p-3 rounded-xl"
+              key={session.id}
+            >
               <p>Session Dates:</p>
               <ul>
                 {session.sessionDates.map((date: string) => (
                   <li key={date}>
                     <span className="mx-3">
-                      
                       {moment(date).format("D-MMM-YYYY")}
                     </span>
                     {convertDateTimeZone(

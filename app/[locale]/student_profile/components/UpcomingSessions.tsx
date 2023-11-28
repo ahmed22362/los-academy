@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
 import moment from "moment-timezone";
@@ -12,9 +12,10 @@ import Countdown from "react-countdown";
 import { Toast } from "primereact/toast";
 import { Tooltip } from "flowbite-react";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import { Button } from "primereact/button";
+import { IoTimeOutline } from "react-icons/io5";
 import ContinueWithModal from "./continueWithModal";
 import { useRouter } from "next/navigation";
+import { FaCalendarDays } from "react-icons/fa6";
 
 function UpcomingSessions() {
   const router = useRouter();
@@ -29,7 +30,7 @@ function UpcomingSessions() {
   const [isHere, setIsHere] = useState<boolean>(false);
   const [isImHereButtonDisabled, setIsImHereButtonDisabled] = useState(true);
   const [openContinueWithModal, setopenContinueWithModal] = useState(false);
-  const [selectedFreeSessionId, setSelectedFreeSessionId] = useState("");
+  const [selectedFreeSessionId, setSelectedFreeSessionId] = useState<number>();
   const [sessionLink, setSessionLink] = useState("");
   const [isRescheduleButtonDisabled, setIsRescheduleButtonDisabled] =
     useState(false);
@@ -37,6 +38,7 @@ function UpcomingSessions() {
     useState<moment.Moment | null>(null);
   const [isConfirmDialogVisible, setIsConfirmDialogVisible] =
     useState<boolean>(false);
+  const [countdownCompleted, setCountdownCompleted] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -46,16 +48,27 @@ function UpcomingSessions() {
       setIsConfirmDialogVisible(storedConfirmDialogValue);
     }
   }, []);
+  useEffect(() => {
+    if (countdownCompleted) {
+      fetchUpcomingSessions();
+    }
+  }, [countdownCompleted]);
 
-  const accept = (sessionId: any) => {
+  const accept = (sessionId: number) => {
     setSelectedFreeSessionId(sessionId);
+    const continueData = {
+      sessionId: Number(sessionId),
+      willContinue: true,
+    };
+    console.log(continueData);
+
     fetch(`${url}/session/continueWithTeacher`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ sessionId, willContinue: true }),
+      body: JSON.stringify(continueData),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -83,7 +96,6 @@ function UpcomingSessions() {
   };
 
   const reject = (sessionId: any) => {
-
     fetch(`${url}/session/continueWithTeacher`, {
       method: "POST",
       headers: {
@@ -170,7 +182,7 @@ function UpcomingSessions() {
           .subtract(1, "minute");
         const allowedStartTimeForReschedule = sessionStartTime
           .clone()
-          .subtract(10, "minute");
+          .subtract(20, "minute");
 
         const currentTime = moment().tz(
           Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -221,40 +233,36 @@ function UpcomingSessions() {
 
   useEffect(() => {
     if (upComingSession.length > 0) {
-      // Extract and store the time part of the session start time as a moment object
-      const startTime = moment(upComingSession[0].sessionDate);
-      setSessionWillStartTime(startTime);
-      console.log("start time" ,startTime);
-       // Store it as a moment object
-    }
-  }, [upComingSession]);
-
-  useEffect(() => {
-    // Set up an interval to check the current time and fetch ongoing sessions
-    const intervalId = setInterval(() => {
-      const currentTime = moment().tz(
-        Intl.DateTimeFormat().resolvedOptions().timeZone
+      const sessionDate: any = convertDateTimeZone(
+        upComingSession[0].sessionDate,
+        "UTC",
+        Intl.DateTimeFormat().resolvedOptions().timeZone,
+        "MMM D,YYYY h:mm A"
       );
-        console.log("current time ", currentTime);
-        
-      if (currentTime.isSame(sessionWillStartTime, "minute")) {
-        // Call the fetching ongoing session function
-        fetchOngoingSessions();
-      }
-    }, 60000); // Check every minute
+      // const ourSessionDate = new Date(sessionDate);
 
-    // Cleanup function to clear the interval
-    return () => clearInterval(intervalId);
-  }, [sessionWillStartTime]);
+      const currentDate: any = new Date();
+      const currentTime = moment();
+      const ourSessionDate = moment(sessionDate);
 
-  useEffect(() => {
-    if (upComingSession.length > 0) {
-      // Extract and store the time part of the session start time
-      const startTime = moment(upComingSession[0].sessionDate);
-      setSessionWillStartTime(startTime); // HH:mm format for time only
+      const timeDifference = ourSessionDate.diff(currentTime);
+
+      const intervalId = setInterval(() => {
+        // console.log("start TIME" ,sessionDate);
+        // console.log("ourSessionDate TIME" ,ourSessionDate);
+        // console.log("currentDate TIME" ,currentDate);
+        // console.log("timeDifference TIME" ,timeDifference);
+
+        // Check if timeDifference is zero and initiate the fetch
+        if (timeDifference === 0) {
+          fetchOngoingSessions();
+          clearInterval(intervalId); // Stop the interval once fetch is triggered
+        }
+      }, 1000); // Check every second
+
+      return () => clearInterval(intervalId);
     }
   }, [upComingSession]);
-
   const fetchOngoingSessions = () => {
     // Fetch ongoing sessions
     fetch(`${url}/user/ongoingSession`, {
@@ -281,7 +289,6 @@ function UpcomingSessions() {
       });
   };
 
-
   useEffect(() => {
     // Fetch ongoing sessions
     fetch(`${url}/user/ongoingSession`, {
@@ -292,14 +299,14 @@ function UpcomingSessions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("ongoingSession",data);
+        console.log("ongoingSession", data);
         setUpComingSession(data.data);
         // Check if the local storage item is set to true
         if (data.data.length > 0) {
           // If there are ongoing sessions, display them
           console.log(localStorage.getItem("confirmDialog"));
           localStorage.setItem("sessionId", data?.data[0]?.id);
-          
+
           setsessionId(data?.data[0]?.id);
           setLoading(false);
           setSessionLink(data?.data[0]?.meetingLink);
@@ -366,7 +373,7 @@ function UpcomingSessions() {
   if (loading) {
     return (
       <div
-        className={` w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
+        className={` w-full bg-white-color pr-3 p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
         style={{ overflow: "hidden" }}
       >
         <ContentLoader
@@ -393,6 +400,10 @@ function UpcomingSessions() {
     <div
       className={` w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
     >
+      <ContinueWithModal
+        openContinueWithModal={openContinueWithModal}
+        setopenContinueWithModal={setopenContinueWithModal}
+      />
       <Toast ref={toast} />
 
       <h4 className={`${styles.secondary_head} my-2`}>
@@ -400,29 +411,17 @@ function UpcomingSessions() {
       </h4>
       {upComingSession?.length > 0 ? (
         upComingSession?.map((session, index) => (
-          <div key={index}>
+          <div className="" key={index}>
             <p>{`Session #${session.id} with title ${session.type}`}</p>
             <div className={`${styles.date} flex justify-gap-5 my-2`}>
               <div className={`flex justify-center  items-center `}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 448 512"
-                >
-                  <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zm64 80v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16zm128 0v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H208c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H336zM64 400v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H208zm112 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H336c-8.8 0-16 7.2-16 16z" />
-                </svg>
+                <FaCalendarDays />
                 <p className={`ml-3 mr-1`}>
                   {moment(session.sessionDate).format("D-MMM-YYYY")}
                 </p>
               </div>
               <div className={`flex justify-center items-center`}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 512 512"
-                >
-                  <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                </svg>
+                <IoTimeOutline />
                 <p className={`ml-3`}>
                   {convertDateTimeZone(
                     session.sessionDate,
@@ -451,7 +450,8 @@ function UpcomingSessions() {
                     .toDate()}
                   renderer={({ hours, minutes, seconds, completed }) => {
                     if (completed) {
-                      if (upComingSession[0].type === "free") {
+                      setCountdownCompleted(true);
+                      if (upComingSession[0]?.type === "free") {
                         setAlertVisible(true);
                         localStorage.setItem("confirmDialog", "true");
                       }
@@ -459,7 +459,7 @@ function UpcomingSessions() {
                         <span>
                           {isConfirmDialogVisible && (
                             <ConfirmDialog
-                            closable={false}
+                              closable={false}
                               visible={isConfirmDialogVisible}
                               message={
                                 "Do you want to Continue With This Teacher?"
@@ -567,7 +567,7 @@ function UpcomingSessions() {
             <span>
               {isConfirmDialogVisible && (
                 <ConfirmDialog
-                closable={false}
+                  closable={false}
                   visible={isConfirmDialogVisible}
                   message={"Do you want to Continue With This Teacher?"}
                   acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
@@ -575,8 +575,12 @@ function UpcomingSessions() {
                   header="Continue With This Teacher"
                   icon="bi bi-info-circle"
                   position="top"
-                  accept={() => accept(localStorage.getItem("sessionId"))}
-                  reject={() => reject(localStorage.getItem("sessionId"))}
+                  accept={() =>
+                    accept(Number(localStorage.getItem("sessionId")))
+                  }
+                  reject={() =>
+                    reject(Number(localStorage.getItem("sessionId")))
+                  }
                 />
               )}
             </span>

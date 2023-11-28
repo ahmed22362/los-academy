@@ -5,14 +5,19 @@ import { Nullable } from "primereact/ts-helpers";
 import { Toast } from "primereact/toast";
 import Cookies from "universal-cookie";
 import { Modal } from "flowbite-react";
+import { inflateRaw } from "zlib";
 
 function RescheduleSession({
   setopenRescheduleModal,
   openRescheduleModal,
   sessionId,
 }: any) {
-  const [selectedStartDate, setSelectedStartDate] = useState<Nullable<Date> | any>(null);
-  const [selectedEndDate, setSelectedEndDate] = useState<Nullable<Date> | any>(null);
+  const [selectedStartDate, setSelectedStartDate] = useState<
+    Nullable<Date> | any
+  >(null);
+  const [selectedEndDate, setSelectedEndDate] = useState<Nullable<Date> | any>(
+    null
+  );
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -62,28 +67,26 @@ function RescheduleSession({
       .then((response) => response.json())
       .then((data) => {
         console.log("Session rescheduled successfully", data);
-     
-        
+
         // Handle success response
         if (data.status === "success") {
           showSuccess(`${data.message}`);
           // Close the modal after a successful reschedule
-          setTimeout(()=>{
+          setTimeout(() => {
             setopenRescheduleModal(false);
-          },4000)
+          }, 4000);
         } else {
           showError(`${data.message}`);
         }
-        setTimeout(()=>{
+        setTimeout(() => {
           setopenRescheduleModal(false);
-        },6000)
+        }, 6000);
       })
       .catch((error) => {
         // Handle error
         console.error("Error rescheduling session:", error);
         showError("Error rescheduling session. Please try again.");
         setopenRescheduleModal(false);
-
       });
   };
 
@@ -99,26 +102,30 @@ function RescheduleSession({
         <Modal.Body>
           <div className="flex justify-center flex-col items-center gap-5">
             <Calendar
+              panelClassName="h-fit lg:mt-[300px]"
               value={selectedStartDate}
-              onChange={(e: CalendarProps | any) => setSelectedStartDate(e.value)}
+              onChange={(e: CalendarProps | any) =>
+                setSelectedStartDate(e.value)
+              }
               showTime
               hourFormat="12"
               style={{
                 outline: "4px solid var(--secondary-color)",
-                borderRadius: "16px",
-                width: "408px",
+                borderRadius: "",
+                width: "100%",
               }}
               placeholder="Select First Avilable Date and Time"
             />
             <Calendar
+              panelClassName="h-fit lg:mt-[250px]"
               value={selectedEndDate}
               onChange={(e: CalendarProps | any) => setSelectedEndDate(e.value)}
               showTime
               hourFormat="12"
               style={{
                 outline: "4px solid var(--secondary-color)",
-                borderRadius: "16px",
-                width: "408px",
+                borderRadius: "",
+                width: "100%",
               }}
               placeholder="Select Second Avilable Date and Time"
             />

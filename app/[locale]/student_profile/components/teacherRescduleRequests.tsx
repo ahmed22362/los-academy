@@ -177,7 +177,11 @@ function TeacherRescduleRequests() {
                                   onClick={() =>
                                     acceptReschedule(request.id, date)
                                   }
-                                  className={`${request.status==="no_response" ? 'hidden': ''} px-5 py-1 bg-green-600 hover:bg-green-700 rounded-3xl text-white`}
+                                  className={`${
+                                    request.status === "no_response"
+                                      ? "hidden"
+                                      : ""
+                                  } px-5 py-1 bg-green-600 hover:bg-green-700 rounded-3xl text-white`}
                                 >
                                   Accept
                                 </button>
@@ -186,7 +190,11 @@ function TeacherRescduleRequests() {
                           )}
                         </div>
                       </div>
-                      <button className={`${request.status==="no_response" ? 'hidden': ''} text-center m-auto px-5 py-1 bg-red-700 hover:bg-red-800 text-white rounded-3xl`}>
+                      <button
+                        className={`${
+                          request.status === "no_response" ? "hidden" : ""
+                        } text-center m-auto px-5 py-1 bg-red-700 hover:bg-red-800 text-white rounded-3xl`}
+                      >
                         Deny All
                       </button>
                     </div>

@@ -3,8 +3,8 @@
 import { useTranslations } from "next-intl";
 import OurCard from "./OurCard"
 import { useEffect, useState} from "react";
-// import Slider from "react-slick";
-import { Splide, SplideSlide } from '@splidejs/react-splide';
+import Slider from "react-slick";
+// import { Splide, SplideSlide } from '@splidejs/react-splide';
 import { Skeleton } from 'primereact/skeleton';
 import { usePathname } from "next/navigation";
 
@@ -16,6 +16,45 @@ function OurCourses() {
   const pathname = usePathname();
   const t = useTranslations('courses');
   const t2 = useTranslations('Hompage');
+
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    initialSlide: 1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+        }
+      },
+      {
+        breakpoint: 1023,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
+  };
+
+
+
+
+
 
   const getCourses = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/course`, {
@@ -85,41 +124,42 @@ function OurCourses() {
             )
             :
             (
-              <Splide options={
-                {
-                  classes: {
-                    arrows: 'splide__arrows',
-                    arrow: 'splide__arrow',
-                    prev  : 'splide__arrow--prev',
-                    next  : 'splide__arrow--next',
-                  },
-                  direction: pathname === '/ar' ? 'rtl' : 'ltr',
-                  perPage: 3,
-                  gap    : '2rem',
-                  position: 'center',
-                  focus  : 'center',
-                  breakpoints: {
-                    640: {
-                      perPage: 2,
-                      gap    : '.7rem',
-                      height : '6rem',
-                    },
-                    480: {
-                      perPage: 1,
-                      gap    : '.7rem',
-                      height : '6rem',
-                    },
-                  },
-                } 
-              }>
+              // <Splide options={
+              //   {
+              //     classes: {
+              //       arrows: 'splide__arrows',
+              //       arrow: 'splide__arrow',
+              //       prev  : 'splide__arrow--prev',
+              //       next  : 'splide__arrow--next',
+              //     },
+              //     direction: pathname === '/ar' ? 'rtl' : 'ltr',
+              //     perPage: 3,
+              //     gap    : '2rem',
+              //     position: 'center',
+              //     focus  : 'center',
+              //     breakpoints: {
+              //       640: {
+              //         perPage: 2,
+              //         gap    : '.7rem',
+              //         height : '6rem',
+              //       },
+              //       480: {
+              //         perPage: 1,
+              //         gap    : '.7rem',
+              //         height : '6rem',
+              //       },
+              //     },
+              //   } 
+              // }>
+              <Slider {...settings}>
               {
                 courses && courses.map((course: any, index: number) => (
-                  <SplideSlide key={index}>
-                    <OurCard data={course} />
-                  </SplideSlide>
+                    <OurCard key={index} data={course} />
+                  
                 ))
-            }
-              </Splide>
+              }
+              </Slider>
+              // </Splide>
             )
             }
       </section>

@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { Tooltip } from 'flowbite-react';
 import EditReportModal from './editReportModal'
 
-export default function ReportData({data}:{data: any}) {
+export default function ReportData({data,visibleEdit }:{data: any ; visibleEdit?: any} ) {
 
     const reports = data && data;
 
@@ -31,7 +31,7 @@ export default function ReportData({data}:{data: any}) {
     };
 
   return (
-        <div className={"bg-white-color px-10 py-5 rounded-[16px] flex justify-between items-center w-full my-4 flex-wrap"}>
+        <div className={"bg-white-color px-8 py-5 rounded-[16px] flex justify-between items-center w-full my-4 flex-wrap"}>
             <div className={"flex items-center justify-center gap-5"}>
                 <AiOutlineFileText className={"text-[26px]"}/>
                 <div className={"flex flex-col gap-2"}>
@@ -43,9 +43,11 @@ export default function ReportData({data}:{data: any}) {
                 <button className={"smallBtn"}
                     onClick={handleOpen}
                     >View</button>
+               {visibleEdit ? 
                 <Tooltip content="Edit Report">
-                    <BiSolidEditAlt className={"text-2xl cursor-pointer"} style={{color: "green"}} onClick={handleOpenEdit}/>
-                </Tooltip>
+                <BiSolidEditAlt className={"text-2xl cursor-pointer"} style={{color: "green"}} onClick={handleOpenEdit}/>
+            </Tooltip>
+                :''}
                 <EditReportModal openAssignModal={selectedEditReport} handleCloseModal={handleCloseEditModal} reportDetails={reports} />
             </div>
             <ReportModal openAssignModal={selectedReport} handleCloseModal={handleCloseModal} details={reports}/>

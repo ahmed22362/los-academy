@@ -19,10 +19,7 @@ function TeacherRescduleRequests() {
     outputTimezone: string,
     ourFormat: string
   ) => {
-    const convertedTime = moment(
-      `${moment().format("YYYY-MM-DD")}T${inputTime}`,
-      "YYYY-MM-DDTHH:mm:ss.SSS"
-    )
+    const convertedTime = moment(inputTime)
       .tz(inputTimezone)
       .clone()
       .tz(outputTimezone);
@@ -75,6 +72,7 @@ function TeacherRescduleRequests() {
         console.log("Reschedule request accepted successfully");
       })
       .catch((error) => {
+        showError("some thing went wrong");
         console.error("Error accepting reschedule request:", error);
       });
   };
@@ -121,88 +119,90 @@ function TeacherRescduleRequests() {
             {/* Add more rectangles or shapes as needed */}
           </ContentLoader>
         ) : (
-          <ul className="h-full">
-            {teatcherreschedule.map((request) => (
-              <li className="" key={request.id}>
-                <p className="my-1 py-2 font-medium">
-                  Session ID:{" "}
-                  <span className="bg-[--secondary-color] text-white p-1 rounded-2xl">
-                    {request.sessionId}
-                  </span>
-                </p>
-                <p className="my-1 py-2 font-medium">
-                  Status:{" "}
-                  <span className="bg-yellow-500 px-3 py-1 text-white rounded-lg">
-                    {request.status}
-                  </span>
-                </p>
-                <p className="my-1 py-2 font-medium">
-                  Requested By: {request.requestedBy.toUpperCase()}
-                </p>
-                <p className="my-1 py-2 font-medium flex  gap-4">
-                  Old Date:
-                  <span className="text-red-600">
-                    {convertDateTimeZone(
-                      request.oldDate,
-                      "UTC",
-                      Intl.DateTimeFormat().resolvedOptions().timeZone,
-                      "DD/MMM/YYYY h:mm A"
-                    )}
-                  </span>
-                </p>
-                <div className="py-4 flex flex-col gap-5 ">
-                  <h3 className="font-semibold text-lg ">
-                    choose the time that sitable for you :
-                  </h3>
-                  <div className="flex justify-center gap-10 items-center">
-                    <div className="flex flex-col items-center gap-3">
-                      <p className="my-1 text-[--secondary-color]">
+          <>
+            {teatcherreschedule?.length === 0 ? (
+              <p>No reschedule requests available.</p>
+            ) : (
+              <ul className="h-full">
+                {teatcherreschedule.map((request) => (
+                  <li className="" key={request.id}>
+                    <p className="my-1 py-2 font-medium">
+                      Session ID:{" "}
+                      <span className="bg-[--secondary-color] text-white p-1 rounded-2xl">
+                        {request.sessionId}
+                      </span>
+                    </p>
+                    <p className="my-1 py-2 font-medium">
+                      Status:{" "}
+                      <span className="bg-yellow-500 px-3 py-1 text-white rounded-lg">
+                        {request.status}
+                      </span>
+                    </p>
+                    <p className="my-1 py-2 font-medium">
+                      Requested By: {request.requestedBy.toUpperCase()}
+                    </p>
+                    <p className="my-1 py-2 font-medium flex  gap-4">
+                      Old Date:
+                      <span className="text-red-600">
                         {convertDateTimeZone(
-                          request.newDateStartRange,
-                          "UTC",
-                          Intl.DateTimeFormat().resolvedOptions().timeZone,
-                          "DD/MMM/YYYY h:mm A"
-                        )}{" "}
-                      </p>
-                      <button
-                        onClick={() =>
-                          acceptReschedule(
-                            request.id,
-                            request.newDateStartRange
-                          )
-                        }
-                        className=" px-5 py-1 bg-green-600 hover:bg-green-700  rounded-3xl text-white"
-                      >
-                        Accept
-                      </button>
-                    </div>
-                    <div className="flex flex-col items-center gap-3">
-                      <p className="my-1 text-[--secondary-color]">
-                        {" "}
-                        {convertDateTimeZone(
-                          request.newDateEndRange,
+                          request.oldDate,
                           "UTC",
                           Intl.DateTimeFormat().resolvedOptions().timeZone,
                           "DD/MMM/YYYY h:mm A"
                         )}
-                      </p>
+                      </span>
+                    </p>
+                    <div className="py-4 flex flex-col gap-5 ">
+                      <h3 className="font-semibold text-lg ">
+                        choose the time that sitable for you :
+                      </h3>
+                      <div className="flex justify-center gap-10 items-center">
+                        <div className="flex  items-center gap-10">
+                          {request.newDatesOptions?.map(
+                            (date: string, index: number) => (
+                              <div
+                                className="flex flex-col items-center"
+                                key={index}
+                              >
+                                <p className="my-1 text-[--secondary-color]">
+                                  {convertDateTimeZone(
+                                    date,
+                                    "UTC",
+                                    Intl.DateTimeFormat().resolvedOptions()
+                                      .timeZone,
+                                    "DD/MMM/YYYY h:mm A"
+                                  )}
+                                </p>
+                                <button
+                                  onClick={() =>
+                                    acceptReschedule(request.id, date)
+                                  }
+                                  className={`${
+                                    request.status === "no_response"
+                                      ? "hidden"
+                                      : ""
+                                  } px-5 py-1 bg-green-600 hover:bg-green-700 rounded-3xl text-white`}
+                                >
+                                  Accept
+                                </button>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
                       <button
-                        onClick={() =>
-                          acceptReschedule(request.id, request.newDateEndRange)
-                        }
-                        className=" px-5 py-1 bg-green-600 hover:bg-green-700  rounded-3xl text-white"
+                        className={`${
+                          request.status === "no_response" ? "hidden" : ""
+                        } text-center m-auto px-5 py-1 bg-red-700 hover:bg-red-800 text-white rounded-3xl`}
                       >
-                        Accept
+                        Deny All
                       </button>
                     </div>
-                  </div>
-                  <button className="text-center m-auto px-5 py-1 bg-red-700 hover:bg-red-800 text-white rounded-3xl">
-                    Deny All
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
       </div>
     </div>

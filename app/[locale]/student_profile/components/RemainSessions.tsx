@@ -6,6 +6,7 @@ import Cookies from "universal-cookie";
 import MyLoader from "./MyLoader";
 import Image from "next/image";
 import RescheduleSession from "./rescheduleSession";
+import MyLoaderContainer from "./MyLoader";
 
 function RemainSessions({ setTeacherName }: any) {
   const cookie = new Cookies();
@@ -16,6 +17,8 @@ function RemainSessions({ setTeacherName }: any) {
   const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
     null
   );
+  const [isRescheduleButtonDisabled, setIsRescheduleButtonDisabled] =
+    useState(false);
   const [openRescheduleModal, setOpenRescheduleModal] = useState(false);
   const convertDateTimeZone = (
     inputTime: moment.MomentInput,
@@ -65,53 +68,79 @@ function RemainSessions({ setTeacherName }: any) {
       <div className={`${styles.sessions} px-2 h-[200px]  scrollAction`}>
         {loading ? (
           <div style={{ overflow: "hidden" }}>
-            <MyLoader />
+            <MyLoaderContainer />
           </div>
         ) : sessions?.length > 0 ? (
           <>
-            {sessions.map((session, index) => (
-              <div
-                key={index}
-                className={`${styles.session} bg-white-color px-2 rounded-2xl py-3 w-full  flex justify-between items-center gap- my-3`}
-              >
-                <div>
-                  <p className="">Session #{session.id}</p>
-                  <p className="">
-                    Time:{" "}
-                    {convertDateTimeZone(
-                      session.sessionDate,
-                      "UTC",
-                      Intl.DateTimeFormat().resolvedOptions().timeZone,
-                      "h:mm A"
-                    )}
-                    {" - "}
-                    {convertDateTimeZone(
-                      moment(session.sessionDate)
-                        .add(session.sessionDuration, "minutes")
-                        .format(),
-                      "UTC",
-                      Intl.DateTimeFormat().resolvedOptions().timeZone,
-                      "h:mm A"
-                    )}
-                  </p>
-                  <p className="">
-                    Date:{" "}
-                    {convertDateTimeZone(
-                      session.sessionDate,
-                      "UTC",
-                      Intl.DateTimeFormat().resolvedOptions().timeZone,
-                      "MMM D,YYYY"
-                    )}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleRescheduleClick(session.id)}
-                  className="bg-[--secondary-color] hover:bg-[#453ed2] h-fit text-sm rounded-full py-2 text-white px-2"
+            {sessions.map((session, index) => {
+              const sessionStartTime = moment.utc(session.sessionDate);
+              const currentTime = moment().tz(
+                Intl.DateTimeFormat().resolvedOptions().timeZone
+              );
+              const allowedStartTimeForReschedule = sessionStartTime
+                .clone()
+                .subtract(20, "minute");
+
+              const check = currentTime.isBetween(
+                allowedStartTimeForReschedule,
+                sessionStartTime.clone().add(session.sessionDuration, "minutes")
+              );
+              return (
+                <div
+                  key={index}
+                  className={`${styles.session} bg-white-color px-2 rounded-2xl py-3 w-full  flex justify-between items-center gap- my-3`}
                 >
-                  Reschedule
-                </button>
-              </div>
-            ))}{" "}
+                  <div>
+                    <p className="">Session #{session.id}</p>
+                    <p className="">
+                      Time:{" "}
+                      {convertDateTimeZone(
+                        session.sessionDate,
+                        "UTC",
+                        Intl.DateTimeFormat().resolvedOptions().timeZone,
+                        "h:mm A"
+                      )}
+                      {" - "}
+                      {convertDateTimeZone(
+                        moment(session.sessionDate)
+                          .add(session.sessionDuration, "minutes")
+                          .format(),
+                        "UTC",
+                        Intl.DateTimeFormat().resolvedOptions().timeZone,
+                        "h:mm A"
+                      )}
+                    </p>
+                    <p className="">
+                      Date:{" "}
+                      {convertDateTimeZone(
+                        session.sessionDate,
+                        "UTC",
+                        Intl.DateTimeFormat().resolvedOptions().timeZone,
+                        "MMM D,YYYY"
+                      )}
+                    </p>
+                    <div className={"  py-1 "}>
+                      with teacher:{" "}
+                      <span className="font-bold">
+                        {session.SessionInfo.teacher.name}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleRescheduleClick(session.id)}
+                    className={`${check ? "cursor-not-allowed" : ""} bg-${
+                      check ? "gray-500" : "[--secondary-color]"
+                    } hover:bg-${
+                      check ? "gray-500" : "[#453ed2]"
+                    } h-fit text-sm rounded-full py-2 text-white px-2`}
+                    disabled={check}
+                  >
+                    Reschedule
+                  </button>
+                </div>
+              );
+            })}{" "}
           </>
         ) : (
           <div className="flex justify-center mt-5 items-center flex-col gap-5">

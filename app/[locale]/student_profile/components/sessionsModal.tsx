@@ -7,6 +7,7 @@ import RemainSessions from "./RemainSessions";
 import HistorySessions from "./historySessions";
 import SessionsRequest from "./sessionsRequest";
 import RescheduleRequests from "./rescheduleRequests";
+import TeacherUbsent from "./teacherUbsent";
 
 export default function SessionsModal({
   setOpenSeesionModal,
@@ -15,7 +16,7 @@ export default function SessionsModal({
   const customeTheme: CustomFlowbiteTheme = {
     tab: {
       tablist: {
-        base: "flex  items-center  w-fit  ",
+        base: "flex  items-center max-md:justify-center w-fit   ",
         tabitem: {
           styles: {
             pills: {
@@ -63,6 +64,9 @@ export default function SessionsModal({
                 </Tabs.Item>
                 <Tabs.Item title="Rescheduling Requests">
                   <RescheduleRequests />
+                </Tabs.Item>
+                <Tabs.Item title="Teacher Ubsent Sessions">
+                  <TeacherUbsent />
                 </Tabs.Item>
               </Tabs.Group>
             </div>

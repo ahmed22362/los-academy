@@ -11,6 +11,8 @@ import Cookies from "universal-cookie";
 import StudentAttendence from "./components/studentAttendence";
 import MyInfo from "./components/myInfo";
 import BannerComponent from "./components/Banner";
+import MyReports from "./myReports";
+import TeacherUbsent from "./components/teacherUbsent";
 
 interface UserInfo {
   name: string;
@@ -22,58 +24,31 @@ interface UserInfo {
   sessionPlaced: boolean; // make age optional if it may not be present in the API response
 }
 export default function page() {
-  const [reports, setReports] = useState([]);
   const [myInfo, setMyInfo] = useState<UserInfo | undefined>();
   const [teacherName, setTeacherName] = useState("");
   const [showBanner, setShowBanner] = useState(true);
 
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const cookie = new Cookies();
-  const token = cookie.get("token");
-
   useEffect(() => {
-    // Fetch reports when the component mounts
-    fetch(`${url}/user/myReports`, {
-      method: "GET", // Specify the HTTP method as 'GET'
-      headers: {
-        Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        // Set the retrieved reports in the state
-        setReports(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching reports:", error);
-      });
+    const isFirstVisit = localStorage.getItem("isFirstVisit") === null;
+
+    if (myInfo?.sessionPlaced == false) {
+      // Display tips for the first visit
+
+      setShowBanner(true);
+      // Set the flag to indicate that the user has seen the tips
+    }
   }, []);
-
-useEffect(() => {
-  const isFirstVisit = localStorage.getItem('isFirstVisit') === null;
-
-if (myInfo?.sessionPlaced==false) {
-  // Display tips for the first visit
-   
-  setShowBanner(true)
-  // Set the flag to indicate that the user has seen the tips
-}
-
- 
-}, [])
-
 
   return (
     <main
       className={
-        "ps-10 pe-10 pt-[7rem]  max-md:justify-between max-md:items-center"
+        "ps-10 pe-10 pt-[7rem] max-md:mt-7  max-md:justify-between max-md:items-center"
       }
     >
-       {showBanner && (
-        <BannerComponent/>
-    )}
-      <MyInfo myInfo={myInfo} />
+      {showBanner && <BannerComponent />}
+      <div className="myInfo flex justify-center items-center">
+        <MyInfo myInfo={myInfo} />
+      </div>
       <div className="grid grid-cols-3 max-sm:grid-cols-1 max-md:grid-cols-2 justify-between gap-5	 mt-7">
         <div className="card w-full  ">
           <EditProfile setMyInfo={setMyInfo} />
@@ -82,9 +57,9 @@ if (myInfo?.sessionPlaced==false) {
 
             <CommunityStatistics />
             <div
-              className={` mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full`}
+              className={`mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full`}
             >
-              <h4 className={`${styles.secondary_head} `}>
+              <h4 className={`${styles.secondary_head} pb-2`}>
                 Remain Sessions:{" "}
                 <span className="font-bold font-italic">
                   with teacher: {teacherName}
@@ -94,8 +69,8 @@ if (myInfo?.sessionPlaced==false) {
             </div>
           </div>
         </div>
-        <div className="card w-full  ">
-          <h3 className={`${styles.main_head} mb-8`}>Sessions</h3>
+        <div className="card w-full mr-3 ">
+          <h3 className={`${styles.main_head} mb-8 `}>Sessions</h3>
           <UpcomingSessions />
           {/* <div
             className={`my-11 p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
@@ -118,12 +93,20 @@ if (myInfo?.sessionPlaced==false) {
         <div className="card w-full ">
           <h3 className={`${styles.main_head} mb-8`}>Reports</h3>
           <div
-            className={`mr-1 my-11 	 p-4  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
+            className={`mr-1  p-3  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
           >
-            <h4 className={`${styles.secondary_head}  my-2`}>
-              Report 1 (5-Sep-2023)
-            </h4>
-            <p>Title : Revision</p>
+            <h4 className={`${styles.secondary_head} ml-3 my-2`}>My Reports</h4>
+            <MyReports />
+          </div>
+          <div
+            className={`mr-1  mb-10 mt-10  p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
+          >
+            <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}>
+              Teacher Ubsent Sessions
+            </h3>
+            <div className="h-[300px]  scrollAction">
+              <TeacherUbsent />
+            </div>
           </div>
         </div>
       </div>

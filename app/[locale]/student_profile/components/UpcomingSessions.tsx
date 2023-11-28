@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
-import moment from "moment-timezone";
+import moment, { min } from "moment-timezone";
 import styles from "../page.module.css";
 import Cookies from "universal-cookie";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -16,6 +16,8 @@ import { IoTimeOutline } from "react-icons/io5";
 import ContinueWithModal from "./continueWithModal";
 import { useRouter } from "next/navigation";
 import { FaCalendarDays } from "react-icons/fa6";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import { Knob } from "primereact/knob";
 
 function UpcomingSessions() {
   const router = useRouter();
@@ -39,6 +41,7 @@ function UpcomingSessions() {
   const [isConfirmDialogVisible, setIsConfirmDialogVisible] =
     useState<boolean>(false);
   const [countdownCompleted, setCountdownCompleted] = useState<boolean>(false);
+  const [value, setValue] = useState(0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -411,7 +414,7 @@ function UpcomingSessions() {
       </h4>
       {upComingSession?.length > 0 ? (
         upComingSession?.map((session, index) => (
-          <div className="" key={index}>
+          <div className="relative" key={index}>
             <p>{`Session #${session.id} with title ${session.type}`}</p>
             <div className={`${styles.date} flex justify-gap-5 my-2`}>
               <div className={`flex justify-center  items-center `}>
@@ -476,9 +479,13 @@ function UpcomingSessions() {
                         </span>
                       );
                     } else {
-                      // Render the timer
+                      const remainingSeconds = minutes * 60 + seconds;
+                      const totalSeconds = session.sessionDuration * 60;
+
+                      // Update the value state for the knob
+                      setValue(remainingSeconds);
                       return (
-                        <span className=" flex flex-col items-center gap-5 rounded-3xl px-3 py-1 ">
+                        <div className=" flex flex-col items-center gap-5 rounded-3xl px-3 py-1 ">
                           <p className="text-[#333]">
                             This Session will End within
                           </p>{" "}
@@ -491,7 +498,20 @@ function UpcomingSessions() {
                               {seconds} sec
                             </span>
                           </p>
-                        </span>
+                          {remainingSeconds > 0 && (
+                            <div className="absolute -top-24 right-0">
+                              <Knob
+                                value={value}
+                                max={session.sessionDuration * 60}
+                                min={0}
+                                valueColor="#708090"
+                                rangeColor="#48d1cc"
+                                readOnly
+                              />
+                            </div>
+                          )}
+                        </div>
+
                         // <span className="font-bold text-lg">{hours} hours</span>
                       );
                     }

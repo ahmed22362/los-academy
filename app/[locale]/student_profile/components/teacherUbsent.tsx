@@ -99,7 +99,7 @@ function TeacherUbsent() {
                         {sessionInfo.type.toUpperCase()}
                       </span>
                     </p>
-                    <p className="my-1 flex justify-between items-center py-2 font-medium">
+                    <div className="my-1 flex justify-between items-center py-2 font-medium">
                       <div>
                         Status:{" "}
                         <span
@@ -116,7 +116,7 @@ function TeacherUbsent() {
                       >
                         Reschedule
                       </button>
-                    </p>
+                    </div>
                     <p className="my-1 py-2 font-medium">
                       Teacher Name: {sessionInfo?.SessionInfo?.teacher?.name}
                     </p>
@@ -133,7 +133,6 @@ function TeacherUbsent() {
                     </p>
                   </div>
 
-                  <hr className=" h-[2px]" />
                 </li>
               ))}
             </ul>

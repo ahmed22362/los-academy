@@ -10,6 +10,7 @@ interface StudentPlaneProps {
   features: string[];
   recommended?: boolean;
   planId?: number;
+  continueFlag?:boolean
 }
 
 const StudentPlane: React.FC<StudentPlaneProps> = ({
@@ -18,6 +19,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
   features = [],
   recommended,
   planId,
+  continueFlag
 }) => {
   const router = useRouter();
   const toast = useRef<Toast>(null);
@@ -52,7 +54,8 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
     }
 
     const customPlanData = {
-      planId: planId, // Include the planId in the request body
+      planId: planId,
+      continueFlag:continueFlag 
     };
 
     fetch(`${url}/subscription/`, {

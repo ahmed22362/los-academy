@@ -19,11 +19,11 @@ export default function ReportModal({
   const modalRef = useRef<HTMLDivElement>(null);
   const   reprotDetails = details && details;
   
-  const downloadPdf = async () => {
+  const downloadPdf = async (reportId:any) => {
     const pdf = new jsPDF("p", "pt", "a4");
     const capture: any = document.getElementById("reportModal")
     pdf.html(capture).then(() => {
-      pdf.save("report.pdf");
+      pdf.save(`report_${reportId}.pdf`);
     });
   };
 
@@ -171,7 +171,7 @@ export default function ReportModal({
           <div className="flex justify-center items-center">
             <button
               className="text-white bg-success-color hover:bg-green-300 rounded-full py-2 px-5 transition-colors"
-              onClick={downloadPdf}
+              onClick={()=>downloadPdf(reprotDetails.id)}
             >
               Download as pdf
             </button>

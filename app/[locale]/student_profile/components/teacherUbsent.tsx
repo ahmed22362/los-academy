@@ -78,7 +78,7 @@ function TeacherUbsent() {
           ) : (
             <ul className="">
               {teacherUbsentSessions?.map((sessionInfo, index) => (
-                <li className="flex flex-col gap-4  pr-2" key={sessionInfo.id}>
+                <li className="flex flex-col gap-4 mb-3 pr-2" key={sessionInfo.id}>
                   <div className="bg-white-color p-2 rounded-xl">
                     <p className="my-1 py-2 font-medium">
                       Session ID:{" "}
@@ -104,7 +104,6 @@ function TeacherUbsent() {
                         Status:{" "}
                         <span
                           className={`
-                             
                          px-3 py-1 text-red-500 rounded-lg`}
                         >
                           {sessionInfo.status}
@@ -121,7 +120,7 @@ function TeacherUbsent() {
                       Teacher Name: {sessionInfo?.SessionInfo?.teacher?.name}
                     </p>
                     <p className="my-1 py-2 font-medium flex  gap-4">
-                      Old Date:
+                       Date:
                       <span className="text-red-600">
                         {convertDateTimeZone(
                           sessionInfo.sessionDate,

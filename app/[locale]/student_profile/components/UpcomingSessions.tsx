@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { FaCalendarDays } from "react-icons/fa6";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import { Knob } from "primereact/knob";
+import StudentPlanModal from "./StudentPlanModal";
 
 function UpcomingSessions() {
   const router = useRouter();
@@ -31,13 +32,12 @@ function UpcomingSessions() {
   const [alertVisible, setAlertVisible] = useState(false);
   const [isHere, setIsHere] = useState<boolean>(false);
   const [isImHereButtonDisabled, setIsImHereButtonDisabled] = useState(true);
-  const [openContinueWithModal, setopenContinueWithModal] = useState(false);
+  const [openPlansModal, setOpenPlansModal] = useState(false);
   const [selectedFreeSessionId, setSelectedFreeSessionId] = useState<number>();
   const [sessionLink, setSessionLink] = useState("");
   const [isRescheduleButtonDisabled, setIsRescheduleButtonDisabled] =
     useState(false);
-  const [sessionWillStartTime, setSessionWillStartTime] =
-    useState<moment.Moment | null>(null);
+  useState<moment.Moment | null>(null);
   const [isConfirmDialogVisible, setIsConfirmDialogVisible] =
     useState<boolean>(false);
   const [countdownCompleted, setCountdownCompleted] = useState<boolean>(false);
@@ -51,6 +51,7 @@ function UpcomingSessions() {
       setIsConfirmDialogVisible(storedConfirmDialogValue);
     }
   }, []);
+
   useEffect(() => {
     if (countdownCompleted) {
       fetchUpcomingSessions();
@@ -86,7 +87,7 @@ function UpcomingSessions() {
             life: 3000,
           });
           setTimeout(() => {
-            setopenContinueWithModal(true);
+            setOpenPlansModal(true);
           }, 3000);
         } else {
           console.error(data);
@@ -236,28 +237,26 @@ function UpcomingSessions() {
 
   useEffect(() => {
     if (upComingSession.length > 0) {
-      const sessionDate: any = convertDateTimeZone(
+      const localSessionDate: any = convertDateTimeZone(
         upComingSession[0].sessionDate,
         "UTC",
         Intl.DateTimeFormat().resolvedOptions().timeZone,
         "MMM D,YYYY h:mm A"
       );
-      // const ourSessionDate = new Date(sessionDate);
 
-      const currentDate: any = new Date();
-      const currentTime = moment();
-      const ourSessionDate = moment(sessionDate);
-
-      const timeDifference = ourSessionDate.diff(currentTime);
+      const sessionDate: number = new Date(
+        upComingSession[0].sessionDate
+      ).getTime();
 
       const intervalId = setInterval(() => {
-        // console.log("start TIME" ,sessionDate);
-        // console.log("ourSessionDate TIME" ,ourSessionDate);
-        // console.log("currentDate TIME" ,currentDate);
-        // console.log("timeDifference TIME" ,timeDifference);
+        const currentDate: Date = new Date();
+        const diff = sessionDate - currentDate.getTime();
+        // const diffInSec = diff / 1000
+        const diffInSec = Math.floor(diff / 1000);
 
+        console.log(currentDate, sessionDate, diffInSec);
         // Check if timeDifference is zero and initiate the fetch
-        if (timeDifference === 0) {
+        if (diffInSec === 0) {
           fetchOngoingSessions();
           clearInterval(intervalId); // Stop the interval once fetch is triggered
         }
@@ -266,6 +265,7 @@ function UpcomingSessions() {
       return () => clearInterval(intervalId);
     }
   }, [upComingSession]);
+
   const fetchOngoingSessions = () => {
     // Fetch ongoing sessions
     fetch(`${url}/user/ongoingSession`, {
@@ -403,9 +403,10 @@ function UpcomingSessions() {
     <div
       className={` w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
     >
-      <ContinueWithModal
-        openContinueWithModal={openContinueWithModal}
-        setopenContinueWithModal={setopenContinueWithModal}
+      <StudentPlanModal
+        openPlansModal={openPlansModal}
+        setOpenPlansModal={setOpenPlansModal}
+        continueFlag={true}
       />
       <Toast ref={toast} />
 
@@ -498,18 +499,6 @@ function UpcomingSessions() {
                               {seconds} sec
                             </span>
                           </p>
-                          {remainingSeconds > 0 && (
-                            <div className="absolute -top-24 right-0">
-                              <Knob
-                                value={value}
-                                max={session.sessionDuration * 60}
-                                min={0}
-                                valueColor="#708090"
-                                rangeColor="#48d1cc"
-                                readOnly
-                              />
-                            </div>
-                          )}
                         </div>
 
                         // <span className="font-bold text-lg">{hours} hours</span>
@@ -574,9 +563,10 @@ function UpcomingSessions() {
               openRescheduleModal={openRescheduleModal}
               setopenRescheduleModal={setopenRescheduleModal}
             />
-            <ContinueWithModal
-              openContinueWithModal={openContinueWithModal}
-              setopenContinueWithModal={setopenContinueWithModal}
+            <StudentPlanModal
+              openPlansModal={openPlansModal}
+              setOpenPlansModal={setOpenPlansModal}
+              continueFlag={true}
             />
           </div>
         ))

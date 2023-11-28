@@ -72,6 +72,7 @@ export default function CustomNavbar() {
         cookies.remove('token', { path: '/', });
         cookies.remove('id', { path: '/', });
         cookies.remove('name', { path: '/', });
+        localStorage.removeItem("confirmDialog");
         if(!token && !id && !name) {
             router.replace('/login');
         }

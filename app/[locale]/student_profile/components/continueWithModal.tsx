@@ -7,7 +7,7 @@ import { Toast } from "primereact/toast";
 
 function ContinueWithModal({
   openContinueWithModal,
-  setopenContinueWithModal,
+  setOpenContinueWithModal,
 }: any) {
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -65,26 +65,31 @@ function ContinueWithModal({
         console.log(data);
 
         if (data.status === "success") {
+          window.history.replaceState(null, '', '/student_profile')
           showSuccess("session with this teacher placed successfully");
           console.log("POST request successful:", data);
           if (typeof window !== "undefined") {
             localStorage.setItem("confirmDialog", "false");
           }
           setTimeout(() => {
-            setopenContinueWithModal(false);
+            setOpenContinueWithModal(false);
           }, 3000);
         } else {
           console.error(data);
           showError(data.message);
+          window.history.replaceState(null, '', '/student_profile')
+
         }
         setTimeout(() => {
-          setopenContinueWithModal(false);
+          setOpenContinueWithModal(false);
         }, 3000);
       })
       .catch((error) => {
+        window.history.replaceState(null, '', '/student_profile')
+
         console.error("Error during POST request:", error);
         setTimeout(() => {
-          setopenContinueWithModal(false);
+          setOpenContinueWithModal(false);
         }, 3000);
       });
   };
@@ -96,7 +101,7 @@ function ContinueWithModal({
         show={openContinueWithModal}
         className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "
         size={"xl"}
-        onClose={() => setopenContinueWithModal(false)}
+        onClose={() => setOpenContinueWithModal(false)}
       >
         <Modal.Header className="p-0 m-0 border-0"></Modal.Header>
 
@@ -104,8 +109,10 @@ function ContinueWithModal({
           <div>
             <h3 className="font-semibold text-lg mb-3">Book Sessions</h3>
             <div className="flex flex-col gap-5">
+              <h4>Now You Should Please Your Session Dates That Avilible To You</h4>
               <div className="taps flex justify-center  h-1/2">
                 <Calendar
+                panelClassName="h-fit lg:mt-[250px]"
                   value={continueWithFirstDate}
                   onChange={(e: CalendarProps | any) =>
                     setContinueWithFirstDate(e.value)
@@ -114,7 +121,6 @@ function ContinueWithModal({
                   hourFormat="12"
                   style={{
                     outline: "4px solid var(--secondary-color)",
-                    borderRadius: "16px",
                     width: "100%",
                   }}
                   placeholder="Select First Avilable Date and Time"
@@ -122,6 +128,7 @@ function ContinueWithModal({
               </div>
               <div className="taps flex justify-center h-1/2">
                 <Calendar
+                panelClassName="h-fit lg:mt-[250px]"
                   value={continueWithSecondDate}
                   onChange={(e: CalendarProps | any) =>
                     setContinueWithSecondDate(e.value)
@@ -130,7 +137,6 @@ function ContinueWithModal({
                   hourFormat="12"
                   style={{
                     outline: "4px solid var(--secondary-color)",
-                    borderRadius: "16px",
                     width: "100%",
                   }}
                   placeholder="Select First Avilable Date and Time"

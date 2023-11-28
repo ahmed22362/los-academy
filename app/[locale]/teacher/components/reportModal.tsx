@@ -17,7 +17,7 @@ export default function ReportModal({
   details: string | any;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const reprotDetails = details && details;
+  const   reprotDetails = details && details;
   
   const downloadPdf = async () => {
     const pdf = new jsPDF("p", "pt", "a4");
@@ -150,7 +150,7 @@ export default function ReportModal({
                 <li>
                   Session Date:{" "}
                   {convertDateTimeZone(
-                    reprotDetails.session.sessionDate,
+                    reprotDetails?.session?.sessionDate,
                     "UTC",
                     Intl.DateTimeFormat().resolvedOptions().timeZone,
                     "D-MMM-YYYY"

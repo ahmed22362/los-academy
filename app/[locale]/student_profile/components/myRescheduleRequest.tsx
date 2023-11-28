@@ -32,11 +32,11 @@ function MyRescheduleRequest() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        const sortedData = data.data.sort((a:any, b:any) =>
-        moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
-      );
-      setMyReschedule(sortedData);
-          })
+        const sortedData = data.data.sort((a: any, b: any) =>
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+        );
+        setMyReschedule(sortedData);
+      })
       .catch((error) => {
         console.error("Error fetching sessions:", error);
       })
@@ -62,88 +62,100 @@ function MyRescheduleRequest() {
           </ContentLoader>
         ) : (
           <>
-          {myReschedule?.length === 0 ? (
-            <p>No reschedule requests available.</p>
-          ) : (
-          <ul>
-            {myReschedule.map((request, index) => (
-              <li className="" key={request.id}>
-                <div className="flex justify-center items-center py-2 mt-5">
-                  <h3 className="px-2 py-1 font-semibold text-lg bg-blueviolet-600 rounded-xl">
-                   With Teacher: {request.session.SessionInfo.teacher.name}
-                  </h3>{" "}
-                </div>
-                <p className="my-1 py-2 font-medium">
-                  Session ID:{" "}
-                  <span className="bg-[--secondary-color] text-white p-1 rounded-2xl">
-                    {request.sessionId}
-                  </span>
-                </p>
-                <p className="my-1 py-2 font-medium">
-                  Status:{" "}
-                  <span
-                    className={`${
-                      request.status === "pending"
-                        ? "bg-yellow-500"
-                        : "bg-green-600"
-                    } px-3 py-1 text-white rounded-lg`}
-                  >
-                    {request.status}
-                  </span>
-                </p>
-                <p className="my-1 py-2 font-medium">
-                  Requested By: {request.requestedBy==='user'?'Me':(request.requestedBy).toUpperCase()}
-                </p>
-                <p className="my-1 py-2 font-medium flex  gap-4">
-                  Old Date:
-                  <span className="text-red-600">
-                    {convertDateTimeZone(
-                      request.oldDate,
-                      "UTC",
-                      Intl.DateTimeFormat().resolvedOptions().timeZone,
-                      "DD/MMM/YYYY h:mm A"
-                    )}
-                  </span>
-                </p>
-                {request.status==="approved"? 
-              
-              <p className="my-1 py-2 font-medium flex  gap-4">
-                  New Date:
-                  <span className="text-green-600">
-                    { convertDateTimeZone(
-                      request.newDate,
-                      "UTC",
-                      Intl.DateTimeFormat().resolvedOptions().timeZone,
-                      "DD/MMM/YYYY h:mm A"
-                    )}
-                  </span>
-                </p>
-              
-              : ''}
-                <div className="py-4 flex flex-col gap-5 ">
-                  <h3 className="font-semibold text-lg ">
-                    The Date You Chose :
-                  </h3>
-          <div className="flex m-auto items-center gap-5" >
-                  {request.newDatesOptions.map((date: string, i: number) => (
-            <p className="my-1 text-[--secondary-color]" key={i}>
-              {convertDateTimeZone(
-                date,
-                "UTC",
-                Intl.DateTimeFormat().resolvedOptions().timeZone,
-                "DD/MMM/YYYY h:mm A"
-              )}
-            </p>
-        ))}
-            </div>
-                </div>
-                <hr />
-              </li>
-            ))}
-          </ul>
-         )}
-         </>   
-         )}
+            {myReschedule?.length === 0 ? (
+              <p>No reschedule requests available.</p>
+            ) : (
+              <ul>
+                {myReschedule.map((request, index) => (
+                  <li className="flex flex-col gap-5" key={request.id}>
+                    <div className="bg-white-color p-2 rounded-xl ">
+                      <div className="flex justify-center items-center py-2 mt-5">
+                        <h3 className="px-2 py-1 font-semibold text-lg bg-blueviolet-600 rounded-xl">
+                          With Teacher:{" "}
+                          {request.session.SessionInfo.teacher.name}
+                        </h3>{" "}
+                      </div>
+                      <p className="my-1 py-2 font-medium">
+                        Session ID:{" "}
+                        <span className="bg-[--secondary-color] text-white p-1 rounded-2xl">
+                          {request.sessionId}
+                        </span>
+                      </p>
+                      <p className="my-1 py-2 font-medium">
+                        Status:{" "}
+                        <span
+                          className={`${
+                            request.status === "pending"
+                              ? "bg-yellow-500"
+                              : "bg-green-600"
+                          } px-3 py-1 text-white rounded-lg`}
+                        >
+                          {request.status}
+                        </span>
+                      </p>
+                      <p className="my-1 py-2 font-medium">
+                        Requested By:{" "}
+                        {request.requestedBy === "user"
+                          ? "Me"
+                          : request.requestedBy.toUpperCase()}
+                      </p>
+                      <p className="my-1 py-2 font-medium flex  gap-4">
+                        Old Date:
+                        <span className="text-red-600">
+                          {convertDateTimeZone(
+                            request.oldDate,
+                            "UTC",
+                            Intl.DateTimeFormat().resolvedOptions().timeZone,
+                            "DD/MMM/YYYY h:mm A"
+                          )}
+                        </span>
+                      </p>
+                      {request.status === "approved" ? (
+                        <p className="my-1 py-2 font-medium flex  gap-4">
+                          New Date:
+                          <span className="text-green-600">
+                            {convertDateTimeZone(
+                              request.newDate,
+                              "UTC",
+                              Intl.DateTimeFormat().resolvedOptions().timeZone,
+                              "DD/MMM/YYYY h:mm A"
+                            )}
+                          </span>
+                        </p>
+                      ) : (
+                        ""
+                      )}
+                      <div className="py-4 flex flex-col gap-5 ">
+                        <h3 className="font-semibold text-lg ">
+                          The Date You Chose :
+                        </h3>
+                        <div className="flex m-auto items-center gap-5">
+                          {request.newDatesOptions.map(
+                            (date: string, i: number) => (
+                              <p
+                                className="my-1 text-[--secondary-color]"
+                                key={i}
+                              >
+                                {convertDateTimeZone(
+                                  date,
+                                  "UTC",
+                                  Intl.DateTimeFormat().resolvedOptions()
+                                    .timeZone,
+                                  "DD/MMM/YYYY h:mm A"
+                                )}
+                              </p>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

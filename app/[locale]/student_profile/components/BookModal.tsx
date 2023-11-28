@@ -10,7 +10,7 @@ import BookPaidSession from "./BookPaidSession";
 import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import PrimaryButton from "../../components/PrimaryButton";
 
-export default function BookModal({myInfo}:any) {
+export default function BookModal({ myInfo }: any) {
   const [openBookModal, setOpenBookModal] = useState(false);
   const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date>>(null);
 
@@ -40,9 +40,9 @@ export default function BookModal({myInfo}:any) {
         className="bg-secondary-color hover:bg-secondary-hover text-md w-[150px] font-semibold transition-colors text-white  h-10  px-8 m-auto my-3 shadow rounded-full  mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
         onClick={() => setOpenBookModal(true)}
         disabled={myInfo?.sessionPlaced}
-        >
-          {myInfo?.sessionPlaced?`Can't Book Untill Your Plan End`:"Book"}
-          </button>
+      >
+        {myInfo?.sessionPlaced ? `Can't Book Untill Your Plan End` : "Book"}
+      </button>
       <Modal
         show={openBookModal}
         className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "

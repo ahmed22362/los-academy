@@ -50,7 +50,6 @@ function page() {
     });
   };
 
-
   const [gender, setGender] = useState("");
   const [userData, setUserData] = useState();
   const [showEmailVerification, setShowEmailVerification] = useState(false);
@@ -205,9 +204,9 @@ function page() {
             router.push("/student_profile");
           }, 3000);
           // Save user token in a cookie or state as needed
-          cookies.set('token', data.token);
-          cookies.set('id', data.data.id);
-          cookies.set('name', data.data.name);
+          cookies.set("token", data.token);
+          cookies.set("id", data.data.id);
+          cookies.set("name", data.data.name);
         } else {
           if (
             data.message ===
@@ -221,7 +220,7 @@ function page() {
           }
           console.log(data);
         }
-        setIsProcessing(false)
+        setIsProcessing(false);
       })
       .catch((error) => {
         console.log(error);
@@ -354,7 +353,7 @@ function page() {
                   >
                     <p>Login</p>
                   </Button>
-                  
+
                   {/* <LoadingButton 
                     title="Login"
                     isProcessing={isProcessing}

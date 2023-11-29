@@ -7,20 +7,21 @@ import AddReportModal from "./addReportModal";
 import { convertDateTimeZone } from "@/helpers/convertDateAndTime";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Spinner } from "flowbite-react";
 
 export default function OnGoingBox(session: any) {
 
     const upComingSession = session.session && session.session
-    
-    const [isJoin, setIsJoin] = useState(false)
 
-    const [onGoingSession, setOnGoingSession] = useState<any>({});
-
+    const [onGoingSession, setOnGoingSession]: any = useState<any>([]);
     const [countdownSeconds, setCountdownSeconds] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
     const cookies = new Cookies()
     const toast = useRef<any>(null);
     const [openModal, setOpenModal] = useState(false)
     const router = useRouter();
+    const sessionDuration = onGoingSession && onGoingSession.sessionDuration
+
     const convertTimeZone = convertDateTimeZone
     const handleOpen = () => {
         setOpenModal(true)
@@ -47,18 +48,12 @@ export default function OnGoingBox(session: any) {
     // Calculate the time difference in milliseconds
     const timeDifference = ourSessionDate.getTime() - currentDate.getTime();
 
-    // Convert milliseconds to seconds
-    const secondsDifference = Math.max(0, Math.floor(timeDifference / 1000));
-
+    // Convert the time difference to seconds
+    const seconds = Math.floor(timeDifference / 1000);
 
     useEffect(() => {
-        console.log(ourSessionDate)
-        console.log(currentDate)
-        console.log(secondsDifference)
-        setCountdownSeconds(secondsDifference);
-    }, [])
-    
-
+            setCountdownSeconds(seconds);
+    }, []);
 
     // Counter down Functionality
     useEffect(() => {
@@ -104,7 +99,6 @@ export default function OnGoingBox(session: any) {
             console.log(data)
             if(data.status === 'success') {
                 showSuccess(data.message)
-                setIsJoin(true)
             } else {
                 showError(data.message)
             }
@@ -125,6 +119,7 @@ export default function OnGoingBox(session: any) {
         .then(data => {
             console.log(data)
             setOnGoingSession(data.data)
+            setIsLoading(false)
         }).catch(err => {
             console.log(err)
        })
@@ -139,40 +134,43 @@ export default function OnGoingBox(session: any) {
             }
        }, [countdownSeconds])
        
+       useEffect(() => {
+        getOngoing()
+       }, [])
+
     return(
         <div className={"bg-white-color p-5 rounded-[16px] "}>
             <Toast ref={toast} />
-            { countdownSeconds > 0 && countdownSeconds < 1200 ? <h5>Timer: {formatTime(countdownSeconds)}</h5> : <span>""</span>}
-            <h3 className="mb-3">The Next Session with: <b>{upComingSession && upComingSession.SessionInfo.user.name}</b></h3>
-            <div className={"flex flex-row justify-center gap-2 items-center text-md font-semibold text-[black-color-one]"}> 
-                { 
-                    countdownSeconds <= 300 ? 
-                        <button onClick={handleUpdateAttendance} disabled={isJoin} className="smallBtn hover:bg-secondary-hover disabled:bg-blue-300">Join</button> 
-                        : ""
-                }
-                    {/* {
-                        countdownSeconds <= 0 && isJoin === true ? 
-                            <button onClick={getOngoing} className="smallBtn hover:bg-secondary-hover">Get Link Now</button> 
-                            : ""
-                    } */}
-                {
-                    onGoingSession && onGoingSession.length > 0 ? onGoingSession.map((session: any, index: number) => {
-                        return (
-                            <div key={index}>
-                                <Link href={session.meetingLink} className="text-success-color hover:underline" target="_blank">Going Meeting</Link>
-                            </div>
-                        )
-                    }   
-                    ) : ""
-                }
-            </div>
-{/*             
-            <AddReportModal 
-                sessionID={upComingSession.id}
-                openAssignModal={openModal}
-                handleCloseModal={handleClose}
-            /> */}
+            {isLoading ? <Spinner /> : 
+                onGoingSession && onGoingSession.length > 0 ? onGoingSession.map((session: any, index: number) => {
+                    return (
+                        <div key={index}>
+                            <h4 className="mb-3">session {session.SessionInfo.user.name} <b className="text-success-color">starting ..</b></h4>
+                            <Link
+                                target="_blank"
+                                className="smallBtn hover:secondary-hover transition-colors"
+                                onClick={handleUpdateAttendance}
+                                href={session.meetingLink}
+                            >Join Meeting Now !!</Link>
+                        </div>
+                    )
+                }) :  
+                upComingSession ? 
+                (<>
+                    {countdownSeconds > 0 && countdownSeconds < 3600 && <h5>Timer: {formatTime(countdownSeconds)}</h5>}
+                    <h3 className="mb-3">The Next Session with: <b>{upComingSession && upComingSession.SessionInfo.user.name}</b></h3>
+                </>) 
+                : 
+                (<p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">No Sessions</p>)
+            }
 
-        </div>
+         
+    {/* <AddReportModal 
+        sessionID={upComingSession.id}
+        openAssignModal={openModal}
+        handleCloseModal={handleClose}
+    />           */}
+
+    </div>
     )
 }

@@ -51,11 +51,6 @@ function OurCourses() {
     ]
   };
 
-
-
-
-
-
   const getCourses = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/course`, {
         method: "GET",
@@ -124,33 +119,6 @@ function OurCourses() {
             )
             :
             (
-              // <Splide options={
-              //   {
-              //     classes: {
-              //       arrows: 'splide__arrows',
-              //       arrow: 'splide__arrow',
-              //       prev  : 'splide__arrow--prev',
-              //       next  : 'splide__arrow--next',
-              //     },
-              //     direction: pathname === '/ar' ? 'rtl' : 'ltr',
-              //     perPage: 3,
-              //     gap    : '2rem',
-              //     position: 'center',
-              //     focus  : 'center',
-              //     breakpoints: {
-              //       640: {
-              //         perPage: 2,
-              //         gap    : '.7rem',
-              //         height : '6rem',
-              //       },
-              //       480: {
-              //         perPage: 1,
-              //         gap    : '.7rem',
-              //         height : '6rem',
-              //       },
-              //     },
-              //   } 
-              // }>
               <Slider {...settings}>
               {
                 courses && courses.map((course: any, index: number) => (
@@ -159,7 +127,6 @@ function OurCourses() {
                 ))
               }
               </Slider>
-              // </Splide>
             )
             }
       </section>

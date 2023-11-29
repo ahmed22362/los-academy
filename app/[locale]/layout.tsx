@@ -4,7 +4,6 @@ import "primereact/resources/primereact.min.css";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import 'bootstrap-icons/font/bootstrap-icons.min.css'
-// import '@splidejs/react-splide/css/core';
 import type { Metadata } from 'next'
 import { Work_Sans } from 'next/font/google'
 import {notFound} from 'next/navigation';
@@ -12,6 +11,7 @@ import {NextIntlClientProvider} from 'next-intl';
 import Footer from '@/app/[locale]/components/layout/Footer';
 import CustomNavbar from '@/app/[locale]/components/layout/Navbar';
 
+// the main font
   const workSans = Work_Sans({
     subsets: ['latin'],
     display: "swap",
@@ -20,14 +20,14 @@ import CustomNavbar from '@/app/[locale]/components/layout/Navbar';
     style: "normal",
     preload: true
   })
-
+// metadata for pages
 export const metadata: Metadata = {
   title: 'LOS Academy',
   description: 'Learning Forgeins Kids Arabic And Islamic Courses',
 }
 
 export default async function LocaleLayout({children, params: {locale}}: {children: React.ReactNode, params: {locale: string}}) {
-
+  // get translated files for locale
   let messages;
   try {
     messages = (await import(`../../messages/${locale}.json`)).default;

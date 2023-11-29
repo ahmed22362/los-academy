@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import OnGoingBox from "./onGoingBox";
 import { Spinner } from "flowbite-react";
-import Link from "next/link";
 
 export default function FetchingUpComingSessions() {
     const [sessions, setAllSessions] = useState<any>([]);
@@ -32,13 +31,12 @@ export default function FetchingUpComingSessions() {
     }
 
     useEffect(() => {
-        // getOngoing()
         getUpComingSession()
     }, [])
 
   return (
     <section>
-        <div className={"flex-col justify-center items-center gap-[16px] h-[240px] text-center adminBox"}>
+        <div className={"flex-col justify-start items-center gap-[16px] h-[240px] text-center adminBox"}>
             <h3 className={"adminBoxTitle"}>Are you here and ready for the session ?</h3>
             {isLoading ? <Spinner /> : (sessions && sessions.length > 0 ? sessions.map((session: any, index: number) => (
                 
@@ -46,7 +44,7 @@ export default function FetchingUpComingSessions() {
             )
             : 
             (
-                <p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">No Upcoming Sessions</p>
+                <p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">No Upcoming Sessions for now </p>
             )
                 )}
 {/* 

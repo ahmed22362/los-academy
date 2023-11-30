@@ -74,7 +74,11 @@ export default function page() {
     >
       <ContinueWithModal openContinueWithModal={openContinueWithModal}
       setOpenContinueWithModal={setOpenContinueWithModal} />
-      {showBanner && <BannerComponent />}
+      {showBanner && <BannerComponent
+      message={"You Want To Enjoy Sessions?"}
+      animation={"animate-bounce"}
+      header={"Los Academy Plans"}
+      />}
       <div className="myInfo flex justify-center items-center">
         <MyInfo myInfo={myInfo} />
       </div>

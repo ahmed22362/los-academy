@@ -65,41 +65,41 @@ function MyRescheduleRequest() {
             {myReschedule?.length === 0 ? (
               <p>No reschedule requests available.</p>
             ) : (
-              <ul>
+              <ul className="">
                 {myReschedule.map((request, index) => (
-                  <li className="flex flex-col gap-5" key={request.id}>
-                    <div className="bg-white-color p-2 rounded-xl ">
-                      <div className="flex justify-center items-center py-2 mt-5">
+                  <li className="flex flex-col gap-5 mb-3" key={request.id}>
+                    <div className="bg-white-color p-2 flex flex-col gap-1 rounded-xl ">
+                      <div className="flex justify-center items-center  mt-2">
                         <h3 className="px-2 py-1 font-semibold text-lg bg-blueviolet-600 rounded-xl">
                           With Teacher:{" "}
                           {request.session.SessionInfo.teacher.name}
                         </h3>{" "}
                       </div>
-                      <p className="my-1 py-2 font-medium">
+                      <p className="my-1  font-medium">
                         Session ID:{" "}
                         <span className="bg-[--secondary-color] text-white p-1 rounded-2xl">
                           {request.sessionId}
                         </span>
                       </p>
-                      <p className="my-1 py-2 font-medium">
+                      <p className="my-1  font-medium">
                         Status:{" "}
                         <span
                           className={`${
                             request.status === "pending"
-                              ? "bg-yellow-500"
-                              : "bg-green-600"
-                          } px-3 py-1 text-white rounded-lg`}
+                              ? "bg-yellow-500 text-white"
+                              : "border shadow"
+                          } px-3 py-1 bg-white rounded-lg`}
                         >
                           {request.status}
                         </span>
                       </p>
-                      <p className="my-1 py-2 font-medium">
+                      <p className="my-1  font-medium">
                         Requested By:{" "}
                         {request.requestedBy === "user"
                           ? "Me"
                           : request.requestedBy.toUpperCase()}
                       </p>
-                      <p className="my-1 py-2 font-medium flex  gap-4">
+                      <p className="my-1  font-medium flex  gap-4">
                         Old Date:
                         <span className="text-red-600">
                           {convertDateTimeZone(
@@ -111,7 +111,7 @@ function MyRescheduleRequest() {
                         </span>
                       </p>
                       {request.status === "approved" ? (
-                        <p className="my-1 py-2 font-medium flex  gap-4">
+                        <p className="my-1  font-medium flex  gap-4">
                           New Date:
                           <span className="text-green-600">
                             {convertDateTimeZone(
@@ -125,11 +125,14 @@ function MyRescheduleRequest() {
                       ) : (
                         ""
                       )}
-                      <div className="py-4 flex flex-col gap-5 ">
+                      {request.status==="pending"? 
+                    (
+                      <>
+                  <div className=" flex flex-col gap-3 ">
                         <h3 className="font-semibold text-lg ">
                           The Date You Chose :
                         </h3>
-                        <div className="flex m-auto items-center gap-5">
+                        <div className="flex m-auto items-center gap-3">
                           {request.newDatesOptions.map(
                             (date: string, i: number) => (
                               <p
@@ -148,8 +151,11 @@ function MyRescheduleRequest() {
                           )}
                         </div>
                       </div>
+                      </>
+                    )  
+                    :''}
+                     
                     </div>
-                    <hr />
                   </li>
                 ))}
               </ul>

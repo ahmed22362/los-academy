@@ -37,6 +37,7 @@ function RemainSessions({ setTeacherName }: any) {
     setSelectedSessionId(sessionId);
     // Open the reschedule modal
     setOpenRescheduleModal(true);
+
   };
 
   // api data
@@ -157,8 +158,9 @@ function RemainSessions({ setTeacherName }: any) {
       <RescheduleSession
         sessionId={selectedSessionId}
         openRescheduleModal={openRescheduleModal}
-        setopenRescheduleModal={setOpenRescheduleModal}
-      />
+        setOpenRescheduleModal={setOpenRescheduleModal} // <-- Correct casing here
+        fromTeacherRequest={true}
+        />
     </div>
   );
 }

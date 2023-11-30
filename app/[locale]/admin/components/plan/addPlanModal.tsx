@@ -7,6 +7,7 @@ import { Toast } from 'primereact/toast';
 import { PiStudentBold } from 'react-icons/pi';
 import Cookies from 'universal-cookie';
 import LoadingButton from '../loadingButton';
+import { PlanDetails } from '@/types';
 
 export default function AddPlanModal({openAssignModal, handleCloseModal, updateComponent}: 
     {
@@ -16,18 +17,22 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
     }) {
 
     const modalRef = useRef<HTMLDivElement>(null);
-    const [title, setTitle] = useState('');
-    const [sessionDuration, setSessionDuration] = useState<any>(null);
-    const [sessionsCount, setSessionsCount] = useState<any>(null);
-    const [sessionsPerWeek, setSessionsPerWeek] = useState<any>(null);
+
+    const [title, setTitle] = useState<string>('');
+    const [sessionDuration, setSessionDuration] = useState<number>(0);
+    const [sessionsCount, setSessionsCount] = useState<number>(0);
+    const [sessionsPerWeek, setSessionsPerWeek] = useState<number>(0);
+    const [discount, setDiscount] = useState<number>(0);
+    const [recommended, setRecommended] = useState<boolean>(false);
+
     const cookies = new Cookies();
     const toast = useRef<Toast>(null);
     const [isProcessing, setIsProcessing] = useState(false);
-    const showSuccess = () => {
-        toast.current?.show({severity:'success', summary: 'Success', detail:'Add Success', life: 3000});
+    const showSuccess = (msg: string) => {
+        toast.current?.show({severity:'success', summary: 'Success', detail:msg, life: 3000});
     }
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Add failed make sure all fields are correct', life: 4000});
+    const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail:msg, life: 4000});
       }
 
     useEffect(() => {
@@ -56,6 +61,31 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
       }
 
       const addPlan = () => {
+        if(title === '') {
+            showError("Title can't be blank")
+            return
+        }
+        if(sessionDuration === 0) {
+            showError("Session duration can't be blank")
+            return
+        }
+        if(sessionsCount === 0) {
+            showError("Session count can't be blank")
+            return
+        }
+        if(sessionsPerWeek === 0) {
+            showError("Sessions per week can't be blank")
+            return
+        }
+        const planData: PlanDetails = {
+            title: title,
+            sessionDuration: sessionDuration,
+            sessionsCount: sessionsCount,
+            sessionsPerWeek: sessionsPerWeek,
+            discount: discount,
+            recommended: recommended,
+            type: 'standard'
+        }
         setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/plan`, {
             method: "POST",
@@ -63,24 +93,19 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${cookies.get("token")}`
             },
-            body: JSON.stringify({
-                title: title,
-                sessionDuration: sessionDuration,
-                sessionsCount: sessionsCount,
-                sessionsPerWeek: sessionsPerWeek,
-                type: 'standard',
-            }),
+            body: JSON.stringify(planData),
         }).then(response => response.json()).then(data => {
             console.log(data)
           if(data.status === "success") {
-            showSuccess()
+            showSuccess("Plan added successfully")
             updateComponent()
           } else {
-            showError()
+            showError("Something went wrong in fields")
           }
           setIsProcessing(false)
-        }).catch(err => {
+        }).catch((err) => {
           console.log(err)
+          showError(err)
         })
       }
 
@@ -102,19 +127,35 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
               <div className="mb-2 block">
                 <Label htmlFor="sessionDuration" value="Session Duration" />
               </div>
-              <TextInput id="sessionDuration" placeholder='Session Duration' onChange={(e) => setSessionDuration(e.target.value)} type="number" />
+              <TextInput min={0} id="sessionDuration" placeholder='Session Duration' onChange={(e: any) => setSessionDuration(parseInt(e.target.value, 10))} type="number" />
             </div>
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="sessionsCount" value="Sessions Count" />
               </div>
-              <TextInput id="sessionsCount" placeholder='Session Count' onChange={(e) => setSessionsCount(e.target.value)} type="number" />
+              <TextInput min={0} id="sessionsCount" placeholder='Session Count' onChange={(e: any) => setSessionsCount(parseInt(e.target.value, 10))} type="number" />
             </div>
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="sessionsPerWeek" value="Sessions Per Week" />
               </div>
-              <TextInput id="sessionsPerWeek" placeholder='Sessions Per Week' onChange={(e) => setSessionsPerWeek(e.target.value)} type="number" />
+              <TextInput min={0} id="sessionsPerWeek" placeholder='Sessions Per Week' onChange={(e: any) => setSessionsPerWeek(parseInt(e.target.value, 10))} type="number" />
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="discount" value="Discount" />
+              </div>
+              <TextInput min={0} id="discount" placeholder='Add Discount ?' onChange={(e: any) => setDiscount(parseInt(e.target.value, 10))} type="number" />
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="recommended" value="Recommended" />
+              </div>
+              <Select id="recommended" onChange={(e: any) => setRecommended(e.target.value === 'true')}>
+                <option value="">Select Recommended</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </Select>
             </div>
             <div className="w-full">
               <LoadingButton 

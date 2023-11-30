@@ -7,8 +7,8 @@ import LoadingButton from '../../admin/components/loadingButton';
 import { Calendar } from 'primereact/calendar';
 import { Nullable } from "primereact/ts-helpers";
 import { Toast } from 'primereact/toast';
-import { convertDateTimeZone } from '@/helpers/convertDateAndTime';
 import { useRouter } from 'next/navigation';
+import { convertDateTimeZone } from '@/utilities';
 export default function AcceptRescheduleModal(
     {
         openModal,

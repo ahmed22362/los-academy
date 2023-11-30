@@ -5,11 +5,23 @@ import { useEffect, useState } from 'react';
 import MatrialComboBox from './matrialComboBox';
 import FetchMatrialData from './fetchMatrialData';
 import Cookies from 'universal-cookie';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 
 export default function MatrialTable() {
     const [allMatrial, setAllMatrial]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
     const cookies = new Cookies()
+    const [first, setFirst] = useState<number>(0);
+    const [rows, setRows] = useState<number>(10);
+    const onPageChange = (event: PaginatorPageChangeEvent) => {
+        setFirst(event.first);
+        setRows(event.rows);
+    };
+    const getPaginatedData = () => {
+        const endIndex = first + rows;
+        return allMatrial.slice(first, endIndex);
+    };
+    const displaydSessions = getPaginatedData()
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
             base: "group/head text-xs uppercase text-black-color-one bg-white-color p-[15px] text-center",
@@ -77,7 +89,7 @@ export default function MatrialTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-                    (allMatrial && allMatrial.length > 0 ? allMatrial.map((matrial: any, index: number) => {
+                    (allMatrial && allMatrial.length > 0 ? displaydSessions.map((matrial: any, index: number) => {
                     return(
                         <FetchMatrialData key={index} matrialData={matrial} updateComponent={fetchAllMatrials}/>
                     )
@@ -87,6 +99,8 @@ export default function MatrialTable() {
             }
             </Table.Body>
         </Table>
+        <div className="mt-4">
+            <Paginator  first={first} rows={rows} totalRecords={allMatrial.length} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />        </div>
         </div>
         </>
     )

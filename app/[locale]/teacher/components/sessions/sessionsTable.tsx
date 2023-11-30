@@ -5,11 +5,23 @@ import { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import SessionsComboBox from './sessionsComboBox';
 import FetchSessionsData from './fetchSessionsData';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 
 export default function SessionsTable() {
     const [allSessions, setAllSessions]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
     const cookies = new Cookies()
+    const [first, setFirst] = useState<number>(0);
+    const [rows, setRows] = useState<number>(10);
+    const onPageChange = (event: PaginatorPageChangeEvent) => {
+        setFirst(event.first);
+        setRows(event.rows);
+    };
+    const getPaginatedData = () => {
+        const endIndex = first + rows;
+        return allSessions.slice(first, endIndex);
+    };
+    const displaydSessions = getPaginatedData()
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
             base: "group/head text-xs uppercase text-black-color-one bg-white-color p-[15px] text-center",
@@ -30,7 +42,7 @@ export default function SessionsTable() {
         .then(response => response.json())
         .then(data => {
             console.log(data)
-            setAllSessions(data)
+            setAllSessions(data.sessions)
             setIsLoading(false)
         }).catch(err => {
             console.log(err)
@@ -77,7 +89,7 @@ export default function SessionsTable() {
                     </Table.Row>
                  ) :
              (allSessions && allSessions.length > 0 
-                    ? allSessions.sessions.map((session: any, index: number) => {
+                    ? displaydSessions.map((session: any, index: number) => {
                     return(
                         <FetchSessionsData key={index} sessionData={session} updateComponent={fetchAllSessions}/>
                     )
@@ -87,6 +99,9 @@ export default function SessionsTable() {
             }
             </Table.Body>
         </Table>
+        <div className="card mt-4">
+            <Paginator  first={first} rows={rows} totalRecords={allSessions.length} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
+        </div>
         </div>
         </>
     )

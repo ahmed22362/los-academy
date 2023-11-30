@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import AssignModal from "./assignModal"
 import Cookies from "universal-cookie"
 import { Spinner } from "flowbite-react";
-import { convertDateTimeZone } from "@/helpers/convertDateAndTime";
+import { convertDateTimeZone } from "@/utilities";
 export default function PaidSesstionsTable() {
     const [totalPaid, setTotlaPaid] = useState([]);
     const [selectedSession, setSelectedSession]: any = useState(null);

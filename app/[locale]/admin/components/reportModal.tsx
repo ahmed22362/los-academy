@@ -1,6 +1,6 @@
 "use client";
 
-import { convertDateTimeZone } from "@/helpers/convertDateAndTime";
+import { convertDateTimeZone } from "@/utilities";
 import { CustomFlowbiteTheme, Modal } from "flowbite-react";
 import jsPDF from "jspdf";
 import Image from "next/image";

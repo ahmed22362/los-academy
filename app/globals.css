@@ -57,8 +57,10 @@ html {
 body{
   color: var(--primary-color);
 }
-
-
+/* Container of the page */
+.container {
+  @apply py-20 px-10 max-md:px-3
+}
 
 
 
@@ -95,14 +97,24 @@ body{
   z-index: 1000 !important;
   border-radius: 50%;
 }
-/* .slick-slider .slick-arrow .slick-next{
-  content: "\F284" !important;
+
+.p-paginator-element {
+  color: #000015ce;
+  min-width: 2rem;
+  height: 2rem;
+  padding-left: 4px;
+  padding-right: 4px;
 }
-.slick-slider .slick-arrow .slick-prev{
-  content: "\F285" !important;
-} */
+.p-paginator-element:hover {
+  background-color:#2f81ed79;
+  color: white;
+  
+}
+.p-highlight {
+  background-color:#2f81ed79;
+  color: white;
 
-
+}
 /* ===========> Start of SlickArrows <============= */
 
 /* ltr classes */

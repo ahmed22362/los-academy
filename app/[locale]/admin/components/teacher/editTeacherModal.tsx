@@ -26,11 +26,11 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
     const cookies = new Cookies()
     
     const toast = useRef<Toast>(null);
-    const showSuccess = () => {
-        toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
+    const showSuccess = (msg:string) => {
+        toast.current?.show({severity:'success', summary: 'Success', detail: msg, life: 3000});
     }
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Updated failed make sure all fields are correct', life: 4000});
+    const showError = (msg:string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg , life: 4000});
       }
 
     useEffect(() => {
@@ -57,6 +57,31 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
       }
 
       const updateTeacher = () => {
+        const updatedData: { [key: string]: any } = {} 
+
+        if (name !== teacherDetails.name && name !== '') {
+            updatedData.name = name
+        }
+        if (email !== teacherDetails.email && email !== '') {
+            updatedData.email = email
+        }
+        if (phone !== teacherDetails.phone && phone !== '') {
+            updatedData.phone = phone
+        }
+        if (role !== teacherDetails.role && role !== '') {
+            updatedData.role = role
+        }
+        if (password !== '') {
+            updatedData.password = password
+        }
+        if (cost !== teacherDetails.sessionCost && cost !== '' && cost > 0) {
+            updatedData.sessionCost = cost
+        }
+
+        if (Object.keys(updatedData).length === 0) {
+            showSuccess('No changes made')
+            return
+        }
         setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/${teacherDetails.id}`, {
             method: "PATCH",
@@ -64,24 +89,19 @@ export default function EditTeacherModal({openAssignModal, handleCloseModal, tea
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${cookies.get("token")}`
             },
-            body: JSON.stringify({
-                name: name,
-                email: email,
-                phone: phone,
-                role: role,
-                password: password,
-                sessionCost: cost
-            }),
+            body: JSON.stringify(updatedData),
         }).then(response => response.json()).then(data => {
           if(data.status === "success") {
-            showSuccess()
+            showSuccess(data.message)
             updateComponent()
           } else {
-            showError()
+            showError(data.message)
           }
           setIsProcessing(false)
         }).catch(err => {
           console.log(err)
+          setIsProcessing(false)
+          showError(err)
         })
       }
   return (

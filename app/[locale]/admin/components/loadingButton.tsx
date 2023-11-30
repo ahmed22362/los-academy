@@ -1,13 +1,9 @@
 "use client"
+import { LoadingButtonProps } from '@/types'
 import { Button, CustomFlowbiteTheme } from 'flowbite-react'
 import React from 'react'
 
-function LoadingButton({title, isProcessing, customStyle, action}: {
-    title: string;
-    isProcessing: boolean;
-    customStyle: string;
-    action?: () => void | any;
-}) {
+function LoadingButton({title, isProcessing, customStyle, action}: LoadingButtonProps) {
 
     const buttonTheme: CustomFlowbiteTheme['button'] = {
         color: {

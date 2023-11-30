@@ -24,11 +24,11 @@ export default function EditMatrialModal({openAssignModal, handleCloseModal, mat
     const cookie = new Cookies()
 
     const toast = useRef<Toast>(null);
-    const showSuccess = () => {
-        toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
+    const showSuccess = (msg: string) => {
+        toast.current?.show({severity:'success', summary: 'Success', detail: msg, life: 4000});
     }
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Updated failed make sure all fields are correct', life: 4000});
+    const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
       }
 
     useEffect(() => {
@@ -56,6 +56,27 @@ export default function EditMatrialModal({openAssignModal, handleCloseModal, mat
       }
 
       const updateBook = () => {
+
+        const updateData: { [key: string]: any } = {}
+
+        if(name !== matrialDetails.name && name !== '') {
+            updateData.name = name
+        }
+        if(age !== matrialDetails.age && age !== 0) {
+            updateData.age = age
+        }
+        if(course !== matrialDetails.course && course !== '') {
+            updateData.course = course
+        }
+        if(status !== matrialDetails.status) {
+            updateData.status = status
+        }
+
+        if(Object.keys(updateData).length === 0) {
+            showError("Nothing to update")
+            return
+        }
+
         setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/material/${matrialDetails.id}`, {
             method: "PATCH",
@@ -63,22 +84,21 @@ export default function EditMatrialModal({openAssignModal, handleCloseModal, mat
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${cookie.get("token")}`
             },
-            body: JSON.stringify({
-                name,
-                age,
-                course,
-                status
-              }),
-        }).then(response => response.json()).then(data => {
+            body: JSON.stringify(updateData),
+        }).then(response => response.json())
+        .then((data) => {
           if(data.status === "success") {
-            showSuccess()
+            showSuccess("Updated Successfully")
             updateComponent()
+  
           } else {
-            showError()
+            showError("Something went wrong make sure all fields are filled correctly")
           }
           setIsProcessing(false)
-        }).catch(err => {
+        }).catch((err) => {
           console.log(err)
+          showError(err)
+          setIsProcessing(false)
         })
       }
   return (

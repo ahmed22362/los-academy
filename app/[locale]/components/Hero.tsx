@@ -33,7 +33,7 @@ const Hero = () => {
   }
 
   return (
-      <section id="hero" className="flex flex-row justify-center items-center mt-20 py-20 max-md:flex-wrap px-10 max-md:px-3">
+      <section id="hero" className="flex flex-row justify-center items-center mt-20 py-16 max-md:flex-wrap px-14 max-md:px-3">
         <div className="flex flex-col justify-center items-flex-start gap-3">
               <h1 className='font-bold text-5xl'>
                 {t('hero-title')}

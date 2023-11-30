@@ -31,11 +31,11 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
 
 
     const toast = useRef<Toast>(null);
-    const showSuccess = () => {
-        toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
+    const showSuccess = (msg: string) => {
+        toast.current?.show({severity:'success', summary: 'Success', detail:msg, life: 4000});
     }
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Updated failed make sure all fields are correct', life: 4000});
+    const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
       }
 
     useEffect(() => {
@@ -63,6 +63,43 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
       }
 
       const updateStudent = () => {
+
+        const updatedData:{[key: string]: any } = {}
+
+        if (name !== studentDetails.name && name !== '') {
+          updatedData.name = name
+        }
+        if (email !== studentDetails.email && email !== '') {
+          updatedData.email = email
+        }
+        if (phone !== studentDetails.phone && phone !== '') {
+          updatedData.phone = phone
+        }
+        if (availableFreeSession !== studentDetails.role && availableFreeSession !== '') {
+          updatedData.role = availableFreeSession
+        }
+        if (age !== studentDetails.sessionCost && age !== 0) {
+          updatedData.sessionCost = age
+        }
+        if (password !== studentDetails.password && password !== '') {
+          updatedData.password = password
+        }
+        if (remainSessions !== studentDetails.remainSessions && remainSessions !== 0) {
+          updatedData.remainSessions = remainSessions
+        }
+        if (gender !== studentDetails.gender && gender !== '') {
+          updatedData.gender = gender
+        }
+        if (verified !== studentDetails.verified && verified !== false) {
+          updatedData.verified = verified
+        }
+
+        if(Object.keys(updatedData).length === 0) {
+            showError("No data to update")
+            return
+        }
+
+        console.log(JSON.stringify(updatedData))
         setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/${studentDetails.id}`, {
             method: "PATCH",
@@ -70,27 +107,24 @@ export default function EditStudentModal({openAssignModal, handleCloseModal, stu
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${cookies.get("token")}`
             },
-            body: JSON.stringify({
-                name: name,
-                email: email,
-                phone: phone,
-                availableFreeSession: availableFreeSession,
-                remainSessions: remainSessions,
-                age: age,
-                password: password,
-                gender: gender,
-                verified: verified
-            }),
-        }).then(response => response.json()).then(data => {
+            body: JSON.stringify(updatedData),
+        }).then(response => response.json())
+        .then((data) => {
+          console.log(data)
           if(data.status === "success") {
-            showSuccess()
-            updateComponent()
+            showSuccess("Updated Successfully")
+            const timer = setTimeout(() => {
+              updateComponent()
+              clearTimeout(timer)
+          }, 4000)
           } else {
-            showError()
+            showError("Update Failed make sure all fields are filled correctly")
           }
           setIsProcessing(false)
-        }).catch(err => {
+        }).catch((err) => {
           console.log(err)
+          showError(err)
+          setIsProcessing(false)
         })
       }
   return (

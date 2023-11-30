@@ -1,4 +1,4 @@
-import { getStaticData } from "@/helpers/getStaticData";
+import { getStaticData } from "@/utilities/getStaticData";
 import ReportData from "./reportData";
 
 export default async function Reports() {

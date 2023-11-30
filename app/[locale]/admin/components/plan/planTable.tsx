@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import PlanComboBox from './planComboBox';
 import FetchPlanData from './fetchPlanData';
 import Cookies from 'universal-cookie';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 
 
 export default function PlanTable() {
@@ -19,7 +20,17 @@ export default function PlanTable() {
             }
         }
     }
-
+    const [first, setFirst] = useState<number>(0);
+    const [rows, setRows] = useState<number>(10);
+    const onPageChange = (event: PaginatorPageChangeEvent) => {
+        setFirst(event.first);
+        setRows(event.rows);
+    };
+    const getPaginatedData = () => {
+        const endIndex = first + rows;
+        return allPlans.slice(first, endIndex);
+    };
+    const displaydPlans = getPaginatedData()
     const fetchAllPlans = () => {
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/plan`, {
             method: "GET",
@@ -41,6 +52,10 @@ export default function PlanTable() {
     useEffect(() => {
         fetchAllPlans()
     }, [])
+
+    const updateComponent = () => {
+        fetchAllPlans()
+    }
 
     return (
         <>
@@ -64,6 +79,12 @@ export default function PlanTable() {
                     Sessions Per Week
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
+                    Recommended
+                </Table.HeadCell>
+                <Table.HeadCell theme={customTheme.head}>
+                    Discount
+                </Table.HeadCell>
+                <Table.HeadCell theme={customTheme.head}>
                     Status
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
@@ -76,16 +97,21 @@ export default function PlanTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allPlans && allPlans.length > 0 ? allPlans.map((plan: any, index: number) => {
+             (allPlans && allPlans.length > 0 ? displaydPlans.map((plan: any, index: number) => {
                     return(
-                        <FetchPlanData key={index} planData={plan} updateComponent={fetchAllPlans}/>
+                        <FetchPlanData key={index} planData={plan} updateComponent={updateComponent}/>
                     )
                 }):
-                    (<p className='p-3'>There is no plans</p>)
+                    (<tr>
+                        <td className='p-3'>There is no plans</td>
+                    </tr>)
                 )
             }
             </Table.Body>
         </Table>
+        <div className='card mt-4'>
+            <Paginator  first={first} rows={rows} totalRecords={allPlans.length} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
+        </div>
         </div>
         </>
     )

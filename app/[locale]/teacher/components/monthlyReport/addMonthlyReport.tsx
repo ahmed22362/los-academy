@@ -13,33 +13,29 @@ import React, { useState } from "react";
 import { useEffect, useRef } from "react";
 import { Toast } from "primereact/toast";
 import Cookies from "universal-cookie";
-import LoadingButton from "../../admin/components/loadingButton";
 import { useRouter } from "next/navigation";
 import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
 import { FaRegFileLines } from "react-icons/fa6";
+import LoadingButton from "@/app/[locale]/admin/components/loadingButton";
 
-export default function AddReportModal({
-  openAssignModal,
+export default function AddMonthlyReport({
+    openReportModal,
   handleCloseModal,
-  sessionID,
 }: {
-  sessionID?: any;
-  openAssignModal: boolean;
+    openReportModal: boolean;
   handleCloseModal: () => void;
 }) {
-
-  const idSession = sessionID && sessionID;
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const [id, setId] = useState(idSession);
-  const [grade, setGrade] = useState("");
+  const [studentId, setStudentId] = useState("");
   const [comment, setComment] = useState("");
   const [arabicGrade, setArabicGrade] = useState("");
   const [quranGrade, setQuranGrade] = useState("");
   const [islamicGrade, setIslamicGrade] = useState("");
-  const [arabicComment, setArabicComment] = useState("");
-  const [quranComment, setQuranComment] = useState("");
-  const [islamicComment, setIslamicComment] = useState("");
+  const [arabicToPage, setArabicToPage] = useState("")
+  const [quranToPage, setQuranToPage] = useState("")
+  const [islamicToPage, setIslamicToPage] = useState("")
+  const [myStudents, setMyStudents] = useState([]);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
@@ -70,14 +66,14 @@ export default function AddReportModal({
       }
     };
 
-    if (openAssignModal) {
+    if (openReportModal) {
       document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [openAssignModal, handleCloseModal]);
-  if (!openAssignModal) {
+  }, [openReportModal, handleCloseModal]);
+  if (!openReportModal) {
     return null;
   }
 
@@ -88,37 +84,44 @@ export default function AddReportModal({
     },
   };
 
+  const getMyStudents = () => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/myStudents`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.get("token")}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setMyStudents(data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+
+
   const addReport = () => {
-    console.log({
-      sessionId: parseInt(id),
-      title: "report",
-      comment: comment,
-      grade: grade,
-      arabic: arabicGrade,
-      quran: quranGrade,
-      islamic: islamicGrade,
-      arabicComment,
-      quranComment,
-      islamicComment
-    });
+    
     setIsProcessing(true);
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/report`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/monthlyReport/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${cookies.get("token")}`,
       },
       body: JSON.stringify({
-        sessionId: parseInt(id),
-        title: "report",
+        studentId: parseInt(studentId),
+        arabicToPage: parseInt(arabicToPage),
+        arabicGrade: arabicGrade,
+        quranToPage: parseInt(quranToPage),
+        quranGrade: quranGrade,
+        islamicToPage: parseInt(islamicToPage),
+        islamicGrade: islamicGrade,
         comment: comment,
-        grade: grade,
-        arabic: arabicGrade,
-        quran: quranGrade,
-        islamic: islamicGrade,
-        arabicComment,
-        quranComment,
-        islamicComment
       }),
     })
       .then((response) => response.json())
@@ -142,26 +145,35 @@ export default function AddReportModal({
   return (
     <Modal
       ref={modalRef}
-      show={openAssignModal}
+      show={openReportModal}
       onClose={handleCloseModal}
       size={"3xl"}
     >
       <Modal.Header theme={modalTheme.header}>
-        Add Report <FaRegFileLines />
+        Add Monthly Report <FaRegFileLines />
       </Modal.Header>
       <Modal.Body>
         <div className="space-y-6">
           <Toast ref={toast} />
           <div>
             <div className="mb-2 block">
-              <Label htmlFor="id" value="Session ID" />
+              <Label htmlFor="id" value="Select User" />
             </div>
-            <TextInput
+            <Select
               id="id"
-              defaultValue={id}
-              onChange={(e) => setId(e.target.value)}
-              type="text"
-            />
+              defaultValue={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+              className="w-full"
+            >
+              <option value="">Select User</option>
+              {myStudents.map((student: any, index: number) => {
+                return (
+                  <option key={index} value={student.id}>
+                    {student.name}
+                  </option>
+                );
+              })}
+            </Select>
           </div>
           <h3 className="mb-3">Select Courses: </h3>
           <div id="checkbox" className="flex flex-col gap-4">
@@ -185,11 +197,11 @@ export default function AddReportModal({
                 </Select>
               </div>
               <TextInput
-                id="arabicComment"
-                placeholder="Arabic Comment"
+                id="arabicToPage"
+                placeholder="Arabic To Page"
                 type="text"
                 className="my-2"
-                onChange={(e) => setArabicComment(e.target.value)}
+                onChange={(e) => setArabicToPage(e.target.value)}
               />
             </div>
             <div className="mb-2 block">
@@ -212,16 +224,16 @@ export default function AddReportModal({
                 </Select>
               </div>
               <TextInput
-                id="quranComment"
-                placeholder="Quran Comment"
+                id="quranToPage"
+                placeholder="Quran To Page"
                 type="text"
                 className="my-2"
-                onChange={(e) => setQuranComment(e.target.value)}
+                onChange={(e) => setQuranToPage(e.target.value)}
               />
             </div>
             <div className="mb-2 block">
-              <div className="flex flex-col max-md:w-full w-[40%] justify-center items-start gap-3">
-                <label htmlFor="quran" className="ml-2">
+              <div className="flex flex-col max-md:w-full w-[40%] justify-center items-start  gap-3">
+                <label htmlFor="islamic" className="ml-2">
                   Islamic:
                 </label>
                 <Select
@@ -230,7 +242,7 @@ export default function AddReportModal({
                   onChange={(e) => setIslamicGrade(e.target.value)}
                   className="w-full"
                 >
-                  <option value="">Select Islamic Grade </option>
+                  <option value="">Select Quran Grade </option>
                   <option value="excellent">excellent</option>
                   <option value="very good">Very Good</option>
                   <option value="good">Good</option>
@@ -239,89 +251,13 @@ export default function AddReportModal({
                 </Select>
               </div>
               <TextInput
-                id="islamicComment"
-                placeholder="Islamic Comment"
+                id="islamicToPage"
+                placeholder="Islamic To Page"
                 type="text"
                 className="my-2"
-                onChange={(e) => setIslamicComment(e.target.value)}
+                onChange={(e) => setIslamicToPage(e.target.value)}
               />
             </div>
-          </div>
-          <fieldset className="flex w-full flex-col gap-4" id="radio">
-            <legend className="mb-4">Grade</legend>
-            <div className={"flex flex-row gap-4"}>
-              <div className="flex items-center gap-2">
-                <Label className="cursor-pointer" htmlFor="excellent">
-                  <Radio
-                    id="excellent"
-                    name="radio"
-                    value="excellent"
-                    className="h-4 w-4"
-                    onClick={(e: any) => {
-                      setGrade(e.target.value);
-                    }}
-                  />
-                  <span className="ml-2">Excellent</span>
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Label className="cursor-pointer" htmlFor="veryGood">
-                  <Radio
-                    id="veryGood"
-                    name="radio"
-                    value="very good"
-                    className="h-4 w-4"
-                    onClick={(e: any) => {
-                      setGrade(e.target.value);
-                    }}
-                  />
-                  <span className="ml-2">very good</span>
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Label className="cursor-pointer" htmlFor="Good">
-                  <Radio
-                    id="Good"
-                    name="radio"
-                    value="good"
-                    className="h-4 w-4"
-                    onClick={(e: any) => {
-                      setGrade(e.target.value);
-                    }}
-                  />
-                  <span className="ml-2">Good</span>
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Label className="cursor-pointer" htmlFor="Average">
-                  <Radio
-                    id="Average"
-                    name="radio"
-                    value="average"
-                    className="h-4 w-4"
-                    onClick={(e: any) => {
-                      setGrade(e.target.value);
-                    }}
-                  />
-                  <span className="ml-2">Average</span>
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Label className="cursor-pointer" htmlFor="Below Average">
-                  <Radio
-                    id="Below Average"
-                    name="radio"
-                    value="below average"
-                    className="h-4 w-4"
-                    onClick={(e: any) => {
-                      setGrade(e.target.value);
-                    }}
-                  />
-                  <span className="ml-2">Below Average</span>
-                </Label>
-              </div>
-            </div>
-          </fieldset>
           <div>
             <div className="mb-2 block">
               <Label htmlFor="comment" value="Your message" />
@@ -344,6 +280,7 @@ export default function AddReportModal({
               isProcessing={isProcessing}
             />
           </div>
+        </div>
         </div>
       </Modal.Body>
     </Modal>

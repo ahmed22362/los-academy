@@ -1,5 +1,5 @@
 import StatisticBox from "@/app/[locale]/admin/components/statisticBox";
-import { getCurrentTeacher } from "@/helpers/getMe";
+import { getCurrentTeacher } from "@/utilities/getMe";
 import { cookies } from 'next/headers';
 
 export default async function Statistics() {

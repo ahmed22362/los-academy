@@ -1,11 +1,11 @@
 "use client";
 
-import { convertDateTimeZone } from "@/helpers/convertDateAndTime";
 import Cookies from "universal-cookie";
 import { Toast } from 'primereact/toast';
 import { useRef, useState } from 'react';
 import AcceptRescheduleModal from "./acceptReschedule";
 import { useRouter } from "next/navigation";
+import { convertDateTimeZone } from "@/utilities";
 
 export default function sessionData({data, updateComponent}:{data: any, updateComponent: () => void}) {
 

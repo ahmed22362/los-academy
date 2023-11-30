@@ -5,8 +5,8 @@ import { BiSolidEditAlt } from 'react-icons/bi';
 import { useState, useEffect, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import EditCoursesModal from './editCoursesModal';
-import { convertDateTimeZone } from '@/helpers/convertDateAndTime';
 import Cookies from 'universal-cookie';
+import { convertDateTimeZone } from '@/utilities';
 
 export default function FetchCoursesData({coursesData, updateComponent} : {coursesData: any; updateComponent: () => void}) {
     const [handleModal, setHandleModal] = useState(false)
@@ -18,8 +18,8 @@ export default function FetchCoursesData({coursesData, updateComponent} : {cours
     const toastB = useRef<Toast>(null);
     const toastC = useRef<Toast>(null);
     const cookies = new Cookies();
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Deleted Success', life: 3000});
+    const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 3000});
     }
 
     const openModal = () => {
@@ -79,12 +79,13 @@ export default function FetchCoursesData({coursesData, updateComponent} : {cours
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${cookies.get("token")}`
             },
-        }).then(response => response.json()).then(data => {
-            console.log(data)
+        }).then(response => response.json())
+        .then((data) => {
+            showError(data.message)
             updateComponent()
-            showError()
         }).catch(err => {
             console.log(err)
+            showError(err)
         })
     }
 

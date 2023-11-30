@@ -103,13 +103,13 @@ export default function FetchStudentData({studentData, updateComponent} : {stude
                 {student.name}
             </Table.Cell>
             <Table.Cell>
-                {student.gender || "not available"}
+                {student.gender}
             </Table.Cell>
             <Table.Cell>
-                {student.age || "not available"}
+                {student.age}
             </Table.Cell>
             <Table.Cell>
-                {student.availableFreeSession || "not available"}
+                {student.availableFreeSession}
             </Table.Cell>
             <Table.Cell>
             {student.remainSessions}

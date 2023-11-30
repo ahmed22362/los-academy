@@ -52,6 +52,23 @@ export default function EditCoursesModal({openAssignModal, handleCloseModal, cou
       }
 
       const updateCourse = () => {
+        const updateData: { [key: string]: any } = {}
+
+        if(title !== courseDetails.title && title !== '') {
+            updateData.title = title
+        }
+        if(description !== courseDetails.description && description !== '') {
+            updateData.description = description
+        }
+        if(details !== courseDetails.details && details !== '') {
+            updateData.details = details
+        }
+
+        if(Object.keys(updateData).length === 0) {
+          showError("Nothing to update")  
+          return
+        }
+        
         setIsProcessing(true)
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/course/${courseDetails.id}`, {
             method: "PATCH",
@@ -64,20 +81,20 @@ export default function EditCoursesModal({openAssignModal, handleCloseModal, cou
               description,
               details
             }),
-        }).then(response => response.json()).then(data => {
+        }).then(response => response.json())
+        .then((data) => {
             console.log(data)
             if(data.status === "success") {
-              showSuccess(data.message)
-              const timerToClose = setTimeout(() => {
-                handleCloseModal()
-                clearTimeout(timerToClose)
-              }, 3000)
-              updateComponent()
+              showSuccess("Updated Successfully")
+              const timer = setTimeout(() => {
+                updateComponent()
+                clearTimeout(timer)
+              }, 4000)
             } else {
-              showError(data.message)
+              showError("Something went wrong make sure all fields are filled correctly")
           }
           setIsProcessing(false)
-        }).catch(err => {
+        }).catch((err) => {
           console.log(err)
           showError(err)
         })

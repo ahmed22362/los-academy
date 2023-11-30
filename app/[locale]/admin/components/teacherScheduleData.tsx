@@ -1,7 +1,7 @@
 "use client";
 
+import { convertDateTimeZone } from '@/utilities';
 import { useEffect } from 'react';
-import { convertDateTimeZone } from './../../../../helpers/convertDateAndTime';
 function TeacherScheduleData({data}: {data: any}) {
 
     const session = data && data;

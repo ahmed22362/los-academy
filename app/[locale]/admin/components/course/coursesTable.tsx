@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import CoursesComboBox from './coursesComboBox';
 import FetchCoursesData from './fetchCoursesData';
 import Cookies from 'universal-cookie';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 
 
 export default function CoursesTable() {
@@ -19,6 +20,20 @@ export default function CoursesTable() {
             }
         }
     }
+
+    const [first, setFirst] = useState(0);
+    const [rows, setRows] = useState(10);
+
+    const onPageChange = (event: PaginatorPageChangeEvent) => {
+        setFirst(event.first);
+        setRows(event.rows);
+    };
+
+    const getPaginatedData = () => {
+        const endIndex = first + rows;
+        return allCourses.slice(first, endIndex);
+    };
+    const displaydCourses = getPaginatedData()
 
     const fetchAllCourses = () => {
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/course`, {
@@ -71,7 +86,7 @@ export default function CoursesTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allCourses && allCourses.length > 0 ? allCourses.map((teacher: any, index: number) => {
+             (allCourses && allCourses.length > 0 ? displaydCourses.map((teacher: any, index: number) => {
                     return(
                         <FetchCoursesData key={index} coursesData={teacher} updateComponent={fetchAllCourses}/>
                     )
@@ -83,6 +98,9 @@ export default function CoursesTable() {
             }
             </Table.Body>
         </Table>
+        <div className='card mt-4'>
+            <Paginator  first={first} rows={rows} totalRecords={allCourses.length} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
+        </div>
         </div>
         </>
     )

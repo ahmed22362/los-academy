@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { convertDateTimeZone } from './../../../../helpers/convertDateAndTime';
 import RescheduleModal from './requestRescheduleModal';
+import { convertDateTimeZone } from '@/utilities';
 function TeacherScheduleData({data}: {data: any}) {
 
     const [openModal, setOpenModal]: any = useState(false);

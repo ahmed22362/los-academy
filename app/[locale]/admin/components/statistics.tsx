@@ -1,5 +1,5 @@
  import StatisticBox from "@/app/[locale]/admin/components/statisticBox";
-import { getStaticData } from "@/helpers/getStaticData";
+import { getStaticData } from "@/utilities/getStaticData";
 export default async function Statistics() {
     const totalStudents = await getStaticData('user');
     const totalTeachers = await getStaticData('teacher');

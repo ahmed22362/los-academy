@@ -5,12 +5,24 @@ import { useEffect, useState } from 'react';
 import FetchStudentData from './fetchStudentData';
 import StudentComboBox from './studentComboBox';
 import Cookies from 'universal-cookie';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 
 
 export default function StudentTable() {
     const [allStudents, setAllStudents]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
     const cookies = new Cookies();
+    const [first, setFirst] = useState<number>(0);
+    const [rows, setRows] = useState<number>(10);
+    const onPageChange = (event: PaginatorPageChangeEvent) => {
+        setFirst(event.first);
+        setRows(event.rows);
+    };
+    const getPaginatedData = () => {
+        const endIndex = first + rows;
+        return allStudents.slice(first, endIndex);
+    };
+    const displaydStudents = getPaginatedData()
 
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
@@ -79,7 +91,7 @@ export default function StudentTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allStudents.length > 0 ? allStudents.map((student: any, index: number) => {
+             (allStudents && allStudents.length > 0 ? displaydStudents.map((student: any, index: number) => {
                     return(
                         <FetchStudentData key={index} studentData={student} updateComponent={fetchAllStudents}/>
                     )
@@ -89,6 +101,9 @@ export default function StudentTable() {
             }
             </Table.Body>
         </Table>
+        <div className="card mt-4">
+            <Paginator  first={first} rows={rows} totalRecords={allStudents.length} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
+        </div>
         </div>
         </>
     )

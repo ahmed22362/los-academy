@@ -1,10 +1,12 @@
 "use client"
 import {CustomFlowbiteTheme, Dropdown} from "flowbite-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {  useState } from "react";
+import { IoReload } from "react-icons/io5";
 
 export default function PayOutComboBox({...props}: any) {
     const [handleModal, setHandleModal] = useState(false)
-
+    const router = useRouter()
     const openModal = () => {
         setHandleModal(true)
     }
@@ -15,6 +17,11 @@ export default function PayOutComboBox({...props}: any) {
     const customTheme: CustomFlowbiteTheme['dropdown'] = {
         inlineWrapper: "bg-white text-black-color-one px-5 py-2 flex items-center rounded-[16px] font-normal"
     }
+
+    const refreshPage = () => {
+        router.refresh()
+    }
+
 
     return(
         <section className={"px-5"}>
@@ -36,6 +43,12 @@ export default function PayOutComboBox({...props}: any) {
                     }
                     >Add Student +</button> */}
                     {/* <AddStudentModal openAssignModal={handleModal} handleCloseModal={closeModal} updateComponent={props.updateComponent} /> */}
+                    {/* <span
+                        onClick={refreshPage}
+                        className={
+                            "flex gap-2 justify-center items-center cursor-pointer bg-white hover:bg-gray-100 transition-colors text-black-color-one px-5 py-2 rounded-[16px] font-normal"
+                        }
+                    >refresh<IoReload /></span> */}
                 </div>
             </div>
         </section>

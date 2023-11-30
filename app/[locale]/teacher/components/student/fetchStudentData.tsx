@@ -99,36 +99,22 @@ export default function FetchStudentData({studentData, updateComponent} : {stude
                 {student.name}
             </Table.Cell>
             <Table.Cell>
-                {student.gender || "not available"}
+                {student.gender}
             </Table.Cell>
             <Table.Cell>
-                {student.age || "not available"}
+                {student.age}
             </Table.Cell>
             <Table.Cell>
-                {student.availableFreeSession || "not available"}
+                {student.availableFreeSession}
             </Table.Cell>
             <Table.Cell>
             {student.remainSessions}
             </Table.Cell>
             <Table.Cell>
                 <div className="flex flex-row items-center justify-center gap-3">
-                    {/* <LiaPhoneSolid className={"text-2xl cursor-pointer"} 
-                        onClick={() => {
-                            location.href = `https://wa.me/+2${student.phone}`
-                        }}
-                    /> */}
                    <Link href={`mailto:${student.email}`}> <GoMail className={"text-2xl cursor-pointer"} /></Link>
                 </div>
             </Table.Cell>
-            {/* <Table.Cell>
-                <div className="flex flex-row justify-between gap-4">
-                    <Toast ref={toast} />
-                    <BiSolidEditAlt className={"text-2xl cursor-pointer"} style={{color: "green"}} onClick={openModal}/>
-                    <BsTrash className={"text-2xl cursor-pointer"} style={{color: "red"}} onClick={confirm}/>
-                    <Toast ref={toastB} />
-                    <Toast ref={toastC} position="bottom-center" />
-                </div>
-            </Table.Cell> */}
         </Table.Row>
   )
 }

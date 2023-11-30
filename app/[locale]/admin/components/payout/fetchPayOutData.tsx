@@ -5,7 +5,8 @@ import {Table} from 'flowbite-react';
 import { useState, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import Cookies from 'universal-cookie';
-import { convertDateTimeZone } from '@/helpers/convertDateAndTime';
+import { convertDateTimeZone } from '@/utilities';
+import { MdCheck } from 'react-icons/md';
 
 
 
@@ -15,12 +16,12 @@ export default function FetchPayOutData({payOutData, updateComponent} : {payOutD
     const convertTime = convertDateTimeZone
     // Toast reference
     const toast = useRef<Toast>(null);
-    const showSuccess = () => {
-        toast.current?.show({severity:'success', summary: 'Success', detail:'Updated Success', life: 3000});
+    const showSuccess = (msg: string) => {
+        toast.current?.show({severity:'success', summary: 'Success', detail: msg, life: 3000});
     }
 
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Updated failed try again later or contact support', life: 4000});
+    const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
     }
     const acceptRequest = () => {
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/payout/status`, {
@@ -36,14 +37,14 @@ export default function FetchPayOutData({payOutData, updateComponent} : {payOutD
         }).then(response => response.json()).then(data => {
             console.log(data)
             if(data.status === 'success') {
+                showSuccess(data.message)
                 updateComponent()
-                showSuccess()
             } else {
-                showError()
+                showError(data.message)
             }
-        }).catch(err => {
+        }).catch((err) => {
             console.log(err)
-            showError()
+            showError(err)
         })
     }
 
@@ -83,7 +84,7 @@ export default function FetchPayOutData({payOutData, updateComponent} : {payOutD
                         onClick={acceptRequest}
                         className={`px-3 py-2 bg-secondary-color hover:bg-secondary-hover transition-colors text-white rounded-full font-semibold`}
                     >Accept Request</button>
-                    : <p className="p-2 bg-success-color text-white rounded-full font-semibold">accepted before</p>}
+                    : <p className="px-4 py-2 bg-success-color text-white rounded-full font-semibold flex items-center justify-center gap-1 capitalize">accepted <MdCheck style={{fontSize: "20px"}} /></p>}
                 </div>
             </Table.Cell>
         </Table.Row>

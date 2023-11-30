@@ -1,5 +1,5 @@
 
-import { getAllSessions } from "@/helpers/getAllSessions";
+import { getAllSessions } from "@/utilities/getAllSessions";
 import TeacherScheduleData from './teacherScheduleData';
 
 

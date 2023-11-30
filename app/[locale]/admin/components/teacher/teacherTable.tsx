@@ -5,12 +5,26 @@ import { useEffect, useState } from 'react';
 import FetchTeacherData from '../teacher/fetchTeacherData';
 import TeacherComboBox from './teacherComboBox';
 import Cookies from 'universal-cookie';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 
 
 export default function TeacherTable() {
     const [allTeachers, setAllTeachers]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
     const cookies = new Cookies()
+    const [first, setFirst] = useState<number>(0);
+    const [rows, setRows] = useState<number>(10);
+    const onPageChange = (event: PaginatorPageChangeEvent) => {
+        setFirst(event.first);
+        setRows(event.rows);
+    };
+    const getPaginatedData = () => {
+        const endIndex = first + rows;
+        return allTeachers.slice(first, endIndex);
+    };
+    const displaydTeachers = getPaginatedData()
+
+
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
             base: "group/head text-xs uppercase text-black-color-one bg-white-color p-[15px] text-center",
@@ -75,7 +89,7 @@ export default function TeacherTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allTeachers && allTeachers.length > 0 ? allTeachers.map((teacher: any, index: number) => {
+             (allTeachers && allTeachers.length > 0 ? displaydTeachers.map((teacher: any, index: number) => {
                     return(
                         <FetchTeacherData key={index} teacherData={teacher} updateComponent={fetchAllTechers}/>
                     )
@@ -89,6 +103,9 @@ export default function TeacherTable() {
             }
             </Table.Body>
         </Table>
+        <div className='card mt-4'>
+            <Paginator  first={first} rows={rows} totalRecords={allTeachers.length} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
+        </div>
         </div>
         </>
     )

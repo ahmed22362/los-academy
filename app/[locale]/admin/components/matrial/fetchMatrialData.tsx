@@ -8,8 +8,8 @@ import { useState, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 import EditMatrialModal from './editMatrialModal';
 import Link from 'next/link';
-import { convertDateTimeZone } from '@/helpers/convertDateAndTime';
 import Cookies from 'universal-cookie';
+import { convertDateTimeZone } from '@/utilities';
 
 
 
@@ -123,7 +123,7 @@ export default function FetchMatrialData({matrialData, updateComponent} : {matri
             </Table.Cell>
             <Table.Cell>
                 <div className='flex items-center justify-center'>
-                    <Link href={matrial.b2Link} download={matrial.b2Link}>
+                    <Link href={matrial.b2Link} download={matrial.b2Link} target="_blank" rel="noopener noreferrer" >
                         <GrDocumentDownload className="text-2xl cursor-pointer"/>
                     </Link>
                 </div>

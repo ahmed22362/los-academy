@@ -1,5 +1,6 @@
 'use client';
-
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import 'primereact/resources/primereact.min.css';
 import {CustomFlowbiteTheme, Spinner, Table} from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import FetchSessionData from './fetchSessionData';
@@ -90,7 +91,7 @@ export default function SesstionsTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (displaydSessions && displaydSessions.length > 0 ? displaydSessions.map((session: any, index: number) => {
+             (allSessions && allSessions.length > 0 ? displaydSessions.map((session: any, index: number) => {
                     return(
                         <FetchSessionData key={index} sessionData={session} updateComponent={fetchAllSessions}/>
                     )
@@ -100,8 +101,8 @@ export default function SesstionsTable() {
             }
             </Table.Body>
         </Table>
-        <div className="card">
-            <Paginator first={first} rows={rows} totalRecords={allSessions.length} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
+        <div className="card mt-4">
+            <Paginator  first={first} rows={rows} totalRecords={allSessions.length} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
         </div>
         </div>
         </>

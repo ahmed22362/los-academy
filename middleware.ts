@@ -1,8 +1,8 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getCurrentTeacher } from './helpers/getMe';
-import { checkUserIsVerify } from './helpers/checkUserIsVerify';
+import { getCurrentTeacher } from './utilities/getMe';
+import { checkUserIsVerify } from './utilities/checkUserIsVerify';
 
 const protectedAdminRoutes = [
     '/admin',

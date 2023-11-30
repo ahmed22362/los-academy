@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import PayOutComboBox from './payOutComboBox';
 import FetchPayOutData from './fetchPayOutData';
 import Cookies from 'universal-cookie';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 
 
 
@@ -12,6 +13,18 @@ export default function PayOutTable() {
     const [allPayOuts, setAllPayOuts]: any = useState([])
     const [isLoading, setIsLoading] = useState(true);
     const cookies = new Cookies()
+
+    const [first, setFirst] = useState<number>(0);
+    const [rows, setRows] = useState<number>(10);
+    const onPageChange = (event: PaginatorPageChangeEvent) => {
+        setFirst(event.first);
+        setRows(event.rows);
+    };
+    const getPaginatedData = () => {
+        const endIndex = first + rows;
+        return allPayOuts.slice(first, endIndex);
+    };
+    const displaydPayOuts = getPaginatedData()
 
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
@@ -74,7 +87,7 @@ export default function PayOutTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allPayOuts && allPayOuts.length > 0 ? allPayOuts.map((payOut: any, index: number) => {
+             (allPayOuts && allPayOuts.length > 0 ? displaydPayOuts.map((payOut: any, index: number) => {
                     return(
                         <FetchPayOutData key={index} payOutData={payOut} updateComponent={fetchAllPayOuts}/>
                     )
@@ -85,6 +98,9 @@ export default function PayOutTable() {
             }
             </Table.Body>
         </Table>
+        <div className='card mt-4'>
+            <Paginator  first={first} rows={rows} totalRecords={allPayOuts.length} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
+        </div>
         </div>
         </>
     )

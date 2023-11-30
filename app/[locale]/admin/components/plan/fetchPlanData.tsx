@@ -106,16 +106,22 @@ export default function FetchPlanData({planData, updateComponent} : {planData: a
                 {plan.title}
             </Table.Cell>
             <Table.Cell>
-                {plan.sessionDuration || "not available"}
+                {plan.sessionDuration}
             </Table.Cell>
             <Table.Cell>
-                {plan.sessionsCount || "not available"}
+                {plan.sessionsCount}
             </Table.Cell>
             <Table.Cell>
-                {plan.sessionsPerWeek || "not available"}
+                {plan.sessionsPerWeek}
             </Table.Cell>
             <Table.Cell>
-            {plan.active === true ? ( <p className="bg-success-color text-white px-2 py-1 rounded-full">Active</p>) : (<p className="bg-danger-color text-white px-2 py-1 rounded-full">Inactive</p>) }
+                {plan.recommended === true ? ( <p className="bg-success-color text-white px-2 py-1 rounded-full font-semibold">Yes</p>) : (<p className="bg-danger-color text-white px-2 py-1 rounded-full font-semibold">No</p>) }
+            </Table.Cell>
+            <Table.Cell>
+                {plan.discount}
+            </Table.Cell>
+            <Table.Cell>
+            {plan.active === true ? ( <p className="bg-success-color text-white px-4 py-1 rounded-full font-semibold">Active</p>) : (<p className="bg-danger-color text-white px-4 py-1 rounded-full font-semibold">Inactive</p>) }
             </Table.Cell>
             <Table.Cell>
                 <div className="flex flex-row justify-between gap-4">

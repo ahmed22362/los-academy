@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import OnGoingSessionComboBox from './onGoingsessionComboBox';
 import FetchOnGoingSessionData from './onGoingfetchSessionData';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 
 
 export default function OnGoingSesstionsTable() {
@@ -19,7 +20,17 @@ export default function OnGoingSesstionsTable() {
             }
         }
     }
-
+    const [first, setFirst] = useState<number>(0);
+    const [rows, setRows] = useState<number>(10);
+    const onPageChange = (event: PaginatorPageChangeEvent) => {
+        setFirst(event.first);
+        setRows(event.rows);
+    };
+    const getPaginatedData = () => {
+        const endIndex = first + rows;
+        return allSessions.slice(first, endIndex);
+    };
+    const displaydSessions = getPaginatedData()
     const fetchAllSessions = () => {
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/?status=ongoing`, {
             method: "GET",
@@ -78,7 +89,7 @@ export default function OnGoingSesstionsTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allSessions && allSessions.length > 0 ? allSessions.map((session: any, index: number) => {
+             (allSessions && allSessions.length > 0 ? displaydSessions.map((session: any, index: number) => {
                     return(
                         <FetchOnGoingSessionData key={index} sessionData={session} updateComponent={fetchAllSessions}/>
                     )
@@ -88,6 +99,9 @@ export default function OnGoingSesstionsTable() {
             }
             </Table.Body>
         </Table>
+        <div className='card mt-4'>
+            <Paginator  first={first} rows={rows} totalRecords={allSessions.length} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
+        </div>
         </div>
         </>
     )

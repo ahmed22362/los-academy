@@ -1,5 +1,5 @@
 
-import { getStaticData } from "@/helpers/getStaticData";
+import { getStaticData } from "@/utilities/getStaticData";
 import ReportData from "./reportData";
 import SectionHeader from "./sectionHeader";
 

@@ -110,7 +110,7 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
                         <li>Plan Price: <span className='font-bold'>{resData.data?.amount_total / 100}$</span></li>
                     </ul>
                     <Link
-                        href={resData.data?.url}
+                        href={resData?.data?.url}
                         target='_blank'
                         className="flex items-center justify-center gap-2 smallBtn ms-auto font-semibold hover:bg-secondary-hover cursor-pointer mb-4"
                     >Go to Buy</Link>

@@ -169,7 +169,7 @@ export default function OnGoingBox(session: any) {
                 onGoingSession && onGoingSession.length > 0 ? onGoingSession.map((session: any, index: number) => {
                     return (
                         <div key={index}>
-                            <h4 className="mb-1">session {session.SessionInfo.user.name} <b className="text-success-color">starting ..</b></h4>
+                            <h4 className="mb-1">session {session.SessionInfo?.user?.name} <b className="text-success-color">starting ..</b></h4>
                             <span className="mb-2">Timer of session : {formatTime(countdownSeconds)}</span><br/>
                             <Link
                                 target="_blank"
@@ -194,7 +194,7 @@ export default function OnGoingBox(session: any) {
                 }) :  
                 lastTakenSession && lastTakenSession.hasReport === false ? 
                 <div>
-                     <h4 className="mb-3">add report for the last session with {lastTakenSession && lastTakenSession.SessionInfo.user.name}</h4>
+                     <h4 className="mb-3">add report for the last session with {lastTakenSession && lastTakenSession.SessionInfo?.user?.name}</h4>
                      <button
                         className="smallBtn hover:bg-secondary-hover transition-colors"
                         onClick={handleOpen}
@@ -210,7 +210,7 @@ export default function OnGoingBox(session: any) {
                 upComingSession ? 
                 (<>
                     {countdownSeconds > 0 && countdownSeconds < 3600 && <h5>Timer: {formatTime(countdownSeconds)}</h5>}
-                    <h3 className="mb-3">The Next Session with: <b>{upComingSession && upComingSession.SessionInfo.user.name}</b></h3>
+                    <h3 className="mb-3">The Next Session with: <b>{upComingSession && upComingSession.SessionInfo?.user?.name}</b></h3>
                     <span>start at : {convertDateTimeZone(upComingSession.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MM/DD/YYYY hh:mm A")}</span>
                 </>) 
                 : 

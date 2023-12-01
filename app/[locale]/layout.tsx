@@ -24,6 +24,30 @@ import CustomNavbar from '@/app/[locale]/components/layout/Navbar';
 export const metadata: Metadata = {
   title: 'LOS Academy',
   description: 'Learning Forgeins Kids Arabic And Islamic Courses',
+  icons: {
+    icon: '/favicon.ico',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
+  openGraph: {
+    title: 'LOS Academy',
+    description: 'Learning Forgeins Kids Arabic And Islamic Courses',
+    url: 'https://los-academy.com/',
+    siteName: 'LOS Academy',
+    images: "/logo.png",
+    locale: 'en-US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'LOS Academy',
+    description: 'Learning Forgeins Kids Arabic And Islamic Courses',
+    creator: '@los_academy',
+    images: "/logo.png",
+  },
 }
 
 export default async function LocaleLayout({children, params: {locale}}: {children: React.ReactNode, params: {locale: string}}) {

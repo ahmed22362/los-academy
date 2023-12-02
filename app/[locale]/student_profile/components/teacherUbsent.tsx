@@ -36,14 +36,15 @@ function TeacherUbsent() {
     return convertedTime.format(ourFormat);
   };
   useEffect(() => {
-    const apiUrl = `${url}/user/mySessions?status=teacher_absent`;
-
-    fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    fetch(
+      `${process.env.NEXT_PUBLIC_APIURL}/user/mySessions?status=teacher_absent`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data.data);
@@ -78,7 +79,10 @@ function TeacherUbsent() {
           ) : (
             <ul className="">
               {teacherUbsentSessions?.map((sessionInfo, index) => (
-                <li className="flex flex-col gap-4 mb-3 pr-2" key={sessionInfo.id}>
+                <li
+                  className="flex flex-col gap-4 mb-3 pr-2"
+                  key={sessionInfo.id}
+                >
                   <div className="bg-white-color p-2 flex flex-col gap-2 rounded-xl">
                     <p className="my-1  font-medium">
                       Session ID:{" "}
@@ -120,7 +124,7 @@ function TeacherUbsent() {
                       Teacher Name: {sessionInfo?.SessionInfo?.teacher?.name}
                     </p>
                     <p className="  font-medium flex  gap-4">
-                       Date:
+                      Date:
                       <span className="text-red-600">
                         {convertDateTimeZone(
                           sessionInfo.sessionDate,
@@ -131,7 +135,6 @@ function TeacherUbsent() {
                       </span>
                     </p>
                   </div>
-
                 </li>
               ))}
             </ul>

@@ -1,7 +1,4 @@
-import moment from "moment-timezone";
-import { Nullable } from "primereact/ts-helpers";
-import React, { useEffect, useState } from "react";
-import Cookies from "universal-cookie";
+import React from "react";
 import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import TeacherRescduleRequests from "./teacherRescduleRequests";
 import MyRescheduleRequest from "./myRescheduleRequest";

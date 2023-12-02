@@ -5,8 +5,6 @@ import moment from "moment-timezone";
 
 function MyRescheduleRequest() {
   const cookie = new Cookies();
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
   const [myReschedule, setMyReschedule] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -23,10 +21,10 @@ function MyRescheduleRequest() {
     return convertedTime.format(ourFormat);
   };
   useEffect(() => {
-    fetch(`${url}/user/requestReschedule`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/requestReschedule`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
       },
     })
       .then((response) => response.json())
@@ -125,36 +123,35 @@ function MyRescheduleRequest() {
                       ) : (
                         ""
                       )}
-                      {request.status==="pending"? 
-                    (
-                      <>
-                  <div className=" flex flex-col gap-3 ">
-                        <h3 className="font-semibold text-lg ">
-                          The Date You Chose :
-                        </h3>
-                        <div className="flex m-auto items-center gap-3">
-                          {request.newDatesOptions.map(
-                            (date: string, i: number) => (
-                              <p
-                                className="my-1 text-[--secondary-color]"
-                                key={i}
-                              >
-                                {convertDateTimeZone(
-                                  date,
-                                  "UTC",
-                                  Intl.DateTimeFormat().resolvedOptions()
-                                    .timeZone,
-                                  "DD/MMM/YYYY h:mm A"
-                                )}
-                              </p>
-                            )
-                          )}
-                        </div>
-                      </div>
-                      </>
-                    )  
-                    :''}
-                     
+                      {request.status === "pending" ? (
+                        <>
+                          <div className=" flex flex-col gap-3 ">
+                            <h3 className="font-semibold text-lg ">
+                              The Date You Chose :
+                            </h3>
+                            <div className="flex m-auto items-center gap-3">
+                              {request.newDatesOptions.map(
+                                (date: string, i: number) => (
+                                  <p
+                                    className="my-1 text-[--secondary-color]"
+                                    key={i}
+                                  >
+                                    {convertDateTimeZone(
+                                      date,
+                                      "UTC",
+                                      Intl.DateTimeFormat().resolvedOptions()
+                                        .timeZone,
+                                      "DD/MMM/YYYY h:mm A"
+                                    )}
+                                  </p>
+                                )
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </li>
                 ))}

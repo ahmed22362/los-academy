@@ -3,22 +3,18 @@ import React, { useEffect, useState } from "react";
 import styles from "../page.module.css";
 import moment from "moment-timezone";
 import Cookies from "universal-cookie";
-import MyLoader from "./MyLoader";
 import Image from "next/image";
 import RescheduleSession from "./rescheduleSession";
 import MyLoaderContainer from "./MyLoader";
 
 function RemainSessions({ setTeacherName }: any) {
   const cookie = new Cookies();
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
     null
   );
-  const [isRescheduleButtonDisabled, setIsRescheduleButtonDisabled] =
-    useState(false);
+
   const [openRescheduleModal, setOpenRescheduleModal] = useState(false);
   const convertDateTimeZone = (
     inputTime: moment.MomentInput,
@@ -40,14 +36,13 @@ function RemainSessions({ setTeacherName }: any) {
 
   };
 
-  // api data
   useEffect(() => {
     setLoading(true); // Set loading to true when starting to fetch data
 
-    fetch(`${url}/user/remainSessions`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/remainSessions`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.get("token")}`,
       },
     })
       .then((response) => response.json())
@@ -62,7 +57,7 @@ function RemainSessions({ setTeacherName }: any) {
       .finally(() => {
         setLoading(false); // Set loading to false when data fetching is complete
       });
-  }, [token, url]);
+  }, []);
 
   return (
     <div>

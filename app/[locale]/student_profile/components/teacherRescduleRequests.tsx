@@ -1,20 +1,16 @@
 import moment from "moment-timezone";
-import { Nullable } from "primereact/ts-helpers";
 import React, { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
-import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import { Toast } from "primereact/toast";
 import ContentLoader from "react-content-loader";
 import RescheduleSession from "./rescheduleSession";
-
 function TeacherRescduleRequests() {
   const cookie = new Cookies();
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
   const [teatcherreschedule, setTeatcherReschedule] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-const [openRescheduleModal, setOpenRescheduleModal] = useState<boolean>(false);
-const [sessionId, setSessionId] = useState<Number>()
+  const [openRescheduleModal, setOpenRescheduleModal] =
+    useState<boolean>(false);
+  const [sessionId, setSessionId] = useState<Number>();
   const convertDateTimeZone = (
     inputTime: moment.MomentInput,
     inputTimezone: string,
@@ -45,40 +41,40 @@ const [sessionId, setSessionId] = useState<Number>()
       life: 5000,
     });
   };
-// 
-const fetchTeacherRescheduleRequests=()=>{
-  fetch(`${url}/user/receivedRescheduleRequests`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
+  //
+  const fetchTeacherRescheduleRequests = () => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/receivedRescheduleRequests`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
 
-      const sortedRescheduleRequests = data.data.sort((a:any, b:any) => {
-        // The exact sorting logic depends on the structure of your data
-        // Assuming `status` is a string representing the status
-        if (a.status === "pending" && b.status !== "pending") {
-          return -1; // a comes before b
-        } else if (a.status !== "pending" && b.status === "pending") {
-          return 1; // b comes before a
-        } else {
-          return 0; // no change in order
-        }
+        const sortedRescheduleRequests = data.data.sort((a: any, b: any) => {
+          // The exact sorting logic depends on the structure of your data
+          // Assuming `status` is a string representing the status
+          if (a.status === "pending" && b.status !== "pending") {
+            return -1; // a comes before b
+          } else if (a.status !== "pending" && b.status === "pending") {
+            return 1; // b comes before a
+          } else {
+            return 0; // no change in order
+          }
+        });
+
+        setTeatcherReschedule(sortedRescheduleRequests);
+        // Set the retrieved Seeions in the state
+      })
+      .catch((error) => {
+        console.error("Error fetching sessions:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-
-      setTeatcherReschedule(sortedRescheduleRequests);
-      // Set the retrieved Seeions in the state
-    })
-    .catch((error) => {
-      console.error("Error fetching sessions:", error);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-}
+  };
   const acceptReschedule = (requestId: number, newTime: string) => {
     console.log(requestId);
     console.log(newTime);
@@ -87,10 +83,10 @@ const fetchTeacherRescheduleRequests=()=>{
       rescheduleRequestId: requestId,
       newDate: newTime,
     };
-    fetch(`${url}/user/acceptReschedule`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/acceptReschedule`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.get("token")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newData),
@@ -100,7 +96,7 @@ const fetchTeacherRescheduleRequests=()=>{
         console.log(data); // Log the response data
         if (data.status === "success") {
           showSuccess(data.message);
-          fetchTeacherRescheduleRequests()
+          fetchTeacherRescheduleRequests();
         } else {
           showError(data.message);
         }
@@ -114,17 +110,17 @@ const fetchTeacherRescheduleRequests=()=>{
   };
 
   useEffect(() => {
-    fetch(`${url}/user/receivedRescheduleRequests`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/receivedRescheduleRequests`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
       },
     })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
 
-        const sortedRescheduleRequests = data.data.sort((a:any, b:any) => {
+        const sortedRescheduleRequests = data.data.sort((a: any, b: any) => {
           // The exact sorting logic depends on the structure of your data
           // Assuming `status` is a string representing the status
           if (a.status === "pending" && b.status !== "pending") {
@@ -135,8 +131,8 @@ const fetchTeacherRescheduleRequests=()=>{
             return 0; // no change in order
           }
         });
-  
-        setTeatcherReschedule(sortedRescheduleRequests);        // Set the retrieved Seeions in the state
+
+        setTeatcherReschedule(sortedRescheduleRequests); // Set the retrieved Seeions in the state
       })
       .catch((error) => {
         console.error("Error fetching sessions:", error);
@@ -146,17 +142,17 @@ const fetchTeacherRescheduleRequests=()=>{
       });
   }, []);
   // deny Dates
-  const denyAllReschedule = (requestId: number ,sessionId:Number) => {
+  const denyAllReschedule = (requestId: number, sessionId: Number) => {
     console.log(requestId);
-    setSessionId(sessionId)
+    setSessionId(sessionId);
     const newData = {
       rescheduleRequestId: requestId,
     };
 
-    fetch(`${url}/user/declineReschedule`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/declineReschedule`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.get("token")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newData),
@@ -166,14 +162,13 @@ const fetchTeacherRescheduleRequests=()=>{
         console.log(data); // Log the response data
         if (data.status === "success") {
           showSuccess(data.message);
-            setOpenRescheduleModal(true)
-            fetchTeacherRescheduleRequests();
+          setOpenRescheduleModal(true);
+          fetchTeacherRescheduleRequests();
           // Handle success, e.g., update state or show a success message
           console.log("Reschedule request declined successfully");
         } else {
           showError(data.message);
           fetchTeacherRescheduleRequests();
-
         }
       })
       .catch((error) => {
@@ -184,10 +179,10 @@ const fetchTeacherRescheduleRequests=()=>{
   return (
     <div>
       <RescheduleSession
-      setOpenRescheduleModal={setOpenRescheduleModal}
-      openRescheduleModal={openRescheduleModal}
-      sessionId={sessionId}
-      fromTeacherRequest={true}
+        setOpenRescheduleModal={setOpenRescheduleModal}
+        openRescheduleModal={openRescheduleModal}
+        sessionId={sessionId}
+        fromTeacherRequest={true}
       />
       <Toast ref={toast} />
       <div className="md:min-h-[190px] max-md:min-h-[150px]">
@@ -213,7 +208,10 @@ const fetchTeacherRescheduleRequests=()=>{
             ) : (
               <ul className="h-full">
                 {teatcherreschedule.map((request) => (
-                  <li className="flex flex-col gap-3 bg-white-color py-3 mb-3 pl-2 rounded-lg mr-2" key={request.id}>
+                  <li
+                    className="flex flex-col gap-3 bg-white-color py-3 mb-3 pl-2 rounded-lg mr-2"
+                    key={request.id}
+                  >
                     <p className="  font-medium">
                       Session ID:{" "}
                       <span className="bg-[--secondary-color] text-white p-1 rounded-2xl">
@@ -304,7 +302,9 @@ const fetchTeacherRescheduleRequests=()=>{
                           <hr />
 
                           <button
-                            onClick={() => denyAllReschedule(request.id,request.sessionId)}
+                            onClick={() =>
+                              denyAllReschedule(request.id, request.sessionId)
+                            }
                             className={`${
                               request.status === "no_response" ? "hidden" : ""
                             } text-center m-auto px-5 py-1 bg-red-700 hover:bg-red-800 text-white rounded-xl`}
@@ -316,7 +316,6 @@ const fetchTeacherRescheduleRequests=()=>{
                     ) : (
                       ""
                     )}
-
                   </li>
                 ))}
               </ul>

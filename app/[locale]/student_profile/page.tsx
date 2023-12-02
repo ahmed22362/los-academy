@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import Image from "next/image";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import RemainSessions from "./components/RemainSessions";
 import CommunityStatistics from "./components/CommunityStatistics";
 import UpcomingSessions from "./components/UpcomingSessions";
@@ -14,6 +15,7 @@ import TeacherUbsent from "./components/teacherUbsent";
 import RescheduleRequests from "./components/rescheduleRequests";
 import { useRouter } from "next/navigation";
 import ContinueWithModal from "./components/continueWithModal";
+import dynamic from "next/dynamic";
 
 interface UserInfo {
   name: string;
@@ -25,11 +27,13 @@ interface UserInfo {
   sessionPlaced: boolean; // make age optional if it may not be present in the API response
 }
 export default function page() {
+  const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
+
   const [myInfo, setMyInfo] = useState<UserInfo | undefined>();
   const [teacherName, setTeacherName] = useState("");
   const [showBanner, setShowBanner] = useState(true);
   const router = useRouter();
-
+  const [start, setStart] = useState<boolean>(true);
   useEffect(() => {
     const isFirstVisit = localStorage.getItem("isFirstVisit") === null;
 
@@ -40,31 +44,83 @@ export default function page() {
       // Set the flag to indicate that the user has seen the tips
     }
   }, []);
-  const [referred,setReferred]=useState(false)
 
-  const [openContinueWithModal, setOpenContinueWithModal] = useState(false)
+  var isFirstVisit;
+
+  if (
+    typeof window !== "undefined" &&
+    typeof window.localStorage !== "undefined"
+  ) {
+    // Check if the user has visited the site before
+    isFirstVisit = localStorage.getItem("firstVisit") === null;
+
+    if (isFirstVisit) {
+      localStorage.setItem("firstVisit", "true");
+    }
+  } else {
+  }
+
+  const [openContinueWithModal, setOpenContinueWithModal] = useState(false);
   useEffect(() => {
-
-
     const currentPageUrl = window.location.href;
 
-  // Log the current page's URL to the console
-  console.log(`Current page URL: ${currentPageUrl}`);
+    // Log the current page's URL to the console
+    console.log(`Current page URL: ${currentPageUrl}`);
 
-  // Parse the URL to get the query parameters
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  const fromUserContinueParam = urlSearchParams.get("fromUserContinue");
+    // Parse the URL to get the query parameters
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const fromUserContinueParam = urlSearchParams.get("fromUserContinue");
 
-  // Log the query parameter to the console
-  console.log(`fromUserContinue parameter: ${fromUserContinueParam}`);
+    // Log the query parameter to the console
+    console.log(`fromUserContinue parameter: ${fromUserContinueParam}`);
 
-  // Check if the query parameter is true
-  if (fromUserContinueParam === "true") {
-    // If true, set the state to open the modal
-    setOpenContinueWithModal(true);
-  }
-  
-    }, []);
+    // Check if the query parameter is true
+    if (fromUserContinueParam === "true") {
+      // If true, set the state to open the modal
+      setOpenContinueWithModal(true);
+    }
+  }, []);
+
+  const [steps] = useState<any[]>([
+    {
+      content: <h1>Hello This Tips To Show You Your Page Sections</h1>,
+      placement: "center",
+      target: "body",
+    },
+    {
+      target: ".book_section",
+      content:
+        "From here, you can book a free session or a paid session after subscribing to a plan.",
+    },
+    {
+      target: ".reports_section",
+      content: "The reports that your teachers write about you appear here",
+    },
+    {
+      target: ".community_section",
+      content:
+        "our community statistics appear here, including your attendance.",
+    },
+    {
+      target: ".remain_sessions_section",
+      content: "All your pending sessions appear here.",
+    },
+    {
+      target: ".rescheduling_section",
+      content:
+        "All rescheduling requests, whether from you or your teacher, appear here.",
+    },
+    {
+      target: ".teacher_ubsent_section",
+      content: "The sessions that your teacher was absent from appear here.",
+    },
+  ]);
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
+  }, []);
 
   return (
     <main
@@ -72,25 +128,54 @@ export default function page() {
         "ps-10 pe-10 pt-[7rem] max-md:mt-7  max-md:justify-between max-md:items-center"
       }
     >
-      <ContinueWithModal openContinueWithModal={openContinueWithModal}
-      setOpenContinueWithModal={setOpenContinueWithModal} />
-      {showBanner && <BannerComponent
-      message={"You Want To Enjoy Sessions?"}
-      animation={"animate-bounce"}
-      header={"Los Academy Plans"}
-      />}
+      {/* <button
+      className="underline text-secondary-color"
+      onClick={()=>setStart(true)}
+      >Show Website Guides</button> */}
+
+      {isFirstVisit ? (
+        <Joyride
+          steps={steps}
+          run={start}
+          continuous
+          showProgress
+          showSkipButton
+        />
+      ) : (
+        ""
+      )}
+
+      <ContinueWithModal
+        openContinueWithModal={openContinueWithModal}
+        setOpenContinueWithModal={setOpenContinueWithModal}
+      />
+      {showBanner && (
+        <BannerComponent
+          message={"You Want To Enjoy Sessions?"}
+          animation={"animate-bounce"}
+          header={"Los Academy Plans"}
+        />
+      )}
       <div className="myInfo flex justify-center items-center">
         <MyInfo myInfo={myInfo} />
       </div>
       <div className="grid grid-cols-3 max-sm:grid-cols-1 max-md:grid-cols-2 justify-between gap-5	 mt-7">
         <div className="card w-full  ">
           <EditProfile setMyInfo={setMyInfo} />
-          <div>
+          <div className="">
             <h3 className={`${styles.main_head} mb-8`}>Info</h3>
-
-            <CommunityStatistics />
             <div
-              className={`mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full`}
+              className={`community_section	w-full p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
+            >
+              <h4 className={`${styles.secondary_head} mb-5 ml-3`}>
+                Community statistics :
+              </h4>
+              <div data-aos="fade-down">
+                <CommunityStatistics />
+              </div>
+            </div>
+            <div
+              className={`mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full remain_sessions_section`}
             >
               <h4 className={`${styles.secondary_head} pb-2`}>
                 Remain Sessions:{" "}
@@ -98,20 +183,31 @@ export default function page() {
                   with teacher: {teacherName}
                 </span>{" "}
               </h4>
-              <RemainSessions setTeacherName={setTeacherName} />
+              <div data-aos="fade-up">
+                <RemainSessions setTeacherName={setTeacherName} />
+              </div>
             </div>
           </div>
         </div>
-        <div className="card w-full mr-3 ">
+        <div className="card w-full mr-3  ">
           <h3 className={`${styles.main_head} mb-8 `}>Sessions</h3>
-          <UpcomingSessions />
           <div
-            className={`my-11 p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
+            data-aos="flip-left"
+            data-aos-easing="ease-out-cubic"
+            data-aos-duration="2000"
+            className="upcoming_section "
           >
-         <h3 className={`${styles.secondary_head} mb-8`}>Reschedule Requests </h3>
+            <UpcomingSessions />
+          </div>
+          <div
+            className={`my-11 p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	rescheduling_section`}
+          >
+            <h3 className={`${styles.secondary_head} mb-8`}>
+              Reschedule Requests{" "}
+            </h3>
 
-        <div className="h-[300px]  scrollAction">
-            <RescheduleRequests/>
+            <div data-aos="fade-up" className="h-[300px]  scrollAction ">
+              <RescheduleRequests />
             </div>
           </div>
           <div
@@ -122,7 +218,10 @@ export default function page() {
             <h4 className={`${styles.secondary_head} ml-3 my-2`}>
               Book a Session
             </h4>
-            <div className={`flex flex-col justify-center items-center`}>
+            <div
+              data-aos="fade-right"
+              className={`flex flex-col justify-center items-center book_section`}
+            >
               <BookModal myInfo={myInfo} />
             </div>
           </div>
@@ -130,18 +229,26 @@ export default function page() {
         <div className="card w-full ">
           <h3 className={`${styles.main_head} mb-8`}>Reports</h3>
           <div
-            className={`mr-1  p-3  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
+            className={`mr-1  p-3  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] reports_section	`}
           >
             <h4 className={`${styles.secondary_head} ml-3 my-2`}>My Reports</h4>
-            <MyReports />
+            <div data-aos="fade-right">
+              <MyReports />
+            </div>
           </div>
           <div
-            className={`mr-1  mb-10 mt-10  p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
+            className={`mr-1  mb-10 mt-10  p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] 	`}
           >
             <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}>
               Teacher Ubsent Sessions
             </h3>
-            <div className="h-[300px]  scrollAction">
+            <div
+              data-aos="fade-up"
+              data-aos-anchor="#example-anchor"
+              data-aos-offset="500"
+              data-aos-duration="500"
+              className="h-[300px] teacher_ubsent_section scrollAction "
+            >
               <TeacherUbsent />
             </div>
           </div>

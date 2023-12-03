@@ -126,7 +126,7 @@ export default function signupTap() {
             value={values.name}
             onChange={handleChange}
             onBlur={handleBlur}
-            className={`${errors.name && touched.name ? "border-[--danger-color]" : "border-[--secondary-color]"} border-[--secondary-color] gradiant-color rounded-3xl w-full border-2`}
+            className={`${errors.name && touched.name ? "border-[--danger-color]" : "border-[--secondary-color]"} gradiant-color rounded-3xl w-full border-2`}
             type="text"
             placeholder="Full Name"
           />

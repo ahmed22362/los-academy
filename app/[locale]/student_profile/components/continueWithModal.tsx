@@ -15,9 +15,7 @@ function ContinueWithModal({
   const [continueWithFirstDate, setContinueWithFirstDate] = useState<
     Nullable<Date> | any
   >(null);
-  const [continueWithSecondDate, setContinueWithSecondDate] = useState<
-    Nullable<Date> | any
-  >(null);
+
   const toast = useRef<Toast>(null);
 
   const showSuccess = (msg: any) => {
@@ -37,19 +35,25 @@ function ContinueWithModal({
       life: 5000,
     });
   };
-  const placeDates = () => {
-    console.log("placeDates function is triggered");
 
-    if (!continueWithFirstDate || !continueWithSecondDate) {
-      showError("Please select both start date and end date.");
+  const placeDates = () => {
+    if (
+      !continueWithFirstDate ||
+      !Array.isArray(continueWithFirstDate) ||
+      continueWithFirstDate.length === 0
+    ) {
+      showError("Please select at least one date for booking.");
       return;
     }
+    if (continueWithFirstDate && Array.isArray(continueWithFirstDate) && continueWithFirstDate.length > 0) {
+      const selectedDates = continueWithFirstDate.map((date) => date.toISOString());
+    
+    console.log("placeDates function is triggered");
+
+    
 
     const rescheduleData = {
-      sessionDates: [
-        continueWithFirstDate.toISOString(),
-        continueWithSecondDate.toISOString(),
-      ],
+      sessionDates: selectedDates,
     };
 
     fetch(`${url}/session/placeSessionDates`, {
@@ -71,28 +75,22 @@ function ContinueWithModal({
           if (typeof window !== "undefined") {
             localStorage.setItem("confirmDialog", "false");
           }
-          setTimeout(() => {
-            setOpenContinueWithModal(false);
-          }, 3000);
+          
         } else {
           console.error(data);
           showError(data.message);
           window.history.replaceState(null, '', '/student_profile')
 
         }
-        setTimeout(() => {
-          setOpenContinueWithModal(false);
-        }, 3000);
+      
       })
       .catch((error) => {
         window.history.replaceState(null, '', '/student_profile')
 
         console.error("Error during POST request:", error);
-        setTimeout(() => {
-          setOpenContinueWithModal(false);
-        }, 3000);
+        
       });
-  };
+  };}
 
   return (
     <div>
@@ -112,12 +110,14 @@ function ContinueWithModal({
               <h4>Now You Should Please Your Session Dates That Avilible To You</h4>
               <div className="taps flex justify-center  h-1/2">
                 <Calendar
-                panelClassName="h-fit lg:mt-[250px]"
+                panelClassName="h-fit "
                   value={continueWithFirstDate}
                   onChange={(e: CalendarProps | any) =>
                     setContinueWithFirstDate(e.value)
                   }
                   showTime
+                  inline
+                  selectionMode="multiple"
                   hourFormat="12"
                   style={{
                     outline: "4px solid var(--secondary-color)",
@@ -126,22 +126,7 @@ function ContinueWithModal({
                   placeholder="Select First Avilable Date and Time"
                 />
               </div>
-              <div className="taps flex justify-center h-1/2">
-                <Calendar
-                panelClassName="h-fit lg:mt-[250px]"
-                  value={continueWithSecondDate}
-                  onChange={(e: CalendarProps | any) =>
-                    setContinueWithSecondDate(e.value)
-                  }
-                  showTime
-                  hourFormat="12"
-                  style={{
-                    outline: "4px solid var(--secondary-color)",
-                    width: "100%",
-                  }}
-                  placeholder="Select First Avilable Date and Time"
-                />
-              </div>
+             
               <button
                 onClick={placeDates}
                 className=" max-md-px-1 py-2 px-5 w-fit text-sm font-semibold transition-colors text- shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10   rounded-full mx-auto max-md:px-4 max-md:w-45"

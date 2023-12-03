@@ -81,15 +81,12 @@ function RescheduleSession({
         } else {
           showError(`${data.message}`);
         }
-        setTimeout(() => {
-          setOpenRescheduleModal(false);
-        }, 6000);
+       
       })
       .catch((error) => {
         // Handle error
         console.error("Error rescheduling session:", error);
         showError("Error rescheduling session. Please try again.");
-        setOpenRescheduleModal(false);
       });
   };
 

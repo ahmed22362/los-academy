@@ -68,12 +68,13 @@ function BookFreeSession({ setOpenBookModal }: any) {
         console.log(data);
         if (data.status === "success") {
           showSuccessMessage("Booking Free Session successful");
+          setTimeout(() => {
+            setOpenBookModal(false);
+          }, 4000);
         } else {
           showErrorMessage(data.message);
         }
-        setTimeout(() => {
-          setOpenBookModal(false);
-        }, 3000);
+       
       })
       .catch((error) => {
         console.error("Error fetching Free sessions:", error);

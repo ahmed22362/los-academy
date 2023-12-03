@@ -16,7 +16,16 @@ import RescheduleRequests from "./components/rescheduleRequests";
 import { useRouter } from "next/navigation";
 import ContinueWithModal from "./components/continueWithModal";
 import dynamic from "next/dynamic";
-
+import Cookies from "universal-cookie";
+import SessionsRequest from "./components/sessionsRequest";
+import moment from "moment-timezone";
+interface Session {
+  id: number;
+  sessionDates: string[];
+  status: string;
+  type: string;
+  sessionDate: string; // You might need to adjust the type based on your actual data structure
+}
 interface UserInfo {
   name: string;
   email: string;
@@ -33,7 +42,10 @@ export default function page() {
   const [teacherName, setTeacherName] = useState("");
   const [showBanner, setShowBanner] = useState(true);
   const router = useRouter();
-  const [start, setStart] = useState<boolean>(true);
+  const [start, setStart] = useState<boolean>(false);
+  const [pendingSessionRequest, setPendingSessionRequest] = useState<Session[]>([]);
+
+  const cookie=new Cookies();
   useEffect(() => {
     const isFirstVisit = localStorage.getItem("isFirstVisit") === null;
 
@@ -44,21 +56,74 @@ export default function page() {
       // Set the flag to indicate that the user has seen the tips
     }
   }, []);
+  const convertDateTimeZone = (
+    inputTime: moment.MomentInput,
+    inputTimezone: string,
+    outputTimezone: string,
+    ourFormat: string
+  ) => {
+    const convertedTime = moment(inputTime)
+      .tz(inputTimezone)
+      .clone()
+      .tz(outputTimezone);
+    return convertedTime.format(ourFormat);
+  };
+  useEffect(() => {
+    const isFirstVisit = cookie.get("FirstVisit") === undefined;
+console.log(isFirstVisit);
 
-  var isFirstVisit;
+    if (isFirstVisit===true) {
+      // Display Joyride only on the first visit
+      setStart(true);
+      setShowBanner(true);
 
-  if (
-    typeof window !== "undefined" &&
-    typeof window.localStorage !== "undefined"
-  ) {
-    // Check if the user has visited the site before
-    isFirstVisit = localStorage.getItem("firstVisit") === null;
-
-    if (isFirstVisit) {
-      localStorage.setItem("firstVisit", "true");
+      // Set the flag to indicate that the user has seen the tips
+      cookie.set("FirstVisit", "true");
     }
-  } else {
-  }
+  }, []);
+
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySessionReq`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.data);
+        
+        const sortedSessions = data.data.map((session: Session) => ({
+          ...session,
+          sessionDates: session.sessionDates.map((date) =>
+            moment(date).toDate()
+          ),
+        }));
+
+        sortedSessions.sort((a: Session, b: Session) => {
+          const dateA = new Date(
+            Math.max(...a.sessionDates.map((date: any) => date.getTime()))
+          );
+          const dateB = new Date(
+            Math.max(...b.sessionDates.map((date: any) => date.getTime()))
+          );
+          return dateB.getTime() - dateA.getTime();
+        });
+
+        console.log("sorted session requests ",sortedSessions);
+        const pendingSessions = sortedSessions.filter((session :Session) => session.status === "pending");
+        setPendingSessionRequest(pendingSessions);
+        // Set the retrieved Seeions in the state
+      })
+      .catch((error) => {
+        console.error("Error fetching sessions:", error);
+      });
+  }, []);
+
+
+
+
 
   const [openContinueWithModal, setOpenContinueWithModal] = useState(false);
   useEffect(() => {
@@ -116,6 +181,8 @@ export default function page() {
     },
   ]);
   useEffect(() => {
+    console.log(pendingSessionRequest);
+    
     AOS.init({
       duration: 800,
       once: true,
@@ -133,7 +200,7 @@ export default function page() {
       onClick={()=>setStart(true)}
       >Show Website Guides</button> */}
 
-      {isFirstVisit ? (
+      {start ? (
         <Joyride
           steps={steps}
           run={start}
@@ -187,6 +254,22 @@ export default function page() {
                 <RemainSessions setTeacherName={setTeacherName} />
               </div>
             </div>
+            {pendingSessionRequest.length>0 ? (
+              <>
+               <div
+               data-aos="fade-up"
+              className={` mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full remain_sessions_section`}
+            >
+               <h4 className={`${styles.secondary_head} mb-5 ml-3`}>
+                Your Session Requests :
+              </h4>
+              <div className="scrollAction mx-2">
+                <SessionsRequest  />
+              </div>
+              </div>
+              </>
+            ):''}
+           
           </div>
         </div>
         <div className="card w-full mr-3  ">

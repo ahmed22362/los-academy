@@ -110,7 +110,9 @@ function TeacherUbsent() {
                           className={`
                          px-3  text-red-500 rounded-lg`}
                         >
-                          {sessionInfo.status}
+                          {sessionInfo.status === "teacher_absent"
+                            ? "Teacher Absent"
+                            : ""}
                         </span>
                       </div>
                       <button

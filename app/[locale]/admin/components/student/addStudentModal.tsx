@@ -46,16 +46,6 @@ export default function AddStudentModal({
   });
 
 
-
-
-  // const [email, setEmail] = useState("");
-  // const [phone, setPhone] = useState("");
-  // const [availableFreeSession, setAvailableFreeSession] = useState("");
-  // const [age, setAge] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  // const [remainSessions, setRemainSessions] = useState("");
-  // const [gender, setGender] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const cookies = new Cookies();
   const toast = useRef<Toast>(null);

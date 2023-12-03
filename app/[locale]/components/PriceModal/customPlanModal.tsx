@@ -85,7 +85,9 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
                 showSuccess(data.message)
                 setResData(data)
                 setIsDisabled(true)
-            } else{
+            } else if(data.status === "fail" && data.message === "Invalid token. Please log in again!") {
+                showError("You Can't Create Plan Until Login")
+            } else {
                 showError(data.message)
             }
         }).catch(err => {

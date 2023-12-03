@@ -74,11 +74,11 @@ function MyReports() {
   }, []);
 
   return (
-    <div className="w-full px-2 gap-2 h-[200px] scrollAction ">
+    <div className="w-full px-2 gap-2 h-[160px] scrollAction ">
       {loading ? (
         // Display loading indicator while fetching data
         <>
-          <p className=" mb-3 rounded-xl bg-white-color">
+          <p className=" overflow-hidden  mb-3 rounded-xl bg-white-color">
             <ContentLoader
               speed={2}
               width={400}

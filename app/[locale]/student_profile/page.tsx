@@ -263,7 +263,7 @@ console.log(isFirstVisit);
                <h4 className={`${styles.secondary_head} mb-5 ml-3`}>
                 Your Session Requests :
               </h4>
-              <div className="scrollAction mx-2">
+              <div className="scrollAction mx-2 h-[250px]">
                 <SessionsRequest  />
               </div>
               </div>
@@ -315,7 +315,7 @@ console.log(isFirstVisit);
             className={`mr-1  p-3  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] reports_section	`}
           >
             <h4 className={`${styles.secondary_head} ml-3 my-2`}>My Reports</h4>
-            <div data-aos="fade-right">
+            <div data-aos="fade-right" className="h-[160px]">
               <MyReports />
             </div>
           </div>

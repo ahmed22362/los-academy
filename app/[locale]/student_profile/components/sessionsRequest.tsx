@@ -1,7 +1,8 @@
 import moment from "moment-timezone";
 import { Calendar, CalendarProps } from "primereact/calendar";
+import { Toast } from "primereact/toast";
 import { Nullable } from "primereact/ts-helpers";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 interface Session {
   id: number;
@@ -15,6 +16,29 @@ function SessionsRequest() {
   const [sessionsRequest, setSessionsRequest] = useState<any[]>([]);
   const [updateCalendar, setUpdateCalendar] = useState<boolean>(true);
   const [newDates, setNewDates] = useState<Nullable<Date> | any>(null);
+  const [updatedId, setUpdatedId] = useState<Number>()
+
+
+  const toast = useRef<Toast>(null);
+
+  const showSuccess = (msg: any) => {
+    toast.current?.show({
+      severity: "success",
+      summary: "Success",
+      detail: msg,
+      life: 5000,
+    });
+  };
+
+  const showError = (msg: string) => {
+    toast.current?.show({
+      severity: "error",
+      summary: "Error",
+      detail: msg,
+      life: 5000,
+    });
+  };
+
 
   const convertDateTimeZone = (
     inputTime: moment.MomentInput,
@@ -69,9 +93,9 @@ function SessionsRequest() {
   }, [updateCalendar]);
 
   //   update Dates
-  const handleUpdateDates = (sessionId: number) => {
+  const handleUpdateDates = (sessionId: Number |any) => {
     if (!newDates || newDates.length === 0) {
-      // Handle the case where no new dates are selected
+        showError('You should choose at least one Date')
       return;
     }
 
@@ -99,6 +123,7 @@ function SessionsRequest() {
         .then((response) => response.json())
         .then((data) => {
           // Handle the response if needed
+          showSuccess(data.message)
           console.log("Updated session:", data);
           // Fetch and update the sessions again to reflect the changes
           setUpdateCalendar(true);
@@ -109,8 +134,15 @@ function SessionsRequest() {
     }
   };
 
+
+    const handleUpdateButton=(id:Number)=>{
+      setUpdateCalendar(false);
+      setUpdatedId(id)
+    }
   return (
-    <div className="md:min-h-[190px] mx-2 max-md:min-h-[150px]">
+    <div className="md:min-h-[190px] mx-2 max-md:min-h-[150px] ">
+            <Toast ref={toast} />
+
       {updateCalendar ? (
         <div className="">
           {sessionsRequest.length === 0 ? (
@@ -165,13 +197,13 @@ function SessionsRequest() {
                   </span>{" "}
                 </p>
                 <div
-                  className={`mt-4 flex justify-center gap-10 items-center `}
+                  className={`${session.status==="pending" ?'flex':'hidden'}  mt-4  justify-center gap-10 items-center `}
                 >
                   <button
-                    onClick={() => setUpdateCalendar(false)}
+                    onClick={()=>handleUpdateButton(session.id)}
                     className={`${
-                      session.status === "pending" ? "" : "hidden"
-                    }bg-[#ffc107] py-1 px-3 rounded-lg text-white float-right w-fit`}
+                      session.status === "pending" ? "bg-[#ffc107] py-1 px-3 rounded-lg text-white  w-fit" : "hidden"
+                    }`}
                   >
                     Update
                   </button>
@@ -213,15 +245,12 @@ function SessionsRequest() {
                 >
                   Cancel
                 </button>
-                {sessionsRequest.map((session) => (
                   <button
-                    key={session.id}
                     className="bg-secondary-color  hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-10  rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
-                    onClick={() => handleUpdateDates(session.id)}
+                    onClick={() => handleUpdateDates(updatedId)}
                   >
                     Update Dates
                   </button>
-                ))}
               </div>
             </div>
           )}

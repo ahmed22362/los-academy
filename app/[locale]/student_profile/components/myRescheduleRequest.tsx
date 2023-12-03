@@ -30,9 +30,16 @@ function MyRescheduleRequest() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        const sortedData = data.data.sort((a: any, b: any) =>
-          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
-        );
+        const sortedData = data.data.sort((a: any, b: any) => {
+          if (a.status === "pending" && b.status !== "pending") {
+            return -1; // Move "pending" requests to the beginning
+          } else if (a.status !== "pending" && b.status === "pending") {
+            return 1; // Move "pending" requests to the beginning
+          } else {
+            // Sort based on dates for other statuses
+            return moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1;
+          }
+        });
         setMyReschedule(sortedData);
       })
       .catch((error) => {
@@ -42,10 +49,11 @@ function MyRescheduleRequest() {
         setLoading(false);
       });
   }, []);
+  
 
   return (
     <div>
-      <div className="md:min-h-[190px] max-md:min-h-[150px]">
+      <div className="md:min-h-[190px] max-md:min-h-[150px] mx-2">
         {loading ? (
           // React Content Loader while data is being fetched
           <ContentLoader
@@ -84,9 +92,9 @@ function MyRescheduleRequest() {
                         <span
                           className={`${
                             request.status === "pending"
-                              ? "bg-yellow-500 text-white"
-                              : "border shadow"
-                          } px-3 py-1 bg-white rounded-lg`}
+                              ? "bg-[#ffaa38] text-white"
+                              : "border shadow bg-white"
+                          } px-3 py-1  rounded-lg`}
                         >
                           {request.status}
                         </span>

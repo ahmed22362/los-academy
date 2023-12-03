@@ -107,7 +107,9 @@ function TeacherUbsent() {
                              
                          px-3 py-1 text-red-500 rounded-lg`}
                         >
-                          {sessionInfo.status}
+                          {sessionInfo.status === "teacher_absent"
+                            ? "Teacher Absent"
+                            : ""}
                         </span>
                       </div>
                       <button

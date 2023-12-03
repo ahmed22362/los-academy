@@ -27,6 +27,11 @@ const protectedAdminRoutes = [
     '/student_profile'
   ]
 
+  const loginRoutes = [
+    '/login',
+    '/los_auth'
+  ]
+
 
 async function middleware(req: NextRequest) {
     
@@ -79,6 +84,10 @@ async function middleware(req: NextRequest) {
         return NextResponse.redirect(absoluteUrl.toString());
     }
 
+    // if(token && loginRoutes.includes(req.nextUrl.pathname)) {
+    //   const absoluteUrl = new URL("/", req.nextUrl.origin);
+    //     return NextResponse.redirect(absoluteUrl.toString());
+    // }
   return createMiddleware({
     locales: ['en', 'ar'],
     defaultLocale: 'en',

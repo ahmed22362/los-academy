@@ -89,7 +89,7 @@ export default function AddMonthlyReport({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
+        "Authorization": `Bearer ${cookies.get("token")}`,
       },
     })
       .then((response) => response.json())
@@ -105,31 +105,31 @@ export default function AddMonthlyReport({
 
 
   const addReport = () => {
-    
+    const reportData = {
+      userId: studentId,
+      arabicToPage: parseInt(arabicToPage),
+      arabicGrade: arabicGrade,
+      quranToPage: parseInt(quranToPage),
+      quranGrade: quranGrade,
+      islamicToPage: parseInt(islamicToPage),
+      islamicGrade: islamicGrade,
+      comment: comment,
+    }
     setIsProcessing(true);
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/monthlyReport/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
+        "Authorization": `Bearer ${cookies.get("token")}`,
       },
-      body: JSON.stringify({
-        studentId: parseInt(studentId),
-        arabicToPage: parseInt(arabicToPage),
-        arabicGrade: arabicGrade,
-        quranToPage: parseInt(quranToPage),
-        quranGrade: quranGrade,
-        islamicToPage: parseInt(islamicToPage),
-        islamicGrade: islamicGrade,
-        comment: comment,
-      }),
+      body: JSON.stringify(reportData),
     })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
         if (data.status === "success") {
           showSuccess(data.message);
-          router.refresh();
+          // router.refresh();
         } else {
           showError(data.message);
         }
@@ -141,6 +141,12 @@ export default function AddMonthlyReport({
         setIsProcessing(false);
       });
   };
+
+
+
+  useEffect(() => {
+    getMyStudents();
+  }, [])
 
   return (
     <Modal
@@ -169,7 +175,7 @@ export default function AddMonthlyReport({
               {myStudents.map((student: any, index: number) => {
                 return (
                   <option key={index} value={student.id}>
-                    {student.name}
+                    {student.email}
                   </option>
                 );
               })}

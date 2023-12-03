@@ -17,29 +17,29 @@ interface SignUpUser {
 const signupSchema: yup.Schema<SignUpUser> = yup.object().shape({
     name: yup
         .string()
-        .required('Name is required'),
+        .required('Required'),
     email: yup
         .string()
-        .required('Email is required')
-        .email('Email is not valid'),
+        .required('Required')
+        .email('Not valid email'),
     phone: yup
         .string()
-        .required('Phone number is required'),
+        .required('Required'),
     password: yup
         .string()
-        .required('Password is required')
-        .matches(passwordRulez, 'Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one number'),
+        .required('Required')
+        .matches(passwordRulez, 'make sure there is 6-40 characters at least 1 uppercase, 1 lowercase, 1 number and 1 special character'),
     passwordConfirmation: yup
         .string()
-        .required('Password confirmation is required')
-        .oneOf([yup.ref('password')], 'Passwords must match'),
+        .required('Required')
+        .oneOf([yup.ref('password')], 'Not Match'),
     gender: yup
         .string()
-        .required('Gender is required'),
+        .required('Required'),
     age: yup
         .number()
-        .required('Age is required')
-        .min(3, 'Age must be at least 3')
-        .max(20, 'Age must be at most 20'),
+        .required('Required')
+        .min(3, 'start from 3 years old')
+        .max(20, 'not more than 20 years old'),
 });
 export default signupSchema;

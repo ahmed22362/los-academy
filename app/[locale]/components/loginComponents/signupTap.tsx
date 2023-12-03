@@ -4,7 +4,7 @@ import { Radio } from "flowbite-react";
 import PrimaryButton from "../PrimaryButton";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
-import signupSchema from "@/schemas";
+import {signupSchema} from "@/schemas";
 import { useFormik } from "formik";
 import LoadingButton from "../../admin/components/loadingButton";
 import { useRouter } from "next/navigation";

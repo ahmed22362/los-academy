@@ -28,11 +28,11 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
     const [isProcessing, setIsProcessing] = useState(false)
     const cookies = new Cookies()
 
-    const showSuccess = () => {
-        toast.current?.show({severity:'success', summary: 'Success', detail:'Added Success', life: 3000});
+    const showSuccess = (msg: string) => {
+        toast.current?.show({severity:'success', summary: 'Success', detail: msg, life: 3000});
     }
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'make sure all fields are correct', life: 4000});
+    const showError = (msg: string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
       }
 
     useEffect(() => {
@@ -82,14 +82,16 @@ export default function AddTeacherModal({openAssignModal, handleCloseModal, upda
         }).then(response => response.json()).then(data => {
             console.log(data)
           if(data.status === "success") {
-            showSuccess()
+            showSuccess(data.message)
             updateComponent()
           } else {
-            showError()
+            showError(data.message)
           }
           setIsProcessing(false)
         }).catch(err => {
           console.log(err)
+          showError(err)
+          setIsProcessing(false)
         })
       }
 

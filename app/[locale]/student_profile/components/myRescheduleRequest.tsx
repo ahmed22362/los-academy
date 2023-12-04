@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import ContentLoader from "react-content-loader";
 import moment from "moment-timezone";
+import { Toast } from "primereact/toast";
 
 function MyRescheduleRequest() {
   const cookie = new Cookies();
@@ -20,27 +21,24 @@ function MyRescheduleRequest() {
       .tz(outputTimezone);
     return convertedTime.format(ourFormat);
   };
+
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/requestReschedule`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
+        Authorization: `Bearer ${cookie.get("token")}`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        const sortedData = data.data.sort((a: any, b: any) => {
-          if (a.status === "pending" && b.status !== "pending") {
-            return -1; // Move "pending" requests to the beginning
-          } else if (a.status !== "pending" && b.status === "pending") {
-            return 1; // Move "pending" requests to the beginning
-          } else {
-            // Sort based on dates for other statuses
-            return moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1;
-          }
-        });
-        setMyReschedule(sortedData);
+        const pendingRequests = data.data.filter(
+          (request: any) => request.status === "pending"
+        );
+        const sortedPendingRequests = pendingRequests.sort((a: any, b: any) =>
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+        );
+        setMyReschedule(sortedPendingRequests);
       })
       .catch((error) => {
         console.error("Error fetching sessions:", error);
@@ -49,11 +47,92 @@ function MyRescheduleRequest() {
         setLoading(false);
       });
   }, []);
-  
+
+  const fetchMyReschedule=()=>{
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/requestReschedule`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        const pendingRequests = data.data.filter(
+          (request: any) => request.status === "pending"
+        );
+        const sortedPendingRequests = pendingRequests.sort((a: any, b: any) =>
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+        );
+        setMyReschedule(sortedPendingRequests);
+      })
+      .catch((error) => {
+        console.error("Error fetching sessions:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+  const toast = useRef<Toast>(null);
+
+  const showSuccess = (msg: any) => {
+    toast.current?.show({
+      severity: "success",
+      summary: "Success",
+      detail: msg,
+      life: 5000,
+    });
+  };
+
+  const showError = (msg: string) => {
+    toast.current?.show({
+      severity: "error",
+      summary: "Error",
+      detail: msg,
+      life: 5000,
+    });
+  };
+  // cancel reschedule request
+  const cancelMyRescheduleRequest = (requestId: number) => {
+    if (!requestId || isNaN(requestId)) {
+      showError("Please enter a valid number for the request!");
+      return;
+    }
+
+    const requestBody = {
+      requestId: Number(requestId),
+    };
+
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/cancelRescheduleRequest`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === "success") {
+          showSuccess(data.message);
+        } else {
+          showError(data.message);
+        }
+        fetchMyReschedule();
+
+      })
+      .catch((error) => {
+        showError("An Error Occurred");
+        console.error(error);
+      });
+  };
 
   return (
-    <div>
-      <div className="md:min-h-[190px] max-md:min-h-[150px] mx-2">
+    <div className="scrollAction h-[150px]">
+      <Toast ref={toast} />
+
+      <div className="md:min-h-[190px] max-md:min-h-[150px] mx-2 ">
         {loading ? (
           // React Content Loader while data is being fetched
           <ContentLoader
@@ -75,19 +154,19 @@ function MyRescheduleRequest() {
                 {myReschedule.map((request, index) => (
                   <li className="flex flex-col gap-5 mb-3" key={request.id}>
                     <div className="bg-white-color p-2 flex flex-col gap-1 rounded-xl ">
-                      <div className="flex justify-center items-center  mt-2">
+                      {/* <div className="flex justify-center items-center  mt-2">
                         <h3 className="px-2 py-1 font-semibold text-lg bg-blueviolet-600 rounded-xl">
                           With Teacher:{" "}
                           {request.session.SessionInfo.teacher.name}
                         </h3>{" "}
-                      </div>
-                      <p className="my-1  font-medium">
+                      </div> */}
+                      {/* <p className="my-1  font-medium">
                         Session ID:{" "}
                         <span className="bg-[--secondary-color] text-white p-1 rounded-2xl">
                           {request.sessionId}
                         </span>
-                      </p>
-                      <p className="my-1  font-medium">
+                      </p> */}
+                      {/* <p className="my-1  font-medium">
                         Status:{" "}
                         <span
                           className={`${
@@ -98,23 +177,42 @@ function MyRescheduleRequest() {
                         >
                           {request.status}
                         </span>
-                      </p>
-                      <p className="my-1  font-medium">
+                      </p> */}
+                      {/* <p className="my-1  font-medium">
                         Requested By:{" "}
                         {request.requestedBy === "user"
                           ? "Me"
                           : request.requestedBy.toUpperCase()}
-                      </p>
-                      <p className="my-1  font-medium flex  gap-4">
-                        Old Date:
-                        <span className="text-red-600">
-                          {convertDateTimeZone(
-                            request.oldDate,
-                            "UTC",
-                            Intl.DateTimeFormat().resolvedOptions().timeZone,
-                            "DD/MMM/YYYY h:mm A"
-                          )}
-                        </span>
+                      </p> */}
+                     {request.newDatesOptions.map(
+                                (date: string, i: number) => (
+                                  <p
+                                    className=" flex gap-2 items-center justify-start"
+                                    key={i}
+                                  >
+                                    <span>Date:</span>
+                                    {convertDateTimeZone(
+                                      date,
+                                      "UTC",
+                                      Intl.DateTimeFormat().resolvedOptions()
+                                        .timeZone,
+                                      "DD/MMM/YYYY "
+                                    )}
+                                    <p className="flex gap-2 items-center justify-start">
+                                      <span>Time:</span>
+                                      {convertDateTimeZone(
+                                      date,
+                                      "UTC",
+                                      Intl.DateTimeFormat().resolvedOptions()
+                                        .timeZone,
+                                      "h:mm A"
+                                    )}
+                                    </p>
+                                  </p>
+                                )
+                              )}
+                      <p className="my-1  font-medium">
+                        Teacher Name: {request.session.SessionInfo.teacher.name}
                       </p>
                       {request.status === "approved" ? (
                         <p className="my-1  font-medium flex  gap-4">
@@ -133,7 +231,7 @@ function MyRescheduleRequest() {
                       )}
                       {request.status === "pending" ? (
                         <>
-                          <div className=" flex flex-col gap-3 ">
+                          {/* <div className=" flex flex-col gap-3 ">
                             <h3 className="font-semibold text-lg ">
                               The Date You Chose :
                             </h3>
@@ -141,7 +239,7 @@ function MyRescheduleRequest() {
                               {request.newDatesOptions.map(
                                 (date: string, i: number) => (
                                   <p
-                                    className="my-1 text-[--secondary-color]"
+                                    className="my-1 "
                                     key={i}
                                   >
                                     {convertDateTimeZone(
@@ -155,6 +253,16 @@ function MyRescheduleRequest() {
                                 )
                               )}
                             </div>
+                          </div> */}
+                          <div className="flex justify-center items-center">
+                            <button
+                              onClick={() =>
+                                cancelMyRescheduleRequest(request.id)
+                              }
+                              className={`hover:text-white hover:bg-secondary-color px-3 py-1 text-secondary-color border-2 border-[--secondary-color] font-semibold transition-colors  w-fit rounded-full `}
+                            >
+                              Cancel
+                            </button>
                           </div>
                         </>
                       ) : (

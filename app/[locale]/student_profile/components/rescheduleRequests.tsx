@@ -25,11 +25,12 @@ function RescheduleRequests() {
   return (
     <>
       <Tabs.Group aria-label="Pills" theme={customeTheme.tab} style="pills">
-        <Tabs.Item title="Teacher Requests">
-          <TeacherRescduleRequests />
-        </Tabs.Item>
+       
         <Tabs.Item title="My Requests">
           <MyRescheduleRequest />
+        </Tabs.Item>
+        <Tabs.Item title="Teacher Requests">
+          <TeacherRescduleRequests />
         </Tabs.Item>
       </Tabs.Group>
     </>

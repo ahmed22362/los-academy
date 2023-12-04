@@ -1,3 +1,4 @@
+import { error } from "console";
 import moment from "moment-timezone";
 import { Calendar, CalendarProps } from "primereact/calendar";
 import { Toast } from "primereact/toast";
@@ -16,8 +17,7 @@ function SessionsRequest() {
   const [sessionsRequest, setSessionsRequest] = useState<any[]>([]);
   const [updateCalendar, setUpdateCalendar] = useState<boolean>(true);
   const [newDates, setNewDates] = useState<Nullable<Date> | any>(null);
-  const [updatedId, setUpdatedId] = useState<Number>()
-
+  const [updatedId, setUpdatedId] = useState<Number>();
 
   const toast = useRef<Toast>(null);
 
@@ -39,6 +39,40 @@ function SessionsRequest() {
     });
   };
 
+  const cancelMySessionRequest = (requestId:number) => {
+  
+    if (!requestId || isNaN(requestId)) {
+      showError('Please enter a valid number for the request!');
+      return;
+    }
+  
+    const requestBody = {
+      requestId: Number(requestId),
+    };
+  
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/cancelSessionRequest`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${cookie.get('token')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === 'success') {
+          showSuccess(data.message);
+        } else {
+          showError(data.message);
+        }
+      })
+      .catch((error) => {
+        showError('An Error Occurred');
+        console.error(error);
+      });
+  };
+ 
 
   const convertDateTimeZone = (
     inputTime: moment.MomentInput,
@@ -93,9 +127,9 @@ function SessionsRequest() {
   }, [updateCalendar]);
 
   //   update Dates
-  const handleUpdateDates = (sessionId: Number |any) => {
+  const handleUpdateDates = (sessionId: Number | any) => {
     if (!newDates || newDates.length === 0) {
-        showError('You should choose at least one Date')
+      showError("You should choose at least one Date");
       return;
     }
 
@@ -123,7 +157,7 @@ function SessionsRequest() {
         .then((response) => response.json())
         .then((data) => {
           // Handle the response if needed
-          showSuccess(data.message)
+          showSuccess(data.message);
           console.log("Updated session:", data);
           // Fetch and update the sessions again to reflect the changes
           setUpdateCalendar(true);
@@ -134,19 +168,20 @@ function SessionsRequest() {
     }
   };
 
-
-    const handleUpdateButton=(id:Number)=>{
-      setUpdateCalendar(false);
-      setUpdatedId(id)
-    }
+  const handleUpdateButton = (id: Number) => {
+    setUpdateCalendar(false);
+    setUpdatedId(id);
+  };
   return (
     <div className="md:min-h-[190px] mx-2 max-md:min-h-[150px] ">
-            <Toast ref={toast} />
+      <Toast ref={toast} />
 
       {updateCalendar ? (
         <div className="">
           {sessionsRequest.length === 0 ? (
-            <p className="flex justify-center items-center">No session requests available.</p>
+            <p className="flex justify-center items-center">
+              No session requests available.
+            </p>
           ) : (
             sessionsRequest.map((session) => (
               <div
@@ -197,17 +232,22 @@ function SessionsRequest() {
                   </span>{" "}
                 </p>
                 <div
-                  className={`${session.status==="pending" ?'flex':'hidden'}  mt-4  justify-center gap-10 items-center `}
+                  className={`${
+                    session.status === "pending" ? "flex" : "hidden"
+                  }  mt-4  justify-center gap-10 items-center `}
                 >
                   <button
-                    onClick={()=>handleUpdateButton(session.id)}
+                    onClick={() => handleUpdateButton(session.id)}
                     className={`${
-                      session.status === "pending" ? "bg-[#ffc107] py-1 px-3 rounded-lg text-white  w-fit" : "hidden"
+                      session.status === "pending"
+                        ? "bg-secondary-color py-1 px-3 rounded-lg text-white  w-fit"
+                        : "hidden"
                     }`}
                   >
                     Update
                   </button>
                   <button
+                    onClick={() => cancelMySessionRequest(session.id)}
                     className={`px-3 py-1 bg-red-600 rounded-lg text-white`}
                   >
                     Cancel Request
@@ -245,12 +285,12 @@ function SessionsRequest() {
                 >
                   Cancel
                 </button>
-                  <button
-                    className="bg-secondary-color  hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-10  rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
-                    onClick={() => handleUpdateDates(updatedId)}
-                  >
-                    Update Dates
-                  </button>
+                <button
+                  className="bg-secondary-color  hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-10  rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
+                  onClick={() => handleUpdateDates(updatedId)}
+                >
+                  Update Dates
+                </button>
               </div>
             </div>
           )}

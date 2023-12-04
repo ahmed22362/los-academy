@@ -28,15 +28,22 @@ function CommunityStatistics() {
 
   return (
     <div>
-      <div className={`flex justify-between gap-5 items-center mt-10`}>
-        <PrimaryButton
-          ourStyle="bg-secondary-color max-md:px-3 hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-3 shadow rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
-          text={`Done  (${historySeesions?.length || 0}) Sessions`}
-        />
-        <PrimaryButton
-          ourStyle="bg-secondary-color max-md:px-3 hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-3 shadow rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
-          text={"100% Attendence"}
-        />
+      <div className={`flex justify-center gap- items-center mt-10`}>
+        <div
+          className="bg-secondary-color text-center  hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 lg:px-10  rounded-3xl  mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
+          
+        >
+          <span className="block text-center">Done</span>
+          {`  ${historySeesions?.length || 0} Sessions`}
+          </div>
+        <div
+          className="bg-secondary-color text-center hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 lg:px-10  rounded-3xl  mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
+        >
+          <span className="block text-center">
+          Attendence
+          </span>
+          {"100% "}
+          </div>
       </div>
     </div>
   );

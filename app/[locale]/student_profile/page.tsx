@@ -46,16 +46,17 @@ export default function page() {
   const [pendingSessionRequest, setPendingSessionRequest] = useState<Session[]>([]);
 
   const cookie=new Cookies();
-  useEffect(() => {
-    const isFirstVisit = localStorage.getItem("isFirstVisit") === null;
 
-    if (myInfo?.sessionPlaced == false) {
+  useEffect(() => {
+
+    if (myInfo?.sessionPlaced === false) {
       // Display tips for the first visit
 
       setShowBanner(true);
       // Set the flag to indicate that the user has seen the tips
     }
   }, []);
+  
   const convertDateTimeZone = (
     inputTime: moment.MomentInput,
     inputTimezone: string,
@@ -75,7 +76,6 @@ console.log(isFirstVisit);
     if (isFirstVisit===true) {
       // Display Joyride only on the first visit
       setStart(true);
-      setShowBanner(true);
 
       // Set the flag to indicate that the user has seen the tips
       cookie.set("FirstVisit", "true");
@@ -120,7 +120,6 @@ console.log(isFirstVisit);
         console.error("Error fetching sessions:", error);
       });
   }, []);
-
 
 
 
@@ -180,6 +179,7 @@ console.log(isFirstVisit);
       content: "The sessions that your teacher was absent from appear here.",
     },
   ]);
+
   useEffect(() => {
     console.log(pendingSessionRequest);
     
@@ -216,13 +216,13 @@ console.log(isFirstVisit);
         openContinueWithModal={openContinueWithModal}
         setOpenContinueWithModal={setOpenContinueWithModal}
       />
-      {showBanner && (
+      {myInfo?.sessionPlaced===false?  (
         <BannerComponent
           message={"You Want To Enjoy Sessions?"}
           animation={"animate-bounce"}
           header={"Los Academy Plans"}
         />
-      )}
+      ):''}
       <div className="myInfo flex justify-center items-center">
         <MyInfo myInfo={myInfo} />
       </div>
@@ -230,7 +230,17 @@ console.log(isFirstVisit);
         <div className="card w-full  ">
           <EditProfile setMyInfo={setMyInfo} />
           <div className="">
-            <h3 className={`${styles.main_head} mb-8`}>Info</h3>
+          <div
+            className={`my-11 p-3 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	rescheduling_section`}
+          >
+            <h3 className={`${styles.secondary_head} mb-3`}>
+              Reschedule Requests{" "}
+            </h3>
+
+            <div data-aos="fade-up" className="h-[250px]   ">
+              <RescheduleRequests />
+            </div>
+          </div>
             <div
               className={`community_section	w-full p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
             >
@@ -242,18 +252,21 @@ console.log(isFirstVisit);
               </div>
             </div>
             <div
-              className={`mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full remain_sessions_section`}
+            className={`mr-1  mb-10 mt-10  p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] 	`}
+          >
+            <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}>
+              Teacher Ubsent Sessions
+            </h3>
+            <div
+              data-aos="fade-up"
+              data-aos-anchor="#example-anchor"
+              data-aos-offset="500"
+              data-aos-duration="500"
+              className="h-[200px] teacher_ubsent_section scrollAction "
             >
-              <h4 className={`${styles.secondary_head} pb-2`}>
-                Remain Sessions:{" "}
-                <span className="font-bold font-italic">
-                  with teacher: {teacherName}
-                </span>{" "}
-              </h4>
-              <div data-aos="fade-up">
-                <RemainSessions setTeacherName={setTeacherName} />
-              </div>
+              <TeacherUbsent />
             </div>
+          </div>
             {pendingSessionRequest.length>0 ? (
               <>
                <div
@@ -283,16 +296,18 @@ console.log(isFirstVisit);
             <UpcomingSessions />
           </div>
           <div
-            className={`my-11 p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	rescheduling_section`}
-          >
-            <h3 className={`${styles.secondary_head} mb-8`}>
-              Reschedule Requests{" "}
-            </h3>
-
-            <div data-aos="fade-up" className="h-[300px]  scrollAction ">
-              <RescheduleRequests />
+              className={`mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full remain_sessions_section`}
+            >
+              <h4 className={`${styles.secondary_head} pb-2`}>
+                Remain Sessions:{" "}
+                <span className="font-bold font-italic">
+                  with teacher: {teacherName}
+                </span>{" "}
+              </h4>
+              <div data-aos="fade-up">
+                <RemainSessions setTeacherName={setTeacherName} />
+              </div>
             </div>
-          </div>
           <div
             className={` ${
               myInfo?.sessionPlaced == true ? "hidden" : ""
@@ -319,22 +334,7 @@ console.log(isFirstVisit);
               <MyReports />
             </div>
           </div>
-          <div
-            className={`mr-1  mb-10 mt-10  p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] 	`}
-          >
-            <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}>
-              Teacher Ubsent Sessions
-            </h3>
-            <div
-              data-aos="fade-up"
-              data-aos-anchor="#example-anchor"
-              data-aos-offset="500"
-              data-aos-duration="500"
-              className="h-[300px] teacher_ubsent_section scrollAction "
-            >
-              <TeacherUbsent />
-            </div>
-          </div>
+       
         </div>
       </div>
     </main>

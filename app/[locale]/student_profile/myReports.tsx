@@ -74,7 +74,7 @@ function MyReports() {
   }, []);
 
   return (
-    <div className="w-full px-2 gap-2 h-[160px] scrollAction ">
+    <div className="w-full px-2 gap-2  ">
       {loading ? (
         // Display loading indicator while fetching data
         <>
@@ -118,7 +118,7 @@ function MyReports() {
         ))
       ) : (
         // Display "No reports" message if there are no reports
-        <p>No reports</p>
+        <p className="text-center">No reports</p>
       )}
       <ReportModal
         openAssignModal={selectedReport}

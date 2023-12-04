@@ -114,7 +114,7 @@ function RescheduleSession({
           </div>
           <div className="flex justify-center flex-col items-center gap-5">
             <Calendar
-              panelClassName="h-fit lg:mt-[300px]"
+              panelClassName="h-fit lg:mt-[100px]"
               value={selectedStartDate}
               onChange={(e: CalendarProps | any) =>
                 setSelectedStartDate(e.value)

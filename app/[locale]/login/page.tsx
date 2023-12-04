@@ -443,6 +443,7 @@ function page() {
                   <div className="flex justify-between  px-10 flex-wrap gap-3 py-3">
                     <div className="flex align-items-center  ">
                       <RadioButton
+                        required
                         className="border focus-within:border-none focus-within:bg-[--secondary-color] border-[--secondary-color]   rounded-full"
                         inputId="male"
                         name="gender"
@@ -475,19 +476,7 @@ function page() {
                     </div>
                   </div>
 
-                  {/* <Button
-                    onClick={handleFormSubmit}
-                    theme={buttonTheme}
-                    color="purple"
-                    isProcessing={isProcessing}
-                    pill
-                    size="lg"
-                    className={
-                      "transition-colors rounded-full font-semibold px-5 py-2 text-white"
-                    }
-                  >
-                    <p>Register</p>
-                  </Button> */}
+
 
                   <LoadingButton
                     title={"Register"}
@@ -497,11 +486,7 @@ function page() {
                     }
                     isProcessing={isProcessing}
                   />
-                  {/* <PrimaryButton
-                    text="Register"
-                    ourStyle="bg-secondary-color text-white	py-3 border rounded-3xl text-xl	 w-full"
-                    onClick={handleFormSubmit}
-                  /> */}
+                 
                   <span className="text-center">Or Register with </span>
                   <div className="flex gap-3">
                     <PrimaryButton

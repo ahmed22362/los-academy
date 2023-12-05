@@ -57,6 +57,8 @@ function PlanCard({planData}: any) {
                 router.push(data.data.url)
               }, 4000)
               return () => clearTimeout(timer)
+          } else if (data.status === 'fail' && data.message === "Invalid token. Please log in again!") {
+            showError("You Can't Choose This Plan Please Log In First")
           } else {
             showError(data.message)
           }

@@ -8,7 +8,7 @@ function TeacherScheduleData({data}: {data: any}) {
     const [openModal, setOpenModal]: any = useState(false);
 
     const session = data && data;
-    const userName = session && session.SessionInfo && session.SessionInfo.user && session.SessionInfo.user.name;
+    const userName = session && session.SessionInfo && session.SessionInfo.user && session.SessionInfo.user.name || "name not found :)";
 
     const convertDate = convertDateTimeZone;
     useEffect(() => {

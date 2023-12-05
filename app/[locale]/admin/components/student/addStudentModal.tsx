@@ -14,7 +14,7 @@ import { PiStudentBold } from "react-icons/pi";
 import LoadingButton from "../loadingButton";
 import Cookies from "universal-cookie";
 import { useFormik } from "formik";
-import signupSchema from "@/schemas";
+import {signupSchema} from "@/schemas";
 export default function AddStudentModal({
   openAssignModal,
   handleCloseModal,
@@ -24,10 +24,10 @@ export default function AddStudentModal({
   handleCloseModal: () => void;
   updateComponent: () => void;
 }) {
-    const onSubmit = async (values: any, actions: any) => {
-      addStudent(values);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      actions.resetForm();
+  const onSubmit = async (values: any, actions: any) => {
+    addStudent(values);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    actions.resetForm();
 
   }
   const modalRef = useRef<HTMLDivElement>(null);
@@ -46,16 +46,6 @@ export default function AddStudentModal({
   });
 
 
-
-
-  // const [email, setEmail] = useState("");
-  // const [phone, setPhone] = useState("");
-  // const [availableFreeSession, setAvailableFreeSession] = useState("");
-  // const [age, setAge] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  // const [remainSessions, setRemainSessions] = useState("");
-  // const [gender, setGender] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const cookies = new Cookies();
   const toast = useRef<Toast>(null);

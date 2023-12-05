@@ -29,7 +29,8 @@ export default function RescheduleModal(
         const [startRangeDate, setStartRangeDate] = useState<Nullable<(Date | null)[]> | any>(null);
         const [endRangeDate, setEndRangeDate] = useState<Nullable<(Date | null)[]> | any>(null);
         const toast = useRef<any>(null);
-
+        const userName = sessionData && sessionData.SessionInfo && sessionData.SessionInfo.user && sessionData.SessionInfo.user.name || "name not found :)";
+       
         const showSuccess = (message: string) => {
             
             toast.current?.show({severity:'success', summary: 'Success', detail: message, life: 3000});
@@ -96,7 +97,7 @@ export default function RescheduleModal(
 
   return (
     <Modal ref={modalRef} show={openAssignModal} onClose={handleCloseModal} size={"2xl"}>
-        <Modal.Header theme={modalTheme.header}>Reschedule Session for Student : <span className='capitalize font-bold italic'>{sessionData.SessionInfo.user.name}</span></Modal.Header>
+        <Modal.Header theme={modalTheme.header}>Reschedule Session for Student : <span className='capitalize font-bold italic'>{userName}</span></Modal.Header>
         <Toast ref={toast} />
         <Modal.Body>
             <div className='m-auto flex flex-col items-center justify-center'>

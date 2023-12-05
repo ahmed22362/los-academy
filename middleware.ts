@@ -27,6 +27,13 @@ const protectedAdminRoutes = [
     '/student_profile'
   ]
 
+  const userLoginRoutes = [
+    '/login',
+  ]
+  const adminAndTeacherLoginRoutes = [
+    '/los_auth',
+  ]
+
 
 async function middleware(req: NextRequest) {
     
@@ -77,6 +84,23 @@ async function middleware(req: NextRequest) {
         
         const absoluteUrl = new URL("/", req.nextUrl.origin);
         return NextResponse.redirect(absoluteUrl.toString());
+    }
+
+    if(token && userLoginRoutes.includes(req.nextUrl.pathname)) {
+        const absoluteUrl = new URL("/student_profile", req.nextUrl.origin);
+        return NextResponse.redirect(absoluteUrl.toString());
+    }
+
+    if(token && adminAndTeacherLoginRoutes.includes(req.nextUrl.pathname)) {
+      const getUserRole = await getCurrentTeacher(token?.value);
+      const role = getUserRole.data?.role
+      if(role === "admin") {
+        const absoluteUrl = new URL("/admin", req.nextUrl.origin);
+        return NextResponse.redirect(absoluteUrl.toString());
+      } else {
+        const absoluteUrl = new URL("/teacher", req.nextUrl.origin);
+        return NextResponse.redirect(absoluteUrl.toString());
+      }
     }
 
   return createMiddleware({

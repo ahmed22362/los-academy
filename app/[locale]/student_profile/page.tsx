@@ -334,7 +334,22 @@ console.log(isFirstVisit);
               <MyReports />
             </div>
           </div>
-       
+          <div
+            className={`mr-1  mb-10 mt-10  p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] 	`}
+          >
+            <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}>
+              Teacher Absent Sessions
+            </h3>
+            <div
+              data-aos="fade-up"
+              data-aos-anchor="#example-anchor"
+              data-aos-offset="500"
+              data-aos-duration="500"
+              className="h-[300px] teacher_ubsent_section scrollAction "
+            >
+              <TeacherUbsent />
+            </div>
+          </div>
         </div>
       </div>
     </main>

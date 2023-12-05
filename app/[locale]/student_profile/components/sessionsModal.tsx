@@ -65,7 +65,7 @@ export default function SessionsModal({
                 <Tabs.Item title="Rescheduling Requests">
                   <RescheduleRequests />
                 </Tabs.Item>
-                <Tabs.Item title="Teacher Ubsent Sessions">
+                <Tabs.Item title="Teacher Absent Sessions">
                   <TeacherUbsent />
                 </Tabs.Item>
               </Tabs.Group>

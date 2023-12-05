@@ -129,7 +129,7 @@ function RemainSessions({ setTeacherName }: any) {
                       check ? "gray-500" : "[--secondary-color]"
                     } hover:bg-${
                       check ? "gray-500" : "[#453ed2]"
-                    } h-fit text-sm rounded-full py-2 text-white px-2`}
+                    } h-fit text-sm rounded-full py-1 text-white px-4`}
                     disabled={check}
                   >
                     Reschedule

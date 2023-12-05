@@ -288,10 +288,6 @@ function UpcomingSessions() {
         // setUserContinueSessionId(data?.data?.id)
         console.log("user status", data);
         setUserContinueStatus(data?.data);
-        setTimeout(() => {
-          console.log(userContinueStatus);
-          console.log(userContinueSessionId);
-        }, 3000);
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
@@ -335,7 +331,6 @@ function UpcomingSessions() {
         const diff = sessionDate - currentDate.getTime();
         // const diffInSec = diff / 1000
         const diffInSec = Math.floor(diff / 1000);
-        console.log(sessionDate, currentDate, diffInSec);
 
         if (diffInSec === -5) {
           console.log("done");
@@ -610,7 +605,7 @@ function UpcomingSessions() {
                 <PrimaryButton
                   disabled={isImHereButtonDisabled}
                   onClick={() => updateAttendance()}
-                  ourStyle={`w-full max-md-px-1  text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45 ${
+                  ourStyle={`w-full max-md-px-1  text-sm font-semibold transition-colors text-white  h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45 ${
                     isImHereButtonDisabled
                       ? " bg-gray-500 cursor-not-allowed"
                       : "bg-secondary-color hover:bg-secondary-hover"
@@ -629,14 +624,14 @@ function UpcomingSessions() {
               >
                 <button
                   onClick={() => setopenRescheduleModal(true)}
-                  className={`max-md-px-1 text-sm font-semibold transition-colors shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10 px-3 w-full rounded-full w-50 mx-auto max-md:px-4 max-md:w-45 ${
+                  className={`max-md-px-1 text-sm text-secondary-color border-4 border-[--secondary-color] font-semibold transition-colors  h-10 px-3 w-full rounded-full w-50 mx-auto max-md:px-4 max-md:w-45 ${
                     isRescheduleButtonDisabled
                       ? "bg-gray-500 cursor-not-allowed text-white"
-                      : "hover:bg-[#0a01c09a] hover:text-white"
+                      : "hover:bg-secondary-color hover:text-white"
                   }`}
                   disabled={isRescheduleButtonDisabled}
                 >
-                  Reschedule Session
+                  reschedule Session
                 </button>
               </Tooltip>
             </div>

@@ -74,11 +74,11 @@ function MyReports() {
   }, []);
 
   return (
-    <div className="w-full px-2 gap-2 h-[200px] scrollAction ">
+    <div className="w-full px-2 gap-2  ">
       {loading ? (
         // Display loading indicator while fetching data
         <>
-          <p className=" mb-3 rounded-xl bg-white-color">
+          <p className=" overflow-hidden  mb-3 rounded-xl bg-white-color">
             <ContentLoader
               speed={2}
               width={400}
@@ -118,7 +118,7 @@ function MyReports() {
         ))
       ) : (
         // Display "No reports" message if there are no reports
-        <p>No reports</p>
+        <p className="text-center">No reports</p>
       )}
       <ReportModal
         openAssignModal={selectedReport}

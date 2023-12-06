@@ -36,14 +36,15 @@ function TeacherUbsent() {
     return convertedTime.format(ourFormat);
   };
   useEffect(() => {
-    const apiUrl = `${url}/user/mySessions?status=teacher_absent`;
-
-    fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    fetch(
+      `${process.env.NEXT_PUBLIC_APIURL}/user/mySessions?status=teacher_absent`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data.data);
@@ -61,7 +62,7 @@ function TeacherUbsent() {
   return (
     <>
       <div>
-        <div className="md:min-h-[190px] max-md:min-h-[150px]">
+        <div className="md:min-h-[190px]  max-md:min-h-[100px]">
           {loading ? (
             // React Content Loader while data is being fetched
             <ContentLoader
@@ -78,9 +79,12 @@ function TeacherUbsent() {
           ) : (
             <ul className="">
               {teacherUbsentSessions?.map((sessionInfo, index) => (
-                <li className="flex flex-col gap-4  pr-2" key={sessionInfo.id}>
-                  <div className="bg-white-color p-2 rounded-xl">
-                    <p className="my-1 py-2 font-medium">
+                <li
+                  className="flex flex-col gap-4 mb-3 pr-2"
+                  key={sessionInfo.id}
+                >
+                  <div className="bg-white-color p-4 flex flex-col gap-2 rounded-xl">
+                    {/* <p className="my-1  font-medium">
                       Session ID:{" "}
                       <span className="bg-[--secondary-color] text-white p-1 rounded-2xl">
                         {sessionInfo.id}
@@ -91,39 +95,35 @@ function TeacherUbsent() {
                       <span
                         className={`${
                           sessionInfo.type != "free"
-                            ? "bg-red-500"
-                            : "bg-green-600"
-                        } px-3 py-1 text-white rounded-lg`}
+                            ? "bg-red-500 text-white"
+                            : "bg-white border"
+                        } shadow  px-3 py-1  rounded-lg`}
                       >
                         {" "}
                         {sessionInfo.type.toUpperCase()}
                       </span>
                     </p>
-                    <div className="my-1 flex justify-between items-center py-2 font-medium">
+                    <div className=" flex justify-between items-center  font-medium">
                       <div>
                         Status:{" "}
                         <span
                           className={`
-                             
-                         px-3 py-1 text-red-500 rounded-lg`}
+                         px-3  text-red-500 rounded-lg`}
                         >
                           {sessionInfo.status === "teacher_absent"
                             ? "Teacher Absent"
                             : ""}
                         </span>
                       </div>
-                      <button
-                        onClick={() => handleRescheduleClick(sessionInfo.id)}
-                        className="bg-[--secondary-color] hover:bg-[#453ed2] h-fit text-sm rounded-full py-2 text-white px-2"
-                      >
-                        Reschedule
-                      </button>
-                    </div>
-                    <p className="my-1 py-2 font-medium">
+                    </div> */}
+                    <div className="flex justify-between items-center">
+                    <div className="flex flex-col justify-center items-start">
+                    <p className=" font-medium">
                       Teacher Name: {sessionInfo?.SessionInfo?.teacher?.name}
                     </p>
-                    <p className="my-1 py-2 font-medium flex  gap-4">
-                      Old Date:
+                   
+                      <p className=" font-medium flex  gap-4">
+                      Date:
                       <span className="text-red-600">
                         {convertDateTimeZone(
                           sessionInfo.sessionDate,
@@ -133,8 +133,17 @@ function TeacherUbsent() {
                         )}
                       </span>
                     </p>
+                    </div>
+                    <button
+                        onClick={() => handleRescheduleClick(sessionInfo.id)}
+                        className="bg-[--secondary-color]  hover:bg-[#453ed2] h-fit text-sm py-2 rounded-full  text-white px-4"
+                      >
+                        Reschedule
+                      </button>
+                    </div>
+                    
+                   
                   </div>
-
                 </li>
               ))}
             </ul>
@@ -143,7 +152,7 @@ function TeacherUbsent() {
         <RescheduleSession
           sessionId={selectedSessionId}
           openRescheduleModal={openRescheduleModal}
-          setopenRescheduleModal={setOpenRescheduleModal}
+          setOpenRescheduleModal={setOpenRescheduleModal}
         />
       </div>
     </>

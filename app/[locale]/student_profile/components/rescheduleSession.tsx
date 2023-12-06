@@ -5,12 +5,17 @@ import { Nullable } from "primereact/ts-helpers";
 import { Toast } from "primereact/toast";
 import Cookies from "universal-cookie";
 import { Modal } from "flowbite-react";
-import { inflateRaw } from "zlib";
-
+import BannerComponent from "./Banner";
+interface RescheduleSessionProps {
+  openRescheduleModal: boolean;
+  sessionId: string;
+  fromTeacherRequest?: boolean; // Making fromTeacherRequest optional
+}
 function RescheduleSession({
-  setopenRescheduleModal,
+  setOpenRescheduleModal,
   openRescheduleModal,
   sessionId,
+  fromTeacherRequest,
 }: any) {
   const [selectedStartDate, setSelectedStartDate] = useState<
     Nullable<Date> | any
@@ -20,8 +25,6 @@ function RescheduleSession({
   );
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
 
   const showSuccess = (msg: any) => {
     toast.current?.show({
@@ -56,11 +59,11 @@ function RescheduleSession({
     };
 
     // Perform API request to reschedule session using rescheduleData
-    fetch(`${url}/user/requestReschedule`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/requestReschedule`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.get("token")}`,
       },
       body: JSON.stringify(rescheduleData),
     })
@@ -73,20 +76,17 @@ function RescheduleSession({
           showSuccess(`${data.message}`);
           // Close the modal after a successful reschedule
           setTimeout(() => {
-            setopenRescheduleModal(false);
+            setOpenRescheduleModal(false);
           }, 4000);
         } else {
           showError(`${data.message}`);
         }
-        setTimeout(() => {
-          setopenRescheduleModal(false);
-        }, 6000);
+       
       })
       .catch((error) => {
         // Handle error
         console.error("Error rescheduling session:", error);
         showError("Error rescheduling session. Please try again.");
-        setopenRescheduleModal(false);
       });
   };
 
@@ -96,13 +96,25 @@ function RescheduleSession({
         show={openRescheduleModal}
         className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "
         size={"xl"}
-        onClose={() => setopenRescheduleModal(false)}
+        onClose={() => setOpenRescheduleModal(false)}
       >
         <Modal.Header className="p-0 m-0 border-0"></Modal.Header>
         <Modal.Body>
+          <div className="banner">
+            {fromTeacherRequest && (
+              <BannerComponent
+                message={
+                  "You have declined your teacher rescheduling request so you should suggest two times for your teatcher"
+                }
+                header={"Sessions Rescheduling"}
+                animation={""}
+                fromTeacherRequest={true}
+              />
+            )}
+          </div>
           <div className="flex justify-center flex-col items-center gap-5">
             <Calendar
-              panelClassName="h-fit lg:mt-[300px]"
+              panelClassName="h-fit lg:mt-[100px]"
               value={selectedStartDate}
               onChange={(e: CalendarProps | any) =>
                 setSelectedStartDate(e.value)

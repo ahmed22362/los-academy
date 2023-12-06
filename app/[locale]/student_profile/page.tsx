@@ -1,19 +1,31 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import Image from "next/image";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import RemainSessions from "./components/RemainSessions";
 import CommunityStatistics from "./components/CommunityStatistics";
 import UpcomingSessions from "./components/UpcomingSessions";
 import EditProfile from "./components/edit_profile";
 import BookModal from "./components/BookModal";
-import Cookies from "universal-cookie";
-import StudentAttendence from "./components/studentAttendence";
 import MyInfo from "./components/myInfo";
 import BannerComponent from "./components/Banner";
 import MyReports from "./myReports";
 import TeacherUbsent from "./components/teacherUbsent";
-
+import RescheduleRequests from "./components/rescheduleRequests";
+import { useRouter } from "next/navigation";
+import ContinueWithModal from "./components/continueWithModal";
+import dynamic from "next/dynamic";
+import Cookies from "universal-cookie";
+import SessionsRequest from "./components/sessionsRequest";
+import moment from "moment-timezone";
+interface Session {
+  id: number;
+  sessionDates: string[];
+  status: string;
+  type: string;
+  sessionDate: string; // You might need to adjust the type based on your actual data structure
+}
 interface UserInfo {
   name: string;
   email: string;
@@ -24,19 +36,157 @@ interface UserInfo {
   sessionPlaced: boolean; // make age optional if it may not be present in the API response
 }
 export default function page() {
+  const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
+
   const [myInfo, setMyInfo] = useState<UserInfo | undefined>();
   const [teacherName, setTeacherName] = useState("");
   const [showBanner, setShowBanner] = useState(true);
+  const router = useRouter();
+  const [start, setStart] = useState<boolean>(false);
+  const [pendingSessionRequest, setPendingSessionRequest] = useState<Session[]>([]);
+
+  const cookie=new Cookies();
 
   useEffect(() => {
-    const isFirstVisit = localStorage.getItem("isFirstVisit") === null;
 
-    if (myInfo?.sessionPlaced == false) {
+    if (myInfo?.sessionPlaced === false) {
       // Display tips for the first visit
 
       setShowBanner(true);
       // Set the flag to indicate that the user has seen the tips
     }
+  }, []);
+  
+  const convertDateTimeZone = (
+    inputTime: moment.MomentInput,
+    inputTimezone: string,
+    outputTimezone: string,
+    ourFormat: string
+  ) => {
+    const convertedTime = moment(inputTime)
+      .tz(inputTimezone)
+      .clone()
+      .tz(outputTimezone);
+    return convertedTime.format(ourFormat);
+  };
+  useEffect(() => {
+    const isFirstVisit = cookie.get("FirstVisit") === undefined;
+console.log(isFirstVisit);
+
+    if (isFirstVisit===true) {
+      // Display Joyride only on the first visit
+      setStart(true);
+
+      // Set the flag to indicate that the user has seen the tips
+      cookie.set("FirstVisit", "true");
+    }
+  }, []);
+
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySessionReq`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.data);
+        
+        const sortedSessions = data.data.map((session: Session) => ({
+          ...session,
+          sessionDates: session.sessionDates.map((date) =>
+            moment(date).toDate()
+          ),
+        }));
+
+        sortedSessions.sort((a: Session, b: Session) => {
+          const dateA = new Date(
+            Math.max(...a.sessionDates.map((date: any) => date.getTime()))
+          );
+          const dateB = new Date(
+            Math.max(...b.sessionDates.map((date: any) => date.getTime()))
+          );
+          return dateB.getTime() - dateA.getTime();
+        });
+
+        console.log("sorted session requests ",sortedSessions);
+        const pendingSessions = sortedSessions.filter((session :Session) => session.status === "pending");
+        setPendingSessionRequest(pendingSessions);
+        // Set the retrieved Seeions in the state
+      })
+      .catch((error) => {
+        console.error("Error fetching sessions:", error);
+      });
+  }, []);
+
+
+
+
+  const [openContinueWithModal, setOpenContinueWithModal] = useState(false);
+  useEffect(() => {
+    const currentPageUrl = window.location.href;
+
+    // Log the current page's URL to the console
+    console.log(`Current page URL: ${currentPageUrl}`);
+
+    // Parse the URL to get the query parameters
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const fromUserContinueParam = urlSearchParams.get("fromUserContinue");
+
+    // Log the query parameter to the console
+    console.log(`fromUserContinue parameter: ${fromUserContinueParam}`);
+
+    // Check if the query parameter is true
+    if (fromUserContinueParam === "true") {
+      // If true, set the state to open the modal
+      setOpenContinueWithModal(true);
+    }
+  }, []);
+
+  const [steps] = useState<any[]>([
+    {
+      content: <h1>Hello This Tips To Show You Your Page Sections</h1>,
+      placement: "center",
+      target: "body",
+    },
+    {
+      target: ".book_section",
+      content:
+        "From here, you can book a free session or a paid session after subscribing to a plan.",
+    },
+    {
+      target: ".reports_section",
+      content: "The reports that your teachers write about you appear here",
+    },
+    {
+      target: ".community_section",
+      content:
+        "our community statistics appear here, including your attendance.",
+    },
+    {
+      target: ".remain_sessions_section",
+      content: "All your pending sessions appear here.",
+    },
+    {
+      target: ".rescheduling_section",
+      content:
+        "All rescheduling requests, whether from you or your teacher, appear here.",
+    },
+    {
+      target: ".teacher_ubsent_section",
+      content: "The sessions that your teacher was absent from appear here.",
+    },
+  ]);
+
+  useEffect(() => {
+    console.log(pendingSessionRequest);
+    
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
   }, []);
 
   return (
@@ -45,19 +195,108 @@ export default function page() {
         "ps-10 pe-10 pt-[7rem] max-md:mt-7  max-md:justify-between max-md:items-center"
       }
     >
-      {showBanner && <BannerComponent />}
+      {/* <button
+      className="underline text-secondary-color"
+      onClick={()=>setStart(true)}
+      >Show Website Guides</button> */}
+
+      {start ? (
+        <Joyride
+          steps={steps}
+          run={start}
+          continuous
+          showProgress
+          showSkipButton
+        />
+      ) : (
+        ""
+      )}
+
+      <ContinueWithModal
+        openContinueWithModal={openContinueWithModal}
+        setOpenContinueWithModal={setOpenContinueWithModal}
+      />
+      {myInfo?.sessionPlaced===false?  (
+        <BannerComponent
+          message={"You Want To Enjoy Sessions?"}
+          animation={"animate-bounce"}
+          header={"Los Academy Plans"}
+        />
+      ):''}
       <div className="myInfo flex justify-center items-center">
         <MyInfo myInfo={myInfo} />
       </div>
       <div className="grid grid-cols-3 max-sm:grid-cols-1 max-md:grid-cols-2 justify-between gap-5	 mt-7">
         <div className="card w-full  ">
           <EditProfile setMyInfo={setMyInfo} />
-          <div>
-            <h3 className={`${styles.main_head} mb-8`}>Info</h3>
+          <div className="">
+          <div
+            className={`my-11 p-3 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	rescheduling_section`}
+          >
+            <h3 className={`${styles.secondary_head} mb-3`}>
+              Reschedule Requests{" "}
+            </h3>
 
-            <CommunityStatistics />
+            <div data-aos="fade-up" className="h-[250px]   ">
+              <RescheduleRequests />
+            </div>
+          </div>
             <div
-              className={`mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full`}
+              className={`community_section	w-full p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
+            >
+              <h4 className={`${styles.secondary_head} mb-5 ml-3`}>
+                Community statistics :
+              </h4>
+              <div data-aos="fade-down">
+                <CommunityStatistics />
+              </div>
+            </div>
+            <div
+            className={`mr-1  mb-10 mt-10  p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] 	`}
+          >
+            <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}>
+              Teacher Ubsent Sessions
+            </h3>
+            <div
+              data-aos="fade-up"
+              data-aos-anchor="#example-anchor"
+              data-aos-offset="500"
+              data-aos-duration="500"
+              className="h-[200px] teacher_ubsent_section scrollAction "
+            >
+              <TeacherUbsent />
+            </div>
+          </div>
+            {pendingSessionRequest.length>0 ? (
+              <>
+               <div
+               data-aos="fade-up"
+              className={` mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full remain_sessions_section`}
+            >
+               <h4 className={`${styles.secondary_head} mb-5 ml-3`}>
+                Your Session Requests :
+              </h4>
+              <div className="scrollAction mx-2 h-[250px]">
+                <SessionsRequest  />
+              </div>
+              </div>
+              </>
+            ):''}
+           
+          </div>
+        </div>
+        <div className="card w-full mr-3  ">
+          <h3 className={`${styles.main_head} mb-8 `}>Sessions</h3>
+          <div
+            data-aos="flip-left"
+            data-aos-easing="ease-out-cubic"
+            data-aos-duration="2000"
+            className="upcoming_section "
+          >
+            <UpcomingSessions />
+          </div>
+          <div
+              className={`mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full remain_sessions_section`}
             >
               <h4 className={`${styles.secondary_head} pb-2`}>
                 Remain Sessions:{" "}
@@ -65,18 +304,10 @@ export default function page() {
                   with teacher: {teacherName}
                 </span>{" "}
               </h4>
-              <RemainSessions setTeacherName={setTeacherName} />
+              <div data-aos="fade-up">
+                <RemainSessions setTeacherName={setTeacherName} />
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="card w-full mr-3 ">
-          <h3 className={`${styles.main_head} mb-8 `}>Sessions</h3>
-          <UpcomingSessions />
-          {/* <div
-            className={`my-11 p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
-          >
-            <StudentAttendence />
-          </div> */}
           <div
             className={` ${
               myInfo?.sessionPlaced == true ? "hidden" : ""
@@ -85,7 +316,10 @@ export default function page() {
             <h4 className={`${styles.secondary_head} ml-3 my-2`}>
               Book a Session
             </h4>
-            <div className={`flex flex-col justify-center items-center`}>
+            <div
+              data-aos="fade-right"
+              className={`flex flex-col justify-center items-center book_section`}
+            >
               <BookModal myInfo={myInfo} />
             </div>
           </div>
@@ -93,18 +327,26 @@ export default function page() {
         <div className="card w-full ">
           <h3 className={`${styles.main_head} mb-8`}>Reports</h3>
           <div
-            className={`mr-1  p-3  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
+            className={`mr-1  p-3  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] reports_section	`}
           >
             <h4 className={`${styles.secondary_head} ml-3 my-2`}>My Reports</h4>
-            <MyReports />
+            <div data-aos="fade-right" className="h-[160px]">
+              <MyReports />
+            </div>
           </div>
           <div
-            className={`mr-1  mb-10 mt-10  p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
+            className={`mr-1  mb-10 mt-10  p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] 	`}
           >
             <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}>
               Teacher Absent Sessions
             </h3>
-            <div className="h-[300px]  scrollAction">
+            <div
+              data-aos="fade-up"
+              data-aos-anchor="#example-anchor"
+              data-aos-offset="500"
+              data-aos-duration="500"
+              className="h-[300px] teacher_ubsent_section scrollAction "
+            >
               <TeacherUbsent />
             </div>
           </div>

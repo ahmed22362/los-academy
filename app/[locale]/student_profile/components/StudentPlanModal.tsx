@@ -16,13 +16,15 @@ interface Plan {
 export default function StudentPlanModal({
   openPlansModal,
   setOpenPlansModal,
-}: any) {
+}: any ,continueFlag?:any) {
+
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
   const token = cookie.get("token");
 
   const [allPlans, setAllPlan]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [openContinueWithModal, setopenContinueWithModal] = useState<boolean>(false);
 
   useEffect(() => {
     // Fetch plans from the backend API
@@ -113,6 +115,7 @@ export default function StudentPlanModal({
                   title={plan.title}
                   price={plan.price}
                   recommended={plan.recommended}
+                  continueFlag={continueFlag}
                   features={[
                     "Private one-to-one",
                     `${plan.sessionDuration} mins`,

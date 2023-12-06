@@ -1,22 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
-import styles from "../page.module.css";
 import Cookies from "universal-cookie";
 function CommunityStatistics() {
   const cookie = new Cookies();
 
-  const url = "https://los-academy.onrender.com/api/v1/";
-
-  const token = cookie.get("token");
-
   const [historySeesions, setHistorySeesions] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${url}user/myHistorySessions`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/myHistorySessions`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
       },
     })
       .then((response) => response.json())
@@ -32,21 +27,23 @@ function CommunityStatistics() {
   }, []);
 
   return (
-    <div
-      className={`	w-full p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
-    >
-      <h4 className={`${styles.secondary_head} mb-5 ml-3`}>
-        Community statistics :
-      </h4>
-      <div className={`flex justify-between gap-5 items-center mt-10`}>
-        <PrimaryButton
-          ourStyle="bg-secondary-color max-md:px-3 hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-3 shadow rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
-          text={`Done  (${historySeesions?.length || 0}) Sessions`}
-        />
-        <PrimaryButton
-          ourStyle="bg-secondary-color max-md:px-3 hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-3 shadow rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
-          text={"100% Attendence"}
-        />
+    <div>
+      <div className={`flex justify-center gap- items-center mt-10`}>
+        <div
+          className="bg-secondary-color text-center  hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 lg:px-10  rounded-3xl  mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
+          
+        >
+          <span className="block text-center">Done</span>
+          {`  ${historySeesions?.length || 0} Sessions`}
+          </div>
+        <div
+          className="bg-secondary-color text-center hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 lg:px-10  rounded-3xl  mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
+        >
+          <span className="block text-center">
+          Attendence
+          </span>
+          {"100% "}
+          </div>
       </div>
     </div>
   );

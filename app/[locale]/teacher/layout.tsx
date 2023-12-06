@@ -14,7 +14,7 @@ export default function TeacherLayout(
         children: React.ReactNode
     }) {
     
-    const cookies = new Cookies();
+    // const cookies = new Cookies();
         
     // useEffect(() => {
 

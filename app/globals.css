@@ -57,27 +57,56 @@ html {
 body{
   color: var(--primary-color);
 }
+/* button wave */
+
+@keyframes flagwave {
+  0% {
+    background-position: -400px 0px, -400px 0px, -400px 0px, -400px 0px;
+  }
+  100% {
+    background-position: 800px 0px, 800px 0px, 800px 0px, 800px 0px;
+  }
+}
+.flagwave {
+
+  width: 200px;
+  height: 120px;
+  margin: -220px auto;
+  z-index: 2;
+  background-image: 
+  linear-gradient(
+    to right, 
+    rgba(235, 235, 235, 0), 
+    rgba(235, 235, 235, 0) 40%, 
+    rgba(235, 235, 235, 0.3) 90%, 
+    rgba(235, 235, 235, 0) 100%
+  ),
+  linear-gradient(
+    to right, 
+    rgba(200, 200, 200, 0), 
+    rgba(200, 200, 200, 0.3) 25%, 
+    rgba(200, 200, 200, 0) 50%, 
+    rgba(200, 200, 200, 0.3) 80%, 
+    rgba(200, 200, 200, 0) 100%
+  );
+  background-size: 200% 100%;
+  background-position: right;
+  animation-name: flagwave;
+  animation-duration: 20s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
 /* Container of the page */
 .container {
   @apply py-20 px-10 max-md:px-3
 }
-
-
 
 .specialText > svg {
   background: -webkit-linear-gradient(#3f5def, #9f69d5) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: #7b42d5 !important;
 }
-
-/* slick arrows last updates */
-/* .slick-arrow .slick-next {
-  background-color: black;
-}
-.slick-arrow .slick-prev {
-  background-color: black !important;
-} */
-
 
 .slick-slider {
   width: 100% !important;
@@ -91,13 +120,22 @@ body{
   justify-content: center !important;
   padding: 10px;
 }
-.slick-slider .slick-arrow{
-  font-family: "Bootstrap-icons" !important;
-  background-color: black !important;
+.slick-slider .slick-arrow {
   z-index: 1000 !important;
-  border-radius: 50%;
+  color: black !important;
 }
-
+.slick-prev::before {
+  content: "\F284" !important;
+  font-family: "Bootstrap-icons" !important;
+  font-size: 20px !important;
+  color: black !important;
+}
+.slick-next::before {
+  content: "\F285" !important;
+  font-family: "Bootstrap-icons" !important;
+  font-size: 20px !important;
+  color: black !important;
+}
 .p-paginator-element {
   color: #000015ce;
   min-width: 2rem;
@@ -185,6 +223,24 @@ body{
 .bgWithHover:hover {
   background-color: var(--secondary-hover) !important;
 }
-.splide__arrows {
-  display: none;
+.recommended {
+  background-color: var(--success-color);
+  color: white;
+  width: 127px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  position: absolute;
+  padding: 8px 11px;
+  top: 0;
+  right: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 26px;
+  font-weight: bold;
+  font-size: 15px;
 }
+
+
+

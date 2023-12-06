@@ -66,10 +66,10 @@ export default function StudentTable() {
                 <Table.HeadCell theme={customTheme.head}>
                     Name
                 </Table.HeadCell>
-                <Table.HeadCell theme={customTheme.head}>
+                {/* <Table.HeadCell theme={customTheme.head}>
                     Gender
-                </Table.HeadCell>
-                <Table.HeadCell theme={customTheme.head}>
+                </Table.HeadCell> */}
+                {/* <Table.HeadCell theme={customTheme.head}>
                     Age
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
@@ -77,12 +77,6 @@ export default function StudentTable() {
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
                     Remain Sessions
-                </Table.HeadCell>
-                <Table.HeadCell theme={customTheme.head}>
-                    Contact
-                </Table.HeadCell>
-                {/* <Table.HeadCell theme={customTheme.head}>
-                    options
                 </Table.HeadCell> */}
             </Table.Head>
             <Table.Body className="divide-y">

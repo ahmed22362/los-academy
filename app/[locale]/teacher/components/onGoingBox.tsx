@@ -39,23 +39,18 @@ export default function OnGoingBox(session: any) {
     }
     
     // Convert session time to a Date object
-    const sessionDate: any = convertTimeZone(upComingSession.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MMM D,YYYY h:mm A");
-    
+    const sessionDate: any = convertTimeZone(upComingSession.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MMM D,YYYY h:mm A"); 
     const ourSessionDate = new Date(sessionDate)
-
     // Get the current time
     const currentDate: any = new Date();
-
     // Calculate the time difference in milliseconds
     const timeDifference = ourSessionDate.getTime() - currentDate.getTime();
-
     // Convert the time difference to seconds
     const seconds = Math.floor(timeDifference / 1000);
 
     useEffect(() => {
             setCountdownSeconds(seconds);
     }, []);
-
     // Counter down Functionality
     useEffect(() => {
 
@@ -75,7 +70,6 @@ export default function OnGoingBox(session: any) {
             clearTimeout(timeoutId);
         };
     }, [countdownSeconds]);
-
     // Format time in minutes and seconds
     const formatTime = (seconds: number) => {
         const hours = Math.floor(seconds / 3600);
@@ -83,7 +77,6 @@ export default function OnGoingBox(session: any) {
         const remainingSeconds = seconds % 60;
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
-
     const handleUpdateAttendance = () => {
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/updateTeacherAttendance`, {
             method: "POST",
@@ -120,9 +113,6 @@ export default function OnGoingBox(session: any) {
         .then(data => {
             console.log(data)
             setOnGoingSession(data.data)
-            if(data.data.length > 0) {
-                setCountdownSeconds(parseInt(data.data[0].sessionDuration) * 60)
-            }
             setIsLoading(false)
         }).catch(err => {
             console.log(err)
@@ -138,6 +128,7 @@ export default function OnGoingBox(session: any) {
         })
         .then(response => response.json())
         .then(data => {
+            console.log(data.data[0])   
             console.log(data.data[0].hasReport)   
             setLastTakenSession(data.data[0])
             setIsLoading(false)
@@ -146,6 +137,7 @@ export default function OnGoingBox(session: any) {
        })
     }
         useEffect(() => {
+            getOngoing()
             getLastTakenSession()
         }, [])
 
@@ -157,39 +149,25 @@ export default function OnGoingBox(session: any) {
                 }, 5000)
             }
        }, [countdownSeconds])
-       
-       useEffect(() => {
-        getOngoing()
-       }, [])
 
     return(
-        <div className={"bg-white-color p-5 rounded-[16px] "}>
+        <div className={"bg-white-color p-2 rounded-[16px] h-full"}>
             <Toast ref={toast} />
             {isLoading ? <Spinner /> : 
                 onGoingSession && onGoingSession.length > 0 ? onGoingSession.map((session: any, index: number) => {
                     return (
-                        <div key={index}>
-                            <h4 className="mb-1">session {session.SessionInfo?.user?.name} <b className="text-success-color">starting ..</b></h4>
-                            <span className="mb-2">Timer of session : {formatTime(countdownSeconds)}</span><br/>
+                        <>
+                        <div key={index} className="h-full flex flex-col items-center gap-2">
+                            <h4 className="">session {session.SessionInfo?.user?.name} <b className="text-success-color">starting ..</b></h4>
                             <Link
                                 target="_blank"
-                                className="smallBtn mt-2 hover:bg-secondary-hover transition-colors"
+                                className="smallBtn hover:bg-secondary-hover transition-colors "
                                 onClick={handleUpdateAttendance}
                                 href={session.meetingLink}
                                 >Join Meeting Now !!
                             </Link>
-                         {/* {countdownSeconds === 0 && <button
-                            className="smallBtn hover:bg-secondary-hover transition-colors"
-                            onClick={handleOpen}
-                            >
-                            Add Report +
-                        </button>}    */}
-                        {/* <AddReportModal 
-                            sessionID={session.id}
-                            openAssignModal={openModal}
-                            handleCloseModal={handleClose}
-                        /> */}
                         </div>
+                    </>
                     )
                 }) :  
                 lastTakenSession && lastTakenSession.hasReport === false ? 
@@ -209,14 +187,15 @@ export default function OnGoingBox(session: any) {
                 </div> :
                 upComingSession ? 
                 (<>
-                    {countdownSeconds > 0 && countdownSeconds < 3600 && <h5>Timer: {formatTime(countdownSeconds)}</h5>}
-                    <h3 className="mb-3">The Next Session with: <b>{upComingSession && upComingSession.SessionInfo?.user?.name}</b></h3>
-                    <span>start at : {convertDateTimeZone(upComingSession.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MM/DD/YYYY hh:mm A")}</span>
+                    <div className="flex flex-col items-center justify-center gap-2 my-auto">
+                        {countdownSeconds > 0 && countdownSeconds < 600 && <h5>Timer: {formatTime(countdownSeconds)}</h5>}
+                        <h3 className="mb-3">The Next Session with: <b>{upComingSession && upComingSession.SessionInfo?.user?.name}</b></h3>
+                        <span>start at : {convertDateTimeZone(upComingSession.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MM/DD/YYYY hh:mm A")}</span>
+                    </div>
                 </>) 
                 : 
                 (<p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">No Sessions</p>)
-            }   
-
+            }
     </div>
     )
 }

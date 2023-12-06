@@ -4,14 +4,6 @@ import { useState } from "react";
 import AddStudentModal from "./addStudentModal";
 
 export default function StudentComboBox({...props}: any) {
-    // const [handleModal, setHandleModal] = useState(false)
-
-    // const openModal = () => {
-    //     setHandleModal(true)
-    // }
-    // const closeModal = () => {
-    //     setHandleModal(false)
-    // }
 
     const customTheme: CustomFlowbiteTheme['dropdown'] = {
         inlineWrapper: "bg-white text-black-color-one px-5 py-2 flex items-center rounded-[16px] font-normal"

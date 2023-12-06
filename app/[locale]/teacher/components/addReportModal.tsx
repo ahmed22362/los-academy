@@ -126,7 +126,7 @@ export default function AddReportModal({
         console.log(data);
         if (data.status === "success") {
           showSuccess(data.message);
-          router.refresh();
+          window.location.reload();
         } else {
           showError(data.message);
         }

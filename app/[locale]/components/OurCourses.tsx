@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 import OurCard from "./OurCard"
 import { useEffect, useState} from "react";
 import Slider from "react-slick";
-// import { Splide, SplideSlide } from '@splidejs/react-splide';
 import { Skeleton } from 'primereact/skeleton';
 import { usePathname } from "next/navigation";
 
@@ -123,7 +122,6 @@ function OurCourses() {
               {
                 courses && courses.map((course: any, index: number) => (
                     <OurCard key={index} data={course} />
-                  
                 ))
               }
               </Slider>

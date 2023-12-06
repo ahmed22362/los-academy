@@ -48,19 +48,23 @@ return (
             />
         </div>
         <h3
-            className="my-2 text-2xl font-semibold tracking-tight text-black-color-one h-[70px]">{courseData.title}</h3>
+            className="my-2 text-2xl font-semibold tracking-tight text-black-color-one h-[70px]">
+                {courseData.title}
+        </h3>
         <p
             className="font-medium text-black-two-color text-base max-md:text-sm h-[130px]"
         >
             {courseData.description}
         </p>
-        <PrimaryButton 
-            text={t("course-btn")} 
-            ourStyle={
-                "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-4 px-12 shadow rounded-full w-50 mx-auto mt-5 max-md:py-2.5 max-md:px-10 max-md:w-45"
+        <button 
+            className={
+                "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-4 px-12 rounded-full w-50 mx-auto mt-5 max-md:py-2.5 max-md:px-10 max-md:w-45"
             }
             onClick={handleOpenModal}
-        />
+            aria-hidden={false}
+            >
+            {t("course-btn")}
+        </button>
     </Card>
 )
 }

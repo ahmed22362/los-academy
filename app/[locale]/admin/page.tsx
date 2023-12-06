@@ -21,7 +21,6 @@ export default function AdminPage() {
                 <Reports />
             </section>
             <section className="mx-auto">
-                <CalendarSection />
                 <div className="px-2">
                     <FreeSesstionsTable />
                     <PaidSesstionsTable />

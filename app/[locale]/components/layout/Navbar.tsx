@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import LinkIntl from "next-intl/link";
+import Link from "next/link";
 import { MdLanguage } from "react-icons/md";
 import Image from "next/image";
 import { Dropdown, Navbar } from "flowbite-react";
@@ -10,7 +11,6 @@ import {useParams, usePathname, useRouter, useSearchParams} from "next/navigatio
 import Cookies from "universal-cookie"
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
 
 export default function CustomNavbar() {
 

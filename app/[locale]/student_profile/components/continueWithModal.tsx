@@ -7,7 +7,7 @@ import { Toast } from "primereact/toast";
 
 function ContinueWithModal({
   openContinueWithModal,
-  setopenContinueWithModal,
+  setOpenContinueWithModal,
 }: any) {
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -15,9 +15,7 @@ function ContinueWithModal({
   const [continueWithFirstDate, setContinueWithFirstDate] = useState<
     Nullable<Date> | any
   >(null);
-  const [continueWithSecondDate, setContinueWithSecondDate] = useState<
-    Nullable<Date> | any
-  >(null);
+
   const toast = useRef<Toast>(null);
 
   const showSuccess = (msg: any) => {
@@ -37,19 +35,25 @@ function ContinueWithModal({
       life: 5000,
     });
   };
-  const placeDates = () => {
-    console.log("placeDates function is triggered");
 
-    if (!continueWithFirstDate || !continueWithSecondDate) {
-      showError("Please select both start date and end date.");
+  const placeDates = () => {
+    if (
+      !continueWithFirstDate ||
+      !Array.isArray(continueWithFirstDate) ||
+      continueWithFirstDate.length === 0
+    ) {
+      showError("Please select at least one date for booking.");
       return;
     }
+    if (continueWithFirstDate && Array.isArray(continueWithFirstDate) && continueWithFirstDate.length > 0) {
+      const selectedDates = continueWithFirstDate.map((date) => date.toISOString());
+    
+    console.log("placeDates function is triggered");
+
+    
 
     const rescheduleData = {
-      sessionDates: [
-        continueWithFirstDate.toISOString(),
-        continueWithSecondDate.toISOString(),
-      ],
+      sessionDates: selectedDates,
     };
 
     fetch(`${url}/session/placeSessionDates`, {
@@ -65,29 +69,28 @@ function ContinueWithModal({
         console.log(data);
 
         if (data.status === "success") {
+          window.history.replaceState(null, '', '/student_profile')
           showSuccess("session with this teacher placed successfully");
           console.log("POST request successful:", data);
           if (typeof window !== "undefined") {
             localStorage.setItem("confirmDialog", "false");
           }
-          setTimeout(() => {
-            setopenContinueWithModal(false);
-          }, 3000);
+          
         } else {
           console.error(data);
           showError(data.message);
+          window.history.replaceState(null, '', '/student_profile')
+
         }
-        setTimeout(() => {
-          setopenContinueWithModal(false);
-        }, 3000);
+      
       })
       .catch((error) => {
+        window.history.replaceState(null, '', '/student_profile')
+
         console.error("Error during POST request:", error);
-        setTimeout(() => {
-          setopenContinueWithModal(false);
-        }, 3000);
+        
       });
-  };
+  };}
 
   return (
     <div>
@@ -96,7 +99,7 @@ function ContinueWithModal({
         show={openContinueWithModal}
         className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "
         size={"xl"}
-        onClose={() => setopenContinueWithModal(false)}
+        onClose={() => setOpenContinueWithModal(false)}
       >
         <Modal.Header className="p-0 m-0 border-0"></Modal.Header>
 
@@ -104,38 +107,26 @@ function ContinueWithModal({
           <div>
             <h3 className="font-semibold text-lg mb-3">Book Sessions</h3>
             <div className="flex flex-col gap-5">
+              <h4>Now You Should Please Your Session Dates That Avilible To You</h4>
               <div className="taps flex justify-center  h-1/2">
                 <Calendar
+                panelClassName="h-fit "
                   value={continueWithFirstDate}
                   onChange={(e: CalendarProps | any) =>
                     setContinueWithFirstDate(e.value)
                   }
                   showTime
+                  inline
+                  selectionMode="multiple"
                   hourFormat="12"
                   style={{
                     outline: "4px solid var(--secondary-color)",
-                    borderRadius: "16px",
                     width: "100%",
                   }}
                   placeholder="Select First Avilable Date and Time"
                 />
               </div>
-              <div className="taps flex justify-center h-1/2">
-                <Calendar
-                  value={continueWithSecondDate}
-                  onChange={(e: CalendarProps | any) =>
-                    setContinueWithSecondDate(e.value)
-                  }
-                  showTime
-                  hourFormat="12"
-                  style={{
-                    outline: "4px solid var(--secondary-color)",
-                    borderRadius: "16px",
-                    width: "100%",
-                  }}
-                  placeholder="Select First Avilable Date and Time"
-                />
-              </div>
+             
               <button
                 onClick={placeDates}
                 className=" max-md-px-1 py-2 px-5 w-fit text-sm font-semibold transition-colors text- shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10   rounded-full mx-auto max-md:px-4 max-md:w-45"

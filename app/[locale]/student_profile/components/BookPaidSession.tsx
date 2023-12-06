@@ -55,9 +55,7 @@ function BookPaidSession({ setOpenBookModal }: any) {
             }, 3000);
           } else {
             showErrorMessage(data.message);
-            setTimeout(() => {
-              setOpenBookModal(false);
-            }, 3000);
+           
           }
 
           // Process the response as needed

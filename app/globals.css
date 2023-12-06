@@ -121,7 +121,6 @@ body{
   padding: 10px;
 }
 .slick-slider .slick-arrow {
-  z-index: 1000 !important;
   color: black !important;
 }
 .slick-prev::before {

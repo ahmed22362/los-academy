@@ -1,6 +1,6 @@
 "use client";
 
-import { Dropdown } from "flowbite-react";
+import { Dropdown, Tooltip } from "flowbite-react";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import { useState } from "react";
@@ -14,6 +14,7 @@ import StudentPlanModal from "../../student_profile/components/StudentPlanModal"
 import Subscribtion from "../../student_profile/components/Subscribtion";
 import EditProfile from "../../student_profile/components/edit_profile";
 import SessionsModal from "../../student_profile/components/sessionsModal";
+import { FaUser } from "react-icons/fa";
 
 interface UserInfo {
     name: string;
@@ -36,10 +37,19 @@ export default function UserDropDown({userName, logOut}: {userName: string; logO
 
 
     return (
-        <div className="flex flex-row items-center justify-center gap-2">
-                  <Link href={"/student_profile"} className={"bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full rtl:lg:p-[15px]"}>
+        <div className="flex flex-row max-md:items-end md:items-center justify-center gap-2">
+                  <Link 
+                    href={"/student_profile"} 
+                    className={"bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-2.5 px-12 rounded-full rtl:lg:p-[15px] hidden md:flex"}>
                     {userName}'s Profile
                   </Link>
+                  <div className="mt-2 md:hidden">
+                  <Link href={"/student_profile"}>
+                    <Tooltip content={`${userName}'s Profile`} style="light">
+                      <FaUser className={"text-secondary-color hover:text-secondary-hover transition-colors text-2xl"}/>
+                    </Tooltip>
+                  </Link>
+                  </div>
                   <Dropdown label={""} inline>   
                       <Dropdown.Item 
                         onClick={()=> setOpenEditeProfileModal(true)}

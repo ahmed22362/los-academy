@@ -6,6 +6,7 @@ import Reports from "./components/reports";
 import Statistics from "./components/statistics";
 import TeacherSchedule from "./components/teacherSchedule";
 import FetchingUpComingSessions from "./components/fetchingUpComingSessions";
+import StudentAbsent from "./components/studentAbsent";
 
 export default function TeacherPage() {
   
@@ -16,13 +17,13 @@ export default function TeacherPage() {
                     <Attendance />
                     <FetchingUpComingSessions/>
                 </div>
-                <div className={"flex items-center gap-5 pb-[20px] max-md:flex-wrap"}>
+                <div className={"flex flex-col items-center gap-5 pb-[20px] max-md:flex-wrap"}>
                     <TeacherSchedule />
+                    <StudentAbsent />
                 </div>
                 <Reports />
             </section>
             <section className="mx-auto">
-                {/* <CalendarSection /> */}
                 <RescheduleSessions />
                 <div className="px-2">
                     <FreeSesstionsTable />

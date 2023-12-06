@@ -70,8 +70,9 @@ function PlanCard({planData}: any) {
   }
 
   return (
-    <Card theme={customTheme.card} className=" h-[auto] w-[300]">
+    <Card theme={customTheme.card} className=" h-[auto] w-[300] relative">
       <Toast ref={toast} />
+      {plan.recommended && <span className="recommended flagwave">Recommended</span>}
       <h5 className="mb-4 text-xl font-medium text-black-color-two capitalize">
         {plan.title}
       </h5>

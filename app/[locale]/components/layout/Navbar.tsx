@@ -11,7 +11,6 @@ import Cookies from "universal-cookie"
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export default function CustomNavbar() {
 
@@ -25,13 +24,11 @@ export default function CustomNavbar() {
 
   const pathname = usePathname();
   const router = useRouter()
-  const params = useParams();
   const isAdminDashboard = pathname.startsWith('/admin');
   const isAdminLogin = pathname.startsWith('/los_auth');
   const isteacher = pathname.startsWith('/teacher');
   const cookies = new Cookies()
   const t = useTranslations("CustomNavbar");
-  // const dash = window.location.hash;
 
   const customNavTheme: CustomFlowbiteTheme["navbar"] = {
     root: {
@@ -72,17 +69,6 @@ export default function CustomNavbar() {
     });
     e.target.classList.add('active');
   }
-
-  // useEffect(() => {
-  //   const navLinks = document.querySelectorAll('.navBarLink');
-  //   navLinks.forEach(link => {
-  //     link.addEventListener('click', () => {
-  //      document.querySelector('.active')?.classList.remove('active');
-  //      link.classList.add('active');
-  //     });
-  //   });
-  // }, [])
-
 
 
   const logOut = async () => {
@@ -128,46 +114,57 @@ export default function CustomNavbar() {
           </Navbar.Brand>
 
           <Navbar.Collapse className="rtl:font-sans rtl:text-lg" theme={customNavTheme.collapse}>
-              <Link 
-                href={"/#home"}
-                onClick={addActiveClass}
-                className={` navBarLink rtl:ml-5 active`}  >
-                {t("home-link")}
-              </Link>
-              <Link 
-                href={"/#courses"} 
-                onClick={addActiveClass}
-                className={`navBarLink rtl:ml-5 `}>
+              <li>
+                <Link 
+                  href={"/#home"}
+                  onClick={addActiveClass}
+                  className={`navBarLink rtl:ml-5 active`}  >
+                  {t("home-link")}
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href={"/#courses"} 
+                  onClick={addActiveClass}
+                  className={`navBarLink rtl:ml-5 `}>
 
-                {t("courses-link")}
-              </Link>
-              <Link href="/#aboutUs"
-                onClick={addActiveClass}
-                className={` navBarLink rtl:ml-5 `}
+                  {t("courses-link")}
+                </Link>
+              </li>
+                <li> 
+                  <Link href="/#aboutUs"
+                    onClick={addActiveClass}
+                    className={` navBarLink rtl:ml-5 `}
+                    >
+                    {t("about-link")}
+                  </Link>
+                </li>
+              <li>
+                <Link 
+                  href="/#prices" 
+                  onClick={addActiveClass}
+                  className={`navBarLink rtl:ml-5`}
+                  >
+                  {t("prices-link")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/#feedback" 
+                  onClick={addActiveClass}
+                  className={`navBarLink rtl:ml-5`}
+                  >
+                  {t("feedback-link")}
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/#contactus" 
+                  onClick={addActiveClass}
+                  className={`navBarLink rtl:ml-5`}
                 >
-                {t("about-link")}
-              </Link>
-              <Link 
-                href="/#prices" 
-                onClick={addActiveClass}
-                className={`navBarLink rtl:ml-5`}
-                >
-                {t("prices-link")}
-              </Link>
-              <Link href="/#feedback" 
-                onClick={addActiveClass}
-                className={`navBarLink rtl:ml-5`}
-                >
-                {t("feedback-link")}
-              </Link>
-              <Link 
-                href="/#contactus" 
-                onClick={addActiveClass}
-                className={`navBarLink rtl:ml-5`}
-                replace={false}
-              >
-                {t("contact-link")}
-              </Link>
+                  {t("contact-link")}
+                </Link>
+              </li>
           </Navbar.Collapse>
           <div className={
             "flex items-center max-md:items-baseline gap-2 rtl:font-sans rtl:text-lg rtl:max-sm:me-0 rtl:max-sm:ms-auto rtl:lg:w-[185px]"

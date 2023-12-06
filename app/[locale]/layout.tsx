@@ -10,7 +10,6 @@ import {notFound} from 'next/navigation';
 import {NextIntlClientProvider} from 'next-intl';
 import Footer from '@/app/[locale]/components/layout/Footer';
 import CustomNavbar from '@/app/[locale]/components/layout/Navbar';
-
 // the main font
   const workSans = Work_Sans({
     subsets: ['latin'],
@@ -26,11 +25,6 @@ export const metadata: Metadata = {
   description: 'Learning Forgeins Kids Arabic And Islamic Courses',
   icons: {
     icon: '/favicon.ico',
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
   },
   // openGraph: {
   //   title: 'LOS Academy',

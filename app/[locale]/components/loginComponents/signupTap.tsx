@@ -15,7 +15,11 @@ export default function signupTap() {
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
     const router = useRouter();
     const onSubmit = async (values: any, actions: any) => {
-        signupSubmit(values);
+      
+      const data = (({ age, ...values }) => { return {...values,age:parseInt(age,10)}})(values)
+        
+      signupSubmit(data);
+        
         await new Promise((resolve) => setTimeout(resolve, 1000));
         actions.resetForm();
     }
@@ -25,7 +29,7 @@ export default function signupTap() {
           name: "",
           email: "",
           phone: "",
-          age: 0,
+          age: '',
           password: "",
           passwordConfirmation: "",
           gender: "",
@@ -143,7 +147,6 @@ export default function signupTap() {
             onBlur={handleBlur}
             className={`${ errors.age && touched.age ? "border-[--danger-color]" : "border-[--secondary-color]"} gradiant-color rounded-3xl w-full appearance-none border-2`}
             type="number"
-            min={0}
           />
             {errors.age && touched.age ? 
                 <span className="text-danger-color capitalize">{errors.age}</span> 

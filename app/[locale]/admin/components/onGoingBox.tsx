@@ -39,7 +39,7 @@ export default function OnGoingBox() {
 
 
     return(
-        <div className={"flex-col justify-center items-center gap-[16px] h-[240px] text-center adminBox"}>
+        <div className={"flex-col justify-center items-center gap-[16px] h-[240px] w-full text-center adminBox"}>
             <h3 className={"adminBoxTitle"}>Ongoing Sessions</h3>
             <div className={"bg-white-color p-5 rounded-[16px]"}>
                 {isLoading ? (<Spinner />) : 

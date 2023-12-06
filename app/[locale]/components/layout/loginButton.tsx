@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import Link from "next-intl/link";
+import Link from "next/link";
 import { RiUserSharedFill } from "react-icons/ri";
 
 export default function LoginButton() {

@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Spinner } from "flowbite-react";
 import { convertDateTimeZone } from "@/utilities";
-import { getSocket } from '@/utilities/connectWithSocket';
-import { Socket } from "socket.io-client";
+// import { getSocket } from '@/utilities/connectWithSocket';
+// import { Socket } from "socket.io-client";
 export default function OnGoingBox(session: any) {
 
     const upComingSession = session.session && session.session
@@ -24,16 +24,16 @@ export default function OnGoingBox(session: any) {
     const sessionDuration = onGoingSession && onGoingSession.sessionDuration
     const [testData, setTestData]= useState<any>(null)
 
-  useEffect(() => {
+//   useEffect(() => {
 
-    const newSocket:Socket = getSocket(cookies.get('token'))  
+//     const newSocket:Socket = getSocket(cookies.get('token'))  
     
-    console.log(newSocket)  
-        newSocket.on("event",(data:object)=>{
-            console.log(data)
-            // setTestData(data)
-        })
-    },[])
+//     console.log(newSocket)  
+//         newSocket.on("event",(data:object)=>{
+//             console.log(data)
+//             // setTestData(data)
+//         })
+//     },[])
 
 
     const convertTimeZone = convertDateTimeZone

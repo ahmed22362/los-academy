@@ -57,7 +57,7 @@ export default function FetchingUpComingSessions() {
     }, [])
 
   return (
-    <section>
+    <section className="w-full">
         <div className={"flex-col justify-start items-center gap-[16px] h-[240px] text-center adminBox"}>
             <h3 className={"adminBoxTitle"}>Are you here and ready for the session ?</h3>
             {isLoading ? <Spinner /> : (sessions && sessions.length > 0 ? sessions.map((session: any, index: number) => (

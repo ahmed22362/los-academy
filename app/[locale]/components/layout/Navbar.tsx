@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import LinkIntl from "next-intl/link";
+import Link from "next/link";
 import { MdLanguage } from "react-icons/md";
 import Image from "next/image";
 import { Dropdown, Navbar } from "flowbite-react";
@@ -10,7 +11,6 @@ import {useParams, usePathname, useRouter, useSearchParams} from "next/navigatio
 import Cookies from "universal-cookie"
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
 
 export default function CustomNavbar() {
 
@@ -95,7 +95,8 @@ export default function CustomNavbar() {
     return (
       <>
         <Navbar rounded={true} theme={customNavTheme.root} className="fixed w-full top-0 z-10 border-b-2 border-white-color">
-          <Navbar.Brand href="/" className="flex flex-row flex-wrap justify-center gap-3 rtl:flex-row-reverse">
+          <div>
+            <Link href="/" className="flex flex-row flex-wrap justify-center gap-3 rtl:flex-row-reverse">
             <Image
               src={"/logo.png"}
               alt="logo image"
@@ -111,7 +112,8 @@ export default function CustomNavbar() {
                   fontSize: "calc(16px + (24 - 16) * ((100vw - 320px) / (1920 - 320))"
                 }}
             >LOS Academy</h2>
-          </Navbar.Brand>
+            </Link>
+          </div>
 
           <Navbar.Collapse className="rtl:font-sans rtl:text-lg" theme={customNavTheme.collapse}>
               <li>

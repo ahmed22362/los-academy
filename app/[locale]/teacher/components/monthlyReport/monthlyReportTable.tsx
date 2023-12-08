@@ -18,11 +18,12 @@ export default function MonthlyReportTable() {
         setFirst(event.first);
         setRows(event.rows);
     };
+
     const getPaginatedData = () => {
         const endIndex = first + rows;
         return allReports.slice(first, endIndex);
     };
-    // const displaydReports = getPaginatedData()
+    const displaydReports = getPaginatedData()
 
     const customTheme: CustomFlowbiteTheme['table'] = {
         head: {
@@ -34,7 +35,7 @@ export default function MonthlyReportTable() {
     }
 
     const getMonthlyReport = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/monthlyReport/`, {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/myMonthlyReport`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -68,14 +69,17 @@ export default function MonthlyReportTable() {
         <Table>
             <Table.Head theme={customTheme.head}>
                 <Table.HeadCell theme={customTheme.head}>
-                    #ID
+                    #Report ID
                 </Table.HeadCell>
                 <Table.HeadCell theme={customTheme.head}>
-                    Name
+                    Student Name
                 </Table.HeadCell>
-                {/* <Table.HeadCell theme={customTheme.head}>
+                <Table.HeadCell theme={customTheme.head}>
+                    Report Date
+                </Table.HeadCell>
+                <Table.HeadCell theme={customTheme.head}>
                     options
-                </Table.HeadCell> */}
+                </Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
                 {isLoading ? (
@@ -83,7 +87,7 @@ export default function MonthlyReportTable() {
                     <td><Spinner size="xl" /></td>
                     </Table.Row>
                  ) :
-             (allReports &&  allReports.length > 0 ? allReports.map((report: any, index: number) => {
+             (allReports &&  allReports.length > 0 ? displaydReports.map((report: any, index: number) => {
                     return(
                         <FetchMonthlyReportsData key={index} reportData={report} updateComponent={updateComponent}/>
                     )
@@ -94,7 +98,7 @@ export default function MonthlyReportTable() {
             </Table.Body>
         </Table>
         <div className="card mt-4">
-            <Paginator  first={first} rows={rows} totalRecords={0} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
+            <Paginator  first={first} rows={rows} totalRecords={allReports.length} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
         </div>
         </div>
         </>

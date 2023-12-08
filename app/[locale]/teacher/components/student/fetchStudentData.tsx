@@ -23,10 +23,10 @@ export default function FetchStudentData({studentData, updateComponent} : {stude
             <Table.Cell>
                 {student.name}
             </Table.Cell>
-            {/* <Table.Cell>
+            <Table.Cell>
                 {student.gender}
-            </Table.Cell> */}
-            {/* <Table.Cell>
+            </Table.Cell> 
+            <Table.Cell>
                 {student.age}
             </Table.Cell>
             <Table.Cell>
@@ -34,7 +34,7 @@ export default function FetchStudentData({studentData, updateComponent} : {stude
             </Table.Cell>
             <Table.Cell>
             {student.remainSessions}
-            </Table.Cell> */}
+            </Table.Cell>
         </Table.Row>
   )
 }

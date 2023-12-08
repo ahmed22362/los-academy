@@ -121,7 +121,6 @@ body{
   padding: 10px;
 }
 .slick-slider .slick-arrow {
-  z-index: 1000 !important;
   color: black !important;
 }
 .slick-prev::before {
@@ -243,4 +242,12 @@ body{
 }
 
 
+.sideBarCollapse {
+  top: 80px;
+  left: 0;
+  position: fixed;
+  font-size: 30px;
+  cursor: pointer;
+  color: var(--primary-color);
+}
 

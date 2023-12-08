@@ -75,8 +75,7 @@ export default function TeacherNavBar() {
                     {data && <h6>{data.name}</h6>}
                 </div>
                 <Dropdown label={""} inline>
-                    <Dropdown.Item 
-                        href={"#"}
+                    <Dropdown.Item
                         className="rtl:flex-row-reverse ltr:flex-row"
                         onClick={handleOpenModal}>
                             Profile

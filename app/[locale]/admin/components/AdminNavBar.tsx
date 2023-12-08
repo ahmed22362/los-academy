@@ -48,16 +48,16 @@ export default function AdminNavBar() {
         <nav className={
             "flex justify-between align-center w-full px-[18px] py-[12px] fixed top-0 z-50 bg-white shadow shadow-secondary-color"
         }>
-            <div className={""}>
-                <Link href={"/"} className="flex justify-center items-center gap-[20px]">
+            <div className="flex justify-center items-center">
+                <Link href={"/"} className="flex justify-center items-center gap-[20px] max-sm:gap-[10px] max-sm:flex-col">
                 <Image
                     src={"/logo.png"}
                     alt="logo image"
                     width={35}
                     height={35}
-                    priority={true}
-                    loading={"eager"}
-                    className={"w-[35px] h-[35px] max-md:w-[30px]"}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    loading={"lazy"}
+                    className={"w-auo h-auto"}
                 />
                 <h2
                     className={"font-semibold"}
@@ -67,11 +67,13 @@ export default function AdminNavBar() {
                 >LOS Academy</h2>
             </Link>
             </div>
-            <div className={"flex items-center justify-center gap-5"}>
-                <Image src={"/vectors/feedback3.svg"} alt={"avatar"} width={40} height={40} loading={"eager"} priority={true}/>
-                <div>
-                    <span>welcome</span>
-                    {data && <h6>{data.name}</h6>}
+            <div className={"flex items-center justify-center gap-5 max-sm:gap-2"}>
+                <div className="flex items-center justify-center gap-2 max-sm:flex-col">
+                    <Image src={"/vectors/feedback3.svg"} alt={"avatar"} width={35} height={35} loading={"lazy"} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"/>
+                    <div className="max-sm:text-xs flex flex-col items-start justify-center">
+                        <span>welcome,</span>
+                        {data && <h6>{data.name}</h6>}
+                    </div>
                 </div>
                 <Dropdown label={""} inline>
                     <Dropdown.Item 

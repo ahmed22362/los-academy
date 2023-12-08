@@ -89,12 +89,6 @@ export default function TeacherNavBar() {
                     user={data}
                     updateComponent={updateComponent}
                 />
-                {/* <TeacherProfile
-                    openAssignModal={handleModal}
-                    handleCloseModal={handleCloseModal}
-                    user={data}
-                    updateComponent={getCurrentTeacherData}
-                /> */}
             </div>
         </nav>
     )

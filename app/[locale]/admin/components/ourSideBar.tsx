@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {usePathname, useRouter} from "next/navigation";
 import {BiLogOut} from 'react-icons/bi';
 import Cookies from 'universal-cookie';
+import ResponsiveAdminSideBar from './responsiveAdminSideBar';
 export default function OurSideBar() {
     const pathName = usePathname();
     const cookies = new Cookies();
@@ -35,7 +36,8 @@ export default function OurSideBar() {
     }
 
     return (
-        <Sidebar aria-label="Default sidebar example" theme={customTheme} className={"w-[14rem] pt-[70px]"}>
+        <>
+        <Sidebar aria-label="Default sidebar example" theme={customTheme} className={"w-[14rem] pt-[70px] max-md:hidden"}>
             <Sidebar.Items>
                 <Sidebar.ItemGroup className={"text-center"}>
                     <Link href="/admin" className={`sideBarLink  ${pathName === "/admin" ? " active" : ""}`}>
@@ -98,5 +100,9 @@ export default function OurSideBar() {
                 </Sidebar.ItemGroup>
             </Sidebar.Items>
         </Sidebar>
+        <div>
+            <ResponsiveAdminSideBar logOut={logOut}/>
+        </div>
+    </>
     )
 }

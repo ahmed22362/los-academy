@@ -19,8 +19,10 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
   features = [],
   recommended,
   planId,
-  continueFlag
+  continueFlag,
 }) => {
+  console.log(continueFlag);
+  
   const router = useRouter();
   const toast = useRef<Toast>(null);
   const showSuccess = (msg: any) => {
@@ -28,7 +30,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
       severity: "success",
       summary: "Success",
       detail: msg,
-      life: 5000,
+      life: 7000,
     });
   };
   const showError = (msg: string) => {
@@ -36,7 +38,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 7000,
     });
   };
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -57,6 +59,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
       planId: planId,
       continueFlag:continueFlag 
     };
+console.log(customPlanData);
 
     fetch(`${url}/subscription/`, {
       method: "POST",
@@ -72,8 +75,11 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
         if (data.status == "success") {
           showSuccess('You Will Redirect To "Pay"');
           setTimeout(() => {
-            router.push(`${data?.data?.stripeCheckSession?.url}`);
+            router.push(`${data?.data?.url}`);
           }, 3000);
+        }
+        else{
+          showError(data.message)
         }
       })
       .catch((error) => {

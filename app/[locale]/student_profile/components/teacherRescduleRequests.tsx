@@ -8,7 +8,11 @@ import { RadioButton } from "primereact/radiobutton";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
-function TeacherRescduleRequests() {
+function TeacherRescduleRequests({
+  fromStudentProfile,
+}: {
+  fromStudentProfile?: boolean;
+}) {
   const cookie = new Cookies();
   const [teatcherreschedule, setTeatcherReschedule] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -74,8 +78,13 @@ function TeacherRescduleRequests() {
               : -1;
           }
         );
-
-        setTeatcherReschedule(sortedPendingRescheduleRequests);
+        const sortedTeacherRequests = data.data.sort((a: any, b: any) =>
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+        );
+        setTeatcherReschedule(sortedTeacherRequests);
+        if (fromStudentProfile === true) {
+          setTeatcherReschedule(sortedPendingRescheduleRequests);
+        }
       })
       .catch((error) => {
         console.error("Error fetching sessions:", error);
@@ -85,8 +94,8 @@ function TeacherRescduleRequests() {
       });
   };
   const acceptReschedule = (requestId: number, newTime: string) => {
-    if(!ingredient){
-      showError('please select a date ')
+    if (!ingredient) {
+      showError("please select a date ");
       return;
     }
 
@@ -129,7 +138,7 @@ function TeacherRescduleRequests() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log(data.data);
 
         const pendingRescheduleRequests = data.data.filter(
           (request: any) => request.status === "pending"
@@ -143,8 +152,13 @@ function TeacherRescduleRequests() {
               : -1;
           }
         );
-
-        setTeatcherReschedule(sortedPendingRescheduleRequests);
+        const sortedTeacherRequests = data.data.sort((a: any, b: any) =>
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+        );
+        setTeatcherReschedule(sortedTeacherRequests);
+        if (fromStudentProfile === true) {
+          setTeatcherReschedule(sortedPendingRescheduleRequests);
+        }
       })
       .catch((error) => {
         console.error("Error fetching sessions:", error);
@@ -155,7 +169,6 @@ function TeacherRescduleRequests() {
   }, []);
 
   const denyAllReschedule = (requestId: number, sessionId: Number) => {
-    console.log(requestId);
     setSessionId(sessionId);
     const newData = {
       rescheduleRequestId: requestId,
@@ -189,7 +202,7 @@ function TeacherRescduleRequests() {
       });
   };
   return (
-    <div className="scrollAction h-[150px]">
+    <div className={`${teatcherreschedule.length>0? 'scrollAction':''} h-[150px]`} >
       <RescheduleSession
         setOpenRescheduleModal={setOpenRescheduleModal}
         openRescheduleModal={openRescheduleModal}
@@ -216,21 +229,22 @@ function TeacherRescduleRequests() {
         ) : (
           <>
             {teatcherreschedule?.length === 0 ? (
-              <p>No reschedule requests available.</p>
+              <p>No pending reschedule requests available.</p>
             ) : (
-              <ul className="h-full">
-                {teatcherreschedule.map((request) => (
-                  <li className="flex flex-col gap-5 mb-3" key={request.id}>
-                    <div className="bg-white-color p-2 flex flex-col gap-1 rounded-xl ">
-                      <p className="  font-medium">
-                        Session ID:{" "}
-                        <span className="">#{request.sessionId}</span>
-                      </p>
-                      <p className="  font-medium">
-                        Teacher Name:{" "}
-                        {request.session?.SessionInfo?.teacher.name}
-                      </p>
-                      {/* <p className="  font-medium">
+              <div className="">
+                <ul className="h-full mx-2">
+                  {teatcherreschedule.map((request) => (
+                    <li className="flex flex-col gap-5 mb-3" key={request.id}>
+                      <div className="bg-white-color p-2 flex flex-col gap-1 rounded-xl ">
+                        <p className="  font-medium">
+                          Session ID:{" "}
+                          <span className="">#{request.sessionId}</span>
+                        </p>
+                        <p className="  font-medium">
+                          Teacher Name:{" "}
+                          {request.session?.SessionInfo?.teacher.name}
+                        </p>
+                        {/* <p className="  font-medium">
                       Status:{" "}
                       <span
                         className={`${
@@ -245,7 +259,7 @@ function TeacherRescduleRequests() {
                     <p className="  font-medium">
                       Requested By: {request.requestedBy.toUpperCase()}
                     </p> */}
-                      {/* <p className="  font-medium flex  gap-4">
+                        {/* <p className="  font-medium flex  gap-4">
                       Old Date:
                       <span className="text-red-600">
                         {convertDateTimeZone(
@@ -256,7 +270,7 @@ function TeacherRescduleRequests() {
                         )}
                       </span>
                     </p> */}
-                      {/* {request.status === "approved" ? (
+                        {/* {request.status === "approved" ? (
                         <p className="  font-medium flex  gap-4">
                           New Date:
                           <span className="text-green-600">
@@ -271,44 +285,44 @@ function TeacherRescduleRequests() {
                       ) : (
                         ""
                       )} */}
-                      {request.status === "pending" ? (
-                        <>
-                          <div className="mt-2 flex flex-col gap-3 ">
-                            <div className="flex justify-center  items-center">
-                              <div className="flex  items-center gap-5">
-                                {request.newDatesOptions?.map(
-                                  (date: string, index: number) => (
-                                    <div
-                                      className="flex flex-col items-center"
-                                      key={index}
-                                    >
-                                      <div className="flex items-center">
-                                        <div className="bg-white dark:bg-gray-100 rounded-full w-4 h-4 flex flex-shrink-0 justify-center items-center relative">
-                                          <input
-                                            id={`label${index}`}
-                                            type="radio"
-                                            name="radio"
-                                            value={date}
-                                            onChange={(e) =>
-                                              setIngredient(e.target.value)
-                                            }
-                                            className="ring-1 focus:bg-secondary-color checked:bg-secondary-color  ring-secondary-color  focus:opacity-100 focus:ring-2  focus:ring-secondary-color  border-2 rounded-full border-secondary-color absolute cursor-pointer  checked:border-none"
-                                          />
+                        {request.status === "pending" ? (
+                          <>
+                            <div className="mt-2 flex flex-col gap-3 ">
+                              <div className="flex justify-center  items-center">
+                                <div className="flex  items-center gap-5">
+                                  {request.newDatesOptions?.map(
+                                    (date: string, index: number) => (
+                                      <div
+                                        className="flex flex-col items-center"
+                                        key={index}
+                                      >
+                                        <div className="flex items-center">
+                                          <div className="bg-white dark:bg-gray-100 rounded-full w-4 h-4 flex flex-shrink-0 justify-center items-center relative">
+                                            <input
+                                              id={`label${index}`}
+                                              type="radio"
+                                              name="radio"
+                                              value={date}
+                                              onChange={(e) =>
+                                                setIngredient(e.target.value)
+                                              }
+                                              className="ring-1 focus:bg-secondary-color checked:bg-secondary-color  ring-secondary-color  focus:opacity-100 focus:ring-2  focus:ring-secondary-color  border-2 rounded-full border-secondary-color absolute cursor-pointer  checked:border-none"
+                                            />
+                                          </div>
+                                          <label
+                                            htmlFor={`label${index}`}
+                                            className="ml-2 text-sm leading-4 font-normal text-gray-800 dark:text-gray-100"
+                                          >
+                                            {convertDateTimeZone(
+                                              date,
+                                              "UTC",
+                                              Intl.DateTimeFormat().resolvedOptions()
+                                                .timeZone,
+                                              "DD/MMM/YYYY h:mm A"
+                                            )}
+                                          </label>
                                         </div>
-                                        <label
-                                          htmlFor={`label${index}`}
-                                          className="ml-2 text-sm leading-4 font-normal text-gray-800 dark:text-gray-100"
-                                        >
-                                          {convertDateTimeZone(
-                                            date,
-                                            "UTC",
-                                            Intl.DateTimeFormat().resolvedOptions()
-                                              .timeZone,
-                                            "DD/MMM/YYYY h:mm A"
-                                          )}
-                                        </label>
-                                      </div>
-                                      {/* <div className="flex align-items-center">
+                                        {/* <div className="flex align-items-center">
                                       <RadioButton
                                         className="border-2 rounded-[100%] fo focus-within:border-none focus-within:bg-[--secondary-color] border-[--secondary-color]   "
                                         inputId={`ingredient${index}`}
@@ -330,7 +344,7 @@ function TeacherRescduleRequests() {
                                       </label>
                                     </div> */}
 
-                                      {/* <p className=" text-[--secondary-color]">
+                                        {/* <p className=" text-[--secondary-color]">
                                       {convertDateTimeZone(
                                         date,
                                         "UTC",
@@ -339,43 +353,44 @@ function TeacherRescduleRequests() {
                                         "DD/MMM/YYYY h:mm A"
                                       )}
                                     </p> */}
-                                    </div>
-                                  )
-                                )}
+                                      </div>
+                                    )
+                                  )}
+                                </div>
+                              </div>
+                              <div className="m-auto flex justify-center gap-3 items-center">
+                                <button
+                                  onClick={() =>
+                                    acceptReschedule(request.id, ingredient)
+                                  }
+                                  className={`${
+                                    request.status != "pending" ? "hidden" : ""
+                                  } px-5 py-1 bg-secondary-color rounded-3xl text-white`}
+                                >
+                                  Reschedule
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    denyAllReschedule(
+                                      request.id,
+                                      request.sessionId
+                                    )
+                                  }
+                                  className={`hover:text-white hover:bg-secondary-color px-3 py-1 text-secondary-color border-2 border-[--secondary-color] font-semibold transition-colors  w-fit rounded-full `}
+                                >
+                                  Cancel
+                                </button>
                               </div>
                             </div>
-                            <div className="m-auto flex justify-center gap-3 items-center">
-                              <button
-                                onClick={() =>
-                                  acceptReschedule(request.id, ingredient)
-                                }
-                                className={`${
-                                  request.status != "pending" ? "hidden" : ""
-                                } px-5 py-1 bg-secondary-color rounded-3xl text-white`}
-                              >
-                                Reschedule
-                              </button>
-                              <button
-                                onClick={() =>
-                                  denyAllReschedule(
-                                    request.id,
-                                    request.sessionId
-                                  )
-                                }
-                                className={`hover:text-white hover:bg-secondary-color px-3 py-1 text-secondary-color border-2 border-[--secondary-color] font-semibold transition-colors  w-fit rounded-full `}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                          </>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </>
         )}

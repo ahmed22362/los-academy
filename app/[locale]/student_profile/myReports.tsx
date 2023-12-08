@@ -74,7 +74,7 @@ function MyReports() {
   }, []);
 
   return (
-    <div className="w-full px-2 gap-2  ">
+    <div className="w-full px-2 gap-2 scrolAction ">
       {loading ? (
         // Display loading indicator while fetching data
         <>

@@ -427,6 +427,24 @@ function UpcomingSessions() {
     }
   }, [countdownCompleted]);
 
+// 
+const rescheduleButtonRef = useRef<HTMLButtonElement>(null);
+const [rescheduleButtonTop, setRescheduleButtonTop] = useState(0);
+
+useEffect(() => {
+  const measureButton = () => {
+    if (rescheduleButtonRef.current) {
+      const buttonTop = rescheduleButtonRef.current.offsetTop;
+      setRescheduleButtonTop(buttonTop);
+    }
+  };
+
+  measureButton();
+
+  // Cleanup function not needed for this case
+
+}, []);
+
   // Updated updateAttendance function
   const updateAttendance = () => {
     console.log(sessionId);
@@ -498,16 +516,20 @@ function UpcomingSessions() {
         upComingSession?.map((session, index) => (
           <div className="relative" key={index}>
             <p>{`Session #${session.id} with title ${session.type}`}</p>
-            <div className={`${styles.date} flex justify-gap-5 my-2`}>
+            <div className={`${styles.date}  max-[400px]:flex-col sm:flex-col  xl:flex-row flex justify- gap-5 my-2`}>
               <div className={`flex justify-center  items-center `}>
+                <p className="text-md">
                 <FaCalendarDays />
+                </p>
                 <p className={`ml-3 mr-1`}>
                   {moment(session.sessionDate).format("D-MMM-YYYY")}
                 </p>
               </div>
-              <div className={`flex justify-center items-center`}>
-                <IoTimeOutline />
-                <p className={`ml-3`}>
+              <div className={`ml-3 gap-1  flex justify-center items-center`}>
+                <p className="text-md">
+                <IoTimeOutline  />
+                </p>
+                <p className={``}>
                   {convertDateTimeZone(
                     session.sessionDate,
                     "UTC",
@@ -605,7 +627,7 @@ function UpcomingSessions() {
                 <PrimaryButton
                   disabled={isImHereButtonDisabled}
                   onClick={() => updateAttendance()}
-                  ourStyle={`w-full max-md-px-1  text-sm font-semibold transition-colors text-white  h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45 ${
+                  ourStyle={`w-full   text-sm font-semibold transition-colors text-white xl:py-[10px] md:px-[5px] max-[400px]:py-3 md:py-2 w-full shadow rounded-full mx-auto  max-md:w-45 ${
                     isImHereButtonDisabled
                       ? " bg-gray-500 cursor-not-allowed"
                       : "bg-secondary-color hover:bg-secondary-hover"
@@ -624,7 +646,7 @@ function UpcomingSessions() {
               >
                 <button
                   onClick={() => setopenRescheduleModal(true)}
-                  className={`max-md-px-1 text-sm text-secondary-color border-4 border-[--secondary-color] font-semibold transition-colors  h-10 px-3 w-full rounded-full w-50 mx-auto max-md:px-4 max-md:w-45 ${
+                  className={` text-sm text-secondary-color border-4 border-[--secondary-color] font-semibold transition-colors  xl:py-2 px-3 py-2  w-full rounded-full w-50 mx-auto md:py-0 max-md:w-45 ${
                     isRescheduleButtonDisabled
                       ? "bg-gray-500 cursor-not-allowed text-white"
                       : "hover:bg-secondary-color hover:text-white"
@@ -640,6 +662,8 @@ function UpcomingSessions() {
               sessionId={sessionId}
               openRescheduleModal={openRescheduleModal}
               setOpenRescheduleModal={setopenRescheduleModal}
+              fromUpdcoming={true}
+              rescheduleButtonTop={rescheduleButtonTop}
             />
             <StudentPlanModal
               openPlansModal={openPlansModal}

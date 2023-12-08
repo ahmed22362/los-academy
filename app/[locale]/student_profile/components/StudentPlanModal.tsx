@@ -2,7 +2,6 @@
 
 import { Button, Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import { BsPeople, BsPerson } from "react-icons/bs";
 import StudentPlane from "./StudentPlane";
 import PrimaryButton from "../../components/PrimaryButton";
@@ -51,23 +50,7 @@ export default function StudentPlanModal({
     fetchAllPlans();
   }, []);
 
-  const customeTheme: CustomFlowbiteTheme = {
-    tab: {
-      tablist: {
-        base: "flex justify-center items-center m-auto w-auto bg-secondary-color rounded-full px-12 py-2",
-        tabitem: {
-          styles: {
-            pills: {
-              active: {
-                on: "rounded-full bg-white focus:ring-0 text-black px-8 py-2",
-                off: "rounded-full px-8 py-2 focus:ring-0 bg-secondary-color hover:bg-white hover:text-black text-white transition-colors",
-              },
-            },
-          },
-        },
-      },
-    },
-  };
+ 
 
   const activePlans = allPlans.filter((plan: any) => plan.active);
   let numberOfPlans = activePlans.length;

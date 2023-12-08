@@ -242,12 +242,3 @@ body{
 }
 
 
-.sideBarCollapse {
-  top: 80px;
-  left: 0;
-  position: fixed;
-  font-size: 30px;
-  cursor: pointer;
-  color: var(--primary-color);
-}
-

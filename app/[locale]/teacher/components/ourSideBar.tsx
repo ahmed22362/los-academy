@@ -6,6 +6,7 @@ import {usePathname, useRouter} from "next/navigation";
 import {BiLogOut} from 'react-icons/bi';
 import { FiAlignLeft } from "react-icons/fi";
 import Cookies from 'universal-cookie';
+import ResponsiveSideBar from '../../components/responsiveSideBar';
 export default function OurSideBar() {
     const pathName = usePathname();
     const cookies = new Cookies();
@@ -82,9 +83,9 @@ export default function OurSideBar() {
                 </Sidebar.ItemGroup>
             </Sidebar.Items>
         </Sidebar>
-        <span className='sideBarCollapse hidden max-md:block'>
-            <FiAlignLeft  />
-        </span>
+        <div>
+            <ResponsiveSideBar logOut={logOut}/>
+        </div>
     </>
     )
 }

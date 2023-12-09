@@ -2,7 +2,6 @@ import OurChart from "@/app/[locale]/admin/components/chart";
 import { getMyStatistics } from "@/utilities/getTeacherStatistics";
 import { getMyAllSessions } from "@/utilities/teacherGetMyAllSessions";
 import { cookies } from "next/headers";
-import { Suspense } from "react";
 export default async function Attendance() {
   const token = cookies().get("token")?.value.toString();
   const totalSessions = await getMyAllSessions(token);
@@ -18,12 +17,10 @@ export default async function Attendance() {
         <h3 className={"text-black-color-one font-semibold text-[16px]"}>
           Attendance Overview
         </h3>
-        <Suspense fallback={<div>Loading...</div>}>
-          <OurChart
-            totalSessions={totalSessions.length}
-            teacherStatistics={myStatistics.data}
-          />
-        </Suspense>
+        <OurChart
+          totalSessions={totalSessions.length}
+          teacherStatistics={myStatistics.data}
+        />
       </div>
       <span className={"font-semibold text-base text-black-color-one"}>
         Total Sessions: {totalSessions.length}

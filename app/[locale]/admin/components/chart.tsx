@@ -15,20 +15,25 @@ export default function OurChart({ ...props }: any) {
   const attendSessions = Math.floor(
     (props.teacherStatistics[1].count / totalSessions) * 100
   );
+  const pendingSessions = Math.floor(
+    (props.teacherStatistics[0].count / totalSessions) * 100
+  );
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);
     const data = {
-      labels: ["Attend", "Absent"],
+      labels: ["Attend", "Absent", "Pending"],
       datasets: [
         {
-          data: [absentSessions, attendSessions],
+          data: [absentSessions, attendSessions, pendingSessions],
           backgroundColor: [
             documentStyle.getPropertyValue("--secondary-color"),
             documentStyle.getPropertyValue("--primary-color"),
+            documentStyle.getPropertyValue("--yellow-500"),
           ],
           hoverBackgroundColor: [
             documentStyle.getPropertyValue("--blue-300"),
             documentStyle.getPropertyValue("--blue-500"),
+            documentStyle.getPropertyValue("--yellow-300"),
           ],
         },
       ],

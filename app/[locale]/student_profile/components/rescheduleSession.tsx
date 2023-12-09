@@ -9,14 +9,19 @@ import BannerComponent from "./Banner";
 interface RescheduleSessionProps {
   openRescheduleModal: boolean;
   sessionId: string;
-  fromTeacherRequest?: boolean; // Making fromTeacherRequest optional
+  fromTeacherRequest?: boolean;
+  fromUpdcoming?:boolean
+  rescheduleButtonTop:string; // Making fromTeacherRequest optional
 }
 function RescheduleSession({
   setOpenRescheduleModal,
   openRescheduleModal,
   sessionId,
   fromTeacherRequest,
+  fromUpdcoming,
+  rescheduleButtonTop,
 }: any) {
+  
   const [selectedStartDate, setSelectedStartDate] = useState<
     Nullable<Date> | any
   >(null);
@@ -99,7 +104,7 @@ function RescheduleSession({
         onClose={() => setOpenRescheduleModal(false)}
       >
         <Modal.Header className="p-0 m-0 border-0"></Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="relative">
           <div className="banner">
             {fromTeacherRequest && (
               <BannerComponent
@@ -112,9 +117,10 @@ function RescheduleSession({
               />
             )}
           </div>
-          <div className="flex justify-center flex-col items-center gap-5">
-            <Calendar
-              panelClassName="h-fit lg:mt-[100px]"
+          <div className="flex  justify-center flex-col items-center gap-5">
+           <div className="card w-full flex justify-center">
+           <Calendar
+              panelClassName={`${fromUpdcoming?'lg:mb-[30%]':'mt-[23%] left-[50%] absloute -translate-x-1/2	-translate-y-1/2 top-[50%]'} `}
               value={selectedStartDate}
               onChange={(e: CalendarProps | any) =>
                 setSelectedStartDate(e.value)
@@ -128,8 +134,10 @@ function RescheduleSession({
               }}
               placeholder="Select First Avilable Date and Time"
             />
+           </div>
+            <div className="card w-full flex justify-center">
             <Calendar
-              panelClassName="h-fit lg:mt-[250px]"
+              panelClassName={`${fromUpdcoming?'lg:mb-[30%]':'mt-[23%] left-[50%] -translate-x-1/2	-translate-y-1/2 top-[50%]'} absloute`}
               value={selectedEndDate}
               onChange={(e: CalendarProps | any) => setSelectedEndDate(e.value)}
               showTime
@@ -141,6 +149,7 @@ function RescheduleSession({
               }}
               placeholder="Select Second Avilable Date and Time"
             />
+            </div>
             <div>
               <PrimaryButton
                 ourStyle="bg-secondary-color hover:bg-[#3b369a] text-white w-[250px] py-3 border rounded-3xl text-md px-10 transition-all duration-500"

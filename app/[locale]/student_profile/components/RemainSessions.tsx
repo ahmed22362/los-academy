@@ -84,11 +84,11 @@ function RemainSessions({ setTeacherName }: any) {
               return (
                 <div
                   key={index}
-                  className={`${styles.session} bg-white-color px-2 rounded-2xl py-3 w-full  flex justify-between items-center gap- my-3`}
+                  className={`${styles.session} bg-white-color px-2 rounded-2xl py-3 w-full sm:flex-col lg:flex-row max-[400px]:flex-col flex justify-between items-center gap- my-3`}
                 >
                   <div>
                     <p className="">Session #{session.id}</p>
-                    <p className="">
+                    <p className="max-lg:text-sm">
                       Time:{" "}
                       {convertDateTimeZone(
                         session.sessionDate,
@@ -129,7 +129,7 @@ function RemainSessions({ setTeacherName }: any) {
                       check ? "gray-500" : "[--secondary-color]"
                     } hover:bg-${
                       check ? "gray-500" : "[#453ed2]"
-                    } h-fit text-sm rounded-full py-1 text-white px-4`}
+                    } h-fit text-sm rounded-full py-2 text-white px-4`}
                     disabled={check}
                   >
                     Reschedule
@@ -153,8 +153,8 @@ function RemainSessions({ setTeacherName }: any) {
       <RescheduleSession
         sessionId={selectedSessionId}
         openRescheduleModal={openRescheduleModal}
-        setOpenRescheduleModal={setOpenRescheduleModal} // <-- Correct casing here
-        fromTeacherRequest={true}
+        setOpenRescheduleModal={setOpenRescheduleModal} 
+        fromTeacherRequest={false}
         />
     </div>
   );

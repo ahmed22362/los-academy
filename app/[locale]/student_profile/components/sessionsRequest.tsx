@@ -10,9 +10,10 @@ interface Session {
   sessionDates: string[];
   status: string;
   type: string;
-  sessionDate: string; // You might need to adjust the type based on your actual data structure
+  sessionDate: string;
+  fromStudentProfile?:boolean // You might need to adjust the type based on your actual data structure
 }
-function SessionsRequest() {
+function SessionsRequest({ fromStudentProfile }: { fromStudentProfile?: boolean }) {
   const cookie = new Cookies();
   const [sessionsRequest, setSessionsRequest] = useState<any[]>([]);
   const [updateCalendar, setUpdateCalendar] = useState<boolean>(true);
@@ -119,6 +120,9 @@ function SessionsRequest() {
         const pendingSessions = sortedSessions.filter(
           (session: Session) => session.status === "pending"
         );
+        if(fromStudentProfile===true){
+          setSessionsRequest(pendingSessions)
+        }
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
@@ -218,7 +222,7 @@ function SessionsRequest() {
                     {session.status}{" "}
                   </span>
                 </p>
-                <p>
+                {/* <p>
                   Type:
                   <span
                     className={`${
@@ -230,7 +234,7 @@ function SessionsRequest() {
                     {" "}
                     {session.type === "paid" ? "Paid$" : "Free"}{" "}
                   </span>{" "}
-                </p>
+                </p> */}
                 <div
                   className={`${
                     session.status === "pending" ? "flex" : "hidden"

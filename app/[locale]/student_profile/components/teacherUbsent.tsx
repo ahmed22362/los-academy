@@ -7,7 +7,6 @@ import RescheduleSession from "./rescheduleSession";
 function TeacherUbsent() {
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
   const [teacherUbsentSessions, setTeacherUbsentSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
@@ -41,7 +40,7 @@ function TeacherUbsent() {
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${cookie.get("token")}`,
         },
       }
     )
@@ -116,7 +115,7 @@ function TeacherUbsent() {
                         </span>
                       </div>
                     </div> */}
-                    <div className="flex justify-between items-center">
+                    <div className="flex  justify-between items-center sm:flex-col gap-3 xl:gap-0 xl:flex-row max-[400px]:flex-col">
                     <div className="flex flex-col justify-center items-start">
                     <p className=" font-medium">
                       Teacher Name: {sessionInfo?.SessionInfo?.teacher?.name}

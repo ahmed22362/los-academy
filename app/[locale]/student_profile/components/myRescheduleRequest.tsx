@@ -4,7 +4,11 @@ import ContentLoader from "react-content-loader";
 import moment from "moment-timezone";
 import { Toast } from "primereact/toast";
 
-function MyRescheduleRequest() {
+function MyRescheduleRequest({
+  fromStudentProfile,
+}: {
+  fromStudentProfile?: boolean;
+}) {
   const cookie = new Cookies();
   const [myReschedule, setMyReschedule] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,13 +36,22 @@ function MyRescheduleRequest() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+
         const pendingRequests = data.data.filter(
           (request: any) => request.status === "pending"
         );
         const sortedPendingRequests = pendingRequests.sort((a: any, b: any) =>
           moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
         );
-        setMyReschedule(sortedPendingRequests);
+
+        const sortedRequests = data.data.sort((a: any, b: any) =>
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+        );
+        setMyReschedule(sortedRequests);
+
+        if (fromStudentProfile === true) {
+          setMyReschedule(sortedPendingRequests);
+        }
       })
       .catch((error) => {
         console.error("Error fetching sessions:", error);
@@ -48,7 +61,7 @@ function MyRescheduleRequest() {
       });
   }, []);
 
-  const fetchMyReschedule=()=>{
+  const fetchMyReschedule = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/requestReschedule`, {
       method: "GET",
       headers: {
@@ -58,13 +71,21 @@ function MyRescheduleRequest() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+
         const pendingRequests = data.data.filter(
           (request: any) => request.status === "pending"
         );
         const sortedPendingRequests = pendingRequests.sort((a: any, b: any) =>
           moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
         );
-        setMyReschedule(sortedPendingRequests);
+        const sortedRequests = data.data.sort((a: any, b: any) =>
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+        );
+        setMyReschedule(sortedRequests);
+
+        if (fromStudentProfile === true) {
+          setMyReschedule(sortedPendingRequests);
+        }
       })
       .catch((error) => {
         console.error("Error fetching sessions:", error);
@@ -72,7 +93,7 @@ function MyRescheduleRequest() {
       .finally(() => {
         setLoading(false);
       });
-  }
+  };
   const toast = useRef<Toast>(null);
 
   const showSuccess = (msg: any) => {
@@ -120,7 +141,6 @@ function MyRescheduleRequest() {
           showError(data.message);
         }
         fetchMyReschedule();
-
       })
       .catch((error) => {
         showError("An Error Occurred");
@@ -129,10 +149,10 @@ function MyRescheduleRequest() {
   };
 
   return (
-    <div className="scrollAction h-[150px]">
+    <div className={`${myReschedule.length>0?"scrollAction":''} sm:h-[120px] max-[400px]:h-[120px] lg:h-[150px]`}>
       <Toast ref={toast} />
 
-      <div className="md:min-h-[190px] max-md:min-h-[150px] mx-2 ">
+      <div className="md:min-h-[190px] max-md:min-h-[150px]  ">
         {loading ? (
           // React Content Loader while data is being fetched
           <ContentLoader
@@ -148,9 +168,10 @@ function MyRescheduleRequest() {
         ) : (
           <>
             {myReschedule?.length === 0 ? (
-              <p>No reschedule requests available.</p>
+              <p>No pending reschedule requests available.</p>
             ) : (
-              <ul className="">
+              <div className="">
+                <ul className="mx-2">
                 {myReschedule.map((request, index) => (
                   <li className="flex flex-col gap-5 mb-3" key={request.id}>
                     <div className="bg-white-color p-2 flex flex-col gap-1 rounded-xl ">
@@ -184,33 +205,34 @@ function MyRescheduleRequest() {
                           ? "Me"
                           : request.requestedBy.toUpperCase()}
                       </p> */}
-                     {request.newDatesOptions.map(
-                                (date: string, i: number) => (
-                                  <p
-                                    className=" flex gap-2 items-center justify-start"
-                                    key={i}
-                                  >
-                                    <span>Date:</span>
-                                    {convertDateTimeZone(
-                                      date,
-                                      "UTC",
-                                      Intl.DateTimeFormat().resolvedOptions()
-                                        .timeZone,
-                                      "DD/MMM/YYYY "
-                                    )}
-                                    <p className="flex gap-2 items-center justify-start">
-                                      <span>Time:</span>
-                                      {convertDateTimeZone(
-                                      date,
-                                      "UTC",
-                                      Intl.DateTimeFormat().resolvedOptions()
-                                        .timeZone,
-                                      "h:mm A"
-                                    )}
-                                    </p>
-                                  </p>
-                                )
+                      {request.newDatesOptions.map(
+                        (date: string, i: number) => (
+                          <p
+                            className="max-[400px]:flex-col sm:flex-col lg:flex-row  flex gap-2 items-center justify-start"
+                            key={i}
+                          >
+                           <p>
+                           <span>Date:</span>
+                            {convertDateTimeZone(
+                              date,
+                              "UTC",
+                              Intl.DateTimeFormat().resolvedOptions().timeZone,
+                              "DD/MMM/YYYY "
+                            )}
+                           </p>
+                            <p className="flex gap-2 items-center justify-start">
+                              <span>Time:</span>
+                              {convertDateTimeZone(
+                                date,
+                                "UTC",
+                                Intl.DateTimeFormat().resolvedOptions()
+                                  .timeZone,
+                                "h:mm A"
                               )}
+                            </p>
+                          </p>
+                        )
+                      )}
                       <p className="my-1  font-medium">
                         Teacher Name: {request.session.SessionInfo.teacher.name}
                       </p>
@@ -272,6 +294,8 @@ function MyRescheduleRequest() {
                   </li>
                 ))}
               </ul>
+              </div>
+              
             )}
           </>
         )}

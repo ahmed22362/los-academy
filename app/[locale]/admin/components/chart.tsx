@@ -1,50 +1,62 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Chart } from 'primereact/chart';
+import React, { useState, useEffect } from "react";
+import { Chart } from "primereact/chart";
+import { getMyAllSessions } from "@/utilities/teacherGetMyAllSessions";
+import Cookies from "universal-cookie";
 
-export default function OurChart() {
-    const [chartData, setChartData] = useState({});
-    const [chartOptions, setChartOptions] = useState({});
+export default function OurChart({ ...props }: any) {
+  const [chartData, setChartData] = useState({});
+  const [chartOptions, setChartOptions] = useState({});
+  const totalSessions = props.totalSessions;
+  const absentSessions = Math.floor(
+    (props.teacherStatistics[2].count / totalSessions) * 100
+  );
+  const attendSessions = Math.floor(
+    (props.teacherStatistics[1].count / totalSessions) * 100
+  );
+  useEffect(() => {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const data = {
+      labels: ["Attend", "Absent"],
+      datasets: [
+        {
+          data: [absentSessions, attendSessions],
+          backgroundColor: [
+            documentStyle.getPropertyValue("--secondary-color"),
+            documentStyle.getPropertyValue("--primary-color"),
+          ],
+          hoverBackgroundColor: [
+            documentStyle.getPropertyValue("--blue-300"),
+            documentStyle.getPropertyValue("--blue-500"),
+          ],
+        },
+      ],
+    };
+    const options = {
+      plugins: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+          },
+        },
+      },
+    };
 
-    useEffect(() => {
-        const documentStyle = getComputedStyle(document.documentElement);
-        const data = {
-            labels: ['Attend', 'Absent'],
-            datasets: [
-                {
-                    data: [
-                        75,
-                        25
-                    ],
-                    backgroundColor: [
-                        documentStyle.getPropertyValue('--secondary-color'),
-                        documentStyle.getPropertyValue('--primary-color'),
-                    ],
-                    hoverBackgroundColor: [
-                        documentStyle.getPropertyValue('--blue-300'),
-                        documentStyle.getPropertyValue('--blue-500'),
-                    ]
-                }
-            ]
-        }
-        const options = {
-            plugins: {
-                legend: {
-                    labels: {
-                        usePointStyle: true
-                    }
-                }
-            }
-        };
+    setChartData(data);
+    setChartOptions(options);
+  }, []);
 
-        setChartData(data);
-        setChartOptions(options);
-    }, []);
-
-    return (
-        <div className="card flex justify-content-center">
-            <Chart type="pie" data={chartData} options={chartOptions} className="w-full md:w-30rem" height={"150px"} width={"150px"} />
-        </div>
-    )
+  return (
+    <div className="card flex justify-content-center">
+      <Chart
+        type="pie"
+        data={chartData}
+        options={chartOptions}
+        className="w-full md:w-30rem"
+        height={"150px"}
+        width={"150px"}
+      />
+    </div>
+  );
 }

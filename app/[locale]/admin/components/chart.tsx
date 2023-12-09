@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Chart } from "primereact/chart";
-import { getMyAllSessions } from "@/utilities/teacherGetMyAllSessions";
-import Cookies from "universal-cookie";
 
 export default function OurChart({ ...props }: any) {
   const [chartData, setChartData] = useState({});

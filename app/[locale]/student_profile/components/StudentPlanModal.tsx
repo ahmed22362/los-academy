@@ -12,18 +12,18 @@ interface Plan {
   price: number;
   features: string[];
 }
-export default function StudentPlanModal({
-  openPlansModal,
-  setOpenPlansModal,
-}: any ,continueFlag?:any) {
-
+export default function StudentPlanModal(
+  { openPlansModal, setOpenPlansModal }: any,
+  continueFlag?: any
+) {
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
   const token = cookie.get("token");
 
   const [allPlans, setAllPlan]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [openContinueWithModal, setopenContinueWithModal] = useState<boolean>(false);
+  const [openContinueWithModal, setopenContinueWithModal] =
+    useState<boolean>(false);
 
   useEffect(() => {
     // Fetch plans from the backend API
@@ -37,20 +37,18 @@ export default function StudentPlanModal({
         .then((response) => response.json())
         .then((data) => {
           const sortedData = data.data.sort((x: any, y: any) => x.id - y.id);
-          console.log(sortedData);
+          // console.log(sortedData);
           setAllPlan(sortedData);
           setIsLoading(false);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
           setIsLoading(false);
         });
     };
 
     fetchAllPlans();
   }, []);
-
- 
 
   const activePlans = allPlans.filter((plan: any) => plan.active);
   let numberOfPlans = activePlans.length;

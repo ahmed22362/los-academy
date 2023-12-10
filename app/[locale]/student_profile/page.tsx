@@ -39,8 +39,7 @@ export default function page() {
   const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
 
   const [myInfo, setMyInfo] = useState<UserInfo | undefined>();
-  const [teacherName, setTeacherName] = useState("");
-  const [showBanner, setShowBanner] = useState(true);
+  const [mySubscription, setMySubscription] = useState<any>([]);
   const router = useRouter();
   const [start, setStart] = useState<boolean>(false);
   const [pendingSessionRequest, setPendingSessionRequest] = useState<Session[]>([]);
@@ -49,13 +48,22 @@ export default function page() {
   const cookie=new Cookies();
 
   useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySubscription`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log(data);
 
-    if (myInfo?.sessionPlaced === false) {
-      // Display tips for the first visit
-      
-      setShowBanner(true);
-      // Set the flag to indicate that the user has seen the tips
-    }
+        setMySubscription(data.data);
+        // Set the retrieved Seeions in the state
+      })
+      .catch((error) => {
+        console.error("Error fetching sessions:", error);
+      });
   }, []);
   
   useEffect(() => {
@@ -70,7 +78,6 @@ export default function page() {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
 
         // Assuming data.data contains the sessions
         setTeacherUbsentSessions(data.data);
@@ -96,7 +103,7 @@ export default function page() {
   };
   useEffect(() => {
     const isFirstVisit = cookie.get("FirstVisit") === undefined;
-console.log(isFirstVisit);
+// console.log(isFirstVisit);
 
     if (isFirstVisit===true) {
       // Display Joyride only on the first visit
@@ -117,7 +124,7 @@ console.log(isFirstVisit);
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         
         const sortedSessions = data.data.map((session: Session) => ({
           ...session,
@@ -136,7 +143,7 @@ console.log(isFirstVisit);
           return dateB.getTime() - dateA.getTime();
         });
 
-        console.log("sorted session requests ",sortedSessions);
+        // console.log("sorted session requests ",sortedSessions);
         const pendingSessions = sortedSessions.filter((session :Session) => session.status === "pending");
         setPendingSessionRequest(pendingSessions);
         // Set the retrieved Seeions in the state
@@ -154,14 +161,14 @@ console.log(isFirstVisit);
     const currentPageUrl = window.location.href;
 
     // Log the current page's URL to the console
-    console.log(`Current page URL: ${currentPageUrl}`);
+    // console.log(`Current page URL: ${currentPageUrl}`);
 
     // Parse the URL to get the query parameters
     const urlSearchParams = new URLSearchParams(window.location.search);
     const fromUserContinueParam = urlSearchParams.get("fromUserContinue");
 
     // Log the query parameter to the console
-    console.log(`fromUserContinue parameter: ${fromUserContinueParam}`);
+    // console.log(`fromUserContinue parameter: ${fromUserContinueParam}`);
 
     // Check if the query parameter is true
     if (fromUserContinueParam === "true") {
@@ -206,7 +213,7 @@ console.log(isFirstVisit);
   ]);
 
   useEffect(() => {
-    console.log(pendingSessionRequest);
+    // console.log(pendingSessionRequest);
     
     AOS.init({
       duration: 800,
@@ -241,7 +248,7 @@ console.log(isFirstVisit);
         openContinueWithModal={openContinueWithModal}
         setOpenContinueWithModal={setOpenContinueWithModal}
       />
-      {myInfo?.sessionPlaced===false?  (
+      {mySubscription.lenght>0?  (
         <BannerComponent
           message={"You Want To Enjoy Sessions?"}
           animation={"animate-bounce"}
@@ -317,12 +324,10 @@ console.log(isFirstVisit);
             >
               <h4 className={`${styles.secondary_head} pb-2`}>
                 Remain Sessions:{" "}
-                <span className="font-bold font-italic">
-                  with teacher: {teacherName}
-                </span>{" "}
+               
               </h4>
               <div data-aos="fade-up">
-                <RemainSessions setTeacherName={setTeacherName} />
+                <RemainSessions  />
               </div>
             </div>
           <div

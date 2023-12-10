@@ -2,6 +2,7 @@ import React from 'react';
 import ContentLoader from 'react-content-loader';
 
 const MyLoader = (props: any) => (
+  <>
   <ContentLoader
     speed={2}
     width={340}
@@ -18,6 +19,7 @@ const MyLoader = (props: any) => (
     <rect x="5" y="52" rx="3" ry="3" width="139" height="10" />
     <rect x="142" y="30" rx="0" ry="0" width="60" height="10" />
   </ContentLoader>
+  </>
 );
 
 const MyLoaderContainer = () => (

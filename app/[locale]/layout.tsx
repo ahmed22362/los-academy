@@ -10,6 +10,8 @@ import {notFound} from 'next/navigation';
 import {NextIntlClientProvider} from 'next-intl';
 import Footer from '@/app/[locale]/components/layout/Footer';
 import CustomNavbar from '@/app/[locale]/components/layout/Navbar';
+import NextTopLoader from 'nextjs-toploader';
+
 // the main font
   const workSans = Work_Sans({
     subsets: ['latin'],
@@ -60,6 +62,17 @@ export default async function LocaleLayout({children, params: {locale}}: {childr
         <header>
           <CustomNavbar />
         </header>
+        <NextTopLoader 
+          color="#2299DD"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+        />
           {children}
         <Footer />
         </NextIntlClientProvider>

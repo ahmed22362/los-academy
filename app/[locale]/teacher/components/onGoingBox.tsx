@@ -1,5 +1,4 @@
 "use client";
-
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
@@ -8,7 +7,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Spinner } from "flowbite-react";
 import { convertDateTimeZone } from "@/utilities";
-
+// import { getSocket } from '@/utilities/connectWithSocket';
+// import { Socket } from "socket.io-client";
 export default function OnGoingBox(session: any) {
 
     const upComingSession = session.session && session.session
@@ -22,6 +22,19 @@ export default function OnGoingBox(session: any) {
     const [openModal, setOpenModal] = useState(false)
     const router = useRouter();
     const sessionDuration = onGoingSession && onGoingSession.sessionDuration
+    const [testData, setTestData]= useState<any>(null)
+
+//   useEffect(() => {
+
+//     const newSocket:Socket = getSocket(cookies.get('token'))  
+    
+//     console.log(newSocket)  
+//         newSocket.on("event",(data:object)=>{
+//             console.log(data)
+//             // setTestData(data)
+//         })
+//     },[])
+
 
     const convertTimeZone = convertDateTimeZone
     const handleOpen = () => {
@@ -191,6 +204,7 @@ export default function OnGoingBox(session: any) {
                         {countdownSeconds > 0 && countdownSeconds < 600 && <h5>Timer: {formatTime(countdownSeconds)}</h5>}
                         <h3 className="mb-3">The Next Session with: <b>{upComingSession && upComingSession.SessionInfo?.user?.name}</b></h3>
                         <span>start at : {convertDateTimeZone(upComingSession.sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "MM/DD/YYYY hh:mm A")}</span>
+                        {testData && <span>{testData.hello}</span>}
                     </div>
                 </>) 
                 : 

@@ -5,11 +5,10 @@ import TeacherNavBar from "./components/teacherNavBar";
 import OurSideBar from "./components/ourSideBar";
 
 
-
 export default function TeacherLayout(
     {children}: {
         children: React.ReactNode
-    }) {
+    }) {   
     return (
         <section>
             <TeacherNavBar />

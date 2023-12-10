@@ -4,12 +4,34 @@ import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import OnGoingBox from "./onGoingBox";
 import { Spinner } from "flowbite-react";
+// import {io} from 'socket.io-client';
+
+
 
 export default function FetchingUpComingSessions() {
+    
     const [sessions, setAllSessions] = useState<any>([]);
     
     const [isLoading, setIsLoading] = useState(true);
     const cookies = new Cookies();
+    const url = 'https://eydnaq-ip-41-46-4-25.tunnelmole.net/';
+    // const socket = io(url, {
+    //         auth: {
+    //     token: cookies.get('token')
+    //     }
+    // })
+
+    // socket.once("connect", () => {
+    //     console.log('connected')
+    // })
+    // socket.once('sesionStarted', (data) => {
+    //     console.log('sesionStarted')
+    //     console.log(data)
+    // })
+    // socket.once('disconnect', () => {
+    //     console.log('disconnected')
+    // })
+
     const getUpComingSession = () => {
 
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/upcomingSession`, {
@@ -35,7 +57,7 @@ export default function FetchingUpComingSessions() {
     }, [])
 
   return (
-    <section>
+    <section className="w-full">
         <div className={"flex-col justify-start items-center gap-[16px] h-[240px] text-center adminBox"}>
             <h3 className={"adminBoxTitle"}>Are you here and ready for the session ?</h3>
             {isLoading ? <Spinner /> : (sessions && sessions.length > 0 ? sessions.map((session: any, index: number) => (
@@ -61,3 +83,4 @@ export default function FetchingUpComingSessions() {
     </section>
   )
 }
+

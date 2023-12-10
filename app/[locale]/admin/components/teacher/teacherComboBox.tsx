@@ -19,13 +19,13 @@ export default function TeacherComboBox({...props}: any) {
 
     return(
         <section className={"px-5"}>
-            <div className={"flex flex-row w-full justify-between items-center bg-white-color p-5 rounded-[16px]"}>
+            <div className={"flex flex-row w-full justify-between items-center bg-white-color p-5 rounded-[16px] flex-wrap"}>
                 <form>
                     <input className={
-                        "border-0 rounded-[16px] w-[450px] focus:border-[2px] border-secondary-color transition-all"
+                        "border-0 rounded-[16px] w-[420px] max-md:w-full focus:border-[2px] border-secondary-color transition-all"
                     } type={"search"} placeholder={"search"} />
                 </form>
-                <div className={"flex flex-row justify-between items-center gap-5"}>
+                <div className={"flex flex-row justify-between items-center gap-5 my-3"}>
                     <button 
                     onClick={openModal}
                     className={

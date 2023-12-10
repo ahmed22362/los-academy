@@ -4,7 +4,9 @@ import {CustomFlowbiteTheme, Sidebar} from 'flowbite-react';
 import Link from 'next/link';
 import {usePathname, useRouter} from "next/navigation";
 import {BiLogOut} from 'react-icons/bi';
+import { FiAlignLeft } from "react-icons/fi";
 import Cookies from 'universal-cookie';
+import ResponsiveSideBar from '../../components/responsiveSideBar';
 export default function OurSideBar() {
     const pathName = usePathname();
     const cookies = new Cookies();
@@ -33,7 +35,8 @@ export default function OurSideBar() {
     }
 
     return (
-        <Sidebar aria-label="Default sidebar example" theme={customTheme} className={"w-[14rem] pt-[70px]"}>
+        <>
+        <Sidebar aria-label="Default sidebar example" theme={customTheme} className={"w-[14rem] pt-[70px] max-md:hidden"}>
             <Sidebar.Items>
                 <Sidebar.ItemGroup className={"text-center"}>
                     <Link href="/teacher" className={`sideBarLink  ${pathName === "/teacher" ? " active" : ""}`}>
@@ -80,5 +83,9 @@ export default function OurSideBar() {
                 </Sidebar.ItemGroup>
             </Sidebar.Items>
         </Sidebar>
+        <div>
+            <ResponsiveSideBar logOut={logOut}/>
+        </div>
+    </>
     )
 }

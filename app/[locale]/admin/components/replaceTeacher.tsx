@@ -6,14 +6,17 @@ import LoadingButton from "./loadingButton"
 import Cookies from "universal-cookie"
 import { Toast } from "primereact/toast"
 import { useRouter } from "next/navigation"
+import { getAllStudents } from "@/utilities/getAllStudents"
 
 export default function replaceTeacher() {
     const [isProcessing, setIsProcessing] = useState(false)
+    const cookies = new Cookies()
     const [oldTeacher, setOldTeacher] = useState<any>('')
     const [newTeacher, setNewTeacher] = useState<any>('')
     const [student, setStudent] = useState<any>('')
     const [allTeacher, setAllTeacher] = useState([])
-    const [allStudent, setAllStudent] = useState([])
+    // const [allStudent, setAllStudent] = useState([])
+    const allStudents = getAllStudents(cookies.get('token'))
     const router = useRouter()
     const toast = useRef<Toast>(null);
     
@@ -24,7 +27,6 @@ export default function replaceTeacher() {
     const showError = (msg: string) => {
         toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 5000});
     }
-    const cookies = new Cookies()
     const getTeachers = () => {
         fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher`, {
             method: "GET",
@@ -38,18 +40,18 @@ export default function replaceTeacher() {
         }).catch(err => console.log(err))
     }
 
-    const getStudents = () => {
-        fetch(`${process.env.NEXT_PUBLIC_APIURL}/user`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${cookies.get("token")}`
-            },
-        }).then(response => response.json()).then(data => {
-            console.log(data)
-            setAllStudent(data.data);
-        }).catch(err => console.log(err))
-    }
+    // const getStudents = () => {
+    //     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user`, {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": `Bearer ${cookies.get("token")}`
+    //         },
+    //     }).then(response => response.json()).then(data => {
+    //         console.log(data)
+    //         setAllStudent(data.data);
+    //     }).catch(err => console.log(err))
+    // }
     const replaceTeacherAction = () => {
         if(!oldTeacher || !student || !newTeacher) {
             return showError("Please choose teacher and student")
@@ -88,7 +90,6 @@ export default function replaceTeacher() {
 
     useEffect(() => {
         getTeachers()
-        getStudents()
     }, [])
 
   return (
@@ -125,7 +126,7 @@ export default function replaceTeacher() {
             </div>
             <Select className="w-full mb-3" onChange={(e) => setStudent(e.target.value)} >
                 <option value="1">Select Student</option>
-                {allStudent.map((student: any) => (
+                {allStudents && allStudents.map((student: any) => (
                     <option key={student.id} value={student.id}>{student.name}</option>
                 ))}
             </Select>

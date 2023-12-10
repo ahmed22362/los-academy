@@ -9,6 +9,11 @@ export const getCurrentTeacher = async (token: any) => {
             },
         });
         const data = await response.json();
-        return data
+        if(data.status === "success") {
+            return data
+        } else {
+            console.log("fetch error")
+            return false
+        }
     }
 }

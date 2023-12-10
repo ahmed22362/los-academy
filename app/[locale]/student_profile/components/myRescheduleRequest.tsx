@@ -3,6 +3,7 @@ import Cookies from "universal-cookie";
 import ContentLoader from "react-content-loader";
 import moment from "moment-timezone";
 import { Toast } from "primereact/toast";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 function MyRescheduleRequest({
   fromStudentProfile,
@@ -35,7 +36,7 @@ function MyRescheduleRequest({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         const pendingRequests = data.data.filter(
           (request: any) => request.status === "pending"
@@ -70,7 +71,7 @@ function MyRescheduleRequest({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         const pendingRequests = data.data.filter(
           (request: any) => request.status === "pending"
@@ -114,6 +115,17 @@ function MyRescheduleRequest({
     });
   };
   // cancel reschedule request
+  const confirm2 = (requestId: number) => {
+    confirmDialog({
+      message: "Do you want to delete this request?",
+      header: "Delete Confirmation",
+      icon: "pi pi-info-circle",
+      rejectClassName: "bg-secondary-color mr-2 text-white px-2 py-1 rounded-md",
+      acceptClassName: "px-3 text-white  bg-red-500 hover:bg-red-600 py-1",
+      accept: () => cancelMyRescheduleRequest(requestId), // Use accept instead of cancelMySessionRequest in accept callback
+      reject: () => {},
+    });
+  };
   const cancelMyRescheduleRequest = (requestId: number) => {
     if (!requestId || isNaN(requestId)) {
       showError("Please enter a valid number for the request!");
@@ -134,7 +146,7 @@ function MyRescheduleRequest({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data.status === "success") {
           showSuccess(data.message);
         } else {
@@ -151,10 +163,11 @@ function MyRescheduleRequest({
   return (
     <div className={`${myReschedule.length>0?"scrollAction":''} sm:h-[120px] max-[400px]:h-[120px] lg:h-[150px]`}>
       <Toast ref={toast} />
-
+      <ConfirmDialog />
       <div className="md:min-h-[190px] max-md:min-h-[150px]  ">
         {loading ? (
           // React Content Loader while data is being fetched
+         <>
           <ContentLoader
             speed={2}
             width={800}
@@ -163,8 +176,8 @@ function MyRescheduleRequest({
             backgroundColor="#f3f3f3"
             foregroundColor="#ecebeb"
           >
-            {/* Add your loader shapes here */}
           </ContentLoader>
+         </>
         ) : (
           <>
             {myReschedule?.length === 0 ? (
@@ -207,7 +220,7 @@ function MyRescheduleRequest({
                       </p> */}
                       {request.newDatesOptions.map(
                         (date: string, i: number) => (
-                          <p
+                          <div
                             className="max-[400px]:flex-col sm:flex-col lg:flex-row  flex gap-2 items-center justify-start"
                             key={i}
                           >
@@ -230,7 +243,7 @@ function MyRescheduleRequest({
                                 "h:mm A"
                               )}
                             </p>
-                          </p>
+                          </div>
                         )
                       )}
                       <p className="my-1  font-medium">
@@ -279,7 +292,7 @@ function MyRescheduleRequest({
                           <div className="flex justify-center items-center">
                             <button
                               onClick={() =>
-                                cancelMyRescheduleRequest(request.id)
+                                confirm2(request.id)
                               }
                               className={`hover:text-white hover:bg-secondary-color px-3 py-1 text-secondary-color border-2 border-[--secondary-color] font-semibold transition-colors  w-fit rounded-full `}
                             >

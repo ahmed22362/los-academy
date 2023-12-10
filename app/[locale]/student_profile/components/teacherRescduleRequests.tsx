@@ -34,7 +34,7 @@ function TeacherRescduleRequests({
     return convertedTime.format(ourFormat);
   };
   useEffect(() => {
-    console.log(ingredient);
+    // console.log(ingredient);
   }, [ingredient]);
 
   const toast = useRef<Toast>(null);
@@ -64,7 +64,7 @@ function TeacherRescduleRequests({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         const pendingRescheduleRequests = data.data.filter(
           (request: any) => request.status === "pending"
@@ -113,7 +113,7 @@ function TeacherRescduleRequests({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data); // Log the response data
+        // console.log(data); // Log the response data
         if (data.status === "success") {
           showSuccess(data.message);
           fetchTeacherRescheduleRequests();
@@ -121,7 +121,7 @@ function TeacherRescduleRequests({
           showError(data.message);
         }
         // Handle success, e.g., update state or show a success message
-        console.log("Reschedule request accepted successfully");
+        // console.log("Reschedule request accepted successfully");
       })
       .catch((error) => {
         showError("some thing went wrong");
@@ -138,7 +138,7 @@ function TeacherRescduleRequests({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
 
         const pendingRescheduleRequests = data.data.filter(
           (request: any) => request.status === "pending"
@@ -184,13 +184,13 @@ function TeacherRescduleRequests({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data); // Log the response data
+        // console.log(data); // Log the response data
         if (data.status === "success") {
           showSuccess(data.message);
           setOpenRescheduleModal(true);
           fetchTeacherRescheduleRequests();
           // Handle success, e.g., update state or show a success message
-          console.log("Reschedule request declined successfully");
+          // console.log("Reschedule request declined successfully");
         } else {
           showError(data.message);
           fetchTeacherRescheduleRequests();
@@ -202,7 +202,7 @@ function TeacherRescduleRequests({
       });
   };
   return (
-    <div className={`${teatcherreschedule.length>0? 'scrollAction':''} h-[150px]`} >
+    <div className={`${teatcherreschedule.length>0? 'scrollAction':''} sm:h-[120px] max-[400px]:h-[120px] lg:h-[150px]`} >
       <RescheduleSession
         setOpenRescheduleModal={setOpenRescheduleModal}
         openRescheduleModal={openRescheduleModal}
@@ -210,9 +210,10 @@ function TeacherRescduleRequests({
         fromTeacherRequest={true}
       />
       <Toast ref={toast} />
-      <div className="md:min-h-[190px] max-md:min-h-[150px] mx-2">
+      <div className="md:min-h-[190px] max-md:min-h-[150px] ">
         {loading ? (
           // React Content Loader while data is being fetched
+          <>
           <ContentLoader
             speed={2}
             width={800}
@@ -224,8 +225,8 @@ function TeacherRescduleRequests({
             <rect x="0" y="0" rx="3" ry="3" width="70" height="10" />
             <rect x="80" y="0" rx="3" ry="3" width="100" height="10" />
             <rect x="190" y="0" rx="3" ry="3" width="10" height="10" />
-            {/* Add more rectangles or shapes as needed */}
           </ContentLoader>
+          </>
         ) : (
           <>
             {teatcherreschedule?.length === 0 ? (

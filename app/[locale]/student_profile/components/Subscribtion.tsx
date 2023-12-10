@@ -54,7 +54,7 @@ export default function Subscribtion({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         setMySubscription(data.data);
         // Set the retrieved Seeions in the state

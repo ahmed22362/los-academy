@@ -7,7 +7,7 @@ import Image from "next/image";
 import RescheduleSession from "./rescheduleSession";
 import MyLoaderContainer from "./MyLoader";
 
-function RemainSessions({ setTeacherName }: any) {
+function RemainSessions() {
   const cookie = new Cookies();
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,9 +47,8 @@ function RemainSessions({ setTeacherName }: any) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setSessions(data.data);
-        setTeacherName(data?.data[0]?.SessionInfo?.teacher.name);
       })
       .catch((error) => {
         console.error("Error fetching sessions:", error);
@@ -115,6 +114,7 @@ function RemainSessions({ setTeacherName }: any) {
                         "MMM D,YYYY"
                       )}
                     </p>
+                    
                     <div className={"  py-1 "}>
                       with teacher:{" "}
                       <span className="font-bold">
@@ -139,13 +139,13 @@ function RemainSessions({ setTeacherName }: any) {
             })}{" "}
           </>
         ) : (
-          <div className="flex justify-center mt-5 items-center flex-col gap-5">
+          <div className="flex justify-center mt-2 items-center flex-col gap-5">
             <p className="font-meduim"> No Remmain Sessions</p>
             <Image
               src={"/vectors/list.png"}
               alt="no upcoming session"
-              width={150}
-              height={100}
+              width={120}
+              height={90}
             />
           </div>
         )}

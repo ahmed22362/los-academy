@@ -6,6 +6,7 @@ import jsPDF from "jspdf";
 import ReportModal from "../teacher/components/reportModal";
 import ReportData from "../teacher/components/reportData";
 import ContentLoader from "react-content-loader";
+import Image from "next/image";
 
 function MyReports() {
   const [myReports, setMyReports] = useState<any[]>([]);
@@ -62,7 +63,7 @@ function MyReports() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         // Set the retrieved reports in the state
         setMyReports(data.data);
         setLoading(false);
@@ -118,7 +119,10 @@ function MyReports() {
         ))
       ) : (
         // Display "No reports" message if there are no reports
+        <div className="flex flex-col gap-3 items-center">
         <p className="text-center">No reports</p>
+        <Image src={'/vectors/no_report.png'} width={90} height={80} alt="no reports"/>
+        </div>
       )}
       <ReportModal
         openAssignModal={selectedReport}

@@ -34,7 +34,30 @@ function TeacherUbsent() {
       .tz(outputTimezone);
     return convertedTime.format(ourFormat);
   };
+
+ const fetchTeacherUbsentSession=()=>{
+  fetch(
+    `${process.env.NEXT_PUBLIC_APIURL}/user/mySessions?status=teacher_absent`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`,
+      },
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      // console.log(data.data);
+
+      setTeacherUbsentSessions(data.data);
+
+    })
+    .catch((error) => {
+      console.error("Error fetching sessions:", error);
+    });
+  }
   useEffect(() => {
+    
     fetch(
       `${process.env.NEXT_PUBLIC_APIURL}/user/mySessions?status=teacher_absent`,
       {
@@ -46,7 +69,7 @@ function TeacherUbsent() {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
 
         // Assuming data.data contains the sessions
         setTeacherUbsentSessions(data.data);
@@ -57,6 +80,13 @@ function TeacherUbsent() {
         console.error("Error fetching sessions:", error);
       });
   }, []);
+
+  useEffect(() => {
+   
+      fetchTeacherUbsentSession();
+    
+  }, [openRescheduleModal])
+  
 
   return (
     <>

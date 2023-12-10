@@ -16,7 +16,7 @@ function CommunityStatistics() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         setHistorySeesions(data);
         // Set the retrieved Seeions in the state

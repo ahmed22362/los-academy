@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Chart } from "primereact/chart";
 
-export default function OurChart({ ...props }: any) {
+export default function TeacherChart({ ...props }: any) {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
   const totalSessions = props.totalSessions;

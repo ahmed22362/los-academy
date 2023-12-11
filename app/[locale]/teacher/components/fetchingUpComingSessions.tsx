@@ -1,41 +1,10 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import Cookies from "universal-cookie";
+import { getUpComingSession } from "@/utilities/getUpComingSession";
+import { cookies } from "next/headers";
 import OnGoingBox from "./onGoingBox";
-import { Spinner } from "flowbite-react";
-// import {io} from 'socket.io-client';
 
-export default function FetchingUpComingSessions() {
-  const [sessions, setAllSessions] = useState<any>([]);
-
-  const [isLoading, setIsLoading] = useState(true);
-  const cookies = new Cookies();
-  const url = "https://eydnaq-ip-41-46-4-25.tunnelmole.net/";
-
-  const getUpComingSession = () => {
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/upcomingSession`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log(data)
-        setAllSessions(data.data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    getUpComingSession();
-  }, []);
+export default async function FetchingUpComingSessions() {
+  const token = cookies().get("token")?.value.toString();
+  const upComingSession = await getUpComingSession(token);
 
   return (
     <section className="w-full">
@@ -47,10 +16,9 @@ export default function FetchingUpComingSessions() {
         <h3 className={"adminBoxTitle"}>
           Are you here and ready for the session ?
         </h3>
-        {isLoading ? (
-          <Spinner />
-        ) : sessions && sessions.length > 0 ? (
-          sessions.map((session: any, index: number) => (
+
+        {upComingSession && upComingSession.length > 0 ? (
+          upComingSession?.data.map((session: any, index: number) => (
             <OnGoingBox session={session} key={index} />
           ))
         ) : (
@@ -58,16 +26,6 @@ export default function FetchingUpComingSessions() {
             No Upcoming Sessions for now{" "}
           </p>
         )}
-        {/* 
-            {onGoingSession && onGoingSession.length > 0 ? onGoingSession.map((session: any, index: number) => {
-
-                return (
-                    <div>
-                        <Link href={session.meetingLink} className="text-success-color hover:underline" target="_blank">Goin Meeting</Link>
-                    </div>
-                )
-            }   
-            ) : ""} */}
       </div>
     </section>
   );

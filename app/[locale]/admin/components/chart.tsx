@@ -8,13 +8,13 @@ export default function OurChart({ ...props }: any) {
   const [chartOptions, setChartOptions] = useState({});
   const totalSessions = props.totalSessions;
   const absentSessions = Math.floor(
-    (props.teacherStatistics[2].count / totalSessions) * 100
+    (props.teacherStatistics[2]?.count / totalSessions) * 100
   );
   const attendSessions = Math.floor(
-    (props.teacherStatistics[1].count / totalSessions) * 100
+    (props.teacherStatistics[1]?.count / totalSessions) * 100
   );
   const pendingSessions = Math.floor(
-    (props.teacherStatistics[0].count / totalSessions) * 100
+    (props.teacherStatistics[0]?.count / totalSessions) * 100
   );
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);

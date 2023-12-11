@@ -1,4 +1,5 @@
-import OurChart from "@/app/[locale]/admin/components/chart";
+import TeacherChart from "@/app/[locale]/teacher/components/teacherChart";
+import OurChart from "@/app/[locale]/teacher/components/teacherChart";
 import { getMyStatistics } from "@/utilities/getTeacherStatistics";
 import { getMyAllSessions } from "@/utilities/teacherGetMyAllSessions";
 import { cookies } from "next/headers";
@@ -17,7 +18,7 @@ export default async function Attendance() {
         <h3 className={"text-black-color-one font-semibold text-[16px]"}>
           Attendance Overview
         </h3>
-        <OurChart
+        <TeacherChart
           totalSessions={totalSessions.length}
           teacherStatistics={myStatistics.data}
         />

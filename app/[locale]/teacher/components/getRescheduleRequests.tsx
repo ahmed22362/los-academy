@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import SessionData from "./sessionData";
@@ -9,51 +9,59 @@ export default function RescheduleSessions() {
   const [allSessions, setAllSessions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
-  
+
   const getReschedualSession = () => {
-
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/receivedRescheduleRequests?status=pending`, {
-      
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${cookies.get("token")}`,
-      },
-    }).then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      setAllSessions(data.data);
-      setIsLoading(false);
-    }).catch((err) => {
-      console.log(err);
-    })
-  }
-
+    fetch(
+      `${process.env.NEXT_PUBLIC_APIURL}/teacher/receivedRescheduleRequests?status=pending`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log(data);
+        setAllSessions(data.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
-    getReschedualSession()
-  }, [])
+    getReschedualSession();
+  }, []);
 
-  const updateComponet = () =>{
-    getReschedualSession()
-  }
-
+  const updateComponet = () => {
+    getReschedualSession();
+  };
 
   return (
     <div className={"adminBox w-full h-[350px] flex-col mb-5"}>
       <h3 className={"adminBoxTitle"}>Reschedule Sessions</h3>
       <div className="w-full flex-col gap-2 h-[300px] scrollAction ">
-        {isLoading 
-          ? 
-            (<Spinner />) 
-            :
-              allSessions && allSessions.length > 0 ? allSessions.map((report: any, index: number) => {
+        {isLoading ? (
+          <Spinner />
+        ) : allSessions && allSessions.length > 0 ? (
+          allSessions.map((report: any, index: number) => {
             return (
-                <SessionData data={report} key={index} updateComponent={updateComponet}/>
-            )
-            }) : <p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">No Sessions</p>}
-        </div>
+              <SessionData
+                data={report}
+                key={index}
+                updateComponent={updateComponet}
+              />
+            );
+          })
+        ) : (
+          <p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">
+            No Sessions
+          </p>
+        )}
+      </div>
     </div>
-  )
+  );
 }
-

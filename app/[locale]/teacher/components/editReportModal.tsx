@@ -24,11 +24,10 @@ export default function EditReportModal({
   handleCloseModal,
   reportDetails,
 }: {
-    reportDetails: any;
-    openAssignModal: boolean;
-    handleCloseModal: () => void;
+  reportDetails: any;
+  openAssignModal: boolean;
+  handleCloseModal: () => void;
 }) {
-  
   const report = reportDetails && reportDetails;
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -63,10 +62,6 @@ export default function EditReportModal({
       life: 4000,
     });
   };
-
-  useEffect(() => {
-    console.log(report)
-  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | any) => {
@@ -125,7 +120,7 @@ export default function EditReportModal({
 
     if (Object.keys(updatedFields).length === 0) {
       setIsProcessing(false);
-      showError('No updates made');
+      showError("No updates made");
       return;
     }
 
@@ -141,7 +136,7 @@ export default function EditReportModal({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data.status === "success") {
           showSuccess(data.message);
           router.refresh();

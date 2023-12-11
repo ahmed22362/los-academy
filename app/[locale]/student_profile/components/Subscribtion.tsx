@@ -17,7 +17,7 @@ export default function Subscribtion({
   const token = cookie.get("token");
   const [mySubscription, setMySubscription] = useState<any>({});
   const [showSubscriptionDetails, setShowSubscriptionDetails] = useState(true);
-  const [openPlansModal, setOpenPlansModal] = useState<boolean>(false)
+  const [openPlansModal, setOpenPlansModal] = useState<boolean>(false);
   const handleCancelSubscriptionClick = () => {
     setShowSubscriptionDetails(false);
   };
@@ -79,6 +79,8 @@ useEffect(() => {
         openPlansModal={openPlansModal}
         setOpenPlansModal={setOpenPlansModal}
       />
+
+      {/* <Button onClick={() => setOpenSubscribtionModal(true)}>Toggle Subscription modal</Button> */}
       <Modal
         show={openSubscribtionModal}
         className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "

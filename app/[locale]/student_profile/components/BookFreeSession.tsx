@@ -51,6 +51,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
     }
 
     const selectedDates = freedatetime12h.map((date) => date.toISOString());
+
     const selectedCourseTitles = selectedCourses.map((course) => course.title.toLowerCase());
 
       const requestBody = {
@@ -78,7 +79,6 @@ function BookFreeSession({ setOpenBookModal }: any) {
           setIsProcessing(false);
           showErrorMessage(data.message);
         }
-       
       })
       .catch((error) => {
         // console.error("Error fetching Free sessions:", error);
@@ -92,8 +92,8 @@ function BookFreeSession({ setOpenBookModal }: any) {
 
   return (
     <div className=" flex justify-center flex-col items-center gap-5">
-       <div className="courses w-full flex justify-center">
-        <ViewCourses onSelectCourses={handleSelectCourses}/>
+      <div className="courses w-full flex justify-center">
+        <ViewCourses onSelectCourses={handleSelectCourses} />
       </div>
       <Calendar
         value={freedatetime12h}

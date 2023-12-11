@@ -3,18 +3,18 @@
 import React, { useState, useEffect } from "react";
 import { Chart } from "primereact/chart";
 
-export default function OurChart({ ...props }: any) {
+export default function TeacherChart({ ...props }: any) {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
   const totalSessions = props.totalSessions;
   const absentSessions = Math.floor(
-    (props.teacherStatistics[2].count / totalSessions) * 100
+    (props.teacherStatistics[2]?.count / totalSessions) * 100
   );
   const attendSessions = Math.floor(
-    (props.teacherStatistics[1].count / totalSessions) * 100
+    (props.teacherStatistics[1]?.count / totalSessions) * 100
   );
   const pendingSessions = Math.floor(
-    (props.teacherStatistics[0].count / totalSessions) * 100
+    (props.teacherStatistics[0]?.count / totalSessions) * 100
   );
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);

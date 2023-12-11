@@ -39,7 +39,7 @@ export default function page() {
   const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
 
   const [myInfo, setMyInfo] = useState<UserInfo | undefined>();
-  const [mySubscription, setMySubscription] = useState<any>([]);
+  const [mySubscription, setMySubscription] = useState<any[]>([]);
   const router = useRouter();
   const [start, setStart] = useState<boolean>(false);
   const [pendingSessionRequest, setPendingSessionRequest] = useState<Session[]>([]);
@@ -57,8 +57,9 @@ export default function page() {
       .then((response) => response.json())
       .then((data) => {
         // console.log(data);
-
+          if(data.status==="success"){
         setMySubscription(data.data);
+          }
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
@@ -248,7 +249,7 @@ export default function page() {
         openContinueWithModal={openContinueWithModal}
         setOpenContinueWithModal={setOpenContinueWithModal}
       />
-      {mySubscription.lenght>0?  (
+      {mySubscription?.length>0?  (
         <BannerComponent
           message={"You Want To Enjoy Sessions?"}
           animation={"animate-bounce"}

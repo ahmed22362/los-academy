@@ -39,24 +39,56 @@ export default function page() {
   const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
 
   const [myInfo, setMyInfo] = useState<UserInfo | undefined>();
-  const [teacherName, setTeacherName] = useState("");
-  const [showBanner, setShowBanner] = useState(true);
+  const [mySubscription, setMySubscription] = useState<any>([]);
   const router = useRouter();
   const [start, setStart] = useState<boolean>(false);
   const [pendingSessionRequest, setPendingSessionRequest] = useState<Session[]>([]);
+  const [teacherUbsentSessions, setTeacherUbsentSessions] = useState<any[]>([]);
 
   const cookie=new Cookies();
 
   useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySubscription`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log(data);
 
-    if (myInfo?.sessionPlaced === false) {
-      // Display tips for the first visit
-
-      setShowBanner(true);
-      // Set the flag to indicate that the user has seen the tips
-    }
+        setMySubscription(data.data);
+        // Set the retrieved Seeions in the state
+      })
+      .catch((error) => {
+        console.error("Error fetching sessions:", error);
+      });
   }, []);
   
+  useEffect(() => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_APIURL}/user/mySessions?status=teacher_absent`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${cookie.get("token")}`,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+
+        // Assuming data.data contains the sessions
+        setTeacherUbsentSessions(data.data);
+
+        // Assuming data.data.status contains the status
+      })
+      .catch((error) => {
+        console.error("Error fetching sessions:", error);
+      });
+  }, []);
+
   const convertDateTimeZone = (
     inputTime: moment.MomentInput,
     inputTimezone: string,
@@ -71,7 +103,7 @@ export default function page() {
   };
   useEffect(() => {
     const isFirstVisit = cookie.get("FirstVisit") === undefined;
-console.log(isFirstVisit);
+// console.log(isFirstVisit);
 
     if (isFirstVisit===true) {
       // Display Joyride only on the first visit
@@ -92,7 +124,7 @@ console.log(isFirstVisit);
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         
         const sortedSessions = data.data.map((session: Session) => ({
           ...session,
@@ -111,7 +143,7 @@ console.log(isFirstVisit);
           return dateB.getTime() - dateA.getTime();
         });
 
-        console.log("sorted session requests ",sortedSessions);
+        // console.log("sorted session requests ",sortedSessions);
         const pendingSessions = sortedSessions.filter((session :Session) => session.status === "pending");
         setPendingSessionRequest(pendingSessions);
         // Set the retrieved Seeions in the state
@@ -129,14 +161,14 @@ console.log(isFirstVisit);
     const currentPageUrl = window.location.href;
 
     // Log the current page's URL to the console
-    console.log(`Current page URL: ${currentPageUrl}`);
+    // console.log(`Current page URL: ${currentPageUrl}`);
 
     // Parse the URL to get the query parameters
     const urlSearchParams = new URLSearchParams(window.location.search);
     const fromUserContinueParam = urlSearchParams.get("fromUserContinue");
 
     // Log the query parameter to the console
-    console.log(`fromUserContinue parameter: ${fromUserContinueParam}`);
+    // console.log(`fromUserContinue parameter: ${fromUserContinueParam}`);
 
     // Check if the query parameter is true
     if (fromUserContinueParam === "true") {
@@ -181,7 +213,7 @@ console.log(isFirstVisit);
   ]);
 
   useEffect(() => {
-    console.log(pendingSessionRequest);
+    // console.log(pendingSessionRequest);
     
     AOS.init({
       duration: 800,
@@ -216,7 +248,7 @@ console.log(isFirstVisit);
         openContinueWithModal={openContinueWithModal}
         setOpenContinueWithModal={setOpenContinueWithModal}
       />
-      {myInfo?.sessionPlaced===false?  (
+      {mySubscription.lenght>0?  (
         <BannerComponent
           message={"You Want To Enjoy Sessions?"}
           animation={"animate-bounce"}
@@ -230,15 +262,17 @@ console.log(isFirstVisit);
         <div className="card w-full  ">
           <EditProfile setMyInfo={setMyInfo} />
           <div className="">
+          <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}>
+            </h3>
           <div
             className={`my-11 p-3 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	rescheduling_section`}
           >
-            <h3 className={`${styles.secondary_head} mb-3`}>
+            <h3 className={`${styles.secondary_head} mb-3 mt-2 ml-2`}>
               Reschedule Requests{" "}
             </h3>
 
-            <div data-aos="fade-up" className="h-[250px]   ">
-              <RescheduleRequests />
+            <div data-aos="fade-up" className=" ">
+              <RescheduleRequests  fromStudentProfile={true} />
             </div>
           </div>
             <div
@@ -251,7 +285,10 @@ console.log(isFirstVisit);
                 <CommunityStatistics />
               </div>
             </div>
-            <div
+            {teacherUbsentSessions.length>0? 
+            (
+              <>
+               <div
             className={`mr-1  mb-10 mt-10  p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] 	`}
           >
             <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}>
@@ -267,19 +304,6 @@ console.log(isFirstVisit);
               <TeacherUbsent />
             </div>
           </div>
-            {pendingSessionRequest.length>0 ? (
-              <>
-               <div
-               data-aos="fade-up"
-              className={` mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full remain_sessions_section`}
-            >
-               <h4 className={`${styles.secondary_head} mb-5 ml-3`}>
-                Your Session Requests :
-              </h4>
-              <div className="scrollAction mx-2 h-[250px]">
-                <SessionsRequest  />
-              </div>
-              </div>
               </>
             ):''}
            
@@ -300,12 +324,10 @@ console.log(isFirstVisit);
             >
               <h4 className={`${styles.secondary_head} pb-2`}>
                 Remain Sessions:{" "}
-                <span className="font-bold font-italic">
-                  with teacher: {teacherName}
-                </span>{" "}
+               
               </h4>
               <div data-aos="fade-up">
-                <RemainSessions setTeacherName={setTeacherName} />
+                <RemainSessions  />
               </div>
             </div>
           <div
@@ -330,26 +352,26 @@ console.log(isFirstVisit);
             className={`mr-1  p-3  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] reports_section	`}
           >
             <h4 className={`${styles.secondary_head} ml-3 my-2`}>My Reports</h4>
-            <div data-aos="fade-right" className="h-[160px]">
+            <div data-aos="fade-right" className="scrollAction h-[160px]">
               <MyReports />
             </div>
           </div>
-          <div
-            className={`mr-1  mb-10 mt-10  p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] 	`}
-          >
-            <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}>
-              Teacher Absent Sessions
-            </h3>
-            <div
-              data-aos="fade-up"
-              data-aos-anchor="#example-anchor"
-              data-aos-offset="500"
-              data-aos-duration="500"
-              className="h-[300px] teacher_ubsent_section scrollAction "
+          {pendingSessionRequest.length>0 ? (
+              <>
+               <div
+               data-aos="fade-up"
+              className={` mb-10 mt-10  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px] p-5 pb-10 w-full remain_sessions_section`}
             >
-              <TeacherUbsent />
-            </div>
-          </div>
+               <h4 className={`${styles.secondary_head} mb-5 ml-3`}>
+                Your Session Requests :
+              </h4>
+              <div className="scrollAction mx-2 h-[250px]">
+                <SessionsRequest fromStudentProfile={true} />
+              </div>
+              </div>
+              </>
+            ):''}
+           
         </div>
       </div>
     </main>

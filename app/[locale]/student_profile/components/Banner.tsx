@@ -10,13 +10,13 @@ function BannerComponent({
 }: any) {
   const [openPlansModal, setOpenPlansModal] = useState<boolean>(false);
   return (
-    <div className="flex justify-center items-center ">
+    <div className="flex  justify-center items-center ">
       <Banner
         className={`ml-5  ${animation} hover:animate-none transition-all duration-300`}
       >
-        <div className="flex  ml-5 w-[calc(100%-2rem)] mb-5  justify-between rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-600 dark:bg-gray-700 md:flex-row lg:max-w-7xl">
+        <div className="flex sm:flex-col lg:flex-row   max-[400px]:flex-col  ml-5 w-[calc(100%-2rem)] mb-5  justify-between rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-600 dark:bg-gray-700 md:flex-row lg:max-w-7xl">
           <div
-            className={`mb-3 mr-4 flex md:gap-3 ${
+            className={`mb-3 mr-4 sm:flex-col lg:flex-row max-[400px]:flex-col flex md:gap-3 ${
               fromTeacherRequest ? "md:flex-col" : ""
             } items-start md:mb-0  md:items-center`}
           >
@@ -36,7 +36,7 @@ function BannerComponent({
             <div className="flex flex-shrink-0 items-center">
               <button
                 onClick={() => setOpenPlansModal(true)}
-                className="text-white px-3 py-3 rounded-xl bg-[--secondary-color] hover:bg-[#3f3aa6]"
+                className="text-white px-3 sm:px-2 lg:px-3 lg:py-3 lg:text-md max-[400px]:px-2 sm:py-2 max-[400px]:py-2 sm:text-sm max-[400px]:text-sm py-3 rounded-xl bg-[--secondary-color] hover:bg-[#3f3aa6]"
               >
                 Subscribe Now
               </button>

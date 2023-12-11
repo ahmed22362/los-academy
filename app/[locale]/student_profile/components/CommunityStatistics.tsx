@@ -16,7 +16,7 @@ function CommunityStatistics() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         setHistorySeesions(data);
         // Set the retrieved Seeions in the state
@@ -28,16 +28,16 @@ function CommunityStatistics() {
 
   return (
     <div>
-      <div className={`flex justify-center gap- items-center mt-10`}>
+      <div className={`flex justify-center gap-3 items-center mt-10 overflow-hidden`}>
         <div
-          className="bg-secondary-color text-center  hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 lg:px-10  rounded-3xl  mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
+          className="bg-secondary-color max-sm:px-2  sm:px-4 w-fit text-center md:px-2 max-[400px]:px-1 max-[400px]:py-4  hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 lg:px-10  rounded-3xl  mx-auto "
           
         >
           <span className="block text-center">Done</span>
-          {`  ${historySeesions?.length || 0} Sessions`}
+          {`  (${historySeesions?.length || 0})Sessions`}
           </div>
         <div
-          className="bg-secondary-color text-center hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 lg:px-10  rounded-3xl  mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
+          className="bg-secondary-color sm:px-4 max-sm:px-2 w-fit text-center md:px-2 hover:bg-secondary-hover text-sm max-[400px]:px-1 max-[400px]:py-4 font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 lg:px-10  rounded-3xl  mx-auto "
         >
           <span className="block text-center">
           Attendence

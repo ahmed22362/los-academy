@@ -7,7 +7,6 @@ import RescheduleSession from "./rescheduleSession";
 function TeacherUbsent() {
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
   const [teacherUbsentSessions, setTeacherUbsentSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
@@ -35,19 +34,42 @@ function TeacherUbsent() {
       .tz(outputTimezone);
     return convertedTime.format(ourFormat);
   };
+
+ const fetchTeacherUbsentSession=()=>{
+  fetch(
+    `${process.env.NEXT_PUBLIC_APIURL}/user/mySessions?status=teacher_absent`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`,
+      },
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      // console.log(data.data);
+
+      setTeacherUbsentSessions(data.data);
+
+    })
+    .catch((error) => {
+      console.error("Error fetching sessions:", error);
+    });
+  }
   useEffect(() => {
+    
     fetch(
       `${process.env.NEXT_PUBLIC_APIURL}/user/mySessions?status=teacher_absent`,
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${cookie.get("token")}`,
         },
       }
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
 
         // Assuming data.data contains the sessions
         setTeacherUbsentSessions(data.data);
@@ -58,6 +80,13 @@ function TeacherUbsent() {
         console.error("Error fetching sessions:", error);
       });
   }, []);
+
+  useEffect(() => {
+   
+      fetchTeacherUbsentSession();
+    
+  }, [openRescheduleModal])
+  
 
   return (
     <>
@@ -116,7 +145,7 @@ function TeacherUbsent() {
                         </span>
                       </div>
                     </div> */}
-                    <div className="flex justify-between items-center">
+                    <div className="flex  justify-between items-center sm:flex-col gap-3 xl:gap-0 xl:flex-row max-[400px]:flex-col">
                     <div className="flex flex-col justify-center items-start">
                     <p className=" font-medium">
                       Teacher Name: {sessionInfo?.SessionInfo?.teacher?.name}

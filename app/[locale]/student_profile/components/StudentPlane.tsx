@@ -1,16 +1,17 @@
 import React, { useRef, useState } from "react";
-import { Card } from "flowbite-react";
+import { Button, Card } from "flowbite-react";
 import Cookies from "universal-cookie";
 import { useRouter } from "next/navigation";
 import CustomPlanModal from "../../components/PriceModal/customPlanModal";
 import { Toast } from "primereact/toast";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
 interface StudentPlaneProps {
   title: string;
   price: number;
   features: string[];
   recommended?: boolean;
   planId?: number;
-  continueFlag?:boolean
+  continueFlag?: boolean;
 }
 
 const StudentPlane: React.FC<StudentPlaneProps> = ({
@@ -19,7 +20,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
   features = [],
   recommended,
   planId,
-  continueFlag
+  continueFlag,
 }) => {
   const router = useRouter();
   const toast = useRef<Toast>(null);
@@ -28,7 +29,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
       severity: "success",
       summary: "Success",
       detail: msg,
-      life: 5000,
+      life: 7000,
     });
   };
   const showError = (msg: string) => {
@@ -36,28 +37,30 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
       severity: "error",
       summary: "Error",
       detail: msg,
-      life: 4000,
+      life: 7000,
     });
   };
   const url = process.env.NEXT_PUBLIC_APIURL;
   const cookie = new Cookies();
   const token = cookie.get("token");
   const [openCustomPlan, setOpenCustomPlan] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+
   const handleClose = () => {
     setOpenCustomPlan(false);
   };
   const handleCustomPlan = () => {
     // Ensure that a planId is provided before making the API request
     if (planId === undefined || planId === null) {
-      console.error("Invalid planId");
+      // console.error("Invalid planId");
       return;
     }
 
     const customPlanData = {
       planId: planId,
-      continueFlag:continueFlag 
+      continueFlag: continueFlag,
     };
-
+    setIsProcessing(true);
     fetch(`${url}/subscription/`, {
       method: "POST",
       headers: {
@@ -68,16 +71,20 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        setIsProcessing(false);
+        // console.log(data);
         if (data.status == "success") {
           showSuccess('You Will Redirect To "Pay"');
           setTimeout(() => {
-            router.push(`${data?.data?.stripeCheckSession?.url}`);
+            router.push(`${data?.data?.url}`);
           }, 3000);
+        } else {
+          setIsProcessing(false);
+          showError(data.message);
         }
       })
       .catch((error) => {
-        console.error("Error creating custom plan:", error);
+        // console.error("Error creating custom plan:", error);
       });
   };
   return (
@@ -118,35 +125,28 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
           {features &&
             features.map((feature, index) => (
               <li key={index} className="flex space-x-3">
-                <svg
-                  className="h-5 w-5 shrink-0 text-[--secondary-color] dark:text-cyan-500"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+               <IoCheckmarkCircleSharp  className="text-secondary-color text-lg"/>
                 <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
                   {feature}
                 </span>
               </li>
             ))}
         </ul>
-        <button
+
+        <Button
+          isProcessing={isProcessing}
           onClick={
-            title ==="Customize your Plan"
+            title === "Customize your Plan"
               ? () => setOpenCustomPlan(true)
               : handleCustomPlan
           }
+          pill
+          color="purple"
           type="button"
-          className="w-[150px] justify-center rounded-full bg-[--secondary-color] py-2.5 text-center text-sm font-medium text-white hover:bg-[#625ee6] m-auto focus:outline-none focus:ring-4 focus:ring-cyan-200 dark:focus:ring-cyan-900"
+          className=" justify-center rounded-full bg-[--secondary-color] hover:bg-[#625ee6]  py-2.5 text-center text-sm font-medium text-white  m-auto focus:outline-none focus:ring-4"
         >
           {title == "Customize your Plan" ? "Get Started" : "Get this plan"}
-        </button>
+        </Button>
         <CustomPlanModal
           targetComponent={1}
           handleCloseModal={handleClose}

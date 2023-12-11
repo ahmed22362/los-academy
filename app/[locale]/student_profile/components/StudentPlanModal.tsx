@@ -2,7 +2,6 @@
 
 import { Button, Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import { BsPeople, BsPerson } from "react-icons/bs";
 import StudentPlane from "./StudentPlane";
 import PrimaryButton from "../../components/PrimaryButton";
@@ -13,18 +12,18 @@ interface Plan {
   price: number;
   features: string[];
 }
-export default function StudentPlanModal({
-  openPlansModal,
-  setOpenPlansModal,
-}: any ,continueFlag?:any) {
-
+export default function StudentPlanModal(
+  { openPlansModal, setOpenPlansModal }: any,
+  continueFlag?: any
+) {
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
   const token = cookie.get("token");
 
   const [allPlans, setAllPlan]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [openContinueWithModal, setopenContinueWithModal] = useState<boolean>(false);
+  const [openContinueWithModal, setopenContinueWithModal] =
+    useState<boolean>(false);
 
   useEffect(() => {
     // Fetch plans from the backend API
@@ -38,36 +37,18 @@ export default function StudentPlanModal({
         .then((response) => response.json())
         .then((data) => {
           const sortedData = data.data.sort((x: any, y: any) => x.id - y.id);
-          console.log(sortedData);
+          // console.log(sortedData);
           setAllPlan(sortedData);
           setIsLoading(false);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
           setIsLoading(false);
         });
     };
 
     fetchAllPlans();
   }, []);
-
-  const customeTheme: CustomFlowbiteTheme = {
-    tab: {
-      tablist: {
-        base: "flex justify-center items-center m-auto w-auto bg-secondary-color rounded-full px-12 py-2",
-        tabitem: {
-          styles: {
-            pills: {
-              active: {
-                on: "rounded-full bg-white focus:ring-0 text-black px-8 py-2",
-                off: "rounded-full px-8 py-2 focus:ring-0 bg-secondary-color hover:bg-white hover:text-black text-white transition-colors",
-              },
-            },
-          },
-        },
-      },
-    },
-  };
 
   const activePlans = allPlans.filter((plan: any) => plan.active);
   let numberOfPlans = activePlans.length;

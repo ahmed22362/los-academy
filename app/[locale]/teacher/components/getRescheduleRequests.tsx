@@ -18,7 +18,7 @@ export default async function RescheduleSessions() {
           })
         ) : (
           <p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">
-            No Sessions
+            No Reschedule Requests
           </p>
         )}
       </div>

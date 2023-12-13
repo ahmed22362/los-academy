@@ -7,7 +7,7 @@ import Image from "next/image";
 import RescheduleSession from "./rescheduleSession";
 import MyLoaderContainer from "./MyLoader";
 
-function RemainSessions({ setTeacherName }: any) {
+function RemainSessions() {
   const cookie = new Cookies();
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,9 +47,8 @@ function RemainSessions({ setTeacherName }: any) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setSessions(data.data);
-        setTeacherName(data?.data[0]?.SessionInfo?.teacher.name);
       })
       .catch((error) => {
         console.error("Error fetching sessions:", error);
@@ -84,11 +83,11 @@ function RemainSessions({ setTeacherName }: any) {
               return (
                 <div
                   key={index}
-                  className={`${styles.session} bg-white-color px-2 rounded-2xl py-3 w-full  flex justify-between items-center gap- my-3`}
+                  className={`${styles.session} bg-white-color px-2 rounded-2xl py-3 w-full sm:flex-col lg:flex-row max-[400px]:flex-col flex justify-between items-center gap- my-3`}
                 >
                   <div>
                     <p className="">Session #{session.id}</p>
-                    <p className="">
+                    <p className="max-lg:text-sm">
                       Time:{" "}
                       {convertDateTimeZone(
                         session.sessionDate,
@@ -115,6 +114,7 @@ function RemainSessions({ setTeacherName }: any) {
                         "MMM D,YYYY"
                       )}
                     </p>
+                    
                     <div className={"  py-1 "}>
                       with teacher:{" "}
                       <span className="font-bold">
@@ -129,7 +129,7 @@ function RemainSessions({ setTeacherName }: any) {
                       check ? "gray-500" : "[--secondary-color]"
                     } hover:bg-${
                       check ? "gray-500" : "[#453ed2]"
-                    } h-fit text-sm rounded-full py-1 text-white px-4`}
+                    } h-fit text-sm rounded-full py-2 text-white px-4`}
                     disabled={check}
                   >
                     Reschedule
@@ -139,13 +139,13 @@ function RemainSessions({ setTeacherName }: any) {
             })}{" "}
           </>
         ) : (
-          <div className="flex justify-center mt-5 items-center flex-col gap-5">
+          <div className="flex justify-center mt-2 items-center flex-col gap-5">
             <p className="font-meduim"> No Remmain Sessions</p>
             <Image
               src={"/vectors/list.png"}
               alt="no upcoming session"
-              width={150}
-              height={100}
+              width={120}
+              height={90}
             />
           </div>
         )}
@@ -153,8 +153,8 @@ function RemainSessions({ setTeacherName }: any) {
       <RescheduleSession
         sessionId={selectedSessionId}
         openRescheduleModal={openRescheduleModal}
-        setOpenRescheduleModal={setOpenRescheduleModal} // <-- Correct casing here
-        fromTeacherRequest={true}
+        setOpenRescheduleModal={setOpenRescheduleModal} 
+        fromTeacherRequest={false}
         />
     </div>
   );

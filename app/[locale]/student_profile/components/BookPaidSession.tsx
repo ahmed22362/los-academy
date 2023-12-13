@@ -6,6 +6,7 @@ import { Nullable } from "primereact/ts-helpers";
 import PrimaryButton from "../../components/PrimaryButton";
 import { Toast } from "primereact/toast";
 import ViewCourses from "./viewCourses";
+import { Button } from "flowbite-react";
 
 function BookPaidSession({ setOpenBookModal }: any) {
   const [datetime12h, setDateTime12h] = useState<Nullable<Date> | any>(null);
@@ -13,12 +14,15 @@ function BookPaidSession({ setOpenBookModal }: any) {
   const handleSelectCourses = (courses: any[]) => {
     setSelectedCourses(courses);
   };
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
   const token = cookie.get("token");
 
   const handleBookClick = () => {
+    
     if (
       !datetime12h ||
       !Array.isArray(datetime12h) ||
@@ -36,7 +40,7 @@ function BookPaidSession({ setOpenBookModal }: any) {
         sessionDates: selectedDates,
         courses: selectedCourseTitles,
       };
-
+      setIsProcessing(true);
       fetch(`${url}/session/paid/request`, {
         method: "POST",
         headers: {
@@ -47,7 +51,7 @@ function BookPaidSession({ setOpenBookModal }: any) {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          setIsProcessing(false);
           if (data.status == "success") {
             showSuccessMessage("Booking successful");
             setTimeout(() => {
@@ -55,7 +59,7 @@ function BookPaidSession({ setOpenBookModal }: any) {
             }, 3000);
           } else {
             showErrorMessage(data.message);
-           
+          setIsProcessing(false);
           }
 
           // Process the response as needed
@@ -104,11 +108,19 @@ function BookPaidSession({ setOpenBookModal }: any) {
       />
      
       <div>
-        <PrimaryButton
-          onClick={handleBookClick}
-          ourStyle="bg-secondary-color hover:bg-[#3b369a] text-white w-[250px]	py-3 border rounded-3xl text-md px-10	 transition-all	duration-500 "
-          text="Book Paid Sessions"
-        />
+      <Button
+        onClick={handleBookClick}
+        color="purple"
+        isProcessing={isProcessing}
+        pill
+        size="sm"
+        className={
+          "bg-secondary-color hover:bg-[#3b369a] text-white 	py-2 border rounded-3xl text-md px-10	 transition-all	duration-500 "
+        }
+      >
+        <p>Book Paid Sessions</p>
+      </Button>
+     
       </div>
       
       <Toast ref={toast} />

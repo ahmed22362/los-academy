@@ -78,7 +78,7 @@ function UpcomingSessions() {
       sessionId: Number(sessionId),
       willContinue: true,
     };
-    console.log(continueData);
+    // console.log(continueData);
 
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
       method: "POST",
@@ -90,10 +90,10 @@ function UpcomingSessions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         if (data.status === "success") {
-          console.log("POST request successful:", data);
+          // console.log("POST request successful:", data);
           toast.current?.show({
             severity: "info",
             summary: "Confirmed",
@@ -104,17 +104,17 @@ function UpcomingSessions() {
             setOpenPlansModal(true);
           }, 3000);
         } else {
-          console.error(data);
+          // console.error(data);
           // Handle error if needed
         }
       })
       .catch((error) => {
-        console.error("Error during POST request:", error);
+        // console.error("Error during POST request:", error);
       });
   };
 
   const reject = (sessionId: any) => {
-    console.log(sessionId);
+    // console.log(sessionId);
 
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
       method: "POST",
@@ -126,10 +126,10 @@ function UpcomingSessions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         if (data.status === "success") {
-          console.log("POST request successful:", data);
+          // console.log("POST request successful:", data);
           toast.current?.show({
             severity: "warn",
             summary: "Rejected",
@@ -138,12 +138,12 @@ function UpcomingSessions() {
           });
           fetchContinueStatus();
         } else {
-          console.error(data);
+          // console.error(data);
           // Handle error if needed
         }
       })
       .catch((error) => {
-        console.error("Error during POST request:", error);
+        // console.error("Error during POST request:", error);
       });
   };
 
@@ -205,16 +205,16 @@ function UpcomingSessions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("history", data.data);
+        // console.log("history", data.data);
 
         setHistorySessions(data.data);
         setUserContinueSessionId(data?.data[0]?.id);
-        console.log(data?.data[0]?.id);
+        // console.log(data?.data[0]?.id);
 
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
-        console.error("Error fetching sessions:", error);
+        // console.error("Error fetching sessions:", error);
       });
   };
 
@@ -286,12 +286,12 @@ function UpcomingSessions() {
       .then((response) => response.json())
       .then((data) => {
         // setUserContinueSessionId(data?.data?.id)
-        console.log("user status", data);
+        // console.log("user status", data);
         setUserContinueStatus(data?.data);
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
-        console.error("Error fetching continue status:", error);
+        // console.error("Error fetching continue status:", error);
       })
       .finally(() => {
         setLoading(false);
@@ -308,13 +308,13 @@ function UpcomingSessions() {
       .then((response) => response.json())
       .then((data) => {
         // setUserContinueSessionId(data?.data?.id)
-        console.log("user status", data);
+        // console.log("user status", data);
         setUserContinueStatus(data?.data);
         // Set the retrieved Seeions in the state
-        console.log(userContinueStatus);
+        // console.log(userContinueStatus);
       })
       .catch((error) => {
-        console.error("Error fetching continue status:", error);
+        // console.error("Error fetching continue status:", error);
       })
       .finally(() => {
         setLoading(false);
@@ -333,7 +333,7 @@ function UpcomingSessions() {
         const diffInSec = Math.floor(diff / 1000);
 
         if (diffInSec === -5) {
-          console.log("done");
+          // console.log("done");
           fetchOngoingSessions();
           clearInterval(intervalId); // Stop the interval once fetch is triggered
         }
@@ -353,7 +353,7 @@ function UpcomingSessions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("ongoing", data.data);
+        // console.log("ongoing", data.data);
         setOngoingSession(data.data);
         if (data.data.length > 0) {
           // If there are ongoing sessions, display them
@@ -364,7 +364,7 @@ function UpcomingSessions() {
         }
       })
       .catch((error) => {
-        console.error("Error fetching ongoing sessions:", error);
+        // console.error("Error fetching ongoing sessions:", error);
         // Handle error if needed
       });
   };
@@ -380,7 +380,7 @@ function UpcomingSessions() {
       .then((response) => response.json())
       .then((data) => {
         setOngoingSession(data.data);
-        console.log("ongoingSession", data);
+        // console.log("ongoingSession", data);
         setsessionId(data?.data[0]?.id);
         setUpComingSession(data.data);
         // Check if the local storage item is set to true
@@ -394,7 +394,7 @@ function UpcomingSessions() {
         }
       })
       .catch((error) => {
-        console.error("Error fetching ongoing sessions:", error);
+        // console.error("Error fetching ongoing sessions:", error);
         // If there's an error, fetch upcoming sessions
         fetchUpcomingSessions();
       });
@@ -409,13 +409,13 @@ function UpcomingSessions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         setUpComingSession(data.data);
         setsessionId(data?.data[0]?.id);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching upcoming sessions:", error);
+        // console.error("Error fetching upcoming sessions:", error);
         setLoading(false);
       });
   };
@@ -427,9 +427,26 @@ function UpcomingSessions() {
     }
   }, [countdownCompleted]);
 
+  //
+  const rescheduleButtonRef = useRef<HTMLButtonElement>(null);
+  const [rescheduleButtonTop, setRescheduleButtonTop] = useState(0);
+
+  useEffect(() => {
+    const measureButton = () => {
+      if (rescheduleButtonRef.current) {
+        const buttonTop = rescheduleButtonRef.current.offsetTop;
+        setRescheduleButtonTop(buttonTop);
+      }
+    };
+
+    measureButton();
+
+    // Cleanup function not needed for this case
+  }, []);
+
   // Updated updateAttendance function
   const updateAttendance = () => {
-    console.log(sessionId);
+    // console.log(sessionId);
 
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/updateUserAttendance`, {
       method: "POST",
@@ -441,16 +458,16 @@ function UpcomingSessions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         if (data.status === "success") {
-          console.log("POST request successful:", data);
+          // console.log("POST request successful:", data);
           showSuccess(`${data.message}`);
           window.open(sessionLink, "_blank");
         }
       })
       .catch((error) => {
-        console.error("Error during POST request:", error);
+        // console.error("Error during POST request:", error);
       });
   };
 
@@ -498,16 +515,22 @@ function UpcomingSessions() {
         upComingSession?.map((session, index) => (
           <div className="relative" key={index}>
             <p>{`Session #${session.id} with title ${session.type}`}</p>
-            <div className={`${styles.date} flex justify-gap-5 my-2`}>
+            <div
+              className={`${styles.date}  max-[400px]:flex-col sm:flex-col  xl:flex-row flex justify- gap-5 my-2`}
+            >
               <div className={`flex justify-center  items-center `}>
-                <FaCalendarDays />
+                <p className="text-md">
+                  <FaCalendarDays />
+                </p>
                 <p className={`ml-3 mr-1`}>
                   {moment(session.sessionDate).format("D-MMM-YYYY")}
                 </p>
               </div>
-              <div className={`flex justify-center items-center`}>
-                <IoTimeOutline />
-                <p className={`ml-3`}>
+              <div className={`ml-3 gap-1  flex justify-center items-center`}>
+                <p className="text-md">
+                  <IoTimeOutline />
+                </p>
+                <p className={``}>
                   {convertDateTimeZone(
                     session.sessionDate,
                     "UTC",
@@ -605,7 +628,7 @@ function UpcomingSessions() {
                 <PrimaryButton
                   disabled={isImHereButtonDisabled}
                   onClick={() => updateAttendance()}
-                  ourStyle={`w-full max-md-px-1  text-sm font-semibold transition-colors text-white  h-10 w-full shadow rounded-full mx-auto max-md:px-4 max-md:w-45 ${
+                  ourStyle={`w-full   text-sm font-semibold transition-colors text-white xl:py-[10px] md:px-[5px] max-[400px]:py-3 md:py-2 w-full shadow rounded-full mx-auto  max-md:w-45 ${
                     isImHereButtonDisabled
                       ? " bg-gray-500 cursor-not-allowed"
                       : "bg-secondary-color hover:bg-secondary-hover"
@@ -624,7 +647,7 @@ function UpcomingSessions() {
               >
                 <button
                   onClick={() => setopenRescheduleModal(true)}
-                  className={`max-md-px-1 text-sm text-secondary-color border-4 border-[--secondary-color] font-semibold transition-colors  h-10 px-3 w-full rounded-full w-50 mx-auto max-md:px-4 max-md:w-45 ${
+                  className={` text-sm text-secondary-color border-4 border-[--secondary-color] font-semibold transition-colors  xl:py-2 px-3 py-2  w-full rounded-full w-50 mx-auto md:py-0 max-md:w-45 ${
                     isRescheduleButtonDisabled
                       ? "bg-gray-500 cursor-not-allowed text-white"
                       : "hover:bg-secondary-color hover:text-white"
@@ -640,6 +663,8 @@ function UpcomingSessions() {
               sessionId={sessionId}
               openRescheduleModal={openRescheduleModal}
               setOpenRescheduleModal={setopenRescheduleModal}
+              fromUpdcoming={true}
+              rescheduleButtonTop={rescheduleButtonTop}
             />
             <StudentPlanModal
               openPlansModal={openPlansModal}
@@ -650,7 +675,7 @@ function UpcomingSessions() {
         ))
       ) : (
         <>
-          <div className="flex justify-center mt-5 items-center flex-col gap-5 h-[200px]">
+          <div className="flex justify-center mt-2 items-center flex-col gap-3 h-[200px]">
             <p className="font-meduim">No Upcoming Sessions</p>
             <span>
               {ongoingSession.length === 0 &&
@@ -675,7 +700,7 @@ function UpcomingSessions() {
             <Image
               src={"/vectors/empty-calendar.png"}
               alt="no upcoming session"
-              width={150}
+              width={120}
               height={100}
             />
           </div>

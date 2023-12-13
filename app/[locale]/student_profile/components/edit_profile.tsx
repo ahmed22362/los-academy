@@ -61,7 +61,7 @@ export default function EditProfile({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         setMyInfo(data?.data);
         setUserInfo(data.data);
         // Set the retrieved Seeions in the state
@@ -98,7 +98,7 @@ export default function EditProfile({
           "Update Successful",
           "Profile has been updated successfully."
         );
-        console.log("Update successful:", data);
+        // console.log("Update successful:", data);
 
         setSuccessStatus(true);
         setOpenEditeProfileModal(false); // Close the modal after a successful update

@@ -6,6 +6,7 @@ import { Nullable } from "primereact/ts-helpers";
 import PrimaryButton from "../../components/PrimaryButton";
 import { Toast } from "primereact/toast";
 import ViewCourses from "./viewCourses";
+import { Button } from "flowbite-react";
 
 function BookFreeSession({ setOpenBookModal }: any) {
   const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date> | any>(
@@ -15,6 +16,8 @@ function BookFreeSession({ setOpenBookModal }: any) {
   const handleSelectCourses = (courses: any[]) => {
     setSelectedCourses(courses);
   };
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -48,15 +51,14 @@ function BookFreeSession({ setOpenBookModal }: any) {
     }
 
     const selectedDates = freedatetime12h.map((date) => date.toISOString());
-    const selectedCourseTitles = selectedCourses.map((course) =>
-      course.title.toLowerCase()
-    );
 
-    const requestBody = {
-      sessionDates: selectedDates,
-      courses: selectedCourseTitles,
-    };
-    console.log(requestBody);
+    const selectedCourseTitles = selectedCourses.map((course) => course.title.toLowerCase());
+
+      const requestBody = {
+        sessionDates: selectedDates,
+        courses: selectedCourseTitles,
+      };
+      setIsProcessing(true);
     fetch(`${url}/session/free/request`, {
       method: "POST",
       headers: {
@@ -67,24 +69,25 @@ function BookFreeSession({ setOpenBookModal }: any) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        setIsProcessing(false);
         if (data.status === "success") {
           showSuccessMessage("Booking Free Session successful");
           setTimeout(() => {
             setOpenBookModal(false);
           }, 4000);
         } else {
+          setIsProcessing(false);
           showErrorMessage(data.message);
         }
       })
       .catch((error) => {
-        console.error("Error fetching Free sessions:", error);
+        // console.error("Error fetching Free sessions:", error);
         showErrorMessage("Booking failed");
       });
   };
 
   useEffect(() => {
-    console.log(freedatetime12h);
+    // console.log(freedatetime12h);
   }, [freedatetime12h]);
 
   return (
@@ -101,16 +104,25 @@ function BookFreeSession({ setOpenBookModal }: any) {
           outline: "4px solid var(--secondary-color)",
           borderRadius: "16px",
           width: "408px",
+          height:'100%'
         }}
         inline
         selectionMode="multiple"
       />
       <div>
-        <PrimaryButton
-          onClick={handleBookFreeClick}
-          ourStyle="bg-secondary-color hover:bg-[#3b369a] text-white w-[250px]	py-3 border rounded-3xl text-md px-10	 transition-all	duration-500 "
-          text="Book Free Session"
-        />
+      <Button
+        onClick={handleBookFreeClick}
+        color="purple"
+        isProcessing={isProcessing}
+        pill
+        size="sm"
+        className={
+          "bg-secondary-color hover:bg-[#3b369a] text-white 	py-2 border rounded-3xl text-md px-10	 transition-all	duration-500 "
+        }
+      >
+        <p>Book Free Session</p>
+      </Button>
+       
       </div>
       <Toast ref={toast} />
     </div>

@@ -1,4 +1,4 @@
-import { error } from "console";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import moment from "moment-timezone";
 import { Calendar, CalendarProps } from "primereact/calendar";
 import { Toast } from "primereact/toast";
@@ -10,9 +10,14 @@ interface Session {
   sessionDates: string[];
   status: string;
   type: string;
-  sessionDate: string; // You might need to adjust the type based on your actual data structure
+  sessionDate: string;
+  fromStudentProfile?: boolean; // You might need to adjust the type based on your actual data structure
 }
-function SessionsRequest() {
+function SessionsRequest({
+  fromStudentProfile,
+}: {
+  fromStudentProfile?: boolean;
+}) {
   const cookie = new Cookies();
   const [sessionsRequest, setSessionsRequest] = useState<any[]>([]);
   const [updateCalendar, setUpdateCalendar] = useState<boolean>(true);
@@ -38,41 +43,51 @@ function SessionsRequest() {
       life: 5000,
     });
   };
-
-  const cancelMySessionRequest = (requestId:number) => {
-  
+  const confirm2 = (requestId: number) => {
+    confirmDialog({
+      message: "Do you want to delete this request?",
+      header: "Delete Confirmation",
+      icon: "pi pi-info-circle",
+      rejectClassName: "bg-secondary-color mr-2 text-white px-2 py-1 rounded-md",
+      acceptClassName: "px-3 text-white  bg-red-500 hover:bg-red-600 py-1",
+      accept: () => cancelMySessionRequest(requestId), // Use accept instead of cancelMySessionRequest in accept callback
+      reject: () => {},
+    });
+  };
+  const cancelMySessionRequest = (requestId: number) => {
     if (!requestId || isNaN(requestId)) {
-      showError('Please enter a valid number for the request!');
+      showError("Please enter a valid number for the request!");
       return;
     }
-  
+
     const requestBody = {
       requestId: Number(requestId),
     };
-  
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/cancelSessionRequest`, {
-      method: 'POST',
+
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/cancelSessionRequest`, {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${cookie.get('token')}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${cookie.get("token")}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(requestBody),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        if (data.status === 'success') {
+        // console.log(data);
+        fetchMySessionRequests();
+        if (data.status === "success") {
+
           showSuccess(data.message);
         } else {
           showError(data.message);
         }
       })
       .catch((error) => {
-        showError('An Error Occurred');
+        showError("An Error Occurred");
         console.error(error);
       });
   };
- 
 
   const convertDateTimeZone = (
     inputTime: moment.MomentInput,
@@ -86,6 +101,8 @@ function SessionsRequest() {
       .tz(outputTimezone);
     return convertedTime.format(ourFormat);
   };
+
+ 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySessionReq`, {
       method: "GET",
@@ -95,7 +112,7 @@ function SessionsRequest() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
 
         const sortedSessions = data.data.map((session: Session) => ({
           ...session,
@@ -115,10 +132,13 @@ function SessionsRequest() {
         });
 
         setSessionsRequest(sortedSessions);
-        console.log("sorted session requests ", sortedSessions);
+        // console.log("sorted session requests ", sortedSessions);
         const pendingSessions = sortedSessions.filter(
           (session: Session) => session.status === "pending"
         );
+        if (fromStudentProfile === true) {
+          setSessionsRequest(pendingSessions);
+        }
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
@@ -126,6 +146,48 @@ function SessionsRequest() {
       });
   }, [updateCalendar]);
 
+const fetchMySessionRequests=()=>{
+  fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySessionReq`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // console.log(data.data);
+
+      const sortedSessions = data.data.map((session: Session) => ({
+        ...session,
+        sessionDates: session.sessionDates.map((date) =>
+          moment(date).toDate()
+        ),
+      }));
+
+      sortedSessions.sort((a: Session, b: Session) => {
+        const dateA = new Date(
+          Math.max(...a.sessionDates.map((date: any) => date.getTime()))
+        );
+        const dateB = new Date(
+          Math.max(...b.sessionDates.map((date: any) => date.getTime()))
+        );
+        return dateB.getTime() - dateA.getTime();
+      });
+
+      setSessionsRequest(sortedSessions);
+      // console.log("sorted session requests ", sortedSessions);
+      const pendingSessions = sortedSessions.filter(
+        (session: Session) => session.status === "pending"
+      );
+      if (fromStudentProfile === true) {
+        setSessionsRequest(pendingSessions);
+      }
+      // Set the retrieved Seeions in the state
+    })
+    .catch((error) => {
+      console.error("Error fetching sessions:", error);
+    });
+}
   //   update Dates
   const handleUpdateDates = (sessionId: Number | any) => {
     if (!newDates || newDates.length === 0) {
@@ -158,7 +220,7 @@ function SessionsRequest() {
         .then((data) => {
           // Handle the response if needed
           showSuccess(data.message);
-          console.log("Updated session:", data);
+          // console.log("Updated session:", data);
           // Fetch and update the sessions again to reflect the changes
           setUpdateCalendar(true);
         })
@@ -175,7 +237,7 @@ function SessionsRequest() {
   return (
     <div className="md:min-h-[190px] mx-2 max-md:min-h-[150px] ">
       <Toast ref={toast} />
-
+      <ConfirmDialog />
       {updateCalendar ? (
         <div className="">
           {sessionsRequest.length === 0 ? (
@@ -191,8 +253,8 @@ function SessionsRequest() {
                 <p>Session Dates:</p>
                 <ul>
                   {session.sessionDates.map((date: string) => (
-                    <li key={date}>
-                      <span className="mx-3">
+                    <li key={date} className="flex gap-2">
+                      <span className="mx-3 mt-1">
                         {moment(date).format("D-MMM-YYYY")}
                       </span>
                       {convertDateTimeZone(
@@ -205,7 +267,7 @@ function SessionsRequest() {
                   ))}
                 </ul>
 
-                <p className="mr-3 font-semibold flex justify-between items-center">
+                {/* <p className="mr-3 font-semibold flex justify-between items-center">
                   Status:
                   <span
                     className={
@@ -217,8 +279,8 @@ function SessionsRequest() {
                     {" "}
                     {session.status}{" "}
                   </span>
-                </p>
-                <p>
+                </p> */}
+                {/* <p>
                   Type:
                   <span
                     className={`${
@@ -230,11 +292,11 @@ function SessionsRequest() {
                     {" "}
                     {session.type === "paid" ? "Paid$" : "Free"}{" "}
                   </span>{" "}
-                </p>
+                </p> */}
                 <div
                   className={`${
                     session.status === "pending" ? "flex" : "hidden"
-                  }  mt-4  justify-center gap-10 items-center `}
+                  }  mt-4  justify-center sm:flex-col lg:flex-row  gap-10 items-center `}
                 >
                   <button
                     onClick={() => handleUpdateButton(session.id)}
@@ -247,7 +309,7 @@ function SessionsRequest() {
                     Update
                   </button>
                   <button
-                    onClick={() => cancelMySessionRequest(session.id)}
+                    onClick={() => confirm2(session.id)}
                     className={`px-3 py-1 bg-red-600 rounded-lg text-white`}
                   >
                     Cancel Request

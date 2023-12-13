@@ -1,6 +1,6 @@
-export const getOnGoingSession = async (token: string | any) => {
+export const getReschedualSession = async (token: string | any) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_APIURL}/teacher/ongoingSession`,
+    `${process.env.NEXT_PUBLIC_APIURL}/teacher/receivedRescheduleRequests?status=pending`,
     {
       method: "GET",
       headers: {
@@ -9,6 +9,6 @@ export const getOnGoingSession = async (token: string | any) => {
       },
     }
   );
-  const data = await response.json();
+  const data = response.json();
   return data;
 };

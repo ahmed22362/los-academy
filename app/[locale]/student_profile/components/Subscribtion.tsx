@@ -53,9 +53,9 @@ export default function Subscribtion({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        console.log("obj", data.data);
-        console.log("status", data.status);
+        // console.log(data);
+        // console.log("obj", data.data);
+        // console.log("status", data.status);
 
         
         if(data.status==="success"){
@@ -68,10 +68,7 @@ export default function Subscribtion({
         console.error("Error fetching sessions:", error);
       });
   }, []);
-useEffect(() => {
-  console.log(mySubscription);
 
-}, [mySubscription])
 
   return (
     <>

@@ -19,22 +19,22 @@ export default function OnGoingBox(session: any) {
   const toast = useRef<any>(null);
   const [openModal, setOpenModal] = useState(false);
 
-  useEffect(() => {
-    const newSocket: Socket = getSocket(cookies.get("token"));
-    console.log(newSocket.connect());
-    newSocket.on("finished_session", (data: object) => {
-      console.log(data);
-      setOnGoingSession({ ongoingSession: data });
-    });
-    newSocket.on("ongoing_session", (data: object) => {
-      console.log(data);
-      setOnGoingSession({ ongoingSession: data });
-    });
-    newSocket.on("session_requested", (data: object) => {
-      console.log(data);
-      setOnGoingSession({ ongoingSession: data });
-    });
-  }, []);
+    useEffect(() => {
+      const newSocket: Socket = getSocket(cookies.get("token"));
+      console.log(newSocket.connect());
+      newSocket.on("finished_session", (data: object) => {
+        console.log(data);
+        setOnGoingSession({ ongoingSession: data });
+      });
+      newSocket.on("ongoing_session", (data: object) => {
+        console.log(data);
+        setOnGoingSession({ ongoingSession: data });
+      });
+      newSocket.on("session_requested", (data: object) => {
+        console.log(data);
+        setOnGoingSession({ ongoingSession: data });
+      });
+    }, []);
 
   const convertTimeZone = convertDateTimeZone;
   const handleOpen = () => {

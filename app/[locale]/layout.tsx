@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
+ 
   // openGraph: {
   //   title: 'LOS Academy',
   //   description: 'Learning Forgeins Kids Arabic And Islamic Courses',

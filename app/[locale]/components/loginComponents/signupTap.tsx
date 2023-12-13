@@ -56,11 +56,10 @@ export default function signupTap() {
         });
       };
 
-    const url = process.env.NEXT_PUBLIC_APIURL;
     const signupSubmit = (formData: any) => {
       
       setIsProcessing(true);
-      fetch(`${url}/user/auth/signup`, {
+      fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,7 +72,7 @@ export default function signupTap() {
           if (data.status === "success") {
             showSuccess("Registration Successfully");
             showSuccess(data.message);
-            console.log(data);
+            // console.log(data);
             localStorage.setItem(
               "registrationSuccessMessage",
               "Registration successful. Please log in."
@@ -94,6 +93,7 @@ export default function signupTap() {
         })
         .catch((error) => {
           console.log(error);
+          setIsProcessing(false);
           showError("An error occurred");
         });
     };

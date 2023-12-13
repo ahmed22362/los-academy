@@ -17,7 +17,6 @@ export default function loginTap() {
     const [password, setPassword] = useState("");
     const [showEmailVerification, setShowEmailVerification] = useState(false);
     const toast = useRef<Toast>(null);
-    const url = process.env.NEXT_PUBLIC_APIURL;
 
     const showSuccess = (msg: any) => {
         toast.current?.show({
@@ -49,7 +48,7 @@ export default function loginTap() {
       };
 
     const handleLogin = () => {
-        console.log(formDataLogin);
+        // console.log(formDataLogin);
     
         // Perform basic client-side validation
         if (!email || !password) {
@@ -58,7 +57,7 @@ export default function loginTap() {
         }
         setIsProcessing(true);
         // Send a POST request to the login endpoint
-        fetch(`${url}/user/auth/login`, {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -70,7 +69,7 @@ export default function loginTap() {
             setIsProcessing(false);
             if (data.status === "success") {
               showSuccess("Login Successfully");
-              console.log(data);
+              // console.log(data);
               localStorage.setItem("myName", data?.data?.name);
               setTimeout(() => {
                 // Redirect to a protected route upon successful login
@@ -97,7 +96,8 @@ export default function loginTap() {
           })
           .catch((error) => {
             console.log(error);
-            showError("An error occurred");
+            setIsProcessing(false);
+            showError("An error occurred ");
           });
       };
     
@@ -105,7 +105,7 @@ export default function loginTap() {
       // resend mail
       const handleResendMail = () => {
         // Send a request to resend the confirmation email
-        fetch(`${url}/user/auth/resendMailConfirmation?email=${email}`, {
+        fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/auth/resendMailConfirmation?email=${email}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

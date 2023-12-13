@@ -11,7 +11,6 @@ interface RescheduleSessionProps {
   sessionId: string;
   fromTeacherRequest?: boolean;
   fromUpdcoming?: boolean;
-  rescheduleButtonTop: string; // Making fromTeacherRequest optional
 }
 function RescheduleSession({
   setOpenRescheduleModal,
@@ -19,7 +18,6 @@ function RescheduleSession({
   sessionId,
   fromTeacherRequest,
   fromUpdcoming,
-  rescheduleButtonTop,
 }: any) {
   const [selectedStartDate, setSelectedStartDate] = useState<
     Nullable<Date> | any

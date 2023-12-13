@@ -5,7 +5,9 @@ const socket = (token: string) => {
     auth: {
       token,
     },
-    reconnection: false,
+    reconnection: true,
+    reconnectionDelay: 600000,
+    reconnectionAttempts: 5,
   });
 };
 export default socket;

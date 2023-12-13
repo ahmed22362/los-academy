@@ -51,48 +51,66 @@ function UpcomingSessions() {
   const [loading, setLoading] = useState(true);
   const [openRescheduleModal, setopenRescheduleModal] = useState(false);
   const [sessionId, setsessionId] = useState("");
-  const [alertVisible, setAlertVisible] = useState(false);
   const [userContinueSessionId, setUserContinueSessionId] = useState<Number>();
   const [isImHereButtonDisabled, setIsImHereButtonDisabled] = useState(true);
   const [openPlansModal, setOpenPlansModal] = useState(false);
   const [selectedFreeSessionId, setSelectedFreeSessionId] = useState<number>();
   const [sessionLink, setSessionLink] = useState("");
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isRescheduleButtonDisabled, setIsRescheduleButtonDisabled] =
     useState(false);
   const [userContinueStatus, setUserContinueStatus] =
     useState<ContinueStatus>();
   useState<moment.Moment | null>(null);
-  const [ongoingSession, setOngoingSession]:any = useState<any[]>([]);
+  const [ongoingSession, setOngoingSession]: any = useState<any[]>([]);
   const [countdownCompleted, setCountdownCompleted] = useState<boolean>(false);
   const [historySessions, setHistorySessions] = useState<any[]>([]);
 
-// socet function
-useEffect(() => {
-  const newSocket: Socket = getSocket(cookie.get("token"));
-  newSocket.on("event",(object)=>{
-    console.log(object)
-  })
-  console.log(newSocket.connect());
-  newSocket.on("finished_session", (data: object) => {
-    console.log("finished_session",data);
-    setUpComingSession({ upComingSession: data });
-    setCountdownCompleted(true)
-  });
-  newSocket.on("ongoing_session", (data: object) => {
-    console.log("ongoing_session",data);
-    setOngoingSession({ ongoingSession: data });
-  });
-}, []);
+  // socet function
+  useEffect(() => {
+    const newSocket: Socket = getSocket(cookie.get("token"));
+    newSocket.on("event", (object) => {
+      // console.log(object);
+    });
+    // console.log(newSocket.connect());
+    newSocket.on("finished_session", (data: object) => {
+      // console.log("finished_session", data);
+      setUpComingSession({ upComingSession: data });
+      setCountdownCompleted(true);
+    });
+    newSocket.on("ongoing_session", (data: object) => {
+      // console.log("ongoing_session", data);
+      setOngoingSession({ ongoingSession: data });
+    });
+  }, []);
 
+  // handle show confirmDialog state
+  useEffect(() => {
+    // Check your conditions here
+    if (
+      historySessions[0]?.type === "free" &&
+      historySessions[0]?.status === "taken" &&
+      ongoingSession.length === 0 &&
+      userContinueStatus?.willContinue === null
+    ) {
+      setShowConfirmDialog(true);
+    }
+    // const shouldShowDialog =
+    //   historySessions[0]?.type === 'free' &&
+    //   historySessions[0]?.status === 'taken' &&
+    //   ongoingSession.length === 0 &&
+    //   userContinueStatus?.willContinue === null;
 
-
+    // Update the state based on the conditions
+  }, [historySessions, ongoingSession, userContinueStatus]);
+  // handle accept continue with teacher
   const accept = (sessionId: any) => {
     setSelectedFreeSessionId(sessionId);
     const continueData = {
       sessionId: Number(sessionId),
       willContinue: true,
     };
-    console.log(continueData);
+    // console.log(continueData);
 
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
       method: "POST",
@@ -127,8 +145,9 @@ useEffect(() => {
       });
   };
 
+  // handle reject continue with teacher
   const reject = (sessionId: any) => {
-    console.log(sessionId);
+    // console.log(sessionId);
 
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
       method: "POST",
@@ -140,7 +159,7 @@ useEffect(() => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         if (data.status === "success") {
           // console.log("POST request successful:", data);
@@ -206,6 +225,7 @@ useEffect(() => {
 
     return currentTime.isBetween(sessionStartTime, sessionEndTime);
   };
+
   useEffect(() => {
     fetchHistorySessions();
   }, []);
@@ -219,7 +239,7 @@ useEffect(() => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("latest", data.data);
+        // console.log("latest", data.data);
 
         setHistorySessions(data.data);
         setUserContinueSessionId(data?.data[0]?.id);
@@ -291,7 +311,7 @@ useEffect(() => {
   };
   // check for user continue Status
   useEffect(() => {
-    fetchContinueStatus()
+    fetchContinueStatus();
   }, []);
 
   const fetchContinueStatus = () => {
@@ -304,13 +324,12 @@ useEffect(() => {
       .then((response) => response.json())
       .then((data) => {
         // setUserContinueSessionId(data?.data?.id)
-        console.log("user status", data);
+        // console.log("user status", data);
         setUserContinueStatus(data?.data);
         // Set the retrieved Seeions in the state
-        console.log(userContinueStatus);
       })
       .catch((error) => {
-        // console.error("Error fetching continue status:", error);
+        console.error("Error fetching continue status:", error);
       })
       .finally(() => {
         setLoading(false);
@@ -424,11 +443,7 @@ useEffect(() => {
     }
   }, [countdownCompleted]);
 
-
-
- 
-
-    // Cleanup function not needed for this case
+  // Cleanup function not needed for this case
 
   // Updated updateAttendance function
   const updateAttendance = () => {
@@ -487,27 +502,20 @@ useEffect(() => {
     <div
       className={` w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
     >
-       <span>
-                          {ongoingSession.length === 0 &&
-                            historySessions[0]?.type === "free" &&
-                            historySessions[0].status==="taken"&&
-                            userContinueStatus?.willContinue === null &&
-                              <ConfirmDialog
-                                closable={false}
-                                visible={true}
-                                message={
-                                  "Do you want to Continue With This Teacher?"
-                                }
-                                acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
-                                rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
-                                header="Continue With This Teacher"
-                                icon="bi bi-info-circle"
-                                position="top"
-                                accept={() => accept(historySessions[0].id)}
-                                reject={() => reject(historySessions[0].id)}
-                              />
-                            }
-                        </span>
+      {showConfirmDialog && (
+        <ConfirmDialog
+          closable={false}
+          visible={true}
+          message={"Do you want to Continue With This Teacher?"}
+          acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
+          rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
+          header="Continue With This Teacher"
+          icon="bi bi-info-circle"
+          position="top"
+          accept={() => accept(historySessions[0].id)}
+          reject={() => reject(historySessions[0].id)}
+        />
+      )}
       <StudentPlanModal
         openPlansModal={openPlansModal}
         setOpenPlansModal={setOpenPlansModal}
@@ -519,7 +527,7 @@ useEffect(() => {
         {upComingSession[0]?.status || "upcoming session"}
       </h4>
       {upComingSession?.length > 0 ? (
-        upComingSession?.map((session :any, index:any) => (
+        upComingSession?.map((session: any, index: any) => (
           <div className="relative" key={index}>
             <p>{`Session #${session.id} with title ${session.type}`}</p>
             <div
@@ -560,7 +568,7 @@ useEffect(() => {
             <div className="flex justify-center items-center">
               {isSessionRunning(session) ? (
                 <Countdown
-                onStart={fetchOngoingSessions}
+                  onStart={fetchOngoingSessions}
                   date={moment(session.sessionDate)
                     .add(session.sessionDuration, "minutes")
                     .toDate()}
@@ -568,15 +576,9 @@ useEffect(() => {
                     if (completed) {
                       setTimeout(() => {
                         setCountdownCompleted(true);
-                        if (upComingSession[0]?.type === "free") {
-                          setAlertVisible(true);
-                        }
                       });
-                      return (
-                       <></>
-                      );
+                      return <></>;
                     } else {
-                     
                       // Update the value state for the knob
                       return (
                         <div className=" flex flex-col items-center gap-5 rounded-3xl px-3 py-1 ">
@@ -663,24 +665,22 @@ useEffect(() => {
           <div className="flex justify-center mt-2 items-center flex-col gap-3 h-[200px]">
             <p className="font-meduim">No Upcoming Sessions</p>
             <span>
-              {ongoingSession.length === 0 &&
-                historySessions[0]?.type === "free" &&
-                userContinueStatus?.willContinue === null && (
-                  <ConfirmDialog
-                    closable={false}
-                    visible={true}
-                    message={
-                      "Do you want to Book Paid Sessions  With This Teacher?"
-                    }
-                    acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
-                    rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
-                    header="Continue With This Teacher"
-                    icon="bi bi-info-circle"
-                    position="top"
-                    accept={() => accept(userContinueSessionId)}
-                    reject={() => reject(userContinueSessionId)}
-                  />
-                )}
+              {showConfirmDialog && (
+                <ConfirmDialog
+                  closable={false}
+                  visible={true}
+                  message={
+                    "Do you want to Book Paid Sessions  With This Teacher?"
+                  }
+                  acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
+                  rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
+                  header="Continue With This Teacher"
+                  icon="bi bi-info-circle"
+                  position="top"
+                  accept={() => accept(userContinueSessionId)}
+                  reject={() => reject(userContinueSessionId)}
+                />
+              )}
             </span>
             <Image
               src={"/vectors/empty-calendar.png"}

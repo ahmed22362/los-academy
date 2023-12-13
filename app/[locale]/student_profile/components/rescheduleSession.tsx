@@ -4,7 +4,7 @@ import { Calendar, CalendarProps } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 import { Toast } from "primereact/toast";
 import Cookies from "universal-cookie";
-import { Button, Modal } from "flowbite-react";
+import { Button, Label, Modal } from "flowbite-react";
 import BannerComponent from "./Banner";
 interface RescheduleSessionProps {
   openRescheduleModal: boolean;
@@ -53,12 +53,12 @@ function RescheduleSession({
       showError("Please select both first date and end second date.");
       return;
     }
-
+    
     const rescheduleData = {
       sessionId: sessionId,
       newDatesOptions: [
-        selectedStartDate.toISOString(),
-        selectedEndDate.toISOString(),
+        new Date(selectedStartDate).toISOString(),
+        new Date(selectedEndDate).toISOString(),
       ],
     };
 
@@ -119,47 +119,29 @@ function RescheduleSession({
             )}
           </div>
           <div className="flex  justify-center flex-col items-center gap-5">
-            <div className="card w-full flex justify-center">
-              <Calendar
-                panelClassName={`${
-                  fromUpdcoming
-                    ? "lg:mb-[30%]"
-                    : "mt-[23%] left-[50%] absloute -translate-x-1/2	-translate-y-1/2 top-[50%]"
-                } `}
-                value={selectedStartDate}
-                onChange={(e: CalendarProps | any) =>
-                  setSelectedStartDate(e.value)
-                }
-                showTime
-                hourFormat="12"
-                style={{
-                  outline: "4px solid var(--secondary-color)",
-                  borderRadius: "",
-                  width: "100%",
-                }}
-                placeholder="Select First Avilable Date and Time"
-              />
+            <div className="card w-full flex-col flex justify-center">
+            <div className="mb-2 block">
+            <Label htmlFor="rengeDateEnd" value="Select Option Date Two " />
+          </div>
+          <input
+            type="datetime-local"
+            className="border-[5px] border-secondary-color rounded-xl"
+            defaultValue={selectedStartDate}
+            onChange={(e) => setSelectedStartDate(e.target.value)}
+          />
+             
             </div>
-            <div className="card w-full flex justify-center">
-              <Calendar
-                panelClassName={`${
-                  fromUpdcoming
-                    ? "lg:mb-[30%]"
-                    : "mt-[23%] left-[50%] -translate-x-1/2	-translate-y-1/2 top-[50%]"
-                } absloute`}
-                value={selectedEndDate}
-                onChange={(e: CalendarProps | any) =>
-                  setSelectedEndDate(e.value)
-                }
-                showTime
-                hourFormat="12"
-                style={{
-                  outline: "4px solid var(--secondary-color)",
-                  borderRadius: "",
-                  width: "100%",
-                }}
-                placeholder="Select Second Avilable Date and Time"
-              />
+            <div className="card w-full flex-col flex justify-center">
+            <div className="mb-2 block">
+            <Label htmlFor="rengeDateEnd" value="Select Option Date Two " />
+          </div>
+          <input
+            type="datetime-local"
+            className="border-[5px] border-secondary-color rounded-xl"
+            defaultValue={selectedEndDate}
+            onChange={(e) => setSelectedEndDate(e.target.value)}
+          />
+             
             </div>
             <div>
               <Button

@@ -10,31 +10,44 @@ import { convertDateTimeZone } from "@/utilities";
 import { getSocket } from "@/utilities/connectWithSocket";
 import { Socket } from "socket.io-client";
 export default function OnGoingBox(session: any) {
-  const upComingSession = session.session && session.session;
+  let workingSession = session && session.session;
+
   const [onGoingSession, setOnGoingSession]: any = useState<any>([]);
   const [lastTakenSession, setLastTakenSession]: any = useState<any>([]);
+  const [targetSession, setTargetSession] = useState<any>([]);
   const [countdownSeconds, setCountdownSeconds] = useState(0);
+  const [finishedSession, setFinishedSession] = useState<any>([]);
+  const [showReport, setShowReport] = useState(false);
+  const router = useRouter();
+  // const [finishedSession, setFinishedSession] = useState({})
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
   const toast = useRef<any>(null);
   const [openModal, setOpenModal] = useState(false);
 
-    useEffect(() => {
-      const newSocket: Socket = getSocket(cookies.get("token"));
-      console.log(newSocket.connect());
-      newSocket.on("finished_session", (data: object) => {
-        console.log(data);
-        setOnGoingSession({ ongoingSession: data });
-      });
-      newSocket.on("ongoing_session", (data: object) => {
-        console.log(data);
-        setOnGoingSession({ ongoingSession: data });
-      });
-      newSocket.on("session_requested", (data: object) => {
-        console.log(data);
-        setOnGoingSession({ ongoingSession: data });
-      });
-    }, []);
+  // socket connection
+  useEffect(() => {
+    const newSocket: Socket = getSocket(cookies.get("token"));
+    console.log(newSocket.connect());
+    newSocket.on("finished_session", (data: object) => {
+      console.log(data);
+      if (data) {
+        setTargetSession({ ongoingSession: data });
+        setShowReport(true);
+        // router.refresh();
+      }
+    });
+    newSocket.on("ongoing_session", (data: object) => {
+      console.log(data);
+      if (data) {
+        router.refresh();
+      }
+    });
+    newSocket.on("session_requested", (data: object) => {
+      console.log(data);
+      setTargetSession({ ongoingSession: data });
+    });
+  }, []);
 
   const convertTimeZone = convertDateTimeZone;
   const handleOpen = () => {
@@ -107,7 +120,7 @@ export default function OnGoingBox(session: any) {
   //     "0"
   //   )}:${String(remainingSeconds).padStart(2, "0")}`;
   // };
-  const handleUpdateAttendance = () => {
+  const handleUpdateAttendance = (id: string) => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/updateTeacherAttendance`, {
       method: "POST",
       headers: {
@@ -115,7 +128,7 @@ export default function OnGoingBox(session: any) {
         Authorization: `Bearer ${cookies.get("token")}`,
       },
       body: JSON.stringify({
-        sessionId: upComingSession.id,
+        sessionId: id,
       }),
     })
       .then((response) => response.json())
@@ -132,24 +145,29 @@ export default function OnGoingBox(session: any) {
         showError(err.message);
       });
   };
-  const getOngoing = () => {
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/ongoingSession`, {
-      method: "get",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setOnGoingSession(data.data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+
+  // const getOngoing = () => {
+  //   fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/ongoingSession`, {
+  //     method: "get",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${cookies.get("token")}`,
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       if (data && data.data.length > 0) {
+  //         // setTargetSession(data.data);
+  //         setOnGoingSession(data.data);
+  //         // setOngoingSession(data.data);
+  //       }
+  //       setIsLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
   const getLastTakenSession = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/myLatestTakenSession`, {
       method: "get",
@@ -160,9 +178,14 @@ export default function OnGoingBox(session: any) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data[0]);
-        console.log(data.data[0].hasReport);
-        setLastTakenSession(data.data[0]);
+        console.log(data);
+        if (data) {
+          // setLastTakenSession(data.data);
+          // setTargetSession(data);
+          setLastTakenSession(data.data[0]);
+        }
+        // console.log(data.data[0]);
+        // console.log(data.data[0].hasReport);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -171,7 +194,8 @@ export default function OnGoingBox(session: any) {
   };
 
   useEffect(() => {
-    getOngoing();
+    // setTargetSession(upComingSession);
+    // getOngoing();
     getLastTakenSession();
   }, []);
 
@@ -185,6 +209,9 @@ export default function OnGoingBox(session: any) {
   // }, [countdownSeconds]);
 
   useEffect(() => {
+    console.log(workingSession);
+    console.log(lastTakenSession);
+    console.log(targetSession);
     setIsLoading(false);
   }, []);
 
@@ -193,10 +220,28 @@ export default function OnGoingBox(session: any) {
       <Toast ref={toast} />
       {isLoading ? (
         <Spinner />
-      ) : onGoingSession && onGoingSession.length < 0 ? (
-        onGoingSession.map((session: any, index: number) => {
-          return (
-            <>
+      ) : lastTakenSession && lastTakenSession.hasReport === false ? (
+        <div>
+          <h4 className="mb-3">
+            add report for the last session with{" "}
+            {lastTakenSession && lastTakenSession.SessionInfo?.user?.name}
+          </h4>
+          <button
+            className="smallBtn hover:bg-secondary-hover transition-colors"
+            onClick={handleOpen}
+          >
+            Add Report +
+          </button>
+          <AddReportModal
+            sessionID={lastTakenSession && lastTakenSession.id}
+            openAssignModal={openModal}
+            handleCloseModal={handleClose}
+          />
+        </div>
+      ) : workingSession && workingSession.length > 0 ? (
+        workingSession.data.map((session: any, index: number) => {
+          if (session.status === "ongoing") {
+            return (
               <div
                 key={index}
                 className="h-full flex flex-col items-center gap-2"
@@ -208,39 +253,71 @@ export default function OnGoingBox(session: any) {
                 <Link
                   target="_blank"
                   className="smallBtn hover:bg-secondary-hover transition-colors "
-                  onClick={handleUpdateAttendance}
+                  onClick={() => handleUpdateAttendance(session.id)}
                   href={session.meetingLink}
                 >
                   Join Meeting Now !!
                 </Link>
+                <span>
+                  start:
+                  {convertDateTimeZone(
+                    session.sessionDate,
+                    "UTC",
+                    Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    "hh:mm A"
+                  )}
+                </span>
+                <span>
+                  end:
+                  {new Date(
+                    new Date(session.sessionDate).getTime() +
+                      session.sessionDuration * 60 * 1000
+                  ).toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                  })}
+                </span>
                 <span>session duration : {session.sessionDuration}</span>
+                {showReport && (
+                  <div>
+                    <button
+                      className="smallBtn hover:bg-secondary-hover transition-colors"
+                      onClick={handleOpen}
+                    >
+                      Add Report +
+                    </button>
+                    <AddReportModal
+                      sessionID={session && session.id}
+                      openAssignModal={openModal}
+                      handleCloseModal={handleClose}
+                    />
+                  </div>
+                )}
               </div>
-            </>
-          );
+            );
+          } else if (session.status === "pending") {
+            return (
+              <div
+                key={index}
+                className="h-full flex flex-col items-center gap-2"
+              >
+                <h4>
+                  Next session with <b>{session.SessionInfo?.user?.name}</b>{" "}
+                </h4>
+                <span>
+                  {convertDateTimeZone(
+                    session.sessionDate,
+                    "UTC",
+                    Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    "MM/DD/YYYY hh:mm A"
+                  )}
+                </span>
+                <span>session duration : {session.sessionDuration}min</span>
+              </div>
+            );
+          }
         })
-      ) : upComingSession ? (
-        <>
-          <div className="flex flex-col items-center justify-center gap-2 my-auto">
-            {/* {countdownSeconds > 0 && countdownSeconds < 600 && (
-              // <h5>Timer: {formatTime(countdownSeconds)}</h5>
-            )} */}
-            <h3 className="mb-3">
-              The Next Session with:{" "}
-              <b>
-                {upComingSession && upComingSession.SessionInfo?.user?.name}
-              </b>
-            </h3>
-            <span>
-              start at :{" "}
-              {convertDateTimeZone(
-                upComingSession.sessionDate,
-                "UTC",
-                Intl.DateTimeFormat().resolvedOptions().timeZone,
-                "MM/DD/YYYY hh:mm A"
-              )}
-            </span>
-          </div>
-        </>
       ) : (
         <p className="p-3 bg-warning-color text-white w-fit rounded-full mt-2 font-bold">
           No Sessions
@@ -249,23 +326,3 @@ export default function OnGoingBox(session: any) {
     </div>
   );
 }
-
-// : lastTakenSession && lastTakenSession.hasReport === false ? (
-//     <div>
-//       <h4 className="mb-3">
-//         add report for the last session with{" "}
-//         {lastTakenSession && lastTakenSession.SessionInfo?.user?.name}
-//       </h4>
-//       <button
-//         className="smallBtn hover:bg-secondary-hover transition-colors"
-//         onClick={handleOpen}
-//       >
-//         Add Report +
-//       </button>
-//       <AddReportModal
-//         sessionID={lastTakenSession && lastTakenSession.id}
-//         openAssignModal={openModal}
-//         handleCloseModal={handleClose}
-//       />
-//     </div>
-//   ) :

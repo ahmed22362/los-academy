@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Button, CustomFlowbiteTheme } from "flowbite-react";
+import { Button, CustomFlowbiteTheme, Spinner } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { Toast } from "primereact/toast";
 import { useRef, useState } from "react";
@@ -17,6 +17,7 @@ export default function loginTap() {
     const [password, setPassword] = useState("");
     const [showEmailVerification, setShowEmailVerification] = useState(false);
     const toast = useRef<Toast>(null);
+    const url = process.env.NEXT_PUBLIC_APIURL;
 
     const showSuccess = (msg: any) => {
         toast.current?.show({
@@ -127,79 +128,93 @@ export default function loginTap() {
 
   return (
     <div
-    className=" flex justify-center items-center gap-3  flex-wrap "
-    style={{ minHeight: "300px", width: "100%" }}
-  >
-    <Toast ref={toast} />
-    <h3 className="font-bold	 text-xl	"> Welcome Back ! </h3>
-    <div className="flex flex-col gap-4" style={{ width: "100%" }}>
-      <input
-        className="border-[--secondary-color] gradiant-color	 rounded-3xl w-full		border-2	"
-        type="email"
-        value={email}
-        onChange={handleEmailChange}
-        placeholder="Email address "
-        onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-      />
-      <input
-        className="border-[--secondary-color] gradiant-color	 rounded-3xl w-full		border-2	"
-        type="password"
-        value={password}
-        onChange={handlePasswordChange}
-        placeholder="Password"
-        onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-      />
-      <button
-        onClick={() => setOpenForgetPasswordModal(true)}
-        className=" font-semibold	 underline"
-      >
-        Forget Password ?
-      </button>
-      <ForgetPassword
-        openForgetPassword={openForgetPasswordModal}
-        setOpenForgetPasswordModal={setOpenForgetPasswordModal}
-      />
-      {showEmailVerification && (
+      className=" flex justify-center items-center gap-3  flex-wrap "
+      style={{ minHeight: "300px", width: "100%" }}
+    >
+      <Toast ref={toast} />
+      {isProcessing && (
         <div>
-          <div className="text-red-500 text-md font-medium text-center">
-            Check Gmail and confirm your mail
-          </div>
-          <div className="text-center font-sm">
-            Didn't receive a mail?{" "}
-            <button
-              onClick={handleResendMail}
-              className="underline text-lg font-medium"
-            >
-              Resend mail
-            </button>
-          </div>
+          <Spinner
+            style={{
+              width: "3rem",
+              height: "3rem",
+              zIndex: "1000",
+              position: "fixed",
+              top: "14%",
+              left: "1%",
+            }}
+          />
         </div>
       )}
-      <Button
-        onClick={handleLogin}
-        color="purple"
-        isProcessing={isProcessing}
-        pill
-        size="lg"
-        className={
-          "transition-colors rounded-full font-semibold px-5 py-2 text-white"
-        }
-      >
-        <p>Login</p>
-      </Button>
+      <h3 className="font-bold	 text-xl	"> Welcome Back ! </h3>
+      <div className="flex flex-col gap-4" style={{ width: "100%" }}>
+        <input
+          className="border-[--secondary-color] gradiant-color	 rounded-3xl w-full		border-2	"
+          type="email"
+          value={email}
+          onChange={handleEmailChange}
+          placeholder="Email address "
+          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+        />
+        <input
+          className="border-[--secondary-color] gradiant-color	 rounded-3xl w-full		border-2	"
+          type="password"
+          value={password}
+          onChange={handlePasswordChange}
+          placeholder="Password"
+          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+        />
+        <button
+          onClick={() => setOpenForgetPasswordModal(true)}
+          className=" font-semibold	 underline"
+        >
+          Forget Password ?
+        </button>
+        <ForgetPassword
+          openForgetPassword={openForgetPasswordModal}
+          setOpenForgetPasswordModal={setOpenForgetPasswordModal}
+        />
+        {showEmailVerification && (
+          <div>
+            <div className="text-red-500 text-md font-medium text-center">
+              Check Gmail and confirm your mail
+            </div>
+            <div className="text-center font-sm">
+              Didn't receive a mail?{" "}
+              <button
+                onClick={handleResendMail}
+                className="underline text-lg font-medium"
+              >
+                Resend mail
+              </button>
+            </div>
+          </div>
+        )}
+        <Button
+          onClick={handleLogin}
+          color="purple"
+          isProcessing={isProcessing}
+          pill
+          size="lg"
+          className={
+            "transition-colors rounded-full font-semibold px-5 py-2 text-white"
+          }
+        >
+          <p>Login</p>
+        </Button>
 
-      <span className="text-center">Or Login with </span>
-      <div className="flex gap-3">
-        <PrimaryButton
-          text="Google"
-          ourStyle="border-blue-700 rounded-3xl w-full	py-2	border-2 hover:bg-blue-700 hover:text-white transition-all	duration-500	"
-        />
-        <PrimaryButton
-          text="Facebook"
-          ourStyle="border-blue-700 rounded-3xl w-full	py-2	border-2 hover:bg-blue-700 hover:text-white transition-all	duration-500	"
-        />
+        <span className="text-center">Or Login with </span>
+        <div className="flex gap-3">
+          <PrimaryButton
+            text="Google"
+            ourStyle="border-blue-700 rounded-3xl w-full	py-2	border-2 hover:bg-blue-700 hover:text-white transition-all	duration-500	"
+          />
+          <PrimaryButton
+            text="Facebook"
+            ourStyle="border-blue-700 rounded-3xl w-full	py-2	border-2 hover:bg-blue-700 hover:text-white transition-all	duration-500	"
+          />
+        </div>
       </div>
     </div>
-  </div>
-  )
+  );
 }

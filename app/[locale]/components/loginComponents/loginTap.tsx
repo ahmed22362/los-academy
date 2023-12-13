@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, CustomFlowbiteTheme } from "flowbite-react";
+import { Button, CustomFlowbiteTheme, Spinner } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { Toast } from "primereact/toast";
 import { useRef, useState } from "react";
@@ -19,7 +19,7 @@ export default function loginTap() {
   const [showEmailVerification, setShowEmailVerification] = useState(false);
   const toast = useRef<Toast>(null);
   const url = process.env.NEXT_PUBLIC_APIURL;
-
+  const [isLoading, setIsLoading] = useState(false);
   const showSuccess = (msg: any) => {
     toast.current?.show({
       severity: "success",
@@ -71,12 +71,12 @@ export default function loginTap() {
         setIsProcessing(false);
         if (data.status === "success") {
           showSuccess("Login Successfully");
+          setIsLoading(true);
           console.log(data);
           localStorage.setItem("myName", data?.data?.name);
           setTimeout(() => {
             // Redirect to a protected route upon successful login
             router.push("/student_profile");
-            // window.location.href = "/student_profile";
           }, 3000);
           // Save user token in a cookie or state as needed
           cookies.set("token", data.token);
@@ -132,6 +132,20 @@ export default function loginTap() {
       style={{ minHeight: "300px", width: "100%" }}
     >
       <Toast ref={toast} />
+      {isLoading && (
+        <div>
+          <Spinner
+            style={{
+              width: "3rem",
+              height: "3rem",
+              zIndex: "1000",
+              position: "fixed",
+              top: "14%",
+              left: "1%",
+            }}
+          />
+        </div>
+      )}
       <h3 className="font-bold	 text-xl	"> Welcome Back ! </h3>
       <div className="flex flex-col gap-4" style={{ width: "100%" }}>
         <input

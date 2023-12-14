@@ -46,7 +46,7 @@ export default function page() {
   const [teacherUbsentSessions, setTeacherUbsentSessions] = useState<any[]>([]);
 
   const cookie=new Cookies();
-
+// my subscribtion
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySubscription`, {
       method: "GET",
@@ -66,7 +66,7 @@ export default function page() {
         console.error("Error fetching sessions:", error);
       });
   }, []);
-  
+  // teacher ubsent
   useEffect(() => {
     fetch(
       `${process.env.NEXT_PUBLIC_APIURL}/user/mySessions?status=teacher_absent`,
@@ -102,22 +102,24 @@ export default function page() {
       .tz(outputTimezone);
     return convertedTime.format(ourFormat);
   };
+
+  // handle first visit
   useEffect(() => {
+    // Check if the 'visited' cookie exists
+    const hasVisitedBefore = cookie.get('visited');
 
-    const isFirstVisit = cookie.get("FirstVisit") === undefined;
-// console.log(isFirstVisit);
-
-    if (isFirstVisit===true) {
-      // Display Joyride only on the first visit
+    if (!hasVisitedBefore) {
+      // If it doesn't exist, it's the user's first visit 
       setStart(true);
-
-      // Set the flag to indicate that the user has seen the tips
+      // Set the 'visited' cookie to true with an expiry date
+      cookie.set('visited', true, { maxAge: 2592000 }); // Expires in 1 month days
+    } else {
+      setStart(false)
     }
-    cookie.set("FirstVisit", "true");
-
   }, []);
+  
 
-
+// sesion request
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySessionReq`, {
       method: "GET",

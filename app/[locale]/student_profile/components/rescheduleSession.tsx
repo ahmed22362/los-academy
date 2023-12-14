@@ -121,7 +121,7 @@ function RescheduleSession({
           <div className="flex  justify-center flex-col items-center gap-5">
             <div className="card w-full flex-col flex justify-center">
             <div className="mb-2 block">
-            <Label htmlFor="rengeDateEnd" value="Select Option Date Two " />
+            <Label htmlFor="rengeDateEnd" value="Select Option Date one " />
           </div>
           <input
             type="datetime-local"
@@ -137,7 +137,7 @@ function RescheduleSession({
           </div>
           <input
             type="datetime-local"
-            className="border-[5px] border-secondary-color rounded-xl"
+            className="border-[5px]  border-secondary-color rounded-xl"
             defaultValue={selectedEndDate}
             onChange={(e) => setSelectedEndDate(e.target.value)}
           />

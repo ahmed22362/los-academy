@@ -1,6 +1,6 @@
 "use client";
 
-import { CustomFlowbiteTheme, Tabs} from "flowbite-react";
+import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Toast } from "primereact/toast";
@@ -14,8 +14,8 @@ import SignupTap from "../components/loginComponents/signupTap";
 import LoginTap from "../components/loginComponents/loginTap";
 
 function page() {
-
   const toast = useRef<Toast>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const buttonTheme: CustomFlowbiteTheme["button"] = {
     color: {
@@ -40,11 +40,11 @@ function page() {
     });
   };
 
-
   const [activeTab, setActiveTab] = useState<boolean>(false);
 
   useEffect(() => {
     // Check if we are on the client side before using window
+    setIsLoading(true);
     if (typeof window !== "undefined") {
       const storedMessage = localStorage.getItem("registrationSuccessMessage");
       if (storedMessage) {
@@ -74,14 +74,15 @@ function page() {
     },
   };
 
-
-
   return (
     <section className="mt-8">
       <div className="flex items-center mt-40 justify-evenly gap-20 sm:flex-row flex-col-reverse ">
         <Toast ref={toast} />
-
-        <div className="image transition-all duration-500 ">
+        <div
+          className={`image transition-all duration-500 opacity-${
+            isLoading ? "5" : "0"
+          } duration-500 transition-opacity`}
+        >
           <Image
             src={`${activeTab ? "/vectors/login.svg" : "/vectors/signup.svg"}`}
             className="transition-all duration-500 w-auto h-auto"

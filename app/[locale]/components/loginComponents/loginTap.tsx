@@ -136,6 +136,7 @@ export default function loginTap() {
       {isLoading ? (
         <div>
           <Spinner
+            color={"purple"}
             style={{
               width: "2rem",
               height: "2rem",

@@ -130,12 +130,13 @@ export default function AdminLoginForm() {
       <Toast ref={toast} position={"top-center"} />
       {isLoading && (
         <Spinner
+          color={"purple"}
           style={{
-            width: "3rem",
-            height: "3rem",
+            width: "2rem",
+            height: "2rem",
             zIndex: "1000",
             position: "fixed",
-            top: "14%",
+            top: "5%",
             left: "1%",
           }}
         />

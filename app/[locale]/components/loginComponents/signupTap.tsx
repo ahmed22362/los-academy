@@ -8,7 +8,6 @@ import { signupSchema } from "@/schemas";
 import { useFormik } from "formik";
 import LoadingButton from "../../admin/components/loadingButton";
 import { useRouter } from "next/navigation";
-import { InputMask } from "primereact/inputmask";
 export default function signupTap() {
   const toast = useRef<Toast>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
@@ -166,28 +165,20 @@ export default function signupTap() {
             </div>
           </div>
           <div className="flex flex-col gap-1 justify-center items-center">
-            {/* <input
-          name="phone"
-          value={values.phone}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          type="tel"
-          className={`${errors.phone && touched.phone ? "border-[--danger-color]" : "border-[--secondary-color]"} gradiant-color rounded-3xl w-full appearance-none border-2`}
-          placeholder="Phone number"
-        /> */}
-            <InputMask
-              id="phone"
-              mask="(+0) 999-999999999"
-              placeholder="(+0) 999-999999999"
+            <input
+              name="phone"
               value={values.phone}
               onChange={handleChange}
               onBlur={handleBlur}
+              type="tel"
               className={`${
                 errors.phone && touched.phone
                   ? "border-[--danger-color]"
                   : "border-[--secondary-color]"
               } gradiant-color rounded-3xl w-full appearance-none border-2`}
-            ></InputMask>
+              placeholder="Phone number"
+            />
+
             {errors.phone && touched.phone ? (
               <span className="text-danger-color capitalize">
                 {errors.phone}

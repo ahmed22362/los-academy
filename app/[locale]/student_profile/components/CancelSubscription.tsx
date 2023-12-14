@@ -9,8 +9,6 @@ interface CancelSubscription {
 }
 function CancelSubscription({ onCancel }: CancelSubscription) {
   const cookie = new Cookies();
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
   const router = useRouter();
 
   const toast = useRef<Toast>(null);
@@ -33,10 +31,10 @@ function CancelSubscription({ onCancel }: CancelSubscription) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${url}/user/updateMyPlan`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/updateMyPlan`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${cookie.get("token")}`,
         },
       });
 
@@ -51,7 +49,7 @@ function CancelSubscription({ onCancel }: CancelSubscription) {
         console.error("GET request failed:", response.statusText);
         showError("Failed To Cancel plan");
       }
-    } catch (error) {
+    }catch (error) {
       console.error("Error during GET request:", error);
     }
   };

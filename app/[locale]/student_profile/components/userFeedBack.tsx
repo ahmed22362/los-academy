@@ -40,7 +40,6 @@ function UserFeedBack({ setUserFeedbackModal, userFeedbackModal }: any) {
     const feedbackData = {
       feedback: feedback,
     };
-    console.log(feedbackData);
 
     // Perform API request to submit feedback
     fetch(`${url}/feedback/`, {
@@ -57,10 +56,10 @@ function UserFeedBack({ setUserFeedbackModal, userFeedbackModal }: any) {
         // Handle success response
         if (data.status === "success") {
           showSuccess(`Feedback Sent Successfully`);
-          console.log("Feedback submitted successfully", data);
+          // console.log("Feedback submitted successfully", data);
           setUserFeedbackModal(false);
         } else {
-          console.log(data);
+          // console.log(data);
           showError(`${data.message}`);
         }
 

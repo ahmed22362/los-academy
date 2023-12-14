@@ -17,6 +17,7 @@ export default function loginTap() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showEmailVerification, setShowEmailVerification] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const toast = useRef<Toast>(null);
     const url = process.env.NEXT_PUBLIC_APIURL;
 
@@ -71,6 +72,7 @@ export default function loginTap() {
             setIsProcessing(false);
             if (data.status === "success") {
               showSuccess("Login Successfully");
+                setIsLoading(true)
               // console.log(data);
               localStorage.setItem("myName", data?.data?.name);
               setTimeout(() => {

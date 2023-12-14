@@ -137,8 +137,8 @@ export default function loginTap() {
         <div>
           <Spinner
             style={{
-              width: "3rem",
-              height: "3rem",
+              width: "2rem",
+              height: "2rem",
               zIndex: "1000",
               position: "fixed",
               top: "14%",

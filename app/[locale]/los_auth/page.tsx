@@ -17,7 +17,7 @@ function AdminLogin() {
         <div
           className={`w-[600px] h-[460px] max-md:w-full max-md:h-full opacity-${
             isLoading ? "5" : "0"
-          } duration-500 transition-opacity`}
+          } transition-opacity duration-500 `}
         >
           <Image
             src={"/vectors/adminLogin.svg"}

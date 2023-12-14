@@ -133,7 +133,7 @@ export default function loginTap() {
       style={{ minHeight: "300px", width: "100%" }}
     >
       <Toast ref={toast} />
-      {isLoading && (
+      {isLoading ? (
         <div>
           <Spinner
             style={{
@@ -146,6 +146,8 @@ export default function loginTap() {
             }}
           />
         </div>
+      ) : (
+        ""
       )}
       <h3 className="font-bold	 text-xl	"> Welcome Back ! </h3>
       <div className="flex flex-col gap-4" style={{ width: "100%" }}>

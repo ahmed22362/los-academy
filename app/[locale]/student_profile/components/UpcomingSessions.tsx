@@ -13,8 +13,9 @@ import { Toast } from "primereact/toast";
 import { Tooltip } from "flowbite-react";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { IoTimeOutline } from "react-icons/io5";
-import { useRouter } from "next/navigation";
 import { FaCalendarDays } from "react-icons/fa6";
+import { getSocket } from "@/utilities/connectWithSocket";
+import { Socket } from "socket.io-client";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import StudentPlanModal from "./StudentPlanModal";
 
@@ -46,32 +47,63 @@ interface ContinueStatus {
 
 function UpcomingSessions() {
   const cookie = new Cookies();
-  const [upComingSession, setUpComingSession] = useState<any[]>([]);
+  const [upComingSession, setUpComingSession]: any = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [openRescheduleModal, setopenRescheduleModal] = useState(false);
   const [sessionId, setsessionId] = useState("");
-  const [alertVisible, setAlertVisible] = useState(false);
   const [userContinueSessionId, setUserContinueSessionId] = useState<Number>();
   const [isImHereButtonDisabled, setIsImHereButtonDisabled] = useState(true);
   const [openPlansModal, setOpenPlansModal] = useState(false);
   const [selectedFreeSessionId, setSelectedFreeSessionId] = useState<number>();
   const [sessionLink, setSessionLink] = useState("");
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isRescheduleButtonDisabled, setIsRescheduleButtonDisabled] =
     useState(false);
   const [userContinueStatus, setUserContinueStatus] =
     useState<ContinueStatus>();
   useState<moment.Moment | null>(null);
-  const [ongoingSession, setOngoingSession] = useState<any[]>([]);
+  const [ongoingSession, setOngoingSession]: any = useState<any[]>([]);
   const [countdownCompleted, setCountdownCompleted] = useState<boolean>(false);
-  const [value, setValue] = useState(0);
   const [historySessions, setHistorySessions] = useState<any[]>([]);
 
+  // socet function
   useEffect(() => {
-    if (countdownCompleted) {
-      fetchUpcomingSessions();
-    }
-  }, [countdownCompleted]);
+    const newSocket: Socket = getSocket(cookie.get("token"));
+    newSocket.on("event", (object) => {
+      // console.log(object);
+    });
+    // console.log(newSocket.connect());
+    newSocket.on("finished_session", (data: object) => {
+      // console.log("finished_session", data);
+      setUpComingSession({ upComingSession: data });
+      setCountdownCompleted(true);
+    });
+    newSocket.on("ongoing_session", (data: object) => {
+      // console.log("ongoing_session", data);
+      setOngoingSession({ ongoingSession: data });
+    });
+  }, []);
 
+  // handle show confirmDialog state
+  useEffect(() => {
+    // Check your conditions here
+    if (
+      historySessions[0]?.type === "free" &&
+      historySessions[0]?.status === "taken" &&
+      ongoingSession.length === 0 &&
+      userContinueStatus?.willContinue === null
+    ) {
+      setShowConfirmDialog(true);
+    }
+    // const shouldShowDialog =
+    //   historySessions[0]?.type === 'free' &&
+    //   historySessions[0]?.status === 'taken' &&
+    //   ongoingSession.length === 0 &&
+    //   userContinueStatus?.willContinue === null;
+
+    // Update the state based on the conditions
+  }, [historySessions, ongoingSession, userContinueStatus]);
+  // handle accept continue with teacher
   const accept = (sessionId: any) => {
     setSelectedFreeSessionId(sessionId);
     const continueData = {
@@ -113,6 +145,7 @@ function UpcomingSessions() {
       });
   };
 
+  // handle reject continue with teacher
   const reject = (sessionId: any) => {
     // console.log(sessionId);
 
@@ -192,12 +225,13 @@ function UpcomingSessions() {
 
     return currentTime.isBetween(sessionStartTime, sessionEndTime);
   };
+
   useEffect(() => {
     fetchHistorySessions();
   }, []);
 
   const fetchHistorySessions = () => {
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/myHistorySessions`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/myLatestSession`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
@@ -205,7 +239,7 @@ function UpcomingSessions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        // console.log("history", data.data);
+        // console.log("latest", data.data);
 
         setHistorySessions(data.data);
         setUserContinueSessionId(data?.data[0]?.id);
@@ -277,25 +311,7 @@ function UpcomingSessions() {
   };
   // check for user continue Status
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/myContinueStatus`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // setUserContinueSessionId(data?.data?.id)
-        // console.log("user status", data);
-        setUserContinueStatus(data?.data);
-        // Set the retrieved Seeions in the state
-      })
-      .catch((error) => {
-        // console.error("Error fetching continue status:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    fetchContinueStatus();
   }, []);
 
   const fetchContinueStatus = () => {
@@ -311,10 +327,9 @@ function UpcomingSessions() {
         // console.log("user status", data);
         setUserContinueStatus(data?.data);
         // Set the retrieved Seeions in the state
-        // console.log(userContinueStatus);
       })
       .catch((error) => {
-        // console.error("Error fetching continue status:", error);
+        console.error("Error fetching continue status:", error);
       })
       .finally(() => {
         setLoading(false);
@@ -332,7 +347,7 @@ function UpcomingSessions() {
         // const diffInSec = diff / 1000
         const diffInSec = Math.floor(diff / 1000);
 
-        if (diffInSec === -5) {
+        if (diffInSec === 0) {
           // console.log("done");
           fetchOngoingSessions();
           clearInterval(intervalId); // Stop the interval once fetch is triggered
@@ -424,25 +439,11 @@ function UpcomingSessions() {
     if (countdownCompleted) {
       fetchHistorySessions();
       fetchContinueStatus();
+      fetchUpcomingSessions();
     }
   }, [countdownCompleted]);
 
-  //
-  const rescheduleButtonRef = useRef<HTMLButtonElement>(null);
-  const [rescheduleButtonTop, setRescheduleButtonTop] = useState(0);
-
-  useEffect(() => {
-    const measureButton = () => {
-      if (rescheduleButtonRef.current) {
-        const buttonTop = rescheduleButtonRef.current.offsetTop;
-        setRescheduleButtonTop(buttonTop);
-      }
-    };
-
-    measureButton();
-
-    // Cleanup function not needed for this case
-  }, []);
+  // Cleanup function not needed for this case
 
   // Updated updateAttendance function
   const updateAttendance = () => {
@@ -501,6 +502,20 @@ function UpcomingSessions() {
     <div
       className={` w-full p-5 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]`}
     >
+      {showConfirmDialog && (
+        <ConfirmDialog
+          closable={false}
+          visible={true}
+          message={"Do you want to Continue With This Teacher?"}
+          acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
+          rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
+          header="Continue With This Teacher"
+          icon="bi bi-info-circle"
+          position="top"
+          accept={() => accept(historySessions[0].id)}
+          reject={() => reject(historySessions[0].id)}
+        />
+      )}
       <StudentPlanModal
         openPlansModal={openPlansModal}
         setOpenPlansModal={setOpenPlansModal}
@@ -512,7 +527,7 @@ function UpcomingSessions() {
         {upComingSession[0]?.status || "upcoming session"}
       </h4>
       {upComingSession?.length > 0 ? (
-        upComingSession?.map((session, index) => (
+        upComingSession?.map((session: any, index: any) => (
           <div className="relative" key={index}>
             <p>{`Session #${session.id} with title ${session.type}`}</p>
             <div
@@ -553,45 +568,18 @@ function UpcomingSessions() {
             <div className="flex justify-center items-center">
               {isSessionRunning(session) ? (
                 <Countdown
+                  onStart={fetchOngoingSessions}
                   date={moment(session.sessionDate)
                     .add(session.sessionDuration, "minutes")
                     .toDate()}
                   renderer={({ hours, minutes, seconds, completed }) => {
                     if (completed) {
-                      setCountdownCompleted(true);
-
-                      if (upComingSession[0]?.type === "free") {
-                        setAlertVisible(true);
-                      }
-                      return (
-                        <span>
-                          {ongoingSession.length === 0 &&
-                            historySessions[0]?.type === "free" &&
-                            userContinueStatus?.willContinue === null &&
-                            session.type === "free" && (
-                              <ConfirmDialog
-                                closable={false}
-                                visible={true}
-                                message={
-                                  "Do you want to Continue With This Teacher?"
-                                }
-                                acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
-                                rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
-                                header="Continue With This Teacher"
-                                icon="bi bi-info-circle"
-                                position="top"
-                                accept={() => accept(userContinueSessionId)}
-                                reject={() => reject(userContinueSessionId)}
-                              />
-                            )}
-                        </span>
-                      );
+                      setTimeout(() => {
+                        setCountdownCompleted(true);
+                      });
+                      return <></>;
                     } else {
-                      const remainingSeconds = minutes * 60 + seconds;
-                      const totalSeconds = session.sessionDuration * 60;
-
                       // Update the value state for the knob
-                      setValue(remainingSeconds);
                       return (
                         <div className=" flex flex-col items-center gap-5 rounded-3xl px-3 py-1 ">
                           <p className="text-[#333]">
@@ -647,10 +635,10 @@ function UpcomingSessions() {
               >
                 <button
                   onClick={() => setopenRescheduleModal(true)}
-                  className={` text-sm text-secondary-color border-4 border-[--secondary-color] font-semibold transition-colors  xl:py-2 px-3 py-2  w-full rounded-full w-50 mx-auto md:py-0 max-md:w-45 ${
+                  className={` text-sm text-secondary-color border-4  font-semibold transition-colors  xl:py-2 px-3 py-2  w-full rounded-full w-50 mx-auto md:py-0 max-md:w-45 ${
                     isRescheduleButtonDisabled
-                      ? "bg-gray-500 cursor-not-allowed text-white"
-                      : "hover:bg-secondary-color hover:text-white"
+                      ? "bg-gray-500 border-gray-500 cursor-not-allowed text-white"
+                      : "hover:bg-secondary-color border-[--secondary-color] hover:text-white"
                   }`}
                   disabled={isRescheduleButtonDisabled}
                 >
@@ -664,7 +652,6 @@ function UpcomingSessions() {
               openRescheduleModal={openRescheduleModal}
               setOpenRescheduleModal={setopenRescheduleModal}
               fromUpdcoming={true}
-              rescheduleButtonTop={rescheduleButtonTop}
             />
             <StudentPlanModal
               openPlansModal={openPlansModal}
@@ -678,24 +665,22 @@ function UpcomingSessions() {
           <div className="flex justify-center mt-2 items-center flex-col gap-3 h-[200px]">
             <p className="font-meduim">No Upcoming Sessions</p>
             <span>
-              {ongoingSession.length === 0 &&
-                historySessions[0]?.type === "free" &&
-                userContinueStatus?.willContinue === null && (
-                  <ConfirmDialog
-                    closable={false}
-                    visible={true}
-                    message={
-                      "Do you want to Book Paid Sessions  With This Teacher?"
-                    }
-                    acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
-                    rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
-                    header="Continue With This Teacher"
-                    icon="bi bi-info-circle"
-                    position="top"
-                    accept={() => accept(userContinueSessionId)}
-                    reject={() => reject(userContinueSessionId)}
-                  />
-                )}
+              {showConfirmDialog && (
+                <ConfirmDialog
+                  closable={false}
+                  visible={true}
+                  message={
+                    "Do you want to Book Paid Sessions  With This Teacher?"
+                  }
+                  acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
+                  rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
+                  header="Continue With This Teacher"
+                  icon="bi bi-info-circle"
+                  position="top"
+                  accept={() => accept(userContinueSessionId)}
+                  reject={() => reject(userContinueSessionId)}
+                />
+              )}
             </span>
             <Image
               src={"/vectors/empty-calendar.png"}

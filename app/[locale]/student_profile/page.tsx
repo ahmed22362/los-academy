@@ -39,7 +39,7 @@ export default function page() {
   const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
 
   const [myInfo, setMyInfo] = useState<UserInfo | undefined>();
-  const [mySubscription, setMySubscription] = useState<any>([]);
+  const [mySubscription, setMySubscription] = useState<any>({});
   const router = useRouter();
   const [start, setStart] = useState<boolean>(false);
   const [pendingSessionRequest, setPendingSessionRequest] = useState<Session[]>([]);
@@ -57,8 +57,9 @@ export default function page() {
       .then((response) => response.json())
       .then((data) => {
         // console.log(data);
-
+          if(data.status==="success"){
         setMySubscription(data.data);
+          }
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
@@ -102,6 +103,7 @@ export default function page() {
     return convertedTime.format(ourFormat);
   };
   useEffect(() => {
+
     const isFirstVisit = cookie.get("FirstVisit") === undefined;
 // console.log(isFirstVisit);
 
@@ -110,8 +112,9 @@ export default function page() {
       setStart(true);
 
       // Set the flag to indicate that the user has seen the tips
-      cookie.set("FirstVisit", "true");
     }
+    cookie.set("FirstVisit", "true");
+
   }, []);
 
 
@@ -248,7 +251,7 @@ export default function page() {
         openContinueWithModal={openContinueWithModal}
         setOpenContinueWithModal={setOpenContinueWithModal}
       />
-      {mySubscription.lenght>0?  (
+      {mySubscription.lenght==0?  (
         <BannerComponent
           message={"You Want To Enjoy Sessions?"}
           animation={"animate-bounce"}

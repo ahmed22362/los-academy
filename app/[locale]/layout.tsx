@@ -11,8 +11,6 @@ import { NextIntlClientProvider } from "next-intl";
 import Footer from "@/app/[locale]/components/layout/Footer";
 import CustomNavbar from "@/app/[locale]/components/layout/Navbar";
 import NextTopLoader from "nextjs-toploader";
-import { Suspense } from "react";
-import { NavigationEvents } from "./components/navigationEvents";
 
 // the main font
 const workSans = Work_Sans({
@@ -86,9 +84,9 @@ export default async function LocaleLayout({
             shadow="0 0 10px #2299DD,0 0 5px #2299DD"
           />
           {children}
-          <Suspense fallback={<>Loading..</>}>
+          {/* <Suspense fallback={<>Loading..</>}>
             <NavigationEvents />
-          </Suspense>
+          </Suspense> */}
           <Footer />
         </NextIntlClientProvider>
       </body>

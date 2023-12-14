@@ -7,6 +7,7 @@ import { useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import ForgetPassword from "../../student_profile/components/forgetPassword";
 import PrimaryButton from "../PrimaryButton";
+import LoadingButton from "../../admin/components/loadingButton";
 
 export default function loginTap() {
   const cookies = new Cookies();
@@ -154,6 +155,8 @@ export default function loginTap() {
           value={email}
           onChange={handleEmailChange}
           placeholder="Email address "
+          required
+          autoFocus
           onKeyDown={(e) => e.key === "Enter" && handleLogin()}
         />
         <input
@@ -190,7 +193,15 @@ export default function loginTap() {
             </div>
           </div>
         )}
-        <Button
+        <LoadingButton
+          isProcessing={isProcessing}
+          title="Login"
+          customStyle={
+            "text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
+          }
+          action={handleLogin}
+        />
+        {/* <Button
           onClick={handleLogin}
           color="purple"
           isProcessing={isProcessing}
@@ -201,7 +212,7 @@ export default function loginTap() {
           }
         >
           <p>Login</p>
-        </Button>
+        </Button> */}
 
         <span className="text-center">Or Login with </span>
         <div className="flex gap-3">

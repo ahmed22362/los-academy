@@ -198,7 +198,7 @@ export default function CustomNavbar() {
             ) : (
               <LoginButton />
             )}
-            <Dropdown label={<MdLanguage className="w-5 h-5" />} inline>
+            {/* <Dropdown label={<MdLanguage className="w-5 h-5" />} inline>
               <LinkIntl locale="en" href={"/"}>
                 <Dropdown.Item className="rtl:flex-row-reverse ltr:flex-row">
                   en
@@ -209,7 +209,7 @@ export default function CustomNavbar() {
                   ar
                 </Dropdown.Item>
               </LinkIntl>
-            </Dropdown>
+            </Dropdown> */}
           </div>
         </Navbar>
       </>

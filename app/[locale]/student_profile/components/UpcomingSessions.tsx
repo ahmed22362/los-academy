@@ -6,6 +6,7 @@ import styles from "../page.module.css";
 import Cookies from "universal-cookie";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import ContentLoader from "react-content-loader";
+import { ProgressSpinner } from 'primereact/progressspinner';
 import RescheduleSession from "./rescheduleSession";
 import Image from "next/image";
 import Countdown from "react-countdown";
@@ -494,6 +495,7 @@ function UpcomingSessions() {
           <rect x="239" y="62" rx="3" ry="3" width="78" height="13" />
         </ContentLoader>
       </div>
+    
     ); // You can replace this with a loading spinner or any other loading indicator
   }
   //

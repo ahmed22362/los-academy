@@ -65,7 +65,7 @@ function UpcomingSessions() {
   useState<moment.Moment | null>(null);
   const [ongoingSession, setOngoingSession]: any = useState<any[]>([]);
   const [countdownCompleted, setCountdownCompleted] = useState<boolean>(false);
-  const [historySessions, setHistorySessions] = useState<any[]>([]);
+  const [latestSession, setLatestSession] = useState<any[]>([]);
 
   // socet function
   useEffect(() => {
@@ -89,21 +89,21 @@ function UpcomingSessions() {
   useEffect(() => {
     // Check your conditions here
     if (
-      historySessions[0]?.type === "free" &&
-      historySessions[0]?.status === "taken" &&
+      latestSession[0]?.type === "free" &&
+      latestSession[0]?.status === "taken" &&
       ongoingSession.length === 0 &&
       userContinueStatus?.willContinue === null
     ) {
       setShowConfirmDialog(true);
     }
     // const shouldShowDialog =
-    //   historySessions[0]?.type === 'free' &&
-    //   historySessions[0]?.status === 'taken' &&
+    //   latestSession[0]?.type === 'free' &&
+    //   latestSession[0]?.status === 'taken' &&
     //   ongoingSession.length === 0 &&
     //   userContinueStatus?.willContinue === null;
 
     // Update the state based on the conditions
-  }, [historySessions, ongoingSession, userContinueStatus]);
+  }, [latestSession, ongoingSession, userContinueStatus]);
   // handle accept continue with teacher
   const accept = (sessionId: any) => {
     setSelectedFreeSessionId(sessionId);
@@ -138,11 +138,10 @@ function UpcomingSessions() {
           }, 3000);
         } else {
           // console.error(data);
-          // Handle error if needed
         }
       })
       .catch((error) => {
-        // console.error("Error during POST request:", error);
+        console.error("Error during POST request:", error);
       });
   };
 
@@ -228,10 +227,10 @@ function UpcomingSessions() {
   };
 
   useEffect(() => {
-    fetchHistorySessions();
+    fetchLatestSession();
   }, []);
 
-  const fetchHistorySessions = () => {
+  const fetchLatestSession = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/myLatestSession`, {
       method: "GET",
       headers: {
@@ -242,7 +241,7 @@ function UpcomingSessions() {
       .then((data) => {
         // console.log("latest", data.data);
 
-        setHistorySessions(data.data);
+        setLatestSession(data.data);
         setUserContinueSessionId(data?.data[0]?.id);
         // console.log(data?.data[0]?.id);
 
@@ -438,7 +437,7 @@ function UpcomingSessions() {
 
   useEffect(() => {
     if (countdownCompleted) {
-      fetchHistorySessions();
+      fetchLatestSession();
       fetchContinueStatus();
       fetchUpcomingSessions();
     }
@@ -514,8 +513,8 @@ function UpcomingSessions() {
           header="Continue With This Teacher"
           icon="bi bi-info-circle"
           position="top"
-          accept={() => accept(historySessions[0].id)}
-          reject={() => reject(historySessions[0].id)}
+          accept={() => accept(latestSession[0].id)}
+          reject={() => reject(latestSession[0].id)}
         />
       )}
       <StudentPlanModal
@@ -666,24 +665,6 @@ function UpcomingSessions() {
         <>
           <div className="flex justify-center mt-2 items-center flex-col gap-3 h-[200px]">
             <p className="font-meduim">No Upcoming Sessions</p>
-            <span>
-              {showConfirmDialog && (
-                <ConfirmDialog
-                  closable={false}
-                  visible={true}
-                  message={
-                    "Do you want to Book Paid Sessions  With This Teacher?"
-                  }
-                  acceptClassName="bg-secondary-color text-white px-2 py-1 rounded-md"
-                  rejectClassName="px-2 text-white mr-2 bg-red-500 hover:bg-red-600 py-1"
-                  header="Continue With This Teacher"
-                  icon="bi bi-info-circle"
-                  position="top"
-                  accept={() => accept(userContinueSessionId)}
-                  reject={() => reject(userContinueSessionId)}
-                />
-              )}
-            </span>
             <Image
               src={"/vectors/empty-calendar.png"}
               alt="no upcoming session"

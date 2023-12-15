@@ -116,10 +116,10 @@ function TeacherRescduleRequests({
         // console.log(data); // Log the response data
         if (data.status === "success") {
           showSuccess(data.message);
-          fetchTeacherRescheduleRequests();
         } else {
           showError(data.message);
         }
+        fetchTeacherRescheduleRequests();
         // Handle success, e.g., update state or show a success message
         // console.log("Reschedule request accepted successfully");
       })
@@ -208,6 +208,7 @@ function TeacherRescduleRequests({
         openRescheduleModal={openRescheduleModal}
         sessionId={sessionId}
         fromTeacherRequest={true}
+
       />
       <Toast ref={toast} />
       <div className="md:min-h-[190px] max-md:min-h-[150px] ">
@@ -245,18 +246,22 @@ function TeacherRescduleRequests({
                           Teacher Name:{" "}
                           {request.session?.SessionInfo?.teacher.name}
                         </p>
-                        {/* <p className="  font-medium">
-                      Status:{" "}
-                      <span
-                        className={`${
-                          request.status === "pending"
-                            ? "bg-yellow-400 text-white"
-                            : "border shadow bg-white"
-                        }  px-3 py-1 font-semibold rounded-lg `}
-                      >
-                        {request.status}
-                      </span>
-                    </p>
+                        {fromStudentProfile?'':
+                      (
+                        <p className="  font-medium">
+                        Status:{" "}
+                        <span
+                          className={`${
+                            request.status === "pending"
+                              ? "bg-yellow-400 text-white"
+                              : "border shadow bg-white"
+                          }  px-3 py-1 font-semibold rounded-lg `}
+                        >
+                          {request.status}
+                        </span>
+                      </p>
+                      )}
+                        {/* 
                     <p className="  font-medium">
                       Requested By: {request.requestedBy.toUpperCase()}
                     </p> */}

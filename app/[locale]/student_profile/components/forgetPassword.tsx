@@ -10,6 +10,7 @@ function ForgetPassword({
   const handleEmailChange = (e: any) => {
     setEmail(e.target.value);
   };
+  const [isProcessing, setIsProcessing] = useState(false)
   const toast = useRef<Toast>(null);
   const showSuccess = (msg: any) => {
     toast.current?.show({
@@ -35,6 +36,7 @@ function ForgetPassword({
       return;
     }
 
+    setIsProcessing(true)
     // Send a POST request to the forget password endpoint
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/auth/forgetPassword`, {
       method: "POST",
@@ -45,6 +47,7 @@ function ForgetPassword({
     })
       .then((response) => response.json())
       .then((data) => {
+        setIsProcessing(false)
         if (data.status === "success") {
           showSuccess(`${data.message} please check your gmail`);
           console.log(data);
@@ -54,6 +57,7 @@ function ForgetPassword({
         }
       })
       .catch((error) => {
+        setIsProcessing(false)
         console.log(error);
         showError(`${error.message}`);
 
@@ -91,12 +95,23 @@ function ForgetPassword({
             />
           </div>
           <div className="flex justify-center items-center">
-            <button
+          <Button
+                onClick={handleForgetPassword}
+                color="purple"
+                isProcessing={isProcessing}
+                pill
+                size="lg"
+                className="bg-secondary-color  hover:bg-[#413ca3e5]  font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-1 px-10   rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
+
+              >
+                <p>Send Mail</p>
+              </Button>
+            {/* <button
               onClick={handleForgetPassword}
               className="bg-secondary-color  hover:bg-[#413ca3e5]  font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-3 px-16   rounded-full w-50 mx-auto max-md:py-2.5 max-md:px-10 max-md:w-45"
             >
-              Done
-            </button>
+              Send Mail
+            </button> */}
           </div>
         </Modal.Body>
       </Modal>

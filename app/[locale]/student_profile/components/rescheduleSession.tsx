@@ -17,7 +17,7 @@ function RescheduleSession({
   openRescheduleModal,
   sessionId,
   fromTeacherRequest,
-  fromUpdcoming,
+  onSuccessReschedule
 }: any) {
   const [selectedStartDate, setSelectedStartDate] = useState<
     Nullable<Date> | any

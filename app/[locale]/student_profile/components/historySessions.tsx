@@ -34,7 +34,7 @@ function HistorySessions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
 
         setHistorySessions(data.data);
         // Set the retrieved Seeions in the state

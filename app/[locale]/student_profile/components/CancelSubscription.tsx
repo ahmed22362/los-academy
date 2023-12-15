@@ -1,16 +1,17 @@
-import React, { useRef } from "react";
-import { Checkbox, Label } from "flowbite-react";
+import React, { useRef, useState } from "react";
+import { Button, Checkbox, Label } from "flowbite-react";
 import PrimaryButton from "../../components/PrimaryButton";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
+import LoadingButton from "../../admin/components/loadingButton";
 interface CancelSubscription {
   onCancel: () => void;
 }
 function CancelSubscription({ onCancel }: CancelSubscription) {
   const cookie = new Cookies();
   const router = useRouter();
-
+const [isProcessing, setIsProcessing] = useState(false)
   const toast = useRef<Toast>(null);
   const showSuccess = (msg: any) => {
     toast.current?.show({
@@ -30,6 +31,7 @@ function CancelSubscription({ onCancel }: CancelSubscription) {
   };
 
   const fetchData = async () => {
+    setIsProcessing(true)
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/updateMyPlan`, {
         method: "GET",
@@ -39,8 +41,9 @@ function CancelSubscription({ onCancel }: CancelSubscription) {
       });
 
       if (response.ok) {
+        setIsProcessing(false)
         const data = await response.json();
-        console.log("GET request successful:", data);
+        // console.log("GET request successful:", data);
         showSuccess(`${data.message}`);
         setTimeout(() => {
           router.push(data.data.url);
@@ -50,6 +53,7 @@ function CancelSubscription({ onCancel }: CancelSubscription) {
         showError("Failed To Cancel plan");
       }
     }catch (error) {
+      setIsProcessing(false)
       console.error("Error during GET request:", error);
     }
   };
@@ -95,13 +99,22 @@ function CancelSubscription({ onCancel }: CancelSubscription) {
               </div>
             </div>
           </div>
+        
         </div>
         <div className="flex flex-col justify-center items-center gap-4 mt-5">
-          <PrimaryButton
-            ourStyle="bg-[#EB5757] rounded-2xl text-white px-5 py-2 w-fit "
-            text="Cancel Subscription"
-            onClick={fetchData}
-          />
+        <Button
+          onClick={fetchData}
+          color=""
+          isProcessing={isProcessing}
+          pill
+          size="lg"
+          className={
+            "bg-[#EB5757] hover:bg-[#e64242] rounded-2xl text-white px-2 py-1 w-fit"
+          }
+        >
+          <p>Cancel Subscription</p>
+        </Button>
+        
           <PrimaryButton
             ourStyle="text-[#828282] hover:text-[#6a6666] duration-200"
             onClick={onCancel}

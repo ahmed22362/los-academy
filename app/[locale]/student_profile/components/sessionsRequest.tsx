@@ -267,19 +267,19 @@ const fetchMySessionRequests=()=>{
                   ))}
                 </ul>
 
-                {/* <p className="mr-3 font-semibold flex justify-between items-center">
+                <p className="mr-3 font-semibold flex justify-between items-center">
                   Status:
                   <span
                     className={
                       session.status === "pending"
-                        ? `rounded-full p-2 px-3 text-sm bg-[#ffaa38] ml-2 border text-white`
-                        : "ml-2 text-sm px-3"
+                        ? `rounded-full p-2 font-normal px-3 text-sm bg-[#ffaa38] ml-2 border text-white`
+                        : "ml-2 text-sm px-3 font-normal py-1  rounded-lg border shadow bg-white"
                     }
                   >
                     {" "}
                     {session.status}{" "}
                   </span>
-                </p> */}
+                </p>
                 {/* <p>
                   Type:
                   <span

@@ -16,7 +16,7 @@ export default function SessionsModal({
   const customeTheme: CustomFlowbiteTheme = {
     tab: {
       tablist: {
-        base: "flex  items-center max-md:justify-center w-fit   ",
+        base: "flex flex-nowrap items-center justify-center  w-fit  ",
         tabitem: {
           styles: {
             pills: {

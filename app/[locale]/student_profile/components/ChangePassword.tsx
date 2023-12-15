@@ -117,7 +117,7 @@ function ChangePassword({ onCancel }: ChangePasswordProps) {
         </div>
 
         <div className="max-md:flex-col  flex justify-center items-center gap-6">
-          <div className="relative z-0  max-md:w-full md:mb-6 group">
+          <div className="relative z-0  max-md:w-full  group">
             <input
               type={showNewPassword ? "text" : "password"}
               id="newPassword"

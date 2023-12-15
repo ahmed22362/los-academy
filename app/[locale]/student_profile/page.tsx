@@ -44,6 +44,8 @@ export default function page() {
   const [start, setStart] = useState<boolean>(false);
   const [pendingSessionRequest, setPendingSessionRequest] = useState<Session[]>([]);
   const [teacherUbsentSessions, setTeacherUbsentSessions] = useState<any[]>([]);
+  const [myReschedule, setMyReschedule] = useState<any[]>([]);
+  const [teatcherreschedule, setTeatcherReschedule] = useState<any[]>([]);
 
   const cookie=new Cookies();
 // my subscribtion
@@ -102,6 +104,76 @@ export default function page() {
       .tz(outputTimezone);
     return convertedTime.format(ourFormat);
   };
+// fetch my reschedule
+const fetchMyReschedule = () => {
+  fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/requestReschedule`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${cookie.get("token")}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // console.log(data);
+
+      const pendingRequests = data.data.filter(
+        (request: any) => request.status === "pending"
+      );
+      const sortedPendingRequests = pendingRequests.sort((a: any, b: any) =>
+        moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+      );
+      const sortedRequests = data.data.sort((a: any, b: any) =>
+        moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+      );
+     
+        setMyReschedule(sortedPendingRequests);
+    })
+    .catch((error) => {
+      console.error("Error fetching sessions:", error);
+    })
+    .finally(() => {
+    });
+};
+// fetch teacher reschedule
+const fetchTeacherRescheduleRequests = () => {
+  fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/receivedRescheduleRequests`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${cookie.get("token")}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // console.log(data);
+
+      const pendingRescheduleRequests = data.data.filter(
+        (request: any) => request.status === "pending"
+      );
+
+      const sortedPendingRescheduleRequests = pendingRescheduleRequests.sort(
+        (a: any, b: any) => {
+          // Adjust the sorting logic based on your specific requirements
+          return moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0])
+            ? 1
+            : -1;
+        }
+      );
+      const sortedTeacherRequests = data.data.sort((a: any, b: any) =>
+        moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+      );
+      setTeatcherReschedule(sortedPendingRescheduleRequests);
+     
+    })
+    .catch((error) => {
+      console.error("Error fetching sessions:", error);
+    })
+    .finally(() => {
+    });
+};
+useEffect(() => {
+  fetchMyReschedule();
+  fetchTeacherRescheduleRequests();
+}, [myReschedule,teatcherreschedule])
 
   // handle first visit
   useEffect(() => {
@@ -269,21 +341,24 @@ export default function page() {
           <div className="">
           <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}>
             </h3>
-          <div
-            className={`my-11 p-3 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	rescheduling_section`}
-          >
-            <h3 className={`${styles.secondary_head} mb-3 mt-2 ml-2`}>
-              Reschedule Requests{" "}
-            </h3>
-
-            <div data-aos="fade-up" className=" ">
-              <RescheduleRequests  fromStudentProfile={true} />
-            </div>
-          </div>
+            {myReschedule.length>0 || teatcherreschedule.length>0?
+             <div
+             className={`my-11 p-3 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	rescheduling_section`}
+           >
+             <h3 className={`${styles.secondary_head} mb-3 mt-2 ml-2`}>
+               Reschedule Requests{" "}
+             </h3>
+ 
+             <div data-aos="fade-up" className=" ">
+               <RescheduleRequests  fromStudentProfile={true} />
+             </div>
+           </div>
+          :''}
+         
             <div
-              className={`community_section	w-full p-5  shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
+              className={`community_section	w-full my-11 p-3 shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] rounded-[24px]	`}
             >
-              <h4 className={`${styles.secondary_head} mb-5 ml-3`}>
+              <h4 className={`${styles.secondary_head} mb-3 ml-3`}>
                 Community statistics :
               </h4>
               <div data-aos="fade-down">

@@ -200,7 +200,9 @@ function MyRescheduleRequest({
                           {request.sessionId}
                         </span>
                       </p> */}
-                      {/* <p className="my-1  font-medium">
+                      {fromStudentProfile?'':
+                      (
+                        <p className="my-1  font-medium">
                         Status:{" "}
                         <span
                           className={`${
@@ -211,7 +213,9 @@ function MyRescheduleRequest({
                         >
                           {request.status}
                         </span>
-                      </p> */}
+                      </p>
+                      )}
+                    
                       {/* <p className="my-1  font-medium">
                         Requested By:{" "}
                         {request.requestedBy === "user"

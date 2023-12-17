@@ -53,8 +53,8 @@ export default function Subscribtion({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        console.log("obj", data.data);
+        // console.log(data);
+        // console.log("obj", data.data);
         // console.log("status", data.status);
 
         
@@ -67,7 +67,7 @@ export default function Subscribtion({
           setMySubscription([planData]);
         } else {
           // Handle the case where the plan information is missing or invalid
-          console.error("Invalid or missing plan information in the API response");
+          // console.log("Invalid or missing plan information in the API response");
         }
         // Set the retrieved Seeions in the state
       })

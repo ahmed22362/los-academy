@@ -19,6 +19,7 @@
     "formik": "^2.4.5",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
+    "lodash.js": "^0.0.1-security",
     "moment-timezone": "^0.5.43",
     "next": "13.5.4",
     "next-auth": "^4.24.4",

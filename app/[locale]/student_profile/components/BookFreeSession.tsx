@@ -7,6 +7,7 @@ import PrimaryButton from "../../components/PrimaryButton";
 import { Toast } from "primereact/toast";
 import ViewCourses from "./viewCourses";
 import { Button } from "flowbite-react";
+import { useRouter } from "next/navigation";
 
 function BookFreeSession({ setOpenBookModal }: any) {
   const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date> | any>(
@@ -17,7 +18,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
     setSelectedCourses(courses);
   };
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-
+const router=useRouter();
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -74,6 +75,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
           showSuccessMessage("Booking Free Session successful");
           setTimeout(() => {
             setOpenBookModal(false);
+            router.refresh();
           }, 4000);
         } else {
           setIsProcessing(false);
@@ -115,7 +117,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
         color="purple"
         isProcessing={isProcessing}
         pill
-        size="sm"
+        size="md"
         className={
           "bg-secondary-color hover:bg-[#3b369a] text-white 	py-2 border rounded-3xl text-md px-10	 transition-all	duration-500 "
         }

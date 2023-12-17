@@ -149,7 +149,7 @@ function RescheduleSession({
                 color="purple"
                 isProcessing={isProcessing}
                 pill
-                size="sm"
+                size="md"
                 className={
                   "bg-secondary-color hover:bg-[#3b369a] text-white  py-2 border rounded-3xl text-md px-10 transition-all duration-500"
                 }

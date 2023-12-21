@@ -23,7 +23,7 @@ function FooterMain() {
         <h2 className={"font-semibold text-xl"}>LOS Academy</h2>
       </div>
       {/* Links part */}
-      <div className="max-sm:flex max-sm:flex-row max-sm:items-start max-sm:justify-between max-sm:w-full max-sm:px-10 max-[360px]:px-5 flex justify-around w-[calc(100%2)]">
+      <div className="max-sm:flex max-sm:flex-row max-sm:items-start max-sm:justify-between max-sm:w-full max-sm:px-10 max-[360px]:px-5 flex justify-around w-[600px]">
         <div className="flex flex-col items-end">
           <h5 className="font-semibold text-base text-black-one-color mb-2">
             Academy

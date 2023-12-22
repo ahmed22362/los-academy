@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Modal } from "flowbite-react";
 import Cookies from "universal-cookie";
 import { Calendar, CalendarProps } from "primereact/calendar";
@@ -15,7 +15,8 @@ function ContinueWithModal({
   const [continueWithFirstDate, setContinueWithFirstDate] = useState<
     Nullable<Date> | any
   >(null);
-
+  const [latestSession, setLatestSession]:any = useState<any[]>([]);
+const [isProcessing, setIsProcessing] = useState(false)
   const toast = useRef<Toast>(null);
 
   const showSuccess = (msg: any) => {
@@ -35,8 +36,69 @@ function ContinueWithModal({
       life: 5000,
     });
   };
+  useEffect(() => {
+    fetchLatestSession();
+  }, [openContinueWithModal]);
 
+  const fetchLatestSession = () => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/myLatestSession`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log("latest", data.data);
+
+        setLatestSession(data.data);
+        // console.log(data?.data[0]?.id);
+
+        // Set the retrieved Seeions in the state
+      })
+      .catch((error) => {
+        // console.error("Error fetching sessions:", error);
+      });
+  };
+  const accept = (sessionId: any) => {
+    const continueData = {
+      sessionId: Number(sessionId),
+      willContinue: true,
+    };
+    console.log(continueData);
+
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(continueData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+
+        if (data.status === "success") {
+          // console.log("POST request successful:", data);
+          toast.current?.show({
+            severity: "info",
+            summary: "Confirmed",
+            detail: "You have accepted continue with teacher",
+            life: 3000,
+          });
+        
+        } else {
+          // console.error(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error during POST request:", error);
+      });
+  };
   const placeDates = () => {
+
+    accept(latestSession[0]?.id);
     if (
       !continueWithFirstDate ||
       !Array.isArray(continueWithFirstDate) ||
@@ -48,9 +110,9 @@ function ContinueWithModal({
     if (continueWithFirstDate && Array.isArray(continueWithFirstDate) && continueWithFirstDate.length > 0) {
       const selectedDates = continueWithFirstDate.map((date) => date.toISOString());
     
-    console.log("placeDates function is triggered");
+    // console.log("placeDates function is triggered");
 
-    
+    setIsProcessing(true)
 
     const rescheduleData = {
       sessionDates: selectedDates,
@@ -66,8 +128,8 @@ function ContinueWithModal({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-
+        // console.log(data);
+        setIsProcessing(false)
         if (data.status === "success") {
           window.history.replaceState(null, '', '/student_profile')
           showSuccess("session with this teacher placed successfully");
@@ -80,6 +142,7 @@ function ContinueWithModal({
           console.error(data);
           showError(data.message);
           window.history.replaceState(null, '', '/student_profile')
+        setIsProcessing(false)
 
         }
       
@@ -97,7 +160,7 @@ function ContinueWithModal({
       <Toast ref={toast} />
       <Modal
         show={openContinueWithModal}
-        className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "
+        className="block  space-y-0 md:flex md:space-y-0 md:space-x-4 "
         size={"xl"}
         onClose={() => setOpenContinueWithModal(false)}
       >
@@ -123,16 +186,21 @@ function ContinueWithModal({
                     outline: "4px solid var(--secondary-color)",
                     width: "100%",
                   }}
-                  placeholder="Select First Avilable Date and Time"
+                  placeholder="Select  Avilable Date and Time"
                 />
               </div>
-             
-              <button
-                onClick={placeDates}
-                className=" max-md-px-1 py-2 px-5 w-fit text-sm font-semibold transition-colors text- shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10   rounded-full mx-auto max-md:px-4 max-md:w-45"
-              >
-                Continue
-              </button>
+              <Button
+              onClick={placeDates}
+              color="purple"
+              isProcessing={isProcessing}
+              pill
+              size="md"
+              className=" max-md-px-1 text-white py-2 px-5 w-fit text-sm font-semibold transition-colors text- shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10   rounded-full mx-auto max-md:px-4 max-md:w-45"
+
+            >
+              <p>Continue</p>
+            </Button>
+              
             </div>
           </div>
         </Modal.Body>

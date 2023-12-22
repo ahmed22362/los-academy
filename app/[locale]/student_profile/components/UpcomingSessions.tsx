@@ -19,6 +19,8 @@ import { getSocket } from "@/utilities/connectWithSocket";
 import { Socket } from "socket.io-client";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import StudentPlanModal from "./StudentPlanModal";
+import { useRouter } from "next/navigation";
+import ContinueWithModal from "./continueWithModal";
 
 interface ContinueStatus {
   createdAt: string;
@@ -52,10 +54,8 @@ function UpcomingSessions() {
   const [loading, setLoading] = useState(true);
   const [openRescheduleModal, setopenRescheduleModal] = useState(false);
   const [sessionId, setsessionId] = useState("");
-  const [userContinueSessionId, setUserContinueSessionId] = useState<Number>();
   const [isImHereButtonDisabled, setIsImHereButtonDisabled] = useState(true);
   const [openPlansModal, setOpenPlansModal] = useState(false);
-  const [selectedFreeSessionId, setSelectedFreeSessionId] = useState<number>();
   const [sessionLink, setSessionLink] = useState("");
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isRescheduleButtonDisabled, setIsRescheduleButtonDisabled] =
@@ -65,18 +65,21 @@ function UpcomingSessions() {
   useState<moment.Moment | null>(null);
   const [ongoingSession, setOngoingSession]: any = useState<any[]>([]);
   const [countdownCompleted, setCountdownCompleted] = useState<boolean>(false);
-  const [latestSession, setLatestSession] = useState<any[]>([]);
-
+  const [latestSession, setLatestSession]:any = useState<any[]>([]);
+  const [mySubscription, setMySubscription]:any = useState<any[]>([]);
+  const [openContinueWithModal, setOpenContinueWithModal] = useState(false)
+  const router=useRouter()
   // socet function
   useEffect(() => {
     const newSocket: Socket = getSocket(cookie.get("token"));
     newSocket.on("event", (object) => {
-      // console.log(object);
+      // console.log(newSocket);
     });
     // console.log(newSocket.connect());
     newSocket.on("finished_session", (data: object) => {
-      // console.log("finished_session", data);
+      console.log("finished_session", data);
       setUpComingSession({ upComingSession: data });
+      setLatestSession(data)
       setCountdownCompleted(true);
     });
     newSocket.on("ongoing_session", (data: object) => {
@@ -89,11 +92,12 @@ function UpcomingSessions() {
   useEffect(() => {
     // Check your conditions here
     if (
+      latestSession.length>0 &&
       latestSession[0]?.type === "free" &&
       latestSession[0]?.status === "taken" &&
-      ongoingSession.length === 0 &&
-      userContinueStatus?.willContinue === null
-    ) {
+      userContinueStatus?.willContinue === null&&
+      mySubscription.length === 0
+      ) {
       setShowConfirmDialog(true);
     }
     // const shouldShowDialog =
@@ -105,49 +109,55 @@ function UpcomingSessions() {
     // Update the state based on the conditions
   }, [latestSession, ongoingSession, userContinueStatus]);
   // handle accept continue with teacher
+  
   const accept = (sessionId: any) => {
-    setSelectedFreeSessionId(sessionId);
-    const continueData = {
-      sessionId: Number(sessionId),
-      willContinue: true,
-    };
+
+    if(mySubscription.length>0){
+      setOpenContinueWithModal(true)
+    }
+    setOpenPlansModal(true);
+
+    // setSelectedFreeSessionId(sessionId);
+    // const continueData = {
+    //   sessionId: Number(sessionId),
+    //   willContinue: true,
+    // };
     // console.log(continueData);
 
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${cookie.get("token")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(continueData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log(data);
+    // fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
+    //   method: "POST",
+    //   headers: {
+    //     Authorization: `Bearer ${cookie.get("token")}`,
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(continueData),
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log(data);
 
-        if (data.status === "success") {
-          // console.log("POST request successful:", data);
-          toast.current?.show({
-            severity: "info",
-            summary: "Confirmed",
-            detail: "You have accepted",
-            life: 3000,
-          });
-          setTimeout(() => {
-            setOpenPlansModal(true);
-          }, 3000);
-        } else {
-          // console.error(data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error during POST request:", error);
-      });
+    //     if (data.status === "success") {
+    //       // console.log("POST request successful:", data);
+    //       toast.current?.show({
+    //         severity: "info",
+    //         summary: "Confirmed",
+    //         detail: "You have accepted",
+    //         life: 3000,
+    //       });
+    //       setTimeout(() => {
+    //       }, 3000);
+    //     } else {
+    //       // console.error(data);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error during POST request:", error);
+    //   });
   };
 
   // handle reject continue with teacher
   const reject = (sessionId: any) => {
-    // console.log(sessionId);
+    console.log(sessionId);
 
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
       method: "POST",
@@ -179,7 +189,28 @@ function UpcomingSessions() {
         // console.error("Error during POST request:", error);
       });
   };
-
+  const fetchMySubscription=()=>{
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySubscription`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log(data);
+          if(data.status==="success"){
+        setMySubscription(data.data);
+          }
+        // Set the retrieved Seeions in the state
+      })
+      .catch((error) => {
+        console.error("Error fetching subscription:", error);
+      });
+  }
+    useEffect(() => {
+      fetchMySubscription();  
+    }, []);
   const toast = useRef<Toast>(null);
   const showSuccess = (msg: any) => {
     toast.current?.show({
@@ -242,7 +273,6 @@ function UpcomingSessions() {
         // console.log("latest", data.data);
 
         setLatestSession(data.data);
-        setUserContinueSessionId(data?.data[0]?.id);
         // console.log(data?.data[0]?.id);
 
         // Set the retrieved Seeions in the state
@@ -335,6 +365,7 @@ function UpcomingSessions() {
         setLoading(false);
       });
   };
+  
   useEffect(() => {
     if (upComingSession.length > 0) {
       const sessionDate: number = new Date(
@@ -437,7 +468,8 @@ function UpcomingSessions() {
 
   useEffect(() => {
     if (countdownCompleted) {
-      fetchLatestSession();
+        router.refresh()
+      // fetchLatestSession();========================================+
       fetchContinueStatus();
       fetchUpcomingSessions();
     }
@@ -468,7 +500,7 @@ function UpcomingSessions() {
         }
       })
       .catch((error) => {
-        // console.error("Error during POST request:", error);
+        console.error("Error during POST request:", error);
       });
   };
 
@@ -517,6 +549,10 @@ function UpcomingSessions() {
           reject={() => reject(latestSession[0].id)}
         />
       )}
+      <ContinueWithModal
+      openContinueWithModal={openContinueWithModal}
+      setOpenContinueWithModal={setOpenContinueWithModal}
+      />
       <StudentPlanModal
         openPlansModal={openPlansModal}
         setOpenPlansModal={setOpenPlansModal}
@@ -569,7 +605,7 @@ function UpcomingSessions() {
             <div className="flex justify-center items-center">
               {isSessionRunning(session) ? (
                 <Countdown
-                  onStart={fetchOngoingSessions}
+                  onStart={()=>fetchOngoingSessions()}
                   date={moment(session.sessionDate)
                     .add(session.sessionDuration, "minutes")
                     .toDate()}

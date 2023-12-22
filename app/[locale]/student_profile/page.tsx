@@ -49,25 +49,29 @@ export default function page() {
 
   const cookie=new Cookies();
 // my subscribtion
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySubscription`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
-      },
+const fetchMySubscription=()=>{
+  fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySubscription`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // console.log(data);
+        if(data.status==="success"){
+      setMySubscription(data.data);
+        }
+      // Set the retrieved Seeions in the state
     })
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log(data);
-          if(data.status==="success"){
-        setMySubscription(data.data);
-          }
-        // Set the retrieved Seeions in the state
-      })
-      .catch((error) => {
-        console.error("Error fetching sessions:", error);
-      });
+    .catch((error) => {
+      console.error("Error fetching subscription:", error);
+    });
+}
+  useEffect(() => {
+    fetchMySubscription();  
   }, []);
+
   // teacher ubsent
   useEffect(() => {
     fetch(
@@ -173,7 +177,7 @@ const fetchTeacherRescheduleRequests = () => {
 useEffect(() => {
   fetchMyReschedule();
   fetchTeacherRescheduleRequests();
-}, [myReschedule,teatcherreschedule])
+}, [])
 
   // handle first visit
   useEffect(() => {
@@ -309,17 +313,7 @@ useEffect(() => {
       onClick={()=>setStart(true)}
       >Show Website Guides</button> */}
 
-      {start ? (
-        <Joyride
-          steps={steps}
-          run={start}
-          continuous
-          showProgress
-          showSkipButton
-        />
-      ) : (
-        ""
-      )}
+    
 
       <ContinueWithModal
         openContinueWithModal={openContinueWithModal}

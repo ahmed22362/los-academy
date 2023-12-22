@@ -2,10 +2,7 @@
 
 import { Button, Modal } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
-import { CustomFlowbiteTheme, Tabs } from "flowbite-react";
 import Cookies from "universal-cookie";
-import moment from "moment-timezone";
-import MyLoader from "./MyLoader";
 import {
   FaUser,
   FaEnvelope,
@@ -50,7 +47,6 @@ export default function EditProfile({
     toast.current?.show({ severity, summary, detail });
   };
 
-  // History Sessions Api
 
   useEffect(() => {
     fetch(`${url}/user/me`, {
@@ -70,6 +66,7 @@ export default function EditProfile({
         console.error("Error fetching my profile:", error);
       });
   }, []);
+  
   const [editedInfo, setEditedInfo] = useState({ ...(userInfo || {}) });
 
   // update user data
@@ -112,10 +109,7 @@ export default function EditProfile({
         console.error("Error updating profile:", error);
       });
   };
-  useEffect(() => {
-    if (successStatus) {
-    }
-  }, [successStatus]);
+ 
 
   return (
     <>

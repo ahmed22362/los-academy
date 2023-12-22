@@ -7,25 +7,30 @@ import Slider from "react-slick";
 import { Skeleton } from "primereact/skeleton";
 import { usePathname } from "next/navigation";
 import { ScrollTop } from "primereact/scrolltop";
+import { title } from "process";
 function OurCourses() {
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const t = useTranslations("courses");
   const t2 = useTranslations("Hompage");
+  const noData = {
+    title: "No Courses Found",
+    description: "No Courses Found",
+  };
 
   const settings = {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: courses.length > 1 ? 3 : 1,
     slidesToScroll: 1,
     initialSlide: 1,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: courses.length > 1 ? 3 : 1,
           slidesToScroll: 3,
           infinite: true,
         },
@@ -33,7 +38,7 @@ function OurCourses() {
       {
         breakpoint: 1023,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: courses.length > 1 ? 2 : 1,
           slidesToScroll: 2,
           initialSlide: 2,
         },
@@ -148,10 +153,13 @@ function OurCourses() {
         </div>
       ) : (
         <Slider {...settings}>
-          {courses &&
+          {courses && courses.length > 0 ? (
             courses.map((course: any, index: number) => (
               <OurCard key={index} data={course} />
-            ))}
+            ))
+          ) : (
+            <OurCard data={noData} />
+          )}
         </Slider>
       )}
       <ScrollTop className="bg-secondary-color hover:bg-secondary-hover" />

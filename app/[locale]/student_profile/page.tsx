@@ -313,17 +313,7 @@ useEffect(() => {
       onClick={()=>setStart(true)}
       >Show Website Guides</button> */}
 
-      {start ? (
-        <Joyride
-          steps={steps}
-          run={start}
-          continuous
-          showProgress
-          showSkipButton
-        />
-      ) : (
-        ""
-      )}
+    
 
       <ContinueWithModal
         openContinueWithModal={openContinueWithModal}

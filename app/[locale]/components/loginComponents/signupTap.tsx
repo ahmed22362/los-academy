@@ -117,7 +117,7 @@ export default function signupTap() {
       <Toast ref={toast} />
       <h3 className="font-bold	 text-xl	"> Welcome to LOS Accademy ! </h3>
       <div className="flex flex-col gap-4" style={{ width: "100%" }}>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-[450px]">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-[450px] max-sm:w-full">
           <div className="flex gap-4">
             <div className="flex flex-col gap-1 justify-center items-center w-full">
               <input

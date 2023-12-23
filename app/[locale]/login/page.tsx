@@ -76,7 +76,7 @@ function page() {
 
   return (
     <section className="mt-8">
-      <div className="flex items-center mt-40 justify-evenly gap-20 sm:flex-row flex-col-reverse ">
+      <div className="flex items-center mt-40 justify-evenly gap-20 sm:flex-row flex-col-reverse max-md:flex-col-reverse">
         <Toast ref={toast} />
         <div
           className={`image transition-all duration-500 opacity-${
@@ -93,7 +93,7 @@ function page() {
             priority={true}
           />
         </div>
-        <div className="login_contnet sm:w-auto mx-3" style={{ width: "" }}>
+        <div className="login_contnet sm:w-auto mx-3">
           <Tabs.Group
             theme={customeTheme.tab}
             aria-label="Pills"

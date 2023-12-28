@@ -8,9 +8,14 @@ import { signupSchema } from "@/schemas";
 import { useFormik } from "formik";
 import LoadingButton from "../../admin/components/loadingButton";
 import { useRouter } from "next/navigation";
+import TermsOfUse from "../termsOfUse";
+import PrivacyPolicy from "../privacyPolicy";
 export default function signupTap() {
   const toast = useRef<Toast>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [openTermsofServicesModal, setOpenTermsofServicesModal] = useState<boolean>(false)
+  const [openPrivacyPolicyModal, setOpenPrivacyPolicyModal] = useState<boolean>(false)
+
   const router = useRouter();
   const onSubmit = async (values: any, actions: any) => {
     const data = (({ age, ...values }) => {
@@ -114,6 +119,14 @@ export default function signupTap() {
       className=" flex justify-center items-center gap-3 flex-col flex-wrap "
       style={{ minHeight: "300px", width: "100%" }}
     >
+      <TermsOfUse
+      openTermsofServicesModal={openTermsofServicesModal}
+      setOpenTermsofServicesModal={setOpenTermsofServicesModal}
+      />
+      <PrivacyPolicy
+       openPrivacyPolicyModal={openPrivacyPolicyModal}
+      setOpenPrivacyPolicyModal={setOpenPrivacyPolicyModal}
+      />
       <Toast ref={toast} />
       <h3 className="font-bold	 text-xl	"> Welcome to LOS Accademy ! </h3>
       <div className="flex flex-col gap-4" style={{ width: "100%" }}>
@@ -304,7 +317,9 @@ export default function signupTap() {
               ""
             )}
           </div>
-
+              <div>
+                <p>By clicking "Sign up," you agree to our <span className="underline cursor-pointer" onClick={()=>setOpenTermsofServicesModal(true)}>Terms of Use</span> and our <span className="underline cursor-pointer" onClick={()=>setOpenPrivacyPolicyModal(true)}>Privacy Policy</span>.</p>
+              </div>
           <LoadingButton
             title={"Register"}
             // action={handleFormSubmit}

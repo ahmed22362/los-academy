@@ -48,7 +48,6 @@ function RescheduleSession({
   };
 
   const handleReschedule = () => {
-    setIsProcessing(true);
     if (!selectedStartDate || !selectedEndDate) {
       showError("Please select both first date and end second date.");
       return;
@@ -61,6 +60,7 @@ function RescheduleSession({
         new Date(selectedEndDate).toISOString(),
       ],
     };
+    setIsProcessing(true);
 
     // Perform API request to reschedule session using rescheduleData
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/requestReschedule`, {

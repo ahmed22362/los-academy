@@ -305,7 +305,7 @@ useEffect(() => {
   return (
     <main
       className={
-        "ps-10 pe-10 pt-[7rem] max-md:mt-7  max-md:justify-between max-md:items-center"
+        "ps-10 sm:mb-10 max-sm:mb-10 max-[450px]:mb-10 pe-10 pt-[7rem] max-md:mt-7  max-md:justify-between max-md:items-center"
       }
     >
       {/* <button

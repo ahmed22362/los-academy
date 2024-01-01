@@ -497,9 +497,12 @@ function UpcomingSessions() {
           // console.log("POST request successful:", data);
           showSuccess(`${data.message}`);
           window.open(sessionLink, "_blank");
+        }else{
+          showError(data.message)
         }
       })
       .catch((error) => {
+        showError(error.message)
         console.error("Error during POST request:", error);
       });
   };

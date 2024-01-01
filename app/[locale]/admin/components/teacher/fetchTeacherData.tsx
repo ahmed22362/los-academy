@@ -20,8 +20,11 @@ export default function FetchTeacherData({teacherData, updateComponent} : {teach
     const toast = useRef<Toast>(null);
     const toastB = useRef<Toast>(null);
     const toastC = useRef<Toast>(null);
-    const showError = () => {
-        toast.current?.show({severity:'error', summary: 'Error', detail:'Deleted Success', life: 3000});
+    const showError = (message:string) => {
+        toast.current?.show({severity:'error', summary: 'Error', detail:message, life: 3000});
+    } 
+    const showSuccess = (message:string) => {
+        toast.current?.show({severity:'success', summary: 'Error', detail:message, life: 3000});
     }
 
     const openModal = () => {
@@ -82,9 +85,9 @@ export default function FetchTeacherData({teacherData, updateComponent} : {teach
                 "Authorization": `Bearer ${cookies.get("token")}`
             },
         }).then(response => response.json()).then(data => {
-            // console.log(data)
             updateComponent()
-            showError()
+            // console.log(data)
+            data.status==="success"?showSuccess('Teacher Deleted Successfuly'):showError(`can't delete teacher somthing went wrong`);
         }).catch(err => {
             console.log(err)
         })

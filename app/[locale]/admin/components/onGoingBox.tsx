@@ -5,7 +5,6 @@ import { Spinner } from "flowbite-react";
 import Link from "next/link";
 import { useEffect, useState } from "react"
 import Cookies from "universal-cookie";
-import { handleUpdateAttendance } from "../../teacher/components/onGoingBox";
 
 export default function OnGoingBox() {
     const [isLoading, setIsLoading] = useState(true)
@@ -51,7 +50,6 @@ export default function OnGoingBox() {
                                 <span>{convertTime(allSessions[0].sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "YYYY-MM-DD h:mm A")}</span>
                                 <p>{allSessions[0].SessionInfo.teacher.name} with {allSessions[0].SessionInfo.user.name}</p>
                                 <Link 
-                                     onClick={() => handleUpdateAttendance(allSessions[0].id)}
                                     href={allSessions[0].meetingLink}
                                     target="_blank"
                                     className={

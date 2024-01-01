@@ -12,49 +12,7 @@ import { Socket } from "socket.io-client";
   const cookies = new Cookies();
  
 
-export  const handleUpdateAttendance = (id: string) => {
-  const toast = useRef<any>(null);
-  const showSuccess = (message: string) => {
-    toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: message,
-      life: 3000,
-    });
-  };
-  
-  const showError = (message: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: message,
-      life: 4000,
-    });
-  };
-  fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/updateTeacherAttendance`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${cookies.get("token")}`,
-    },
-    body: JSON.stringify({
-      sessionId: id,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      if (data.status === "success") {
-        showSuccess(data.message);
-      } else {
-        showError(data.message);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      showError(err.message);
-    });
-};
+
 
 export default function OnGoingBox(session: any) {
   let workingSession = session && session.session;
@@ -101,8 +59,50 @@ export default function OnGoingBox(session: any) {
   const handleClose = () => {
     setOpenModal(false);
   };
- 
- 
+  const showSuccess = (message: string) => {
+    toast.current?.show({
+      severity: "success",
+      summary: "Success", 
+      detail: message,
+      life: 3000,
+    });
+  };
+  
+  const showError = (message: string) => {
+    toast.current?.show({
+      severity: "error",
+      summary: "Error",
+      detail: message,
+      life: 4000,
+    });
+  };
+    const handleUpdateAttendance = (id: string) => {
+      alert('done')
+  
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/updateTeacherAttendance`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.get("token")}`,
+      },
+      body: JSON.stringify({
+        sessionId: id,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === "success") {
+          showSuccess(data.message);
+        } else {
+          showError(data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        showError(err.message);
+      });
+  };
   // Convert session time to a Date object
   // const sessionDate: any = convertTimeZone(
   //   upComingSession.sessionDate,

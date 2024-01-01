@@ -384,7 +384,7 @@ function TeacherRescduleRequests({
                                   }
                                   className={`hover:text-white hover:bg-secondary-color px-3 py-1 text-secondary-color border-2 border-[--secondary-color] font-semibold transition-colors  w-fit rounded-full `}
                                 >
-                                  Cancel
+                                  Deny
                                 </button>
                               </div>
                             </div>

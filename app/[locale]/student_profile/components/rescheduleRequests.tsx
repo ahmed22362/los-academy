@@ -42,7 +42,7 @@ function RescheduleRequests({fromStudentProfile}:{fromStudentProfile?:boolean}) 
   };
 
 useEffect(() => {
-  // fetchMyReschedule()
+  fetchMyReschedule()
 }, [myReschedule])
 
   const customeTheme: CustomFlowbiteTheme = {

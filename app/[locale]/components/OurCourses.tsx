@@ -23,7 +23,7 @@ function OurCourses() {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: courses.length > 1 ? 3 : 1,
+    slidesToShow: courses.length === 1 ? 1 : courses.length === 2 ? 2 : 3,
     slidesToScroll: 1,
     initialSlide: 1,
     responsive: [

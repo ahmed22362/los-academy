@@ -21,6 +21,7 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 import StudentPlanModal from "./StudentPlanModal";
 import { useRouter } from "next/navigation";
 import ContinueWithModal from "./continueWithModal";
+import Link from "next/link";
 
 interface ContinueStatus {
   createdAt: string;
@@ -66,7 +67,7 @@ function UpcomingSessions() {
   const [ongoingSession, setOngoingSession]: any = useState<any[]>([]);
   const [countdownCompleted, setCountdownCompleted] = useState<boolean>(false);
   const [latestSession, setLatestSession]:any = useState<any[]>([]);
-  const [mySubscription, setMySubscription]:any = useState<any[]>([]);
+  const [mySubscription, setMySubscription]:any[] = useState<any[]>([]);
   const [openContinueWithModal, setOpenContinueWithModal] = useState(false)
   const router=useRouter()
   // socet function
@@ -95,8 +96,7 @@ function UpcomingSessions() {
       latestSession.length>0 &&
       latestSession[0]?.type === "free" &&
       latestSession[0]?.status === "taken" &&
-      userContinueStatus?.willContinue === null&&
-      mySubscription.length === 0
+      userContinueStatus?.willContinue === null
       ) {
       setShowConfirmDialog(true);
     }
@@ -110,12 +110,13 @@ function UpcomingSessions() {
   }, [latestSession, ongoingSession, userContinueStatus]);
   // handle accept continue with teacher
   
-  const accept = (sessionId: any) => {
-
-    if(mySubscription.length>0){
+  const accept = () => {
+    if(mySubscription.length > 0){
       setOpenContinueWithModal(true)
     }
+    else{
     setOpenPlansModal(true);
+    }
 
     // setSelectedFreeSessionId(sessionId);
     // const continueData = {
@@ -197,10 +198,10 @@ function UpcomingSessions() {
       },
     })
       .then((response) => response.json())
-      .then((data) => {
-        // console.log(data);
-          if(data.status==="success"){
-        setMySubscription(data.data);
+      .then((res) => {
+        console.log(res);
+          if(res.status==="success"){
+          setMySubscription(res.data);
           }
         // Set the retrieved Seeions in the state
       })
@@ -548,7 +549,7 @@ function UpcomingSessions() {
           header="Continue With This Teacher"
           icon="bi bi-info-circle"
           position="top"
-          accept={() => accept(latestSession[0].id)}
+          accept={() => accept()}
           reject={() => reject(latestSession[0].id)}
         />
       )}
@@ -653,16 +654,23 @@ function UpcomingSessions() {
                     : "update your Attendence"
                 }
               >
-                <PrimaryButton
-                  disabled={isImHereButtonDisabled}
-                  onClick={() => updateAttendance()}
-                  ourStyle={`w-full   text-sm font-semibold transition-colors text-white xl:py-[10px] md:px-[5px] max-[400px]:py-3 md:py-2 w-full shadow rounded-full mx-auto  max-md:w-45 ${
-                    isImHereButtonDisabled
-                      ? " bg-gray-500 cursor-not-allowed"
-                      : "bg-secondary-color hover:bg-secondary-hover"
-                  }`}
-                  text={`${"Join Meeting"}`}
-                />
+                <button
+                className={`text-sm font-semibold transition-colors text-white xl:py-[10px] md:px-[5px] max-[400px]:py-3 md:py-2 w-full shadow rounded-full mx-auto  max-md:w-45 ${
+                  isImHereButtonDisabled
+                    ? " bg-gray-500 cursor-not-allowed"
+                    : "bg-secondary-color hover:bg-secondary-hover"
+                }`}
+                onClick={() => updateAttendance()}
+                disabled={isImHereButtonDisabled}
+
+                >
+                  <Link
+                  href={sessionLink}
+                  target="_blank"
+                  >
+                    Join Meeting
+                  </Link>
+                </button>
               </Tooltip>
               <Tooltip
                 theme={CustomTHeme}

@@ -40,7 +40,6 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
       life: 7000,
     });
   };
-  const url = process.env.NEXT_PUBLIC_APIURL;
   const cookie = new Cookies();
   const token = cookie.get("token");
   const [openCustomPlan, setOpenCustomPlan] = useState<boolean>(false);
@@ -61,7 +60,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
       continueFlag: continueFlag,
     };
     setIsProcessing(true);
-    fetch(`${url}/subscription/`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/subscription/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -84,7 +83,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
         }
       })
       .catch((error) => {
-        // console.error("Error creating custom plan:", error);
+        console.error("Error creating custom plan:", error);
       });
   };
   return (
@@ -151,6 +150,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
           targetComponent={1}
           handleCloseModal={handleClose}
           handleOpen={openCustomPlan}
+          continueflag={continueFlag}
         />
       </Card>
       <Toast ref={toast} />

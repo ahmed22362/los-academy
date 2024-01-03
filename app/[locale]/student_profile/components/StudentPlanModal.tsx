@@ -110,6 +110,7 @@ export default function StudentPlanModal(
                 planId={1}
                 title="Customize your Plan"
                 price={50}
+                continueFlag={continueFlag}
                 features={[
                   "Fixed times",
                   "Fixed Prices",

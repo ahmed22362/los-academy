@@ -77,7 +77,6 @@ export default function OnGoingBox(session: any) {
     });
   };
     const handleUpdateAttendance = (id: string) => {
-      alert('done')
   
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/updateTeacherAttendance`, {
       method: "POST",

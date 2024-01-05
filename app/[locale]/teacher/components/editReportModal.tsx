@@ -173,6 +173,7 @@ export default function EditReportModal({
               defaultValue={reportId}
               onChange={(e) => setReportId(e.target.value)}
               type="text"
+              readOnly
             />
           </div>
           <h3 className="mb-3">Select Courses: </h3>

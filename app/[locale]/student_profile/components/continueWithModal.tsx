@@ -10,13 +10,12 @@ function ContinueWithModal({
   setOpenContinueWithModal,
 }: any) {
   const cookie = new Cookies();
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
+
   const [continueWithFirstDate, setContinueWithFirstDate] = useState<
     Nullable<Date> | any
   >(null);
-  const [latestSession, setLatestSession]:any = useState<any[]>([]);
-const [isProcessing, setIsProcessing] = useState(false)
+  const [latestSession, setLatestSession]: any = useState<any[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
   const toast = useRef<Toast>(null);
 
   const showSuccess = (msg: any) => {
@@ -60,45 +59,44 @@ const [isProcessing, setIsProcessing] = useState(false)
         // console.error("Error fetching sessions:", error);
       });
   };
-  const accept = (sessionId: any) => {
-    const continueData = {
-      sessionId: Number(sessionId),
-      willContinue: true,
-    };
-    console.log(continueData);
+  // const accept = (sessionId: any) => {
+  //   const continueData = {
+  //     sessionId: Number(sessionId),
+  //     willContinue: true,
+  //   };
+  //   console.log(continueData);
 
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${cookie.get("token")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(continueData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
+  //   fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
+  //     method: "POST",
+  //     headers: {
+  //       Authorization: `Bearer ${cookie.get("token")}`,
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(continueData),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
 
-        if (data.status === "success") {
-          // console.log("POST request successful:", data);
-          toast.current?.show({
-            severity: "info",
-            summary: "Confirmed",
-            detail: "You have accepted continue with teacher",
-            life: 3000,
-          });
-        
-        } else {
-          // console.error(data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error during POST request:", error);
-      });
-  };
+  //       if (data.status === "success") {
+  //         // console.log("POST request successful:", data);
+  //         toast.current?.show({
+  //           severity: "info",
+  //           summary: "Confirmed",
+  //           detail: "You have accepted continue with teacher",
+  //           life: 3000,
+  //         });
+
+  //       } else {
+  //         // console.error(data);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error during POST request:", error);
+  //     });
+  // };
+
   const placeDates = () => {
-
-    accept(latestSession[0]?.id);
     if (
       !continueWithFirstDate ||
       !Array.isArray(continueWithFirstDate) ||
@@ -107,73 +105,80 @@ const [isProcessing, setIsProcessing] = useState(false)
       showError("Please select at least one date for booking.");
       return;
     }
-    if (continueWithFirstDate && Array.isArray(continueWithFirstDate) && continueWithFirstDate.length > 0) {
-      const selectedDates = continueWithFirstDate.map((date) => date.toISOString());
-    
-    // console.log("placeDates function is triggered");
+    if (
+      continueWithFirstDate &&
+      Array.isArray(continueWithFirstDate) &&
+      continueWithFirstDate.length > 0
+    ) {
+      const selectedDates = continueWithFirstDate.map((date) =>
+        date.toISOString()
+      );
 
-    setIsProcessing(true)
+      // console.log("placeDates function is triggered");
 
-    const rescheduleData = {
-      sessionDates: selectedDates,
-    };
+      setIsProcessing(true);
 
-    fetch(`${url}/session/placeSessionDates`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(rescheduleData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log(data);
-        setIsProcessing(false)
-        if (data.status === "success") {
-          window.history.replaceState(null, '', '/student_profile')
-          showSuccess("session with this teacher placed successfully");
-          console.log("POST request successful:", data);
-          if (typeof window !== "undefined") {
-            localStorage.setItem("confirmDialog", "false");
-          }
-          
-        } else {
-          console.error(data);
-          showError(data.message);
-          window.history.replaceState(null, '', '/student_profile')
-        setIsProcessing(false)
+      const rescheduleData = {
+        sessionId: Number(latestSession[0].id),
+        sessionDates: selectedDates,
+      };
 
-        }
-      
+      fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${cookie.get("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(rescheduleData),
       })
-      .catch((error) => {
-        window.history.replaceState(null, '', '/student_profile')
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data);
+          setIsProcessing(false);
+          if (data.status === "success") {
+            window.history.replaceState(null, "", "/student_profile");
+            showSuccess("session with this teacher placed successfully");
+            console.log("POST request successful:", data);
+            setTimeout(() => {
+              setOpenContinueWithModal(false);
+            }, 5000);
+          } else {
+            console.error(data);
+            showError(data.message);
+            window.history.replaceState(null, "", "/student_profile");
+            setIsProcessing(false);
+          }
+        })
+        .catch((error) => {
+          window.history.replaceState(null, "", "/student_profile");
 
-        console.error("Error during POST request:", error);
-        
-      });
-  };}
+          console.error("Error during POST request:", error);
+        });
+    }
+  };
 
   return (
     <div>
-      <Toast ref={toast} />
       <Modal
         show={openContinueWithModal}
         className="block  space-y-0 md:flex md:space-y-0 md:space-x-4 "
         size={"xl"}
         onClose={() => setOpenContinueWithModal(false)}
       >
+        <Toast ref={toast} />
+
         <Modal.Header className="p-0 m-0 border-0"></Modal.Header>
 
         <Modal.Body>
           <div>
             <h3 className="font-semibold text-lg mb-3">Book Sessions</h3>
             <div className="flex flex-col gap-5">
-              <h4>Now You Should Please Your Session Dates That Avilible To You</h4>
+              <h4>
+                Now You Should Please Your Session Dates That Avilible To You
+              </h4>
               <div className="taps flex justify-center  h-1/2">
                 <Calendar
-                panelClassName="h-fit "
+                  panelClassName="h-fit "
                   value={continueWithFirstDate}
                   onChange={(e: CalendarProps | any) =>
                     setContinueWithFirstDate(e.value)
@@ -190,17 +195,15 @@ const [isProcessing, setIsProcessing] = useState(false)
                 />
               </div>
               <Button
-              onClick={placeDates}
-              color="purple"
-              isProcessing={isProcessing}
-              pill
-              size="md"
-              className=" max-md-px-1 text-white py-2 px-5 w-fit text-sm font-semibold transition-colors text- shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10   rounded-full mx-auto max-md:px-4 max-md:w-45"
-
-            >
-              <p>Continue</p>
-            </Button>
-              
+                onClick={placeDates}
+                color="purple"
+                isProcessing={isProcessing}
+                pill
+                size="md"
+                className=" max-md-px-1 text-white py-2 px-5 w-fit text-sm font-semibold transition-colors text- shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] h-10   rounded-full mx-auto max-md:px-4 max-md:w-45"
+              >
+                <p className="text-white">Continue</p>
+              </Button>
             </div>
           </div>
         </Modal.Body>

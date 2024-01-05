@@ -6,7 +6,7 @@ import styles from "../page.module.css";
 import Cookies from "universal-cookie";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import ContentLoader from "react-content-loader";
-import { ProgressSpinner } from 'primereact/progressspinner';
+import { ProgressSpinner } from "primereact/progressspinner";
 import RescheduleSession from "./rescheduleSession";
 import Image from "next/image";
 import Countdown from "react-countdown";
@@ -66,21 +66,18 @@ function UpcomingSessions() {
   useState<moment.Moment | null>(null);
   const [ongoingSession, setOngoingSession]: any = useState<any[]>([]);
   const [countdownCompleted, setCountdownCompleted] = useState<boolean>(false);
-  const [latestSession, setLatestSession]:any = useState<any[]>([]);
-  const [mySubscription, setMySubscription]:any[] = useState<any[]>([]);
-  const [openContinueWithModal, setOpenContinueWithModal] = useState(false)
-  const router=useRouter()
-  // socet function
+  const [latestSession, setLatestSession]: any = useState<any[]>([]);
+  const [mySubscription, setMySubscription]: any[] = useState<any[]>([]);
+  const [openContinueWithModal, setOpenContinueWithModal] = useState(false);
+  const router = useRouter();
+  // socket function
   useEffect(() => {
     const newSocket: Socket = getSocket(cookie.get("token"));
-    newSocket.on("event", (object) => {
-      // console.log(newSocket);
-    });
     // console.log(newSocket.connect());
     newSocket.on("finished_session", (data: object) => {
       console.log("finished_session", data);
       setUpComingSession({ upComingSession: data });
-      setLatestSession(data)
+      setLatestSession(data);
       setCountdownCompleted(true);
     });
     newSocket.on("ongoing_session", (data: object) => {
@@ -93,11 +90,11 @@ function UpcomingSessions() {
   useEffect(() => {
     // Check your conditions here
     if (
-      latestSession.length>0 &&
+      latestSession.length > 0 &&
       latestSession[0]?.type === "free" &&
       latestSession[0]?.status === "taken" &&
       userContinueStatus?.willContinue === null
-      ) {
+    ) {
       setShowConfirmDialog(true);
     }
     // const shouldShowDialog =
@@ -109,64 +106,24 @@ function UpcomingSessions() {
     // Update the state based on the conditions
   }, [latestSession, ongoingSession, userContinueStatus]);
   // handle accept continue with teacher
-  
+
   const accept = () => {
-    if(mySubscription.length > 0){
-      setOpenContinueWithModal(true)
+    if (mySubscription.length > 0) {
+      setOpenContinueWithModal(true);
+    } else {
+      setOpenPlansModal(true);
     }
-    else{
-    setOpenPlansModal(true);
-    }
-
-    // setSelectedFreeSessionId(sessionId);
-    // const continueData = {
-    //   sessionId: Number(sessionId),
-    //   willContinue: true,
-    // };
-    // console.log(continueData);
-
-    // fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
-    //   method: "POST",
-    //   headers: {
-    //     Authorization: `Bearer ${cookie.get("token")}`,
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(continueData),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log(data);
-
-    //     if (data.status === "success") {
-    //       // console.log("POST request successful:", data);
-    //       toast.current?.show({
-    //         severity: "info",
-    //         summary: "Confirmed",
-    //         detail: "You have accepted",
-    //         life: 3000,
-    //       });
-    //       setTimeout(() => {
-    //       }, 3000);
-    //     } else {
-    //       // console.error(data);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error during POST request:", error);
-    //   });
   };
 
   // handle reject continue with teacher
   const reject = (sessionId: any) => {
-    console.log(sessionId);
-
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/continueWithTeacher`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/wontContinueWithTeacher`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${cookie.get("token")}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ sessionId, willContinue: false }),
+      body: JSON.stringify({ sessionId }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -176,8 +133,8 @@ function UpcomingSessions() {
           // console.log("POST request successful:", data);
           toast.current?.show({
             severity: "warn",
-            summary: "Rejected",
-            detail: "You have rejected",
+            summary: "Denied",
+            detail: "You chose to not continue with this teacher",
             life: 3000,
           });
           fetchContinueStatus();
@@ -190,7 +147,7 @@ function UpcomingSessions() {
         // console.error("Error during POST request:", error);
       });
   };
-  const fetchMySubscription=()=>{
+  const fetchMySubscription = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySubscription`, {
       method: "GET",
       headers: {
@@ -200,18 +157,19 @@ function UpcomingSessions() {
       .then((response) => response.json())
       .then((res) => {
         console.log(res);
-          if(res.status==="success"){
+        if (res.status === "success") {
           setMySubscription(res.data);
-          }
-        // Set the retrieved Seeions in the state
+        }
+        // Set the retrieved Sessions in the state
       })
       .catch((error) => {
         console.error("Error fetching subscription:", error);
       });
-  }
-    useEffect(() => {
-      fetchMySubscription();  
-    }, []);
+  };
+  useEffect(() => {
+    fetchMySubscription();
+  }, []);
+
   const toast = useRef<Toast>(null);
   const showSuccess = (msg: any) => {
     toast.current?.show({
@@ -366,7 +324,7 @@ function UpcomingSessions() {
         setLoading(false);
       });
   };
-  
+
   useEffect(() => {
     if (upComingSession.length > 0) {
       const sessionDate: number = new Date(
@@ -469,7 +427,7 @@ function UpcomingSessions() {
 
   useEffect(() => {
     if (countdownCompleted) {
-        router.refresh()
+      router.refresh();
       // fetchLatestSession();========================================+
       fetchContinueStatus();
       fetchUpcomingSessions();
@@ -498,12 +456,12 @@ function UpcomingSessions() {
           // console.log("POST request successful:", data);
           showSuccess(`${data.message}`);
           window.open(sessionLink, "_blank");
-        }else{
-          showError(data.message)
+        } else {
+          showError(data.message);
         }
       })
       .catch((error) => {
-        showError(error.message)
+        showError(error.message);
         console.error("Error during POST request:", error);
       });
   };
@@ -530,7 +488,6 @@ function UpcomingSessions() {
           <rect x="239" y="62" rx="3" ry="3" width="78" height="13" />
         </ContentLoader>
       </div>
-    
     ); // You can replace this with a loading spinner or any other loading indicator
   }
   //
@@ -554,14 +511,15 @@ function UpcomingSessions() {
         />
       )}
       <ContinueWithModal
-      openContinueWithModal={openContinueWithModal}
-      setOpenContinueWithModal={setOpenContinueWithModal}
+        openContinueWithModal={openContinueWithModal}
+        setOpenContinueWithModal={setOpenContinueWithModal}
       />
       <StudentPlanModal
         openPlansModal={openPlansModal}
         setOpenPlansModal={setOpenPlansModal}
         continueFlag={true}
       />
+
       <Toast ref={toast} />
 
       <h4 className={`${styles.secondary_head} my-2`}>
@@ -609,7 +567,7 @@ function UpcomingSessions() {
             <div className="flex justify-center items-center">
               {isSessionRunning(session) ? (
                 <Countdown
-                  onStart={()=>fetchOngoingSessions()}
+                  onStart={() => fetchOngoingSessions()}
                   date={moment(session.sessionDate)
                     .add(session.sessionDuration, "minutes")
                     .toDate()}
@@ -655,19 +613,15 @@ function UpcomingSessions() {
                 }
               >
                 <button
-                className={`text-sm font-semibold transition-colors text-white xl:py-[10px] md:px-[5px] max-[400px]:py-3 md:py-2 w-full shadow rounded-full mx-auto  max-md:w-45 ${
-                  isImHereButtonDisabled
-                    ? " bg-gray-500 cursor-not-allowed"
-                    : "bg-secondary-color hover:bg-secondary-hover"
-                }`}
-                onClick={() => updateAttendance()}
-                disabled={isImHereButtonDisabled}
-
+                  className={`text-sm font-semibold transition-colors text-white xl:py-[10px] md:px-[5px] max-[400px]:py-3 md:py-2 w-full shadow rounded-full mx-auto  max-md:w-45 ${
+                    isImHereButtonDisabled
+                      ? " bg-gray-500 cursor-not-allowed"
+                      : "bg-secondary-color hover:bg-secondary-hover"
+                  }`}
+                  onClick={() => updateAttendance()}
+                  disabled={isImHereButtonDisabled}
                 >
-                  <Link
-                  href={sessionLink}
-                  target="_blank"
-                  >
+                  <Link href={sessionLink} target="_blank">
                     Join Meeting
                   </Link>
                 </button>

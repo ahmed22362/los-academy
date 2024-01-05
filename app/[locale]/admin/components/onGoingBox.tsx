@@ -5,7 +5,6 @@ import { Spinner } from "flowbite-react";
 import Link from "next/link";
 import { useEffect, useState } from "react"
 import Cookies from "universal-cookie";
-
 export default function OnGoingBox() {
     const [isLoading, setIsLoading] = useState(true)
     const [allSessions, setAllSessions] = useState<any>([])

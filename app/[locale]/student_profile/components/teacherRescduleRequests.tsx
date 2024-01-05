@@ -373,7 +373,7 @@ function TeacherRescduleRequests({
                                     request.status != "pending" ? "hidden" : ""
                                   } px-5 py-1 bg-secondary-color rounded-3xl text-white`}
                                 >
-                                  Reschedule
+                                  Accept
                                 </button>
                                 <button
                                   onClick={() =>

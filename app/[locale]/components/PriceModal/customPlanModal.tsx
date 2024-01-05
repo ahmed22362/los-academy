@@ -10,9 +10,9 @@ import Cookies from 'universal-cookie';
 import { Toast } from 'primereact/toast';
 import Link from 'next/link';
 
-export default function CustomPlanModal({handleOpen, handleCloseModal, targetComponent}: {
+export default function CustomPlanModal({handleOpen, handleCloseModal, targetComponent ,continueflag}: {
     
-    handleOpen: boolean; handleCloseModal: () => void, targetComponent: number }) {
+    handleOpen: boolean; handleCloseModal: () => void, targetComponent: number ; continueflag?:boolean}) {
     
     const modalRef = useRef<HTMLDivElement>(null);
     
@@ -77,7 +77,8 @@ export default function CustomPlanModal({handleOpen, handleCloseModal, targetCom
             body: JSON.stringify({
                 sessionDuration: parseInt(sessionsDuration),
                 sessionsCount: parseInt(sessionsCount),
-                sessionsPerWeek: parseInt(sessionsPerWeek)
+                sessionsPerWeek: parseInt(sessionsPerWeek),
+                continueFlag:continueflag
             })
         }).then(response => response.json()).then(data => {
             console.log(data)

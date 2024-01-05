@@ -247,7 +247,7 @@ useEffect(() => {
     // Parse the URL to get the query parameters
     const urlSearchParams = new URLSearchParams(window.location.search);
     const fromUserContinueParam = urlSearchParams.get("fromUserContinue");
-
+    
     // Log the query parameter to the console
     // console.log(`fromUserContinue parameter: ${fromUserContinueParam}`);
 

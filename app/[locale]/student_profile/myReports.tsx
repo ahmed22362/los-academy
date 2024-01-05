@@ -1,64 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import Cookies from "universal-cookie";
 import moment from "moment-timezone";
-import jsPDF from "jspdf";
 import ReportModal from "../teacher/components/reportModal";
 import ReportData from "../teacher/components/reportData";
 import ContentLoader from "react-content-loader";
 import Image from "next/image";
+import { getSocket } from "@/utilities/connectWithSocket";
+import { Socket } from "socket.io-client";
 
 function MyReports() {
   const [myReports, setMyReports] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedReport, setselectedReport]: any = useState(false);
+  const cookie = new Cookies();
 
-  const handleOpen = () => {
-    setselectedReport(true);
-  };
+  useEffect(() => {
+    const newSocket: Socket = getSocket(cookie.get("token"));
+  newSocket.on("event", (object) => {
+      // console.log("socket",object);
+    });
+    newSocket.on("report_added", (data: object) => {
+      console.log(data);
+      
+      setMyReports(r=>{
+        return [...myReports,data]
+      })
+    });
+  }, [myReports])
+  
+ 
 
   const handleCloseModal = () => {
     setselectedReport(false);
   };
 
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const cookie = new Cookies();
-  const token = cookie.get("token");
 
-  const convertDateTimeZone = (
-    inputTime: moment.MomentInput,
-    inputTimezone: string,
-    outputTimezone: string,
-    ourFormat: string
-  ) => {
-    const convertedTime = moment(inputTime)
-      .tz(inputTimezone)
-      .clone()
-      .tz(outputTimezone);
-    return convertedTime.format(ourFormat);
-  };
+  
 
-  const downloadPdf = async (reportId: any) => {
-    const pdf = new jsPDF("p", "pt", "a4");
-    const element = document.getElementById(`report-${reportId}`);
-
-    if (element) {
-      // Use try-catch to handle errors during pdf.html()
-      try {
-        await pdf.html(element);
-        pdf.save(`Report_${reportId}.pdf`);
-      } catch (error) {
-        console.error("Error generating PDF:", error);
-      }
-    }
-  };
+ 
 
   useEffect(() => {
     // Fetch reports when the component mounts
-    fetch(`${url}/user/myReports`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/myReports`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${ cookie.get("token")}`,
       },
     })
       .then((response) => response.json())

@@ -59,17 +59,8 @@ export default function Subscribtion({
 
         
         if(data.status==="success"){
+          setMySubscription(data.data)
         }
-        const planData = data.data && data.data.planId ? data.data : null;
-
-        if (planData) {
-          // Update the state with the plan data
-          setMySubscription([planData]);
-        } else {
-          // Handle the case where the plan information is missing or invalid
-          // console.log("Invalid or missing plan information in the API response");
-        }
-        // Set the retrieved Seeions in the state
       })
       .catch((error) => {
         console.error("Error fetching sessions:", error);

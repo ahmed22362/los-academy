@@ -47,7 +47,6 @@ export default function AddReportModal({
 }) {
   const idSession = sessionID && sessionID;
   const modalRef = useRef<HTMLDivElement>(null);
-
   const [id, setId] = useState(idSession);
   const [courses, setCourses] = useState<[]>([]);
   const [formData, setFormData] = useState<FormData>({
@@ -85,7 +84,6 @@ export default function AddReportModal({
       .then((response) => response.json())
       .then((res) => {
         setCourses(res.data.map((course: any) => course.title));
-        console.log("here in get courses", res.data);
       })
       .catch((error) => {
         console.error("Error fetching courses:", error);
@@ -111,11 +109,9 @@ export default function AddReportModal({
   }
   const handleCommentChange = (comment: string) => {
     setFormData({ ...formData, comment });
-    console.log("in comment change", formData);
   };
   const handleTotalGradeChange = (grade: GradeOptions) => {
     setFormData({ ...formData, grade });
-    console.log("in comment data", formData);
   };
 
   const handleCourseCommentChange = ({
@@ -158,7 +154,6 @@ export default function AddReportModal({
         };
       }
     });
-    console.log("this is the form report in course", formData);
   };
   const modalTheme: CustomFlowbiteTheme["modal"] = {
     header: {
@@ -178,9 +173,6 @@ export default function AddReportModal({
       setIsProcessing(false);
       return;
     }
-    console.log("this is the payload", formData);
-    setIsProcessing(false);
-    return;
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/report`, {
       method: "POST",
       headers: {
@@ -191,7 +183,6 @@ export default function AddReportModal({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.status === "success") {
           showSuccess(data.message);
           window.location.reload();
@@ -201,7 +192,7 @@ export default function AddReportModal({
         setIsProcessing(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         showError(err.message);
         setIsProcessing(false);
       });

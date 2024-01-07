@@ -6,6 +6,7 @@ import jsPDF from "jspdf";
 import Image from "next/image";
 
 import { useEffect, useRef } from "react";
+import { GradeOptions, ReportsCourses } from "./addReportModal";
 
 export default function ReportModal({
   openAssignModal,
@@ -17,11 +18,12 @@ export default function ReportModal({
   details: string | any;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const   reprotDetails = details && details;
-  
-  const downloadPdf = async (reportId:any) => {
+  const reportDetails = sdetails && details;
+
+
+  const downloadPdf = async (reportId: any) => {
     const pdf = new jsPDF("p", "pt", "a4");
-    const capture: any = document.getElementById("reportModal")
+    const capture: any = document.getElementById("reportModal");
     pdf.html(capture).then(() => {
       pdf.save(`report_${reportId}.pdf`);
     });
@@ -52,6 +54,16 @@ export default function ReportModal({
     },
   };
 
+  const getGradeClass = (grade: GradeOptions) => {
+    if (["excellent", "very good", "good"].includes(grade)) {
+      return "text-success-color";
+    } else if (grade === "average") {
+      return "text-warning-color";
+    } else {
+      return "text-danger-color";
+    }
+  };
+
   return (
     <>
       <Modal
@@ -62,83 +74,70 @@ export default function ReportModal({
       >
         <Modal.Header theme={modalTheme.header}></Modal.Header>
         <Modal.Body>
-          <div id="reportModal" className="flex flex-col items-start justify-center gap-3 px-4 mt-5">
+          <div
+            id="reportModal"
+            className="flex flex-col items-start justify-center gap-3 px-4 mt-5"
+          >
             <div className="flex flex-col-reverse">
-              <h3 className="mt-10 text-black-color-one text-center font-semibold text-md">Report Details :</h3>
+              <h3 className="mt-10 text-black-color-one text-center font-semibold text-md">
+                Report Details :
+              </h3>
               <div className="flex flex-col justify-center items-center gap-1">
-                <Image src={'/logo.png'} width={50} height={50} loading={"lazy"} alt={"report logo"} />
-                <span className="text-black-color-one font-bold text-sm">LOS Academy</span>
+                <Image
+                  src={"/logo.png"}
+                  width={50}
+                  height={50}
+                  loading={"lazy"}
+                  alt={"report logo"}
+                />
+                <span className="text-black-color-one font-bold text-sm">
+                  LOS Academy
+                </span>
               </div>
             </div>
-            
-            <hr style={{ width: "70%", height: "2px", backgroundColor: "black" }} />
-            <h3 className="text-black-color-one text-center font-semibold text-md">Courses Grades :</h3>
+
+            <hr
+              style={{ width: "70%", height: "2px", backgroundColor: "black" }}
+            />
+            <h3 className="text-black-color-one text-center font-semibold text-md">
+              Courses Grades :
+            </h3>
             <ul className="ps-5 capitalize flex flex-col items-start justify-center gap-2">
-              {reprotDetails.arabic === null || reprotDetails.arabic === "" ? (
-                ""
-              ) : (
-                <li>
-                  Arabic: <span className="ps-3 ">{reprotDetails.arabic}</span>
-                </li>
-              )}
-              {reprotDetails.arabicComment === null || reprotDetails.arabicComment === "" ? (
-                ""
-              ) : (
-                <li>
-                  Arabic Comment: <span className="ps-3 "><q>{reprotDetails.arabicComment}</q></span>
-                </li>
-              )}
-              {reprotDetails.islamic === null ||
-              reprotDetails.islamic === "" ? (
-                ""
-              ) : (
-                <li>
-                  Islamic: <span className="ps-3 ">{reprotDetails.islamic}</span>
-                </li>
-              )}
-              {reprotDetails.islamicComment === null ||
-              reprotDetails.islamicComment === "" ? (
-                ""
-              ) : (
-                <li>
-                  Islamic Comment: <span className="ps-3 "><q>{reprotDetails.islamicComment}</q></span>
-                </li>
-              )}
-              {reprotDetails.quran === null || reprotDetails.quran === "" ? (
-                ""
-              ) : (
-                <li>
-                  Quran: <span className="ps-3 ">{reprotDetails.quran}</span>
-                </li>
-              )}
-              {reprotDetails.quranComment === null || reprotDetails.quranComment === "" ? (
-                ""
-              ) : (
-                <li>
-                  Quran Comment: <span className="ps-3 "><q>{reprotDetails.quranComment}</q></span>
-                </li>
+              {reportDetails.reportCourses.map(
+                (course: ReportsCourses, index: number) => (
+                  <li key={index}>
+                    {course.courseName}:{" "}
+                    <span className="ps-3 ">{course.courseGrade}</span>
+                    {course.courseComment && (
+                      <li>
+                        {course.courseName} Comment:{" "}
+                        <span className="ps-3 ">
+                          <q>{course.courseComment}</q>
+                        </span>
+                      </li>
+                    )}
+                  </li>
+                ),
               )}
             </ul>
             <p className="flex flex-col  w-[500px]">
               <b>Teacher Comment:</b>
-              <q className="ps-5 pe-5 pt-3 text-sm font-bold italic leading-6"> {reprotDetails.comment} </q>
+              <q className="ps-5 pe-5 pt-3 text-sm font-bold italic leading-6">
+                {" "}
+                {reportDetails.comment}{" "}
+              </q>
             </p>
-
-            <hr style={{ width: "70%", height: "2px", backgroundColor: "black" }} />
+            <hr
+              style={{ width: "70%", height: "2px", backgroundColor: "black" }}
+            />
             <h3 className="text-black-color-one text-center font-semibold text-md">
               Total Grade:{" "}
               <span
-                className={`${
-                  reprotDetails.grade === "excellent" ||
-                  reprotDetails.grade === "very good" ||
-                  reprotDetails.grade === "good"
-                    ? "text-success-color"
-                    : reprotDetails.grade === "average"
-                    ? "text-warning-color"
-                    : "text-danger-color"
-                } capitalize italic ps-3`}
+                className={`${getGradeClass(
+                  reportDetails.grade,
+                )} capitalize italic ps-3`}
               >
-                {reprotDetails.grade}
+                {reportDetails.grade}
               </span>
             </h3>
 
@@ -147,23 +146,23 @@ export default function ReportModal({
                 Session Info
               </h6>
               <ul className="ps-5">
-                <li>Session ID: {reprotDetails.sessionId}</li>
+                <li>Session ID: {reportDetails.sessionId}</li>
                 <li>
                   Session Date:{" "}
                   {convertDateTimeZone(
-                    reprotDetails?.session?.sessionDate,
+                    reportDetails?.session?.sessionDate,
                     "UTC",
                     Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    "D-MMM-YYYY"
+                    "D-MMM-YYYY",
                   )}
                 </li>
                 <li>
                   Create at:{" "}
                   {convertDateTimeZone(
-                    reprotDetails.createdAt,
+                    reportDetails.createdAt,
                     "UTC",
                     Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    "D-MMM-YYYY"
+                    "D-MMM-YYYY",
                   )}
                 </li>
               </ul>
@@ -172,7 +171,7 @@ export default function ReportModal({
           <div className="flex justify-center items-center">
             <button
               className="text-white bg-success-color hover:bg-green-300 rounded-full py-2 px-5 transition-colors"
-              onClick={()=>downloadPdf(reprotDetails.id)}
+              onClick={() => downloadPdf(reportDetails.id)}
             >
               Download as pdf
             </button>
@@ -182,4 +181,3 @@ export default function ReportModal({
     </>
   );
 }
-

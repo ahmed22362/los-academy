@@ -18,8 +18,7 @@ export default function ReportModal({
   details: string | any;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const reportDetails = sdetails && details;
-
+  const reportDetails = details && details;
 
   const downloadPdf = async (reportId: any) => {
     const pdf = new jsPDF("p", "pt", "a4");

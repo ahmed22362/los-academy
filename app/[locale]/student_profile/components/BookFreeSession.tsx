@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import { Calendar, CalendarProps } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
-import PrimaryButton from "../../components/PrimaryButton";
 import { Toast } from "primereact/toast";
 import ViewCourses from "./viewCourses";
 import { Button } from "flowbite-react";
@@ -14,9 +13,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
     null,
   );
   const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
-  const handleSelectCourses = (courses: any[]) => {
-    setSelectedCourses(courses);
-  };
+
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const router = useRouter();
   const toast = useRef<Toast>(null);
@@ -53,14 +50,18 @@ function BookFreeSession({ setOpenBookModal }: any) {
 
     const selectedDates = freedatetime12h.map((date) => date.toISOString());
 
-    const selectedCourseTitles = selectedCourses.map((course) =>
-      course.title.toLowerCase(),
+    const selectedCourseTitles = selectedCourses?.map((course) =>
+      course.toString().toLowerCase(),
     );
-
+    if (!selectedCourseTitles) {
+      showErrorMessage("you should select at least one course");
+    }
     const requestBody = {
       sessionDates: selectedDates,
       courses: selectedCourseTitles,
     };
+    console.log(requestBody);
+
     setIsProcessing(true);
     fetch(`${url}/session/free/request`, {
       method: "POST",
@@ -72,6 +73,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setIsProcessing(false);
         if (data.status === "success") {
           showSuccessMessage("Booking Free Session successful");
@@ -81,7 +83,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
           }, 4000);
         } else {
           setIsProcessing(false);
-          showErrorMessage(data.message);
+          showErrorMessage(data[0]?.message);
         }
       })
       .catch((error) => {
@@ -97,7 +99,10 @@ function BookFreeSession({ setOpenBookModal }: any) {
   return (
     <div className=" flex justify-center flex-col items-center gap-5">
       <div className="courses w-full flex justify-center">
-        <ViewCourses onSelectCourses={handleSelectCourses} />
+        <ViewCourses
+          setSelectedCourses={setSelectedCourses}
+          selectedCourses={selectedCourses}
+        />
       </div>
       <Calendar
         value={freedatetime12h}

@@ -14,10 +14,28 @@ import { useEffect, useRef } from "react";
 import { Toast } from "primereact/toast";
 import Cookies from "universal-cookie";
 import LoadingButton from "../../admin/components/loadingButton";
-import { useRouter } from "next/navigation";
-import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
 import { FaRegFileLines } from "react-icons/fa6";
 
+export enum GradeOptions {
+  EXCELLENT = "excellent",
+  GOOD = "good",
+  VERY_GOOD = "very good",
+  AVERAGE = "average",
+  BELOW_AVERAGE = "below average",
+}
+export interface ReportsCourses {
+  courseName: string;
+  courseGrade: GradeOptions;
+  courseComment?: GradeOptions;
+}
+interface FormData {
+  [key: string]: any;
+  sessionId: number;
+  reportCourses: ReportsCourses[];
+  comment?: string;
+  grade?: GradeOptions;
+  title: string;
+}
 export default function AddReportModal({
   openAssignModal,
   handleCloseModal,
@@ -27,22 +45,17 @@ export default function AddReportModal({
   openAssignModal: boolean;
   handleCloseModal: () => void;
 }) {
-
   const idSession = sessionID && sessionID;
   const modalRef = useRef<HTMLDivElement>(null);
-
   const [id, setId] = useState(idSession);
-  const [grade, setGrade] = useState("");
-  const [comment, setComment] = useState("");
-  const [arabicGrade, setArabicGrade] = useState("");
-  const [quranGrade, setQuranGrade] = useState("");
-  const [islamicGrade, setIslamicGrade] = useState("");
-  const [arabicComment, setArabicComment] = useState("");
-  const [quranComment, setQuranComment] = useState("");
-  const [islamicComment, setIslamicComment] = useState("");
+  const [courses, setCourses] = useState<[]>([]);
+  const [formData, setFormData] = useState<FormData>({
+    sessionId: idSession,
+    title: `Session ${idSession} Report`,
+    reportCourses: [],
+  });
 
   const [isProcessing, setIsProcessing] = useState(false);
-  const router = useRouter();
   const cookies = new Cookies();
   const toast = useRef<Toast>(null);
 
@@ -62,6 +75,20 @@ export default function AddReportModal({
       life: 5000,
     });
   };
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/course`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        setCourses(res.data.map((course: any) => course.title));
+      })
+      .catch((error) => {
+        console.error("Error fetching courses:", error);
+      });
+  }, [sessionID]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | any) => {
@@ -80,50 +107,82 @@ export default function AddReportModal({
   if (!openAssignModal) {
     return null;
   }
+  const handleCommentChange = (comment: string) => {
+    setFormData({ ...formData, comment });
+  };
+  const handleTotalGradeChange = (grade: GradeOptions) => {
+    setFormData({ ...formData, grade });
+  };
 
+  const handleCourseCommentChange = ({
+    course,
+    comment,
+    grade,
+  }: {
+    course: string;
+    comment?: string;
+    grade?: string;
+  }) => {
+    const updatedCourse = {
+      courseName: course,
+      courseComment: comment,
+      courseGrade: grade,
+    };
+    setFormData((prev: any) => {
+      const existingCourse = prev.reportCourses.find(
+        (c: ReportsCourses) => c.courseName === course,
+      );
+
+      if (existingCourse) {
+        return {
+          ...prev,
+          reportCourses: prev.reportCourses.map((c: ReportsCourses) => {
+            if (c.courseName === course) {
+              return {
+                ...c,
+                courseComment: comment ? comment : c.courseComment,
+                courseGrade: grade ? grade : c.courseGrade,
+              };
+            }
+            return c;
+          }),
+        };
+      } else {
+        return {
+          ...prev,
+          reportCourses: [...prev.reportCourses, updatedCourse],
+        };
+      }
+    });
+  };
   const modalTheme: CustomFlowbiteTheme["modal"] = {
     header: {
       base: "flex items-start justify-between rounded-t px-5 py-2 w-full",
       title: "w-full flex items-center gap-4 text-2xl font-semibold",
     },
   };
-
   const addReport = () => {
-    console.log({
-      sessionId: parseInt(id),
-      title: "report",
-      comment: comment,
-      grade: grade,
-      arabic: arabicGrade,
-      quran: quranGrade,
-      islamic: islamicGrade,
-      arabicComment,
-      quranComment,
-      islamicComment
-    });
     setIsProcessing(true);
+    if (courses && formData.reportCourses.length === 0) {
+      showError("Please provide at least one course report.");
+      setIsProcessing(false);
+      return;
+    }
+    if (!formData.grade || !formData.comment) {
+      showError("Please provide both total grade and comment.");
+      setIsProcessing(false);
+      return;
+    }
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/report`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${cookies.get("token")}`,
       },
-      body: JSON.stringify({
-        sessionId: parseInt(id),
-        title: "report",
-        comment: comment,
-        grade: grade,
-        arabic: arabicGrade,
-        quran: quranGrade,
-        islamic: islamicGrade,
-        arabicComment,
-        quranComment,
-        islamicComment
-      }),
+      body: JSON.stringify(formData),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.status === "success") {
           showSuccess(data.message);
           window.location.reload();
@@ -133,7 +192,7 @@ export default function AddReportModal({
         setIsProcessing(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         showError(err.message);
         setIsProcessing(false);
       });
@@ -161,165 +220,72 @@ export default function AddReportModal({
               defaultValue={id}
               onChange={(e) => setId(e.target.value)}
               type="text"
+              readOnly={true}
             />
           </div>
-          <h3 className="mb-3">Select Courses: </h3>
+          <h3 className="mb-3">Add the information of taken courses: </h3>
           <div id="checkbox" className="flex flex-col gap-4">
-            <div className="mb-2 block">
-              <div className="flex flex-col max-md:w-full w-[40%] justify-center items-start gap-3">
-                <label htmlFor="arabic" className="ml-2">
-                  Arabic:
-                </label>
-                <Select
-                  id="arabic"
-                  defaultValue={arabicGrade}
-                  onChange={(e) => setArabicGrade(e.target.value)}
-                  className="w-full"
-                >
-                  <option value="">Select Arabic Grade </option>
-                  <option value="excellent">Excellent</option>
-                  <option value="very good">Very Good</option>
-                  <option value="good">Good</option>
-                  <option value="average">Average</option>
-                  <option value="below average">Below Average</option>
-                </Select>
-              </div>
-              <TextInput
-                id="arabicComment"
-                placeholder="Arabic Comment"
-                type="text"
-                className="my-2"
-                onChange={(e) => setArabicComment(e.target.value)}
-              />
-            </div>
-            <div className="mb-2 block">
-              <div className="flex flex-col max-md:w-full w-[40%] justify-center items-start  gap-3">
-                <label htmlFor="quran" className="ml-2">
-                  Quran:
-                </label>
-                <Select
-                  id="quran"
-                  defaultValue={quranGrade}
-                  onChange={(e) => setQuranGrade(e.target.value)}
-                  className="w-full"
-                >
-                  <option value="">Select Quran Grade </option>
-                  <option value="excellent">excellent</option>
-                  <option value="very good">Very Good</option>
-                  <option value="good">Good</option>
-                  <option value="average">Average</option>
-                  <option value="below average">Below Average</option>
-                </Select>
-              </div>
-              <TextInput
-                id="quranComment"
-                placeholder="Quran Comment"
-                type="text"
-                className="my-2"
-                onChange={(e) => setQuranComment(e.target.value)}
-              />
-            </div>
-            <div className="mb-2 block">
-              <div className="flex flex-col max-md:w-full w-[40%] justify-center items-start gap-3">
-                <label htmlFor="quran" className="ml-2">
-                  Islamic:
-                </label>
-                <Select
-                  id="islamic"
-                  defaultValue={islamicGrade}
-                  onChange={(e) => setIslamicGrade(e.target.value)}
-                  className="w-full"
-                >
-                  <option value="">Select Islamic Grade </option>
-                  <option value="excellent">excellent</option>
-                  <option value="very good">Very Good</option>
-                  <option value="good">Good</option>
-                  <option value="average">Average</option>
-                  <option value="below average">Below Average</option>
-                </Select>
-              </div>
-              <TextInput
-                id="islamicComment"
-                placeholder="Islamic Comment"
-                type="text"
-                className="my-2"
-                onChange={(e) => setIslamicComment(e.target.value)}
-              />
-            </div>
+            {courses.map((course, index) => (
+              <>
+                <div className="mb-2 block" key={course}>
+                  <div className="flex flex-col max-md:w-full w-[40%] justify-center items-start gap-3">
+                    <label htmlFor={course} className="ml-2">
+                      {course}:
+                    </label>
+                    <Select
+                      name="courseGrade"
+                      defaultValue={GradeOptions.AVERAGE}
+                      onChange={(e: any) => {
+                        handleCourseCommentChange({
+                          course,
+                          grade: e.target.value,
+                        });
+                      }}
+                      className="w-full"
+                    >
+                      {Object.values(GradeOptions).map((grade) => (
+                        <option key={grade} value={grade}>
+                          {grade}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                  <TextInput
+                    id={`${course} Comment`}
+                    placeholder={`${course} Comment`}
+                    type="text"
+                    className="my-2"
+                    key={`course-${index}`}
+                    onChange={(e) => {
+                      handleCourseCommentChange({
+                        course,
+                        comment: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+              </>
+            ))}
           </div>
           <fieldset className="flex w-full flex-col gap-4" id="radio">
-            <legend className="mb-4">Grade</legend>
+            <legend className="mb-4">Total session grade</legend>
             <div className={"flex flex-row gap-4"}>
-              <div className="flex items-center gap-2">
-                <Label className="cursor-pointer" htmlFor="excellent">
-                  <Radio
-                    id="excellent"
-                    name="radio"
-                    value="excellent"
-                    className="h-4 w-4"
-                    onClick={(e: any) => {
-                      setGrade(e.target.value);
-                    }}
-                  />
-                  <span className="ml-2">Excellent</span>
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Label className="cursor-pointer" htmlFor="veryGood">
-                  <Radio
-                    id="veryGood"
-                    name="radio"
-                    value="very good"
-                    className="h-4 w-4"
-                    onClick={(e: any) => {
-                      setGrade(e.target.value);
-                    }}
-                  />
-                  <span className="ml-2">very good</span>
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Label className="cursor-pointer" htmlFor="Good">
-                  <Radio
-                    id="Good"
-                    name="radio"
-                    value="good"
-                    className="h-4 w-4"
-                    onClick={(e: any) => {
-                      setGrade(e.target.value);
-                    }}
-                  />
-                  <span className="ml-2">Good</span>
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Label className="cursor-pointer" htmlFor="Average">
-                  <Radio
-                    id="Average"
-                    name="radio"
-                    value="average"
-                    className="h-4 w-4"
-                    onClick={(e: any) => {
-                      setGrade(e.target.value);
-                    }}
-                  />
-                  <span className="ml-2">Average</span>
-                </Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Label className="cursor-pointer" htmlFor="Below Average">
-                  <Radio
-                    id="Below Average"
-                    name="radio"
-                    value="below average"
-                    className="h-4 w-4"
-                    onClick={(e: any) => {
-                      setGrade(e.target.value);
-                    }}
-                  />
-                  <span className="ml-2">Below Average</span>
-                </Label>
-              </div>
+              {Object.values(GradeOptions).map((grade) => (
+                <div className="flex items-center gap-2" key={grade}>
+                  <Label className="cursor-pointer" htmlFor={grade}>
+                    <Radio
+                      id={grade}
+                      name="radio"
+                      value={grade}
+                      className="h-4 w-4"
+                      onChange={(e: any) => {
+                        handleTotalGradeChange(e.target.value);
+                      }}
+                    />
+                    <span className="ml-2">{grade}</span>
+                  </Label>
+                </div>
+              ))}
             </div>
           </fieldset>
           <div>
@@ -331,7 +297,7 @@ export default function AddReportModal({
               placeholder="Leave a comment..."
               required
               rows={4}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={(e) => handleCommentChange(e.target.value)}
             />
           </div>
           <div className="w-full">

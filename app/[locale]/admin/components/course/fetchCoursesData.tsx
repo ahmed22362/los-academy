@@ -55,7 +55,7 @@ export default function FetchCoursesData({
         severity: "warn",
         sticky: true,
         content: (
-          <div
+          <span
             className="flex flex-column align-items-center"
             style={{ flex: "1" }}
           >
@@ -87,7 +87,7 @@ export default function FetchCoursesData({
                 </button>
               </div>
             </div>
-          </div>
+          </span>
         ),
       });
     }
@@ -113,28 +113,26 @@ export default function FetchCoursesData({
   };
 
   return (
-    <Table.Cell>
-      <td className="flex flex-row justify-between gap-4 sm:gap-10">
-        <Toast ref={toast} />
-        <BiSolidEditAlt
-          className={"text-2xl cursor-pointer"}
-          style={{ color: "green" }}
-          onClick={openModal}
-        />
-        <BsTrash
-          className={"text-2xl cursor-pointer"}
-          style={{ color: "red" }}
-          onClick={confirm}
-        />
-        <EditCoursesModal
-          openAssignModal={handleModal}
-          handleCloseModal={closeModal}
-          courseDetails={course}
-          updateComponent={updateComponent}
-        />
-        <Toast ref={toastB} />
-        <Toast ref={toastC} position="bottom-center" />
-      </td>
-    </Table.Cell>
+    <div className="flex flex-row justify-between gap-4 sm:gap-10">
+      <Toast ref={toast} />
+      <BiSolidEditAlt
+        className={"text-2xl cursor-pointer"}
+        style={{ color: "green" }}
+        onClick={openModal}
+      />
+      <BsTrash
+        className={"text-2xl cursor-pointer"}
+        style={{ color: "red" }}
+        onClick={confirm}
+      />
+      <EditCoursesModal
+        openAssignModal={handleModal}
+        handleCloseModal={closeModal}
+        courseDetails={course}
+        updateComponent={updateComponent}
+      />
+      <Toast ref={toastB} />
+      <Toast ref={toastC} position="bottom-center" />
+    </div>
   );
 }

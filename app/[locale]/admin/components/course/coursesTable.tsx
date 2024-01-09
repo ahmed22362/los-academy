@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 import CoursesComboBox from "./coursesComboBox";
 import FetchCoursesData from "./fetchCoursesData";
 import Cookies from "universal-cookie";
+import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
 import { convertDateTimeZone } from "@/utilities";
+import { TableCell } from "flowbite-react/lib/esm/components/Table/TableCell";
 
 export default function CoursesTable() {
   const [allCourses, setAllCourses] = useState([]);
@@ -23,11 +25,16 @@ export default function CoursesTable() {
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(10);
 
+  const onPageChange = (event: PaginatorPageChangeEvent) => {
+    setFirst(event.first);
+    setRows(event.rows);
+  };
+
   const getPaginatedData = () => {
     const endIndex = first + rows;
     return allCourses.slice(first, endIndex);
   };
-  const displayCourses = getPaginatedData();
+  const displaydCourses = getPaginatedData();
 
   const fetchAllCourses = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/course`, {
@@ -81,12 +88,12 @@ export default function CoursesTable() {
               </Table.Head>
               <Table.Body className="divide-y divide-gray-100">
                 {allCourses && allCourses.length > 0 ? (
-                  displayCourses.map((course: any, index: number) => (
+                  displaydCourses.map((course: any, index: number) => (
                     <Table.Row
-                      key={course.id}
+                      key={index}
                       className="bg-white dark:border-gray-700 dark:bg-gray-800 text-center"
                     >
-                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      <Table.Cell className=" font-medium text-gray-900 dark:text-white">
                         {course.id}
                       </Table.Cell>
                       <Table.Cell>{course.title}</Table.Cell>
@@ -104,17 +111,19 @@ export default function CoursesTable() {
                           "YYYY-MM-DD h:mm A",
                         )}
                       </Table.Cell>
-                      <FetchCoursesData
-                        coursesData={course}
-                        updateComponent={fetchAllCourses}
-                      />
+                      <Table.Cell>
+                        <FetchCoursesData
+                          coursesData={course}
+                          updateComponent={fetchAllCourses}
+                        />
+                      </Table.Cell>
                     </Table.Row>
                   ))
                 ) : (
                   <Table.Row>
-                    <td colSpan={5} className="p-3 text-center">
+                    <Table.Cell colSpan={5} className="p-3 text-center">
                       No courses found
-                    </td>
+                    </Table.Cell>
                   </Table.Row>
                 )}
               </Table.Body>
@@ -122,7 +131,7 @@ export default function CoursesTable() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
-            {displayCourses.map((course: any, index: number) => (
+            {displaydCourses.map((course: any, index: number) => (
               <div
                 key={index}
                 className="bg-white space-y-3 p-4 rounded-lg shadow"

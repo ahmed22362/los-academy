@@ -16,6 +16,7 @@ import {
 import Cookies from "universal-cookie";
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 export default function CustomNavbar() {
   const UserDropDown = dynamic(() => import("./userDropDown"), {
@@ -64,8 +65,13 @@ export default function CustomNavbar() {
     },
   };
 
-  const userName = cookies.get("name");
+  const [userName, setUserName] = useState(cookies.get('name'));
 
+  useEffect(() => {
+    // This effect will run whenever the 'name' cookie changes
+    const newName = cookies.get('name');
+    setUserName(newName);
+  }, [cookies.get('name')]); 
   const addActiveClass = (e: any) => {
     const navLinks = document.querySelectorAll(".navBarLink");
     navLinks.forEach((link) => {
@@ -126,6 +132,7 @@ export default function CustomNavbar() {
                 LOS Academy
               </h2>
             </Link>
+            <span className="text-[13px] ml-12">Learning Of Science</span>
           </div>
 
           <Navbar.Collapse
@@ -194,7 +201,7 @@ export default function CustomNavbar() {
           >
             <Navbar.Toggle theme={customNavTheme.toggle} />
             {userName && userName ? (
-              <UserDropDown userName={userName} logOut={logOut} />
+              <UserDropDown userName={userName} logOut={logOut} setUserName={setUserName}/>
             ) : (
               <LoginButton />
             )}

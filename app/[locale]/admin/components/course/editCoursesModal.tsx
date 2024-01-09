@@ -88,6 +88,8 @@ export default function EditCoursesModal({openAssignModal, handleCloseModal, cou
               showSuccess("Updated Successfully")
               const timer = setTimeout(() => {
                 updateComponent()
+                handleCloseModal()
+
                 clearTimeout(timer)
               }, 4000)
             } else {

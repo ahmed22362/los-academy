@@ -140,7 +140,7 @@ function RemainSessions() {
           </>
         ) : (
           <div className="flex justify-center mt-2 items-center flex-col gap-5">
-            <p className="font-meduim"> No Remmain Sessions</p>
+            <p className="font-meduim"> No Remaining Sessions</p>
             <Image
               src={"/vectors/list.png"}
               alt="no upcoming session"

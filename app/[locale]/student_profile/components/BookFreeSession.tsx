@@ -11,14 +11,14 @@ import { useRouter } from "next/navigation";
 
 function BookFreeSession({ setOpenBookModal }: any) {
   const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date> | any>(
-    null
+    null,
   );
   const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
   const handleSelectCourses = (courses: any[]) => {
     setSelectedCourses(courses);
   };
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-const router=useRouter();
+  const router = useRouter();
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -53,13 +53,15 @@ const router=useRouter();
 
     const selectedDates = freedatetime12h.map((date) => date.toISOString());
 
-    const selectedCourseTitles = selectedCourses.map((course) => course.title.toLowerCase());
+    const selectedCourseTitles = selectedCourses.map((course) =>
+      course.title.toLowerCase(),
+    );
 
-      const requestBody = {
-        sessionDates: selectedDates,
-        courses: selectedCourseTitles,
-      };
-      setIsProcessing(true);
+    const requestBody = {
+      sessionDates: selectedDates,
+      courses: selectedCourseTitles,
+    };
+    setIsProcessing(true);
     fetch(`${url}/session/free/request`, {
       method: "POST",
       headers: {
@@ -106,25 +108,24 @@ const router=useRouter();
           outline: "4px solid var(--secondary-color)",
           borderRadius: "16px",
           width: "408px",
-          height:'100%'
+          height: "100%",
         }}
         inline
         selectionMode="multiple"
       />
       <div>
-      <Button
-        onClick={handleBookFreeClick}
-        color="purple"
-        isProcessing={isProcessing}
-        pill
-        size="md"
-        className={
-          "bg-secondary-color hover:bg-[#3b369a] text-white 	py-2 border rounded-3xl text-md px-10	 transition-all	duration-500 "
-        }
-      >
-        <p>Book Free Session</p>
-      </Button>
-       
+        <Button
+          onClick={handleBookFreeClick}
+          color="purple"
+          isProcessing={isProcessing}
+          pill
+          size="md"
+          className={
+            "bg-secondary-color hover:bg-[#3b369a] text-white 	py-2 border rounded-3xl text-md px-10	 transition-all	duration-500 "
+          }
+        >
+          <p>Book Free Session</p>
+        </Button>
       </div>
       <Toast ref={toast} />
     </div>

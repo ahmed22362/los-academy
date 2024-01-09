@@ -105,6 +105,9 @@ export default function FetchCoursesData({
       .then((data) => {
         showError(data.message);
         updateComponent();
+        setTimeout(()=>{
+            closeModal()
+        },3000)
       })
       .catch((err) => {
         console.log(err);

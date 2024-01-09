@@ -18,8 +18,6 @@ function BookFreeSession({ setOpenBookModal }: any) {
 const router=useRouter();
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
 
   const showSuccessMessage = (message: any) => {
     toast?.current?.show({
@@ -61,11 +59,11 @@ const router=useRouter();
       console.log(requestBody);
       
       setIsProcessing(true);
-    fetch(`${url}/session/free/request`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/free/request`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.get("token")}`,
       },
       body: JSON.stringify(requestBody),
     })
@@ -81,7 +79,7 @@ const router=useRouter();
           }, 4000);
         } else {
           setIsProcessing(false);
-          showErrorMessage(data[0]?.message);
+          showErrorMessage(data.message);
         }
       })
       .catch((error) => {

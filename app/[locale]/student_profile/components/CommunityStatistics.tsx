@@ -41,7 +41,7 @@ function CommunityStatistics() {
           <span className="block text-center">
           Attendence
           </span>
-          {communityStatistics[0]?.percent||0}
+          {communityStatistics[0]?.percent||0} %
           </div>
       </div>
     </div>

@@ -11,13 +11,13 @@ interface Course {
   stripeProductId: string | null;
 }
 
-function ViewCourses({ onSelectCourses }:any) {
+function ViewCourses({ setSelectedCourses ,selectedCourses }:any) {
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
   const token = cookie.get('token');
 
   const [courses, setCourses] = useState<Course[]>([]);
-  const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
+  // const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
 
   useEffect(() => {
     // Make a GET request to the course/ endpoint
@@ -37,13 +37,10 @@ function ViewCourses({ onSelectCourses }:any) {
         console.error('Error fetching courses:', error);
       });
   }, []);
-  const handleSelectionChange = (e: MultiSelectChangeEvent) => {
-    setSelectedCourses(e.value);
-    onSelectCourses(e.value);
-  };
+
 
   const options = courses?.map((course) => ({
-    value: course.id,
+    value: course.title,
     label: course.title,
   }));
   console.log( selectedCourses);
@@ -53,7 +50,7 @@ function ViewCourses({ onSelectCourses }:any) {
       <span className="p-float-label text-lg w-full ">
         <MultiSelect
           value={selectedCourses}
-          onChange={(e) => setSelectedCourses(e.value)}
+          onChange={(e) => setSelectedCourses(e.target.value)}
           options={options}
           optionLabel="label" // Use "label" instead of "name" for optionLabel
           maxSelectedLabels={3}

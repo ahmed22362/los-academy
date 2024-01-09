@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import { Calendar, CalendarProps } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
-import PrimaryButton from "../../components/PrimaryButton";
 import { Toast } from "primereact/toast";
 import ViewCourses from "./viewCourses";
 import { Button } from "flowbite-react";

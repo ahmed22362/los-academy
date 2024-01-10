@@ -7,15 +7,16 @@ import { Toast } from "primereact/toast";
 import ViewCourses from "./viewCourses";
 import { Button } from "flowbite-react";
 import { useRouter } from "next/navigation";
+import BookSessionsCalendar from "./bookSessionsCalendar";
 
 function BookFreeSession({ setOpenBookModal }: any) {
-  const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date> | any>(
+  const [datetime12h, setDateTime12h] = useState<Nullable<Date> | any>(
     null
   );
   const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-const router=useRouter();
+  const router=useRouter();
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
 
@@ -38,20 +39,21 @@ const router=useRouter();
   };
   const handleBookFreeClick = () => {
     if (
-      !freedatetime12h ||
-      !Array.isArray(freedatetime12h) ||
-      freedatetime12h.length === 0
+      !datetime12h ||
+      !Array.isArray(datetime12h) ||
+      datetime12h.length === 0
     ) {
       showErrorMessage("Please select at least one date for booking.");
       return;
     }
 
-    const selectedDates = freedatetime12h.map((date) => date.toISOString());
+    const selectedDates = datetime12h.map((date) => date.toISOString());
 
     const selectedCourseTitles = selectedCourses?.map((course) => course.toString().toLowerCase());
-    if(!selectedCourseTitles){
-        showErrorMessage("you should select at least one course")
-      }
+    if(selectedCourseTitles.length==0){
+      showErrorMessage("you should select at least one course");
+      return 0;
+    }
       const requestBody = {
         sessionDates: selectedDates,
         courses: selectedCourseTitles,
@@ -79,7 +81,7 @@ const router=useRouter();
           }, 4000);
         } else {
           setIsProcessing(false);
-          showErrorMessage(data.message);
+          showErrorMessage(data?.message);
         }
       })
       .catch((error) => {
@@ -88,29 +90,14 @@ const router=useRouter();
       });
   };
 
-  useEffect(() => {
-    // console.log(freedatetime12h);
-  }, [freedatetime12h]);
 
   return (
     <div className=" flex justify-center flex-col items-center gap-5">
       <div className="courses w-full flex justify-center">
       <ViewCourses setSelectedCourses={setSelectedCourses} selectedCourses={selectedCourses} />
       </div>
-      <Calendar
-        value={freedatetime12h}
-        onChange={(e: CalendarProps | any) => setFreeDateTime12h(e.value)}
-        showTime
-        hourFormat="12"
-        style={{
-          outline: "4px solid var(--secondary-color)",
-          borderRadius: "16px",
-          width: "408px",
-          height:'100%'
-        }}
-        inline
-        selectionMode="multiple"
-      />
+     
+      <BookSessionsCalendar datetime12h={datetime12h} setDateTime12h={setDateTime12h}/>
       <div>
       <Button
         onClick={handleBookFreeClick}

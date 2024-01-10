@@ -27,21 +27,19 @@ export default function EditProfile({
   setMyInfo,
   openEditeProfileModal,
   setOpenEditeProfileModal,
-  setUserName
+  setUserName,
+  myInfo
 }: any) {
   const [showChangePassword, setShowChangePassword] = useState(false); // New state
   const cookie = new Cookies();
   const [userInfo, setUserInfo] = useState<UserInfo | undefined>(); // Use UserInfo type
-  const [successStatus, setSuccessStatus] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toast = useRef<Toast>(null);
   const showToast = (
     severity: "success" | "info" | "warn" | "error",
     summary: string,
     detail: string
   ) => {
-    setToastMessage(null);
-    setToastMessage(`${summary}: ${detail}`);
+   
     toast.current?.show({ severity, summary, detail });
   };
 
@@ -54,9 +52,12 @@ export default function EditProfile({
     })
       .then((response) => response.json())
       .then((data) => {
-        setUserName(data?.data?.name)
-        setMyInfo(data?.data);
-        setUserInfo(data.data);
+        if(data.status=="success"){
+          cookie.set("name" ,data?.data?.name)
+          setMyInfo(data?.data);
+          setUserInfo(data.data);
+        }
+        
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
@@ -90,10 +91,10 @@ export default function EditProfile({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-
         if(data.status=="success"){
           setUserName(data?.data?.name);
+          setMyInfo(data?.data)
+          cookie.set("name", data?.data?.name);
           getMe();
           showToast(
             "success",
@@ -111,7 +112,6 @@ export default function EditProfile({
        
         // console.log("Update successful:", data);
 
-        setSuccessStatus(true);
         setOpenEditeProfileModal(false); // Close the modal after a successful update
       })
       .catch((error) => {

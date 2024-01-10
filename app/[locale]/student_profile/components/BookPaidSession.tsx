@@ -6,19 +6,17 @@ import { Nullable } from "primereact/ts-helpers";
 import { Toast } from "primereact/toast";
 import ViewCourses from "./viewCourses";
 import { Button } from "flowbite-react";
+import BookSessionsCalendar from "./bookSessionsCalendar";
 
 function BookPaidSession({ setOpenBookModal }: any) {
-  const [datetime12h, setDateTime12h] = useState<Nullable<Date> | any>(null);
-  const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
-  const handleSelectCourses = (courses: any[]) => {
-    setSelectedCourses(courses);
-  };
+  const [datetime12h, setDateTime12h] = useState<Nullable<Date> | any>(
+    null
+  );  const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
+
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
 
   const handleBookClick = () => {
     
@@ -33,18 +31,21 @@ function BookPaidSession({ setOpenBookModal }: any) {
     if (datetime12h && Array.isArray(datetime12h) && datetime12h.length > 0) {
       const selectedDates = datetime12h.map((date) => date.toISOString());
 
-      const selectedCourseTitles = selectedCourses.map((course) => course.title.toLowerCase());
-
+      const selectedCourseTitles = selectedCourses?.map((course) => course.toString().toLowerCase());
+      if(selectedCourseTitles.length==0){
+        showErrorMessage("you should select at least one course");
+        return 0;
+      }
       const requestBody = {
         sessionDates: selectedDates,
         courses: selectedCourseTitles,
       };
       setIsProcessing(true);
-      fetch(`${url}/session/paid/request`, {
+      fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/paid/request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${cookie.get("token")}`,
         },
         body: JSON.stringify(requestBody),
       })
@@ -91,9 +92,9 @@ function BookPaidSession({ setOpenBookModal }: any) {
   return (
     <div className="m-auto flex justify-center flex-col items-center gap-5">
        <div className="courses w-full flex justify-center">
-        <ViewCourses onSelectCourses={handleSelectCourses}/>
+       <ViewCourses setSelectedCourses={setSelectedCourses} selectedCourses={selectedCourses} />
       </div>
-      <Calendar
+      {/* <Calendar
         value={datetime12h}
         onChange={(e: CalendarProps | any) => setDateTime12h(e.value)}
         showTime
@@ -104,8 +105,8 @@ function BookPaidSession({ setOpenBookModal }: any) {
         }}
         inline
         selectionMode="multiple"
-      />
-     
+      /> */}
+     <BookSessionsCalendar datetime12h={datetime12h} setDateTime12h={setDateTime12h}/>
       <div>
       <Button
         onClick={handleBookClick}

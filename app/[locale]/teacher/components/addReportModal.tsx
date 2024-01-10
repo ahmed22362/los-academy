@@ -220,7 +220,6 @@ export default function AddReportModal({
               defaultValue={id}
               onChange={(e) => setId(e.target.value)}
               type="text"
-              readOnly={true}
             />
           </div>
           <h3 className="mb-3">Add the information of taken courses: </h3>

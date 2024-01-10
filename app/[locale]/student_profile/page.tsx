@@ -36,7 +36,6 @@ interface UserInfo {
   sessionPlaced: boolean; // make age optional if it may not be present in the API response
 }
 export default function page() {
-  const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
 
   const [myInfo, setMyInfo] = useState<UserInfo | undefined>();
   const [mySubscription, setMySubscription] = useState<any>({});
@@ -48,8 +47,11 @@ export default function page() {
   const [teacherUbsentSessions, setTeacherUbsentSessions] = useState<any[]>([]);
   const [myReschedule, setMyReschedule] = useState<any[]>([]);
   const [teatcherreschedule, setTeatcherReschedule] = useState<any[]>([]);
-
   const cookie = new Cookies();
+  useEffect(() => {
+    router.refresh();
+  }, [myInfo ,setMyInfo])
+  
   // my subscribtion
   const fetchMySubscription = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySubscription`, {
@@ -97,18 +99,7 @@ export default function page() {
       });
   }, []);
 
-  const convertDateTimeZone = (
-    inputTime: moment.MomentInput,
-    inputTimezone: string,
-    outputTimezone: string,
-    ourFormat: string
-  ) => {
-    const convertedTime = moment(inputTime)
-      .tz(inputTimezone)
-      .clone()
-      .tz(outputTimezone);
-    return convertedTime.format(ourFormat);
-  };
+ 
   // fetch my reschedule
   const fetchMyReschedule = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/requestReschedule`, {
@@ -254,41 +245,6 @@ export default function page() {
     }
   }, []);
 
-  const [steps] = useState<any[]>([
-    {
-      content: <h1>Hello This Tips To Show You Your Page Sections</h1>,
-      placement: "center",
-      target: "body",
-    },
-    {
-      target: ".book_section",
-      content:
-        "From here, you can book a free session or a paid session after subscribing to a plan.",
-    },
-    {
-      target: ".reports_section",
-      content: "The reports that your teachers write about you appear here",
-    },
-    {
-      target: ".community_section",
-      content:
-        "our community statistics appear here, including your attendance.",
-    },
-    {
-      target: ".remain_sessions_section",
-      content: "All your pending sessions appear here.",
-    },
-    {
-      target: ".rescheduling_section",
-      content:
-        "All rescheduling requests, whether from you or your teacher, appear here.",
-    },
-    {
-      target: ".teacher_ubsent_section",
-      content: "The sessions that your teacher was absent from appear here.",
-    },
-  ]);
-
   useEffect(() => {
     // console.log(pendingSessionRequest);
 
@@ -308,7 +264,7 @@ export default function page() {
         openContinueWithModal={openContinueWithModal}
         setOpenContinueWithModal={setOpenContinueWithModal}
       />
-      {mySubscription.lenght == 0 ? (
+      {mySubscription.length === 0 ? (
         <BannerComponent
           message={"You Want To Enjoy Sessions?"}
           animation={"animate-bounce"}
@@ -318,11 +274,11 @@ export default function page() {
         ""
       )}
       <div className="myInfo flex justify-center items-center">
-        <MyInfo myInfo={myInfo} />
+        <MyInfo key={myInfo} myInfo={myInfo} />
       </div>
       <div className="grid grid-cols-3 max-sm:grid-cols-1 max-md:grid-cols-2 justify-between gap-5	 mt-7">
         <div className="card w-full  ">
-          <EditProfile setMyInfo={setMyInfo} />
+          <EditProfile myInfo={myInfo} setMyInfo={setMyInfo} />
           <div className="">
             <h3 className={`${styles.secondary_head} pb-2 ml-3 my-2`}></h3>
             {myReschedule.length > 0 || teatcherreschedule.length > 0 ? (

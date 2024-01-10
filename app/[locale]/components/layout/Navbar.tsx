@@ -113,7 +113,7 @@ export default function CustomNavbar() {
           <div>
             <Link
               href="/"
-              className="flex flex-row flex-wrap justify-center gap-3 rtl:flex-row-reverse"
+              className="flex flex-row flex-wrap justify-center gap-3  rtl:flex-row-reverse"
             >
               <Image
                 src={"/logo.png"}
@@ -125,16 +125,17 @@ export default function CustomNavbar() {
                 className={"w-auto h-auto max-md:w-[30px]"}
               />
               <h2
-                className={"font-semibold"}
+                className={"font-semibold "}
                 style={{
                   fontSize:
                     "calc(16px + (24 - 16) * ((100vw - 320px) / (1920 - 320))",
                 }}
               >
                 LOS Academy
+
               </h2>
             </Link>
-            <span className="text-[13px] ml-12">Learning Of Science</span>
+            <div className="text-[14px] ml-12 max-[450px]:text-[12px] font-semibold -translate-y-1 ">Learning Of Science</div>
           </div>
 
           <Navbar.Collapse

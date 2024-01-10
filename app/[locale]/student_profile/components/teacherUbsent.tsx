@@ -145,7 +145,7 @@ function TeacherUbsent() {
                         </span>
                       </div>
                     </div> */}
-                    <div className="flex  justify-between items-center sm:flex-col gap-3 xl:gap-0 xl:flex-row max-[400px]:flex-col">
+                    <div className="flex  justify-between items-center sm:flex-col gap-3 xl:gap-0 xl:flex-row max-[450px]:flex-col">
                     <div className="flex flex-col justify-center items-start">
                     <p className=" font-medium">
                       Teacher Name: {sessionInfo?.SessionInfo?.teacher?.name}

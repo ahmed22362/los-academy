@@ -1,15 +1,17 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ContentLoader from "react-content-loader";
 
 function MyInfo({ myInfo }: any) {
   const [loading, setloading] = useState<boolean>(true);
-
+const router=useRouter();
   useEffect(() => {
     if (myInfo) {
       setloading(false);
     }
-  }, [myInfo]);
+  router.refresh();
+  }, [myInfo ]);
 
   if (loading) {
     return (

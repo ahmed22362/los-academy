@@ -202,7 +202,7 @@ function TeacherRescduleRequests({
       });
   };
   return (
-    <div className={`${teatcherreschedule.length>0? 'scrollAction':''} sm:h-[120px] max-[400px]:h-[120px] lg:h-[150px]`} >
+    <div className={`${teatcherreschedule.length>0? 'scrollAction':''} sm:h-[120px] max-[450px]:h-[120px] lg:h-[150px]`} >
       <RescheduleSession
         setOpenRescheduleModal={setOpenRescheduleModal}
         openRescheduleModal={openRescheduleModal}

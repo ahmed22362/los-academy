@@ -119,7 +119,7 @@ export default function FetchTeacherData({teacherData, updateComponent} : {teach
                             location.href = `https://wa.me/+2${teacher.phone}`
                         }}
                     />
-                   <Link href={`mailto:${teacher.email}`}> <GoMail className={"text-2xl cursor-pointer"} /></Link>
+                   <Link href={`mailto:${teacher?.email}`}> <GoMail className={"text-2xl cursor-pointer"} /></Link>
                 </div>
             </Table.Cell>
             <Table.Cell>

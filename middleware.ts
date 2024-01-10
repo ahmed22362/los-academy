@@ -104,7 +104,7 @@ async function middleware(req: NextRequest) {
     }
 
   return createMiddleware({
-    locales: ['en', 'ar'],
+    locales: ['en'],
     defaultLocale: 'en',
   })(req);
 }

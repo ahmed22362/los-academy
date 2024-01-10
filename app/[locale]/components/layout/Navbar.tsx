@@ -72,6 +72,8 @@ export default function CustomNavbar() {
     const newName = cookies.get('name');
     setUserName(newName);
   }, [cookies.get('name')]); 
+  
+  
   const addActiveClass = (e: any) => {
     const navLinks = document.querySelectorAll(".navBarLink");
     navLinks.forEach((link) => {

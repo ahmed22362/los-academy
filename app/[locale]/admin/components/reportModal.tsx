@@ -17,11 +17,11 @@ export default function ReportModal({
   details: string | any;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const reprotDetails = details && details;
-  
+  const reportDetails = details && details;
+
   const downloadPdf = async () => {
     const pdf = new jsPDF("p", "pt", "a4");
-    const capture: any = document.getElementById("reportModal")
+    const capture: any = document.getElementById("reportModal");
     pdf.html(capture).then(() => {
       pdf.save("report.pdf");
     });
@@ -62,82 +62,116 @@ export default function ReportModal({
       >
         <Modal.Header theme={modalTheme.header}></Modal.Header>
         <Modal.Body>
-          <div id="reportModal" className="flex flex-col items-start justify-center gap-3 px-4 mt-5">
+          <div
+            id="reportModal"
+            className="flex flex-col items-start justify-center gap-3 px-4 mt-5"
+          >
             <div className="flex flex-col-reverse">
-              <h3 className="mt-10 text-black-color-one text-center font-semibold text-md">Report Details :</h3>
+              <h3 className="mt-10 text-black-color-one text-center font-semibold text-md">
+                Report Details :
+              </h3>
               <div className="flex flex-col justify-center items-center gap-1">
-                <Image src={'/logo.png'} width={50} height={50} loading={"lazy"} alt={"report logo"} />
-                <span className="text-black-color-one font-bold text-sm">LOS Academy</span>
+                <Image
+                  src={"/logo.png"}
+                  width={50}
+                  height={50}
+                  loading={"lazy"}
+                  alt={"report logo"}
+                />
+                <span className="text-black-color-one font-bold text-sm">
+                  LOS Academy
+                </span>
               </div>
             </div>
-            
-            <hr style={{ width: "70%", height: "2px", backgroundColor: "black" }} />
-            <h3 className="text-black-color-one text-center font-semibold text-md">Courses Grades :</h3>
+
+            <hr
+              style={{ width: "70%", height: "2px", backgroundColor: "black" }}
+            />
+            <h3 className="text-black-color-one text-center font-semibold text-md">
+              Courses Grades :
+            </h3>
             <ul className="ps-5 capitalize flex flex-col items-start justify-center gap-2">
-              {reprotDetails.arabic === null || reprotDetails.arabic === "" ? (
+              {reportDetails.arabic === null || reportDetails.arabic === "" ? (
                 ""
               ) : (
                 <li>
-                  Arabic: <span className="ps-3 ">{reprotDetails.arabic}</span>
+                  Arabic: <span className="ps-3 ">{reportDetails.arabic}</span>
                 </li>
               )}
-              {reprotDetails.arabicComment === null || reprotDetails.arabicComment === "" ? (
+              {reportDetails.arabicComment === null ||
+              reportDetails.arabicComment === "" ? (
                 ""
               ) : (
                 <li>
-                  Arabic Comment: <span className="ps-3 "><q>{reprotDetails.arabicComment}</q></span>
+                  Arabic Comment:{" "}
+                  <span className="ps-3 ">
+                    <q>{reportDetails.arabicComment}</q>
+                  </span>
                 </li>
               )}
-              {reprotDetails.islamic === null ||
-              reprotDetails.islamic === "" ? (
+              {reportDetails.islamic === null ||
+              reportDetails.islamic === "" ? (
                 ""
               ) : (
                 <li>
-                  Islamic: <span className="ps-3 ">{reprotDetails.islamic}</span>
+                  Islamic:{" "}
+                  <span className="ps-3 ">{reportDetails.islamic}</span>
                 </li>
               )}
-              {reprotDetails.islamicComment === null ||
-              reprotDetails.islamicComment === "" ? (
+              {reportDetails.islamicComment === null ||
+              reportDetails.islamicComment === "" ? (
                 ""
               ) : (
                 <li>
-                  Islamic Comment: <span className="ps-3 "><q>{reprotDetails.islamicComment}</q></span>
+                  Islamic Comment:{" "}
+                  <span className="ps-3 ">
+                    <q>{reportDetails.islamicComment}</q>
+                  </span>
                 </li>
               )}
-              {reprotDetails.quran === null || reprotDetails.quran === "" ? (
+              {reportDetails.quran === null || reportDetails.quran === "" ? (
                 ""
               ) : (
                 <li>
-                  Quran: <span className="ps-3 ">{reprotDetails.quran}</span>
+                  Quran: <span className="ps-3 ">{reportDetails.quran}</span>
                 </li>
               )}
-              {reprotDetails.quranComment === null || reprotDetails.quranComment === "" ? (
+              {reportDetails.quranComment === null ||
+              reportDetails.quranComment === "" ? (
                 ""
               ) : (
                 <li>
-                  Quran Comment: <span className="ps-3 "><q>{reprotDetails.quranComment}</q></span>
+                  Quran Comment:{" "}
+                  <span className="ps-3 ">
+                    <q>{reportDetails.quranComment}</q>
+                  </span>
                 </li>
               )}
             </ul>
             <p className="flex flex-col  w-[500px]">
               <b>Teacher Comment:</b>
-              <q className="ps-5 pe-5 pt-3 text-sm font-bold italic leading-6"> {reprotDetails.comment} </q>
+              <q className="ps-5 pe-5 pt-3 text-sm font-bold italic leading-6">
+                {" "}
+                {reportDetails.comment}{" "}
+              </q>
             </p>
 
-            <hr style={{ width: "70%", height: "2px", backgroundColor: "black" }} />
+            <hr
+              style={{ width: "70%", height: "2px", backgroundColor: "black" }}
+            />
             <h3 className="text-black-color-one text-center font-semibold text-md">
               Total Grade:{" "}
               <span
                 className={`${
-                  reprotDetails.grade === "exellent" ||
-                  reprotDetails.grade === "good"
+                  reportDetails.grade === "exellent" ||
+                  reportDetails.grade === "good"
                     ? "text-success-color"
-                    : reprotDetails.grade === "average"
+                    : reportDetails.grade === "average"
                     ? "text-warning-color"
                     : "text-danger-color"
                 } capitalize italic ps-3`}
               >
-                {reprotDetails.grade}
+                {reportDetails.grade}
               </span>
             </h3>
 
@@ -146,23 +180,23 @@ export default function ReportModal({
                 Session Info
               </h6>
               <ul className="ps-5">
-                <li>Session ID: {reprotDetails.sessionId}</li>
+                <li>Session ID: {reportDetails.sessionId}</li>
                 <li>
                   Session Date:{" "}
                   {convertDateTimeZone(
-                    reprotDetails.session.sessionDate,
+                    reportDetails.session.sessionDate,
                     "UTC",
                     Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    "D-MMM-YYYY"
+                    "D-MMM-YYYY",
                   )}
                 </li>
                 <li>
                   Create at:{" "}
                   {convertDateTimeZone(
-                    reprotDetails.createdAt,
+                    reportDetails.createdAt,
                     "UTC",
                     Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    "D-MMM-YYYY"
+                    "D-MMM-YYYY",
                   )}
                 </li>
               </ul>
@@ -181,4 +215,3 @@ export default function ReportModal({
     </>
   );
 }
-

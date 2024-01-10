@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import { Calendar, CalendarProps } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
-import PrimaryButton from "../../components/PrimaryButton";
 import { Toast } from "primereact/toast";
 import ViewCourses from "./viewCourses";
 import { Button } from "flowbite-react";
@@ -11,14 +10,12 @@ import { useRouter } from "next/navigation";
 
 function BookFreeSession({ setOpenBookModal }: any) {
   const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date> | any>(
-    null
+    null,
   );
   const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
-  const handleSelectCourses = (courses: any[]) => {
-    setSelectedCourses(courses);
-  };
+
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-const router=useRouter();
+  const router = useRouter();
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
   const url = process.env.NEXT_PUBLIC_APIURL;
@@ -53,13 +50,19 @@ const router=useRouter();
 
     const selectedDates = freedatetime12h.map((date) => date.toISOString());
 
-    const selectedCourseTitles = selectedCourses.map((course) => course.title.toLowerCase());
+    const selectedCourseTitles = selectedCourses?.map((course) =>
+      course.toString().toLowerCase(),
+    );
+    if (!selectedCourseTitles) {
+      showErrorMessage("you should select at least one course");
+    }
+    const requestBody = {
+      sessionDates: selectedDates,
+      courses: selectedCourseTitles,
+    };
+    console.log(requestBody);
 
-      const requestBody = {
-        sessionDates: selectedDates,
-        courses: selectedCourseTitles,
-      };
-      setIsProcessing(true);
+    setIsProcessing(true);
     fetch(`${url}/session/free/request`, {
       method: "POST",
       headers: {
@@ -70,6 +73,7 @@ const router=useRouter();
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setIsProcessing(false);
         if (data.status === "success") {
           showSuccessMessage("Booking Free Session successful");
@@ -79,7 +83,7 @@ const router=useRouter();
           }, 4000);
         } else {
           setIsProcessing(false);
-          showErrorMessage(data.message);
+          showErrorMessage(data[0]?.message);
         }
       })
       .catch((error) => {
@@ -95,7 +99,10 @@ const router=useRouter();
   return (
     <div className=" flex justify-center flex-col items-center gap-5">
       <div className="courses w-full flex justify-center">
-        <ViewCourses onSelectCourses={handleSelectCourses} />
+        <ViewCourses
+          setSelectedCourses={setSelectedCourses}
+          selectedCourses={selectedCourses}
+        />
       </div>
       <Calendar
         value={freedatetime12h}
@@ -106,25 +113,24 @@ const router=useRouter();
           outline: "4px solid var(--secondary-color)",
           borderRadius: "16px",
           width: "408px",
-          height:'100%'
+          height: "100%",
         }}
         inline
         selectionMode="multiple"
       />
       <div>
-      <Button
-        onClick={handleBookFreeClick}
-        color="purple"
-        isProcessing={isProcessing}
-        pill
-        size="md"
-        className={
-          "bg-secondary-color hover:bg-[#3b369a] text-white 	py-2 border rounded-3xl text-md px-10	 transition-all	duration-500 "
-        }
-      >
-        <p>Book Free Session</p>
-      </Button>
-       
+        <Button
+          onClick={handleBookFreeClick}
+          color="purple"
+          isProcessing={isProcessing}
+          pill
+          size="md"
+          className={
+            "bg-secondary-color hover:bg-[#3b369a] text-white 	py-2 border rounded-3xl text-md px-10	 transition-all	duration-500 "
+          }
+        >
+          <p>Book Free Session</p>
+        </Button>
       </div>
       <Toast ref={toast} />
     </div>

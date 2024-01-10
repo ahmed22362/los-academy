@@ -17,7 +17,7 @@ export default function DisplayReportModal({
   details: string | any;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const reprotDetails = details && details;
+  const reportDetails = details && details;
   const downloadPdf = async (reportId: any) => {
     const pdf = new jsPDF("p", "pt", "a4");
     const capture: any = document.getElementById("reportModal");
@@ -90,58 +90,58 @@ export default function DisplayReportModal({
               Courses Grades :
             </h3>
             <ul className="ps-5 capitalize flex flex-col items-start justify-center gap-2">
-              {reprotDetails.arabicGrade === null ||
-              reprotDetails.arabicGrade === "" ? (
+              {reportDetails.arabicGrade === null ||
+              reportDetails.arabicGrade === "" ? (
                 ""
               ) : (
                 <li>
                   Arabic Grade:{" "}
-                  <span className="ps-3 ">{reprotDetails.arabicGrade}</span>
+                  <span className="ps-3 ">{reportDetails.arabicGrade}</span>
                 </li>
               )}
-              {reprotDetails.arabicToPage === null ||
-              reprotDetails.arabicToPage === "" ? (
+              {reportDetails.arabicToPage === null ||
+              reportDetails.arabicToPage === "" ? (
                 ""
               ) : (
                 <li>
                   Arabic To Page:{" "}
-                  <span className="ps-3 ">{reprotDetails.arabicToPage}</span>
+                  <span className="ps-3 ">{reportDetails.arabicToPage}</span>
                 </li>
               )}
-              {reprotDetails.islamicGrade === null ||
-              reprotDetails.islamicGrade === "" ? (
+              {reportDetails.islamicGrade === null ||
+              reportDetails.islamicGrade === "" ? (
                 ""
               ) : (
                 <li>
                   Islamic Grade:{" "}
-                  <span className="ps-3 ">{reprotDetails.islamicGrade}</span>
+                  <span className="ps-3 ">{reportDetails.islamicGrade}</span>
                 </li>
               )}
-              {reprotDetails.islamicToPage === null ||
-              reprotDetails.islamicToPage === "" ? (
+              {reportDetails.islamicToPage === null ||
+              reportDetails.islamicToPage === "" ? (
                 ""
               ) : (
                 <li>
                   Islamic To Page:{" "}
-                  <span className="ps-3 ">{reprotDetails.islamicToPage}</span>
+                  <span className="ps-3 ">{reportDetails.islamicToPage}</span>
                 </li>
               )}
-              {reprotDetails.quranGrade === null ||
-              reprotDetails.quranGrade === "" ? (
+              {reportDetails.quranGrade === null ||
+              reportDetails.quranGrade === "" ? (
                 ""
               ) : (
                 <li>
                   Quran Grade:{" "}
-                  <span className="ps-3 ">{reprotDetails.quranGrade}</span>
+                  <span className="ps-3 ">{reportDetails.quranGrade}</span>
                 </li>
               )}
-              {reprotDetails.quranToPage === null ||
-              reprotDetails.quranToPage === "" ? (
+              {reportDetails.quranToPage === null ||
+              reportDetails.quranToPage === "" ? (
                 ""
               ) : (
                 <li>
                   Quran To Page:{" "}
-                  <span className="ps-3 ">{reprotDetails.quranToPage}</span>
+                  <span className="ps-3 ">{reportDetails.quranToPage}</span>
                 </li>
               )}
             </ul>
@@ -149,7 +149,7 @@ export default function DisplayReportModal({
               <b>Teacher Comment:</b>
               <q className="ps-5 pe-5 pt-3 text-sm font-bold italic leading-6">
                 {" "}
-                {reprotDetails.comment}{" "}
+                {reportDetails.comment}{" "}
               </q>
             </p>
 
@@ -163,15 +163,15 @@ export default function DisplayReportModal({
               <ul className="ps-5">
                 <li className="capitalize">
                   Student Name:{" "}
-                  {reprotDetails.user?.name || reprotDetails.userId}
+                  {reportDetails.user?.name || reportDetails.userId}
                 </li>
                 <li>
                   Create at:{" "}
                   {convertDateTimeZone(
-                    reprotDetails.createdAt,
+                    reportDetails.createdAt,
                     "UTC",
                     Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    "D-MMM-YYYY"
+                    "D-MMM-YYYY",
                   )}
                 </li>
               </ul>
@@ -180,7 +180,7 @@ export default function DisplayReportModal({
           <div className="flex justify-center items-center my-3">
             <button
               className="text-white bg-success-color hover:bg-green-300 rounded-full py-2 px-5 transition-colors"
-              onClick={() => downloadPdf(reprotDetails.id)}
+              onClick={() => downloadPdf(reportDetails.id)}
             >
               Download as pdf
             </button>

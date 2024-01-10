@@ -40,13 +40,12 @@ export default function EditProfile({
   const showToast = (
     severity: "success" | "info" | "warn" | "error",
     summary: string,
-    detail: string
+    detail: string,
   ) => {
     setToastMessage(null);
     setToastMessage(`${summary}: ${detail}`);
     toast.current?.show({ severity, summary, detail });
   };
-
 
   useEffect(() => {
     fetch(`${url}/user/me`, {
@@ -66,7 +65,7 @@ export default function EditProfile({
         console.error("Error fetching my profile:", error);
       });
   }, []);
-  
+
   const [editedInfo, setEditedInfo] = useState({ ...(userInfo || {}) });
 
   // update user data
@@ -93,7 +92,7 @@ export default function EditProfile({
         showToast(
           "success",
           "Update Successful",
-          "Profile has been updated successfully."
+          "Profile has been updated successfully.",
         );
         // console.log("Update successful:", data);
 
@@ -104,12 +103,11 @@ export default function EditProfile({
         showToast(
           "success",
           "Update Successful",
-          "Profile has been updated successfully."
+          "Profile has been updated successfully.",
         );
         console.error("Error updating profile:", error);
       });
   };
- 
 
   return (
     <>

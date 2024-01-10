@@ -19,7 +19,7 @@ export default function CoursesComboBox({ ...props }: any) {
   };
 
   return (
-    <section className={"px-5"}>
+    <section className={"mb-3"}>
       <div
         className={
           "flex flex-row w-full justify-between items-center bg-white-color p-5 rounded-[16px] flex-wrap"

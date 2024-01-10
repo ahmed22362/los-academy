@@ -6,9 +6,10 @@ import CoursesComboBox from "./coursesComboBox";
 import FetchCoursesData from "./fetchCoursesData";
 import Cookies from "universal-cookie";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
+import { convertDateTimeZone } from "@/utilities";
 
 export default function CoursesTable() {
-  const [allCourses, setAllCourses]: any = useState([]);
+  const [allCourses, setAllCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
   const customTheme: CustomFlowbiteTheme["table"] = {
@@ -32,7 +33,7 @@ export default function CoursesTable() {
     const endIndex = first + rows;
     return allCourses.slice(first, endIndex);
   };
-  const displayCourses = getPaginatedData();
+  const displayedCourses = getPaginatedData();
 
   const fetchAllCourses = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/course`, {
@@ -59,53 +60,124 @@ export default function CoursesTable() {
 
   return (
     <>
-      <CoursesComboBox updateComponent={fetchAllCourses} />
-      <div className={"px-5 py-4"}>
-        <Table>
-          <Table.Head theme={customTheme.head}>
-            <Table.HeadCell theme={customTheme.head}>#ID</Table.HeadCell>
-            <Table.HeadCell theme={customTheme.head}>Title</Table.HeadCell>
-            <Table.HeadCell theme={customTheme.head}>
-              Description
-            </Table.HeadCell>
-            <Table.HeadCell theme={customTheme.head}>Details</Table.HeadCell>
-            <Table.HeadCell theme={customTheme.head}>Created At</Table.HeadCell>
-            <Table.HeadCell theme={customTheme.head}>options</Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="divide-y">
-            {isLoading ? (
-              <Table.Row>
-                <td>
-                  <Spinner size="xl" />
-                </td>
-              </Table.Row>
-            ) : allCourses && allCourses.length > 0 ? (
-              displayCourses.map((teacher: any, index: number) => {
-                return (
-                  <FetchCoursesData
-                    key={index}
-                    coursesData={teacher}
-                    updateComponent={fetchAllCourses}
-                  />
-                );
-              })
-            ) : (
-              <tr>
-                <td className="p-3">No courses found</td>
-              </tr>
-            )}
-          </Table.Body>
-        </Table>
-        <div className="card mt-4">
-          <Paginator
-            first={first}
-            rows={rows}
-            totalRecords={allCourses.length}
-            rowsPerPageOptions={[10, 20, 30]}
-            onPageChange={onPageChange}
-          />
+      {isLoading ? (
+        <div className="flex justify-center items-center h-full">
+          <Spinner size="xl" />
         </div>
-      </div>
+      ) : (
+        <div className="p-5">
+          <CoursesComboBox updateComponent={fetchAllCourses} />
+          {allCourses && allCourses.length > 0 ? (
+            <>
+              {" "}
+              <div className="overflow-auto rounded-lg shadow hidden md:block">
+                <Table>
+                  <Table.Head theme={customTheme.head}>
+                    <Table.HeadCell theme={customTheme.head}>
+                      #ID
+                    </Table.HeadCell>
+                    <Table.HeadCell theme={customTheme.head}>
+                      Title
+                    </Table.HeadCell>
+                    <Table.HeadCell theme={customTheme.head}>
+                      Description
+                    </Table.HeadCell>
+                    <Table.HeadCell theme={customTheme.head}>
+                      Details
+                    </Table.HeadCell>
+                    <Table.HeadCell theme={customTheme.head}>
+                      Created At
+                    </Table.HeadCell>
+                    <Table.HeadCell theme={customTheme.head}>
+                      options
+                    </Table.HeadCell>
+                  </Table.Head>
+                  <Table.Body className="divide-y divide-gray-100">
+                    {displayedCourses.map((course: any, index: number) => (
+                      <Table.Row
+                        key={index}
+                        className="bg-white dark:border-gray-700 dark:bg-gray-800 text-center"
+                      >
+                        <Table.Cell className=" font-medium text-gray-900 dark:text-white">
+                          {course.id}
+                        </Table.Cell>
+                        <Table.Cell>{course.title}</Table.Cell>
+                        <Table.Cell>{course.description}</Table.Cell>
+                        <Table.Cell className="hidden md:table-cell">
+                          {course.details.length > 100
+                            ? course.details.substring(0, 100) + "..."
+                            : course.details}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {convertDateTimeZone(
+                            course.createdAt,
+                            "UTC",
+                            Intl.DateTimeFormat().resolvedOptions().timeZone,
+                            "YYYY-MM-DD h:mm A",
+                          )}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <FetchCoursesData
+                            coursesData={course}
+                            updateComponent={fetchAllCourses}
+                          />
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
+                {displayedCourses.map((course: any, index: number) => (
+                  <div
+                    key={index}
+                    className="bg-white space-y-3 p-4 rounded-lg shadow"
+                  >
+                    <div className="flex items-center space-x-2 text-sm">
+                      <div>
+                        <span className="text-blue-500 font-bold hover:underline">
+                          #{course.id}
+                        </span>
+                      </div>
+                      <div className="text-gray-500">{course.title}</div>
+                    </div>
+                    <div className="text-sm text-gray-700">
+                      {course.description}
+                    </div>
+                    <div className="text-sm text-gray-700">
+                      {course.details.length > 20
+                        ? course.details.substring(0, 100) + "..."
+                        : course.details}
+                    </div>
+                    <div className="text-sm font-medium text-black flex justify-center items-center">
+                      {
+                        <FetchCoursesData
+                          key={index}
+                          coursesData={course}
+                          updateComponent={fetchAllCourses}
+                        />
+                      }
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="bg-red-100 text-red-800 p-4 rounded-md">
+              There are no Courses, Add One!
+            </div>
+          )}
+          <div className="card mt-4">
+            <Paginator
+              first={first}
+              rows={rows}
+              totalRecords={allCourses.length ?? 0}
+              rowsPerPageOptions={[10, 20, 30]}
+              onPageChange={onPageChange}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 }

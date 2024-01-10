@@ -621,7 +621,7 @@ function UpcomingSessions() {
                   onClick={() => updateAttendance()}
                   disabled={isImHereButtonDisabled}
                 >
-                  <Link href={sessionLink} target="_blank">
+                  <Link href={sessionLink?sessionLink:"#"} target="_blank">
                     Join Meeting
                   </Link>
                 </button>

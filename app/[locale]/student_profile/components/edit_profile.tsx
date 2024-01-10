@@ -54,7 +54,7 @@ export default function EditProfile({
     })
       .then((response) => response.json())
       .then((data) => {
-        cookie.set("name" ,data?.data?.name)
+        setUserName(data?.data?.name)
         setMyInfo(data?.data);
         setUserInfo(data.data);
         // Set the retrieved Seeions in the state
@@ -94,7 +94,6 @@ export default function EditProfile({
 
         if(data.status=="success"){
           setUserName(data?.data?.name);
-          cookie.set("name", data?.data?.name);
           getMe();
           showToast(
             "success",

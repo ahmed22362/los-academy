@@ -192,7 +192,7 @@ function UpcomingSessions() {
     inputTime: moment.MomentInput,
     inputTimezone: string,
     outputTimezone: string,
-    ourFormat: string
+    ourFormat: string,
   ) => {
     const convertedTime = moment(inputTime)
       .tz(inputTimezone)
@@ -205,12 +205,12 @@ function UpcomingSessions() {
   time.setSeconds(time.getSeconds() + 600); // 10 minutes timer
   const isSessionRunning = (session: any) => {
     const currentTime = moment().tz(
-      Intl.DateTimeFormat().resolvedOptions().timeZone
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
     );
     const sessionStartTime = moment(session.sessionDate);
     const sessionEndTime = moment(session.sessionDate).add(
       session.sessionDuration,
-      "minutes"
+      "minutes",
     );
 
     return currentTime.isBetween(sessionStartTime, sessionEndTime);
@@ -253,14 +253,14 @@ function UpcomingSessions() {
           .subtract(20, "minute");
 
         const currentTime = moment().tz(
-          Intl.DateTimeFormat().resolvedOptions().timeZone
+          Intl.DateTimeFormat().resolvedOptions().timeZone,
         );
 
         setIsImHereButtonDisabled(
-          currentTime.isBefore(allowedStartTimeForJoin)
+          currentTime.isBefore(allowedStartTimeForJoin),
         );
         setIsRescheduleButtonDisabled(
-          currentTime.isAfter(allowedStartTimeForReschedule)
+          currentTime.isAfter(allowedStartTimeForReschedule),
         );
       }
     };
@@ -328,7 +328,7 @@ function UpcomingSessions() {
   useEffect(() => {
     if (upComingSession.length > 0) {
       const sessionDate: number = new Date(
-        upComingSession[0].sessionDate
+        upComingSession[0].sessionDate,
       ).getTime();
 
       const intervalId = setInterval(() => {
@@ -523,7 +523,7 @@ function UpcomingSessions() {
       <Toast ref={toast} />
 
       <h4 className={`${styles.secondary_head} my-2`}>
-        {upComingSession[0]?.status || "upcoming session"}
+        {upComingSession[0]?.status || "Upcoming Session"}
       </h4>
       {upComingSession?.length > 0 ? (
         upComingSession?.map((session: any, index: any) => (
@@ -549,7 +549,7 @@ function UpcomingSessions() {
                     session.sessionDate,
                     "UTC",
                     Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    "h:mm A"
+                    "h:mm A",
                   )}
                   {" - "}
                   {convertDateTimeZone(
@@ -558,7 +558,7 @@ function UpcomingSessions() {
                       .format(), // Calculate end time by adding sessionDuration
                     "UTC",
                     Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    "h:mm A"
+                    "h:mm A",
                   )}
                 </p>
                 {/* <MyTimer expiryTimestamp={time} /> */}

@@ -4,10 +4,8 @@ import { Table, Tooltip } from "flowbite-react";
 import { BsTrash } from "react-icons/bs";
 import { BiFile, BiSolidEditAlt, BiTrash } from "react-icons/bi";
 import { useState, useRef } from "react";
-import { convertDateTimeZone } from "@/utilities";
 import DisplayReportModal from "./displayReportModal";
 import EditMonthlyReport from "./editMonthlyReport";
-import { getAllStudents } from "@/utilities/getAllStudents";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
 
@@ -121,58 +119,41 @@ export default function FetchMonthlyReportsData({
       });
   };
   return (
-    <Table.Row
-      key={report.id}
-      className="bg-white dark:border-gray-700 dark:bg-gray-800 text-center"
-    >
-      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-        {report.id}
-      </Table.Cell>
-      <Table.Cell>{report.userId}</Table.Cell>
-      <Table.Cell>
-        {convertDateTimeZone(
-          report.createdAt,
-          "UTC",
-          Intl.DateTimeFormat().resolvedOptions().timeZone,
-          "YYYY-MM-DD h:mm A"
-        )}
-      </Table.Cell>
-      <Table.Cell>
-        <div className="flex flex-row items-center justify-center gap-3">
-          <Tooltip content="View Report" style="light">
-            <BiFile
-              className={"text-2xl cursor-pointer text-primary-color"}
-              onClick={openAddReportModal}
-            />
-          </Tooltip>
-          <Tooltip content="Edit Report" style="light">
-            <BiSolidEditAlt
-              className={"text-2xl cursor-pointer text-success-color"}
-              onClick={openEditReportModal}
-            />
-          </Tooltip>
-          <Tooltip content="Delete Report" style="light">
-            <BsTrash
-              className={"text-2xl cursor-pointer text-danger-color"}
-              onClick={confirm}
-            />
-          </Tooltip>
-          <Toast ref={toast} />
-          <Toast ref={toastB} />
-          <Toast ref={toastC} position="bottom-center" />
-        </div>
-        <EditMonthlyReport
-          openReportModal={handleEditModal}
-          handleCloseModal={closeHandleEditModal}
-          reportData={report}
-          updateComponent={updateComponent}
-        />
-        <DisplayReportModal
-          openAssignModal={handleAddModal}
-          handleCloseModal={closeAddReportModal}
-          details={report}
-        />
-      </Table.Cell>
-    </Table.Row>
+    <Table.Cell>
+      <div className="flex flex-row items-center justify-center gap-3">
+        <Tooltip content="View Report" style="light">
+          <BiFile
+            className={"text-2xl cursor-pointer text-primary-color"}
+            onClick={openAddReportModal}
+          />
+        </Tooltip>
+        <Tooltip content="Edit Report" style="light">
+          <BiSolidEditAlt
+            className={"text-2xl cursor-pointer text-success-color"}
+            onClick={openEditReportModal}
+          />
+        </Tooltip>
+        <Tooltip content="Delete Report" style="light">
+          <BsTrash
+            className={"text-2xl cursor-pointer text-danger-color"}
+            onClick={confirm}
+          />
+        </Tooltip>
+        <Toast ref={toast} />
+        <Toast ref={toastB} />
+        <Toast ref={toastC} position="bottom-center" />
+      </div>
+      <EditMonthlyReport
+        openReportModal={handleEditModal}
+        handleCloseModal={closeHandleEditModal}
+        reportData={report}
+        updateComponent={updateComponent}
+      />
+      <DisplayReportModal
+        openAssignModal={handleAddModal}
+        handleCloseModal={closeAddReportModal}
+        details={report}
+      />
+    </Table.Cell>
   );
 }

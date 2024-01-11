@@ -28,7 +28,7 @@ export default function EditProfile({
   openEditeProfileModal,
   setOpenEditeProfileModal,
   setUserName,
-  myInfo
+  myInfo,
 }: any) {
   const [showChangePassword, setShowChangePassword] = useState(false); // New state
   const cookie = new Cookies();
@@ -37,13 +37,12 @@ export default function EditProfile({
   const showToast = (
     severity: "success" | "info" | "warn" | "error",
     summary: string,
-    detail: string
+    detail: string,
   ) => {
-   
     toast.current?.show({ severity, summary, detail });
   };
 
-  const getMe=()=>{
+  const getMe = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/me`, {
       method: "GET",
       headers: {
@@ -52,22 +51,22 @@ export default function EditProfile({
     })
       .then((response) => response.json())
       .then((data) => {
-        if(data.status=="success"){
-          cookie.set("name" ,data?.data?.name)
+        if (data.status == "success") {
+          cookie.set("name", data?.data?.name);
           setMyInfo(data?.data);
           setUserInfo(data.data);
         }
-        
+
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
         console.error("Error fetching my profile:", error);
       });
-  }
+  };
   useEffect(() => {
     getMe();
   }, []);
-  
+
   const [editedInfo, setEditedInfo] = useState({ ...(userInfo || {}) });
 
   // update user data
@@ -91,25 +90,20 @@ export default function EditProfile({
     })
       .then((response) => response.json())
       .then((data) => {
-        if(data.status=="success"){
+        if (data.status == "success") {
           setUserName(data?.data?.name);
-          setMyInfo(data?.data)
+          setMyInfo(data?.data);
           cookie.set("name", data?.data?.name);
           getMe();
           showToast(
             "success",
             "Update Successful",
-            "Profile has been updated successfully."
+            "Profile has been updated successfully.",
           );
+        } else {
+          showToast("error", "Update Failed", "Failed To Update Your Profile");
         }
-        else {
-          showToast(
-            "error",
-            "Update Failed",
-            "Failed To Update Your Profile"
-          )
-        }
-       
+
         // console.log("Update successful:", data);
 
         setOpenEditeProfileModal(false); // Close the modal after a successful update
@@ -118,12 +112,11 @@ export default function EditProfile({
         showToast(
           "success",
           "Update Successful",
-          "Profile has been updated successfully."
+          "Profile has been updated successfully.",
         );
         console.error("Error updating profile:", error);
       });
   };
- 
 
   return (
     <>

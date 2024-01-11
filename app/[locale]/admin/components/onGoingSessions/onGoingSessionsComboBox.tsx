@@ -2,7 +2,7 @@
 import { CustomFlowbiteTheme, Dropdown } from "flowbite-react";
 import { useState } from "react";
 
-export default function SessionComboBox({ ...props }: any) {
+export default function OnGoingSessionComboBox({ ...props }: any) {
   const [handleModal, setHandleModal] = useState(false);
 
   const openModal = () => {
@@ -33,12 +33,9 @@ export default function SessionComboBox({ ...props }: any) {
             placeholder={"search"}
           />
         </form>
-        <div className={"flex flex-row justify-between items-center gap-5"}>
-          {/* <Dropdown label={"All"} theme={customTheme} inline>
-                        <Dropdown.Item>one</Dropdown.Item>
-                        <Dropdown.Item>Two</Dropdown.Item>
-                </Dropdown> */}
-        </div>
+        <div
+          className={"flex flex-row justify-between items-center gap-5 my-3"}
+        ></div>
       </div>
     </section>
   );

@@ -10,9 +10,8 @@ import { useRouter } from "next/navigation";
 import BookSessionsCalendar from "./bookSessionsCalendar";
 
 function BookFreeSession({ setOpenBookModal }: any) {
-  const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date> | any>(
-    null,
-  );
+  const [datetime12h, setDateTime12h] = useState<Nullable<Date> | any>(null);
+
   const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
@@ -62,7 +61,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
     console.log(requestBody);
 
     setIsProcessing(true);
-    fetch(`${url}/session/free/request`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/free/request`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -99,19 +98,9 @@ function BookFreeSession({ setOpenBookModal }: any) {
           selectedCourses={selectedCourses}
         />
       </div>
-      <Calendar
-        value={freedatetime12h}
-        onChange={(e: CalendarProps | any) => setFreeDateTime12h(e.value)}
-        showTime
-        hourFormat="12"
-        style={{
-          outline: "4px solid var(--secondary-color)",
-          borderRadius: "16px",
-          width: "408px",
-          height: "100%",
-        }}
-        inline
-        selectionMode="multiple"
+      <BookSessionsCalendar
+        datetime12h={datetime12h}
+        setDateTime12h={setDateTime12h}
       />
       <div>
         <Button

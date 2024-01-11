@@ -7,19 +7,16 @@ import { Toast } from "primereact/toast";
 import ViewCourses from "./viewCourses";
 import { Button } from "flowbite-react";
 import { useRouter } from "next/navigation";
+import BookSessionsCalendar from "./bookSessionsCalendar";
 
 function BookFreeSession({ setOpenBookModal }: any) {
-  const [freedatetime12h, setFreeDateTime12h] = useState<Nullable<Date> | any>(
-    null,
-  );
+  const [datetime12h, setDateTime12h] = useState<Nullable<Date> | any>(null);
   const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const router = useRouter();
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
 
   const showSuccessMessage = (message: any) => {
     toast?.current?.show({
@@ -40,21 +37,22 @@ function BookFreeSession({ setOpenBookModal }: any) {
   };
   const handleBookFreeClick = () => {
     if (
-      !freedatetime12h ||
-      !Array.isArray(freedatetime12h) ||
-      freedatetime12h.length === 0
+      !datetime12h ||
+      !Array.isArray(datetime12h) ||
+      datetime12h.length === 0
     ) {
       showErrorMessage("Please select at least one date for booking.");
       return;
     }
 
-    const selectedDates = freedatetime12h.map((date) => date.toISOString());
+    const selectedDates = datetime12h.map((date) => date.toISOString());
 
     const selectedCourseTitles = selectedCourses?.map((course) =>
       course.toString().toLowerCase(),
     );
-    if (!selectedCourseTitles) {
+    if (selectedCourseTitles.length == 0) {
       showErrorMessage("you should select at least one course");
+      return 0;
     }
     const requestBody = {
       sessionDates: selectedDates,
@@ -63,11 +61,11 @@ function BookFreeSession({ setOpenBookModal }: any) {
     console.log(requestBody);
 
     setIsProcessing(true);
-    fetch(`${url}/session/free/request`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/free/request`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.get("token")}`,
       },
       body: JSON.stringify(requestBody),
     })
@@ -83,7 +81,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
           }, 4000);
         } else {
           setIsProcessing(false);
-          showErrorMessage(data[0]?.message);
+          showErrorMessage(data?.message);
         }
       })
       .catch((error) => {
@@ -91,10 +89,6 @@ function BookFreeSession({ setOpenBookModal }: any) {
         showErrorMessage("Booking failed");
       });
   };
-
-  useEffect(() => {
-    // console.log(freedatetime12h);
-  }, [freedatetime12h]);
 
   return (
     <div className=" flex justify-center flex-col items-center gap-5">
@@ -104,19 +98,10 @@ function BookFreeSession({ setOpenBookModal }: any) {
           selectedCourses={selectedCourses}
         />
       </div>
-      <Calendar
-        value={freedatetime12h}
-        onChange={(e: CalendarProps | any) => setFreeDateTime12h(e.value)}
-        showTime
-        hourFormat="12"
-        style={{
-          outline: "4px solid var(--secondary-color)",
-          borderRadius: "16px",
-          width: "408px",
-          height: "100%",
-        }}
-        inline
-        selectionMode="multiple"
+
+      <BookSessionsCalendar
+        datetime12h={datetime12h}
+        setDateTime12h={setDateTime12h}
       />
       <div>
         <Button

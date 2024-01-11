@@ -27,44 +27,45 @@ export default function EditProfile({
   setMyInfo,
   openEditeProfileModal,
   setOpenEditeProfileModal,
+  setUserName,
+  myInfo
 }: any) {
   const [showChangePassword, setShowChangePassword] = useState(false); // New state
   const cookie = new Cookies();
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
   const [userInfo, setUserInfo] = useState<UserInfo | undefined>(); // Use UserInfo type
-  const [successStatus, setSuccessStatus] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toast = useRef<Toast>(null);
-
   const showToast = (
     severity: "success" | "info" | "warn" | "error",
     summary: string,
     detail: string
   ) => {
-    setToastMessage(null);
-    setToastMessage(`${summary}: ${detail}`);
+   
     toast.current?.show({ severity, summary, detail });
   };
 
-
-  useEffect(() => {
-    fetch(`${url}/user/me`, {
+  const getMe=()=>{
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/me`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Correct the header key to 'Authorization'
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data.data);
-        setMyInfo(data?.data);
-        setUserInfo(data.data);
+        if(data.status=="success"){
+          cookie.set("name" ,data?.data?.name)
+          setMyInfo(data?.data);
+          setUserInfo(data.data);
+        }
+        
         // Set the retrieved Seeions in the state
       })
       .catch((error) => {
         console.error("Error fetching my profile:", error);
       });
+  }
+  useEffect(() => {
+    getMe();
   }, []);
   
   const [editedInfo, setEditedInfo] = useState({ ...(userInfo || {}) });
@@ -80,24 +81,37 @@ export default function EditProfile({
   const handleSaveChanges = (e: any) => {
     e.preventDefault(); // Corrected typo: preventDefault
     // Make PATCH request with editedInfo
-    fetch(`${url}user/${userInfo?.id}`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/me`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.get("token")}`,
       },
       body: JSON.stringify(editedInfo),
     })
       .then((response) => response.json())
       .then((data) => {
-        showToast(
-          "success",
-          "Update Successful",
-          "Profile has been updated successfully."
-        );
+        if(data.status=="success"){
+          setUserName(data?.data?.name);
+          setMyInfo(data?.data)
+          cookie.set("name", data?.data?.name);
+          getMe();
+          showToast(
+            "success",
+            "Update Successful",
+            "Profile has been updated successfully."
+          );
+        }
+        else {
+          showToast(
+            "error",
+            "Update Failed",
+            "Failed To Update Your Profile"
+          )
+        }
+       
         // console.log("Update successful:", data);
 
-        setSuccessStatus(true);
         setOpenEditeProfileModal(false); // Close the modal after a successful update
       })
       .catch((error) => {
@@ -236,7 +250,7 @@ export default function EditProfile({
                     </label>
                   </div>
                   <div
-                    className="underline text-lg font-medium cursor-pointer"
+                    className="underline text-lg font-medium cursor-pointer w-fit"
                     onClick={() => setShowChangePassword(true)}
                   >
                     Change Password

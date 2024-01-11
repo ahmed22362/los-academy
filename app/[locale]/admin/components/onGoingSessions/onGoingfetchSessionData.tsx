@@ -45,7 +45,7 @@ export default function FetchOnGoingSessionData({sessionData, updateComponent} :
                     :
                     <p className="bg-warning-color text-white px-2 py-1 rounded-full font-semibold">Pending</p> 
             }
-            <Link href={session.meetingLink === null ? '#' : session.meetingLink} className="hover:underline">meeting link </Link>
+            <Link href={session.meetingLink === null ? '#' : session?.meetingLink} className="hover:underline">meeting link </Link>
             </Table.Cell>
         </Table.Row>
   )

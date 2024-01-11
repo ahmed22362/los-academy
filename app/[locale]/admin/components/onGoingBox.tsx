@@ -49,7 +49,7 @@ export default function OnGoingBox() {
                                 <span>{convertTime(allSessions[0].sessionDate, "UTC", Intl.DateTimeFormat().resolvedOptions().timeZone, "YYYY-MM-DD h:mm A")}</span>
                                 <p>{allSessions[0].SessionInfo.teacher.name} with {allSessions[0].SessionInfo.user.name}</p>
                                 <Link 
-                                    href={allSessions[0].meetingLink}
+                                    href={allSessions[0]?.meetingLink}
                                     target="_blank"
                                     className={
                                     "bg-secondary-color hover:bg-secondary-hover transition-colors rounded-full mt-1 font-semibold px-5 py-2 text-white"

@@ -8,6 +8,7 @@ import ContentLoader from "react-content-loader";
 import Image from "next/image";
 import { getSocket } from "@/utilities/connectWithSocket";
 import { Socket } from "socket.io-client";
+import { UserRole } from "@/types";
 
 function MyReports() {
   const [myReports, setMyReports] = useState<any[]>([]);
@@ -17,35 +18,28 @@ function MyReports() {
 
   useEffect(() => {
     const newSocket: Socket = getSocket(cookie.get("token"));
-  newSocket.on("event", (object) => {
+    newSocket.on("event", (object) => {
       // console.log("socket",object);
     });
     newSocket.on("report_added", (data: object) => {
       console.log(data);
-      
-      setMyReports(r=>{
-        return [...myReports,data]
-      })
+
+      setMyReports((r) => {
+        return [...myReports, data];
+      });
     });
-  }, [myReports])
-  
- 
+  }, [myReports]);
 
   const handleCloseModal = () => {
     setselectedReport(false);
   };
-
-
-  
-
- 
 
   useEffect(() => {
     // Fetch reports when the component mounts
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/myReports`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${ cookie.get("token")}`,
+        Authorization: `Bearer ${cookie.get("token")}`,
       },
     })
       .then((response) => response.json())
@@ -107,14 +101,20 @@ function MyReports() {
       ) : (
         // Display "No reports" message if there are no reports
         <div className="flex flex-col gap-3 items-center">
-        <p className="text-center">No reports</p>
-        <Image src={'/vectors/no_report.png'} width={90} height={80} alt="no reports"/>
+          <p className="text-center">No reports</p>
+          <Image
+            src={"/vectors/no_report.png"}
+            width={90}
+            height={80}
+            alt="no reports"
+          />
         </div>
       )}
       <ReportModal
         openAssignModal={selectedReport}
         handleCloseModal={handleCloseModal}
         details={myReports}
+        userRole={UserRole.Student}
       />
     </div>
   );

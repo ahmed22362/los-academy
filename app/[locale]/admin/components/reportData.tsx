@@ -8,6 +8,7 @@ import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
 import { convertDateTimeZone } from "@/utilities";
 import ReportModal from "../../teacher/components/reportModal";
+import { UserRole } from "@/types";
 
 export default function ReportData({ data }: { data: any }) {
   const reports = data && data;
@@ -155,7 +156,7 @@ export default function ReportData({ data }: { data: any }) {
         openAssignModal={selectedReport}
         handleCloseModal={handleCloseModal}
         details={reports}
-        isAdmin={true}
+        userRole={UserRole.Admin}
       />
     </div>
   );

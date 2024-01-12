@@ -7,17 +7,19 @@ import Image from "next/image";
 
 import { useEffect, useRef } from "react";
 import { GradeOptions, ReportsCourses } from "./addReportModal";
+import { UserRole } from "@/types";
+import UserDetailsComponent from "./UserDetails.Component";
 
 export default function ReportModal({
   openAssignModal,
   handleCloseModal,
   details,
-  isAdmin,
+  userRole,
 }: {
   openAssignModal: boolean;
   handleCloseModal: () => void;
   details: string | any;
-  isAdmin: boolean;
+  userRole: UserRole;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
   const reportDetails = details && details;
@@ -147,15 +149,11 @@ export default function ReportModal({
                 Session Info
               </h6>
               <ul className="ps-5">
-                <li>
-                  Student Name: {reportDetails.session.SessionInfo.user.name}
-                </li>
-                {isAdmin && (
-                  <li>
-                    Teacher Name:{" "}
-                    {reportDetails.session.SessionInfo.teacher.name}
-                  </li>
-                )}
+                <UserDetailsComponent
+                  userName={reportDetails.session.SessionInfo.user.name}
+                  teacherName={"reportDetails.session.SessionInfo.teacher.name"}
+                  role={userRole}
+                />
                 <li>Session ID: {reportDetails.sessionId}</li>
                 <li>
                   Session Date:{" "}

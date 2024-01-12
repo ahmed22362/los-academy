@@ -151,7 +151,7 @@ export default function ReportModal({
               <ul className="ps-5">
                 <UserDetailsComponent
                   userName={reportDetails.session.SessionInfo.user.name}
-                  teacherName={"reportDetails.session.SessionInfo.teacher.name"}
+                  teacherName={reportDetails.session.SessionInfo.teacher.name}
                   role={userRole}
                 />
                 <li>Session ID: {reportDetails.sessionId}</li>

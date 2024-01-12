@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 import { Spinner } from "flowbite-react";
 import { convertDateTimeZone } from "@/utilities";
 import SessionDetails from "./RequestDetails";
-export default function PaidSessionsTable() {
+export default function PaidSessionsTable({ isAdmin }: { isAdmin: boolean }) {
   const [totalPaid, setTotalPaid] = useState([]);
   const [selectedSession, setSelectedSession]: any = useState(null);
   const [loading, setLoading] = useState(true);
@@ -60,7 +60,7 @@ export default function PaidSessionsTable() {
               selectedSession={selectedSession}
               handleCloseModal={handleCloseModal}
               rerenderComponent={rerenderComponent}
-              assign={true}
+              assign={isAdmin}
             />
           ))
         ) : (

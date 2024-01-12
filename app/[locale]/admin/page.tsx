@@ -33,8 +33,8 @@ export default function AdminPage() {
       </section>
       <section className="mx-auto max-md:w-full max-md:px-[20x]">
         <div className="px-2">
-          <FreeSessionsTable />
-          <PaidSessionsTable />
+          <FreeSessionsTable isAdmin={true} />
+          <PaidSessionsTable isAdmin={true} />
           <ReplaceTeacher />
         </div>
       </section>

@@ -81,7 +81,6 @@ export default function ReportData({
         openAssignModal={selectedReport}
         handleCloseModal={handleCloseModal}
         details={reports}
-        userRole={UserRole.Teacher}
       />
     </div>
   );

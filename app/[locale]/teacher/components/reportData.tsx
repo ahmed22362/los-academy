@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Tooltip } from "flowbite-react";
 import EditReportModal from "./editReportModal";
 import { convertDateTimeZone } from "@/utilities";
+import { UserRole } from "@/types";
 
 export default function ReportData({
   data,
@@ -50,7 +51,7 @@ export default function ReportData({
             reports.createdAt,
             "UTC",
             Intl.DateTimeFormat().resolvedOptions().timeZone,
-            "D-MMM-YYYY"
+            "D-MMM-YYYY",
           )})`}</p>
           <span>{reports.title}</span>
         </div>
@@ -80,6 +81,7 @@ export default function ReportData({
         openAssignModal={selectedReport}
         handleCloseModal={handleCloseModal}
         details={reports}
+        userRole={UserRole.Teacher}
       />
     </div>
   );

@@ -1,13 +1,14 @@
 "use client";
 
 import { AiOutlineFileText } from "react-icons/ai";
-import ReportModal from "./reportModal";
 import { useRef, useState } from "react";
 import { BiTrash } from "react-icons/bi";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
 import { convertDateTimeZone } from "@/utilities";
+import ReportModal from "../../teacher/components/reportModal";
+import { UserRole } from "@/types";
 
 export default function ReportData({ data }: { data: any }) {
   const reports = data && data;
@@ -155,6 +156,7 @@ export default function ReportData({ data }: { data: any }) {
         openAssignModal={selectedReport}
         handleCloseModal={handleCloseModal}
         details={reports}
+        userRole={UserRole.Admin}
       />
     </div>
   );

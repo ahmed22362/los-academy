@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AssignModal from "../assignModal";
 import Cookies from "universal-cookie";
 import moment from "moment-timezone";
 import { Spinner } from "flowbite-react";
 import SessionDetails from "./RequestDetails";
-export default function FreeSessionsTable() {
+export default function FreeSessionsTable({ isAdmin }: { isAdmin: boolean }) {
   const [totalFree, setTotalFree] = useState([]);
   const [selectedSession, setSelectedSession]: any = useState(null);
   const [loading, setLoading] = useState(true);
@@ -73,7 +72,7 @@ export default function FreeSessionsTable() {
               selectedSession={selectedSession}
               handleCloseModal={handleCloseModal}
               rerenderComponent={rerenderComponent}
-              assign={true}
+              assign={isAdmin}
             />
           ))
         ) : (

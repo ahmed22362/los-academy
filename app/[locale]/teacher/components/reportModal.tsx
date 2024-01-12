@@ -19,7 +19,7 @@ export default function ReportModal({
   openAssignModal: boolean;
   handleCloseModal: () => void;
   details: string | any;
-  userRole: UserRole;
+  userRole?: UserRole;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
   const reportDetails = details && details;
@@ -149,11 +149,13 @@ export default function ReportModal({
                 Session Info
               </h6>
               <ul className="ps-5">
-                <UserDetailsComponent
-                  userName={reportDetails.session.SessionInfo.user.name}
-                  teacherName={reportDetails.session.SessionInfo.teacher.name}
-                  role={userRole}
-                />
+                {userRole && (
+                  <UserDetailsComponent
+                    userName={reportDetails.session.SessionInfo.user.name}
+                    teacherName={reportDetails.session.SessionInfo.teacher.name}
+                    role={userRole}
+                  />
+                )}
                 <li>Session ID: {reportDetails.sessionId}</li>
                 <li>
                   Session Date:{" "}

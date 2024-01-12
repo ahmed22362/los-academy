@@ -530,7 +530,7 @@ function UpcomingSessions() {
           <div className="relative" key={index}>
             <p>{`Session #${session.id} with title ${session.type}`}</p>
             <div
-              className={`${styles.date}  max-[400px]:flex-col sm:flex-col  xl:flex-row flex justify- gap-5 my-2`}
+              className={`${styles.date}  max-[450px]:flex-col sm:flex-col  xl:flex-row flex justify- gap-5 my-2`}
             >
               <div className={`flex justify-center  items-center `}>
                 <p className="text-md">
@@ -613,7 +613,7 @@ function UpcomingSessions() {
                 }
               >
                 <button
-                  className={`text-sm font-semibold transition-colors text-white xl:py-[10px] md:px-[5px] max-[400px]:py-3 md:py-2 w-full shadow rounded-full mx-auto  max-md:w-45 ${
+                  className={`text-sm font-semibold transition-colors text-white xl:py-[10px] md:px-[5px] max-[450px]:py-3 md:py-2 w-full shadow rounded-full mx-auto  max-md:w-45 ${
                     isImHereButtonDisabled
                       ? " bg-gray-500 cursor-not-allowed"
                       : "bg-secondary-color hover:bg-secondary-hover"
@@ -621,7 +621,7 @@ function UpcomingSessions() {
                   onClick={() => updateAttendance()}
                   disabled={isImHereButtonDisabled}
                 >
-                  <Link href={sessionLink} target="_blank">
+                  <Link className="" href={sessionLink?sessionLink:"#"} target="_blank">
                     Join Meeting
                   </Link>
                 </button>

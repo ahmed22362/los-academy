@@ -161,7 +161,7 @@ function MyRescheduleRequest({
   };
 
   return (
-    <div className={`${myReschedule.length>0?"scrollAction":''} sm:h-[120px] max-[400px]:h-[120px] lg:h-[150px]`}>
+    <div className={`${myReschedule.length>0?"scrollAction":''} sm:h-[120px] max-[450px]:h-[120px] lg:h-[150px]`}>
       <Toast ref={toast} />
       <ConfirmDialog />
       <div className="md:min-h-[190px] max-md:min-h-[150px]  ">
@@ -225,7 +225,7 @@ function MyRescheduleRequest({
                       {request.newDatesOptions.map(
                         (date: string, i: number) => (
                           <div
-                            className="max-[400px]:flex-col sm:flex-col lg:flex-row  flex gap-2 items-center justify-start"
+                            className="max-[450px]:flex-col sm:flex-col lg:flex-row  flex gap-2 items-center justify-start"
                             key={i}
                           >
                            <p>

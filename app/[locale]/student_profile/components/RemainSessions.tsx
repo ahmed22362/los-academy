@@ -83,7 +83,7 @@ function RemainSessions() {
               return (
                 <div
                   key={index}
-                  className={`${styles.session} bg-white-color px-2 rounded-2xl py-3 w-full sm:flex-col lg:flex-row max-[400px]:flex-col flex justify-between items-center gap- my-3`}
+                  className={`${styles.session} bg-white-color px-2 rounded-2xl py-3 w-full sm:flex-col lg:flex-row max-[450px]:flex-col flex justify-between items-center gap- my-3`}
                 >
                   <div>
                     <p className="">Session #{session.id}</p>
@@ -140,7 +140,7 @@ function RemainSessions() {
           </>
         ) : (
           <div className="flex justify-center mt-2 items-center flex-col gap-5">
-            <p className="font-meduim"> No Remmain Sessions</p>
+            <p className="font-meduim"> No Remaining Sessions</p>
             <Image
               src={"/vectors/list.png"}
               alt="no upcoming session"

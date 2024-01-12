@@ -62,7 +62,16 @@ body {
   color: var(--primary-color);
 }
 /* button wave */
+.responsive-calendar {
+  width: 408px;
+}
 
+/* Media query for small screens */
+@media screen and (max-width: 767px) {
+  .responsive-calendar {
+    width: 300px;
+  }
+}
 @keyframes flagwave {
   0% {
     background-position: -400px 0px, -400px 0px, -400px 0px, -400px 0px;

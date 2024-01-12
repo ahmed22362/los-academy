@@ -16,6 +16,7 @@ import {
 import Cookies from "universal-cookie";
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 export default function CustomNavbar() {
   const UserDropDown = dynamic(() => import("./userDropDown"), {
@@ -64,8 +65,15 @@ export default function CustomNavbar() {
     },
   };
 
-  const userName = cookies.get("name");
+  const [userName, setUserName] = useState(cookies.get('name'));
 
+  useEffect(() => {
+    // This effect will run whenever the 'name' cookie changes
+    const newName = cookies.get('name');
+    setUserName(newName);
+  }, [cookies.get('name')]); 
+  
+  
   const addActiveClass = (e: any) => {
     const navLinks = document.querySelectorAll(".navBarLink");
     navLinks.forEach((link) => {
@@ -105,7 +113,7 @@ export default function CustomNavbar() {
           <div>
             <Link
               href="/"
-              className="flex flex-row flex-wrap justify-center gap-3 rtl:flex-row-reverse"
+              className="flex flex-row flex-wrap justify-center gap-3  rtl:flex-row-reverse"
             >
               <Image
                 src={"/logo.png"}
@@ -117,15 +125,17 @@ export default function CustomNavbar() {
                 className={"w-auto h-auto max-md:w-[30px]"}
               />
               <h2
-                className={"font-semibold"}
+                className={"font-semibold "}
                 style={{
                   fontSize:
                     "calc(16px + (24 - 16) * ((100vw - 320px) / (1920 - 320))",
                 }}
               >
                 LOS Academy
+
               </h2>
             </Link>
+            <div className="text-[14px] ml-12 max-[450px]:text-[12px] font-semibold -translate-y-1 ">Learning Of Science</div>
           </div>
 
           <Navbar.Collapse
@@ -194,7 +204,7 @@ export default function CustomNavbar() {
           >
             <Navbar.Toggle theme={customNavTheme.toggle} />
             {userName && userName ? (
-              <UserDropDown userName={userName} logOut={logOut} />
+              <UserDropDown userName={userName} logOut={logOut} setUserName={setUserName}/>
             ) : (
               <LoginButton />
             )}

@@ -3,7 +3,7 @@
 import { Dropdown, Tooltip } from "flowbite-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { CiCalendar } from "react-icons/ci";
 import { IoIosLogOut } from "react-icons/io";
 import { SiSessionize } from "react-icons/si";
@@ -30,10 +30,12 @@ interface UserInfo {
 }
 export default function UserDropDown({
   userName,
+  setUserName,
   logOut,
 }: {
   userName: string;
   logOut: () => void;
+  setUserName: Dispatch<SetStateAction<string>>;
 }) {
   const [userFeedbackModal, setUserFeedbackModal] = useState<boolean>(false);
   const [openSubscribtionModal, setOpenSubscribtionModal] =
@@ -129,6 +131,7 @@ export default function UserDropDown({
         setMyInfo={setMyInfo}
         setOpenEditeProfileModal={setOpenEditeProfileModal}
         openEditeProfileModal={openEditeProfileModal}
+        setUserName={setUserName}
       />
       <StudentPlanModal
         openPlansModal={openPlansModal}

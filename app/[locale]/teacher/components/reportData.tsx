@@ -50,7 +50,7 @@ export default function ReportData({
             reports.createdAt,
             "UTC",
             Intl.DateTimeFormat().resolvedOptions().timeZone,
-            "D-MMM-YYYY"
+            "D-MMM-YYYY",
           )})`}</p>
           <span>{reports.title}</span>
         </div>
@@ -80,6 +80,7 @@ export default function ReportData({
         openAssignModal={selectedReport}
         handleCloseModal={handleCloseModal}
         details={reports}
+        isAdmin={false}
       />
     </div>
   );

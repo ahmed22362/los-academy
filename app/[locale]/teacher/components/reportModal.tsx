@@ -12,10 +12,12 @@ export default function ReportModal({
   openAssignModal,
   handleCloseModal,
   details,
+  isAdmin,
 }: {
   openAssignModal: boolean;
   handleCloseModal: () => void;
   details: string | any;
+  isAdmin: boolean;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
   const reportDetails = details && details;
@@ -145,6 +147,15 @@ export default function ReportModal({
                 Session Info
               </h6>
               <ul className="ps-5">
+                <li>
+                  Student Name: {reportDetails.session.SessionInfo.user.name}
+                </li>
+                {isAdmin && (
+                  <li>
+                    Teacher Name:{" "}
+                    {reportDetails.session.SessionInfo.teacher.name}
+                  </li>
+                )}
                 <li>Session ID: {reportDetails.sessionId}</li>
                 <li>
                   Session Date:{" "}

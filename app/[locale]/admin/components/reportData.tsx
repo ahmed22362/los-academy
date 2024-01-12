@@ -155,6 +155,7 @@ export default function ReportData({ data }: { data: any }) {
         openAssignModal={selectedReport}
         handleCloseModal={handleCloseModal}
         details={reports}
+        isAdmin={true}
       />
     </div>
   );

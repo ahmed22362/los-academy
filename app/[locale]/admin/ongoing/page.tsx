@@ -1,4 +1,4 @@
-import OnGoingSessionsTable from "../components/onGoingSessions/onGoingSessionsTable";
+import OnGoingSessionsTable from "../components/onGoingSessions/onGoingSessionsTable.component";
 
 function OnGoingPage() {
   return (

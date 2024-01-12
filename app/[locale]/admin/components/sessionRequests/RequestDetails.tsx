@@ -24,6 +24,7 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
       <div className="flex justify-center items-center gap-3">
         <ul className="ps-4">
           <li>{`Student Name: ${request.user.name}`}</li>
+          <li>{`Student Age: ${request.user.age}`}</li>
           Requested Dates:
           {request.sessionDates.map((date: any, index: number) => (
             <li key={index} className="ps-2">

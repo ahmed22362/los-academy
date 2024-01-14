@@ -1,7 +1,6 @@
-import { CustomFlowbiteTheme, Table } from "flowbite-react";
 import { BsTrash } from "react-icons/bs";
 import { BiSolidEditAlt } from "react-icons/bi";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Toast } from "primereact/toast";
 import EditCoursesModal from "./editCoursesModal";
 import Cookies from "universal-cookie";
@@ -116,26 +115,26 @@ export default function FetchCoursesData({
   };
 
   return (
-      <div className="flex flex-row justify-between gap-4 sm:gap-10">
-        <Toast ref={toast} />
-        <BiSolidEditAlt
-          className={"text-2xl cursor-pointer"}
-          style={{ color: "green" }}
-          onClick={openModal}
-        />
-        <BsTrash
-          className={"text-2xl cursor-pointer"}
-          style={{ color: "red" }}
-          onClick={confirm}
-        />
-        <EditCoursesModal
-          openAssignModal={handleModal}
-          handleCloseModal={closeModal}
-          courseDetails={course}
-          updateComponent={updateComponent}
-        />
-        <Toast ref={toastB} />
-        <Toast ref={toastC} position="bottom-center" />
-      </div>
+    <div className="flex flex-row justify-between gap-4 sm:gap-10">
+      <Toast ref={toast} />
+      <BiSolidEditAlt
+        className={"text-2xl cursor-pointer"}
+        style={{ color: "green" }}
+        onClick={openModal}
+      />
+      <BsTrash
+        className={"text-2xl cursor-pointer"}
+        style={{ color: "red" }}
+        onClick={confirm}
+      />
+      <EditCoursesModal
+        openAssignModal={handleModal}
+        handleCloseModal={closeModal}
+        courseDetails={course}
+        updateComponent={updateComponent}
+      />
+      <Toast ref={toastB} />
+      <Toast ref={toastC} position="bottom-center" />
+    </div>
   );
 }

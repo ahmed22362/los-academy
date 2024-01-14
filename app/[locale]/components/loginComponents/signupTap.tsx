@@ -13,8 +13,10 @@ import PrivacyPolicy from "../privacyPolicy";
 export default function signupTap() {
   const toast = useRef<Toast>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [openTermsofServicesModal, setOpenTermsofServicesModal] = useState<boolean>(false)
-  const [openPrivacyPolicyModal, setOpenPrivacyPolicyModal] = useState<boolean>(false)
+  const [openTermsofServicesModal, setOpenTermsofServicesModal] =
+    useState<boolean>(false);
+  const [openPrivacyPolicyModal, setOpenPrivacyPolicyModal] =
+    useState<boolean>(false);
 
   const router = useRouter();
   const onSubmit = async (values: any, actions: any) => {
@@ -79,7 +81,7 @@ export default function signupTap() {
           console.log(data);
           localStorage.setItem(
             "registrationSuccessMessage",
-            "Registration successful. Please log in."
+            "Registration successful. Please log in.",
           );
 
           setTimeout(() => {
@@ -107,7 +109,6 @@ export default function signupTap() {
       const storedMessage = localStorage.getItem("registrationSuccessMessage");
       if (storedMessage) {
         showSuccess(storedMessage);
-
         // Clear the stored message after displaying it
         localStorage.removeItem("registrationSuccessMessage");
       }
@@ -120,22 +121,20 @@ export default function signupTap() {
       style={{ minHeight: "300px", width: "100%" }}
     >
       <TermsOfUse
-      openTermsofServicesModal={openTermsofServicesModal}
-      setOpenTermsofServicesModal={setOpenTermsofServicesModal}
+        openTermsofServicesModal={openTermsofServicesModal}
+        setOpenTermsofServicesModal={setOpenTermsofServicesModal}
       />
       <PrivacyPolicy
-       openPrivacyPolicyModal={openPrivacyPolicyModal}
-      setOpenPrivacyPolicyModal={setOpenPrivacyPolicyModal}
+        openPrivacyPolicyModal={openPrivacyPolicyModal}
+        setOpenPrivacyPolicyModal={setOpenPrivacyPolicyModal}
       />
       <Toast ref={toast} />
       <h3 className="font-bold	 text-xl	"> Welcome to LOS Accademy ! </h3>
       <div className="flex flex-col gap-4" style={{ width: "100%" }}>
-
-     <form
+        <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-4 w-[450px] max-md:w-full max-md:px-5"
         >
-
           <div className="flex gap-4">
             <div className="flex flex-col gap-1 justify-center items-center w-full">
               <input
@@ -317,9 +316,25 @@ export default function signupTap() {
               ""
             )}
           </div>
-              <div>
-                <p>By clicking "Sign up," you agree to our <span className="underline cursor-pointer" onClick={()=>setOpenTermsofServicesModal(true)}>Terms of Use</span> and our <span className="underline cursor-pointer" onClick={()=>setOpenPrivacyPolicyModal(true)}>Privacy Policy</span>.</p>
-              </div>
+          <div>
+            <p>
+              By clicking "Sign up," you agree to our{" "}
+              <span
+                className="underline cursor-pointer"
+                onClick={() => setOpenTermsofServicesModal(true)}
+              >
+                Terms of Use
+              </span>{" "}
+              and our{" "}
+              <span
+                className="underline cursor-pointer"
+                onClick={() => setOpenPrivacyPolicyModal(true)}
+              >
+                Privacy Policy
+              </span>
+              .
+            </p>
+          </div>
           <LoadingButton
             title={"Register"}
             // action={handleFormSubmit}

@@ -9,10 +9,7 @@ import { Spinner } from "flowbite-react";
 import { convertDateTimeZone } from "@/utilities";
 import { getSocket } from "@/utilities/connectWithSocket";
 import { Socket } from "socket.io-client";
-  const cookies = new Cookies();
- 
-
-
+const cookies = new Cookies();
 
 export default function OnGoingBox(session: any) {
   let workingSession = session && session.session;
@@ -62,12 +59,12 @@ export default function OnGoingBox(session: any) {
   const showSuccess = (message: string) => {
     toast.current?.show({
       severity: "success",
-      summary: "Success", 
+      summary: "Success",
       detail: message,
       life: 3000,
     });
   };
-  
+
   const showError = (message: string) => {
     toast.current?.show({
       severity: "error",
@@ -76,8 +73,7 @@ export default function OnGoingBox(session: any) {
       life: 4000,
     });
   };
-    const handleUpdateAttendance = (id: string) => {
-      console.log("session id",id);
+  const handleUpdateAttendance = (id: string) => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/updateTeacherAttendance`, {
       method: "POST",
       headers: {
@@ -108,7 +104,7 @@ export default function OnGoingBox(session: any) {
   //   "UTC",
   //   Intl.DateTimeFormat().resolvedOptions().timeZone,
   //   "MMM D,YYYY h:mm A"
-  // );
+  // );z
   // const ourSessionDate = new Date(sessionDate);
   // // Get the current time
   // const currentDate: any = new Date();
@@ -149,7 +145,6 @@ export default function OnGoingBox(session: any) {
   //     "0"
   //   )}:${String(remainingSeconds).padStart(2, "0")}`;
   // };
-  
 
   // const getOngoing = () => {
   //   fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/ongoingSession`, {
@@ -269,14 +264,14 @@ export default function OnGoingBox(session: any) {
                     session.sessionDate,
                     "UTC",
                     Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    "hh:mm A"
+                    "hh:mm A",
                   )}
                 </span>
                 <span>
                   end:
                   {new Date(
                     new Date(session.sessionDate).getTime() +
-                      session.sessionDuration * 60 * 1000
+                      session.sessionDuration * 60 * 1000,
                   ).toLocaleTimeString("en-US", {
                     hour: "numeric",
                     minute: "numeric",
@@ -315,7 +310,7 @@ export default function OnGoingBox(session: any) {
                     session.sessionDate,
                     "UTC",
                     Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    "MM/DD/YYYY hh:mm A"
+                    "MM/DD/YYYY hh:mm A",
                   )}
                 </span>
                 <span>session duration : {session.sessionDuration}min</span>

@@ -10,13 +10,12 @@ import { useRouter } from "next/navigation";
 import BookSessionsCalendar from "./bookSessionsCalendar";
 
 function BookFreeSession({ setOpenBookModal }: any) {
-  const [datetime12h, setDateTime12h] = useState<Nullable<Date> | any>(
-    null
-  );
+  const [datetime12h, setDateTime12h] = useState<Nullable<Date> | any>(null);
+
   const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const router=useRouter();
+  const router = useRouter();
   const toast = useRef<Toast>(null);
   const cookie = new Cookies();
 
@@ -49,18 +48,19 @@ function BookFreeSession({ setOpenBookModal }: any) {
 
     const selectedDates = datetime12h.map((date) => date.toISOString());
 
-    const selectedCourseTitles = selectedCourses?.map((course) => course.toString().toLowerCase());
-    if(selectedCourseTitles.length==0){
+    const selectedCourseTitles = selectedCourses?.map((course) =>
+      course.toString().toLowerCase(),
+    );
+    if (!selectedCourseTitles) {
       showErrorMessage("you should select at least one course");
-      return 0;
     }
-      const requestBody = {
-        sessionDates: selectedDates,
-        courses: selectedCourseTitles,
-      };
-      console.log(requestBody);
-      
-      setIsProcessing(true);
+    const requestBody = {
+      sessionDates: selectedDates,
+      courses: selectedCourseTitles,
+    };
+    console.log(requestBody);
+
+    setIsProcessing(true);
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/free/request`, {
       method: "POST",
       headers: {
@@ -90,28 +90,31 @@ function BookFreeSession({ setOpenBookModal }: any) {
       });
   };
 
-
   return (
     <div className=" flex justify-center flex-col items-center gap-5">
       <div className="courses w-full flex justify-center">
-      <ViewCourses setSelectedCourses={setSelectedCourses} selectedCourses={selectedCourses} />
+        <ViewCourses
+          setSelectedCourses={setSelectedCourses}
+          selectedCourses={selectedCourses}
+        />
       </div>
-     
-      <BookSessionsCalendar datetime12h={datetime12h} setDateTime12h={setDateTime12h}/>
+      <BookSessionsCalendar
+        datetime12h={datetime12h}
+        setDateTime12h={setDateTime12h}
+      />
       <div>
-      <Button
-        onClick={handleBookFreeClick}
-        color="purple"
-        isProcessing={isProcessing}
-        pill
-        size="md"
-        className={
-          "bg-secondary-color hover:bg-[#3b369a] text-white 	py-2 border rounded-3xl text-md px-10	 transition-all	duration-500 "
-        }
-      >
-        <p>Book Free Session</p>
-      </Button>
-       
+        <Button
+          onClick={handleBookFreeClick}
+          color="purple"
+          isProcessing={isProcessing}
+          pill
+          size="md"
+          className={
+            "bg-secondary-color hover:bg-[#3b369a] text-white 	py-2 border rounded-3xl text-md px-10	 transition-all	duration-500 "
+          }
+        >
+          <p>Book Free Session</p>
+        </Button>
       </div>
       <Toast ref={toast} />
     </div>

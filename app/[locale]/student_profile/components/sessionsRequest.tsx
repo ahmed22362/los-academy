@@ -48,7 +48,8 @@ function SessionsRequest({
       message: "Do you want to delete this request?",
       header: "Delete Confirmation",
       icon: "pi pi-info-circle",
-      rejectClassName: "bg-secondary-color mr-2 text-white px-2 py-1 rounded-md",
+      rejectClassName:
+        "bg-secondary-color mr-2 text-white px-2 py-1 rounded-md",
       acceptClassName: "px-3 text-white  bg-red-500 hover:bg-red-600 py-1",
       accept: () => cancelMySessionRequest(requestId), // Use accept instead of cancelMySessionRequest in accept callback
       reject: () => {},
@@ -77,7 +78,6 @@ function SessionsRequest({
         // console.log(data);
         fetchMySessionRequests();
         if (data.status === "success") {
-
           showSuccess(data.message);
         } else {
           showError(data.message);
@@ -93,7 +93,7 @@ function SessionsRequest({
     inputTime: moment.MomentInput,
     inputTimezone: string,
     outputTimezone: string,
-    ourFormat: string
+    ourFormat: string,
   ) => {
     const convertedTime = moment(inputTime)
       .tz(inputTimezone)
@@ -102,7 +102,6 @@ function SessionsRequest({
     return convertedTime.format(ourFormat);
   };
 
- 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySessionReq`, {
       method: "GET",
@@ -117,16 +116,16 @@ function SessionsRequest({
         const sortedSessions = data.data.map((session: Session) => ({
           ...session,
           sessionDates: session.sessionDates.map((date) =>
-            moment(date).toDate()
+            moment(date).toDate(),
           ),
         }));
 
         sortedSessions.sort((a: Session, b: Session) => {
           const dateA = new Date(
-            Math.max(...a.sessionDates.map((date: any) => date.getTime()))
+            Math.max(...a.sessionDates.map((date: any) => date.getTime())),
           );
           const dateB = new Date(
-            Math.max(...b.sessionDates.map((date: any) => date.getTime()))
+            Math.max(...b.sessionDates.map((date: any) => date.getTime())),
           );
           return dateB.getTime() - dateA.getTime();
         });
@@ -134,7 +133,7 @@ function SessionsRequest({
         setSessionsRequest(sortedSessions);
         // console.log("sorted session requests ", sortedSessions);
         const pendingSessions = sortedSessions.filter(
-          (session: Session) => session.status === "pending"
+          (session: Session) => session.status === "pending",
         );
         if (fromStudentProfile === true) {
           setSessionsRequest(pendingSessions);
@@ -146,48 +145,48 @@ function SessionsRequest({
       });
   }, [updateCalendar]);
 
-const fetchMySessionRequests=()=>{
-  fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySessionReq`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      // console.log(data.data);
-
-      const sortedSessions = data.data.map((session: Session) => ({
-        ...session,
-        sessionDates: session.sessionDates.map((date) =>
-          moment(date).toDate()
-        ),
-      }));
-
-      sortedSessions.sort((a: Session, b: Session) => {
-        const dateA = new Date(
-          Math.max(...a.sessionDates.map((date: any) => date.getTime()))
-        );
-        const dateB = new Date(
-          Math.max(...b.sessionDates.map((date: any) => date.getTime()))
-        );
-        return dateB.getTime() - dateA.getTime();
-      });
-
-      setSessionsRequest(sortedSessions);
-      // console.log("sorted session requests ", sortedSessions);
-      const pendingSessions = sortedSessions.filter(
-        (session: Session) => session.status === "pending"
-      );
-      if (fromStudentProfile === true) {
-        setSessionsRequest(pendingSessions);
-      }
-      // Set the retrieved Seeions in the state
+  const fetchMySessionRequests = () => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user/mySessionReq`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`, // Correct the header key to 'Authorization'
+      },
     })
-    .catch((error) => {
-      console.error("Error fetching sessions:", error);
-    });
-}
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log(data.data);
+
+        const sortedSessions = data.data.map((session: Session) => ({
+          ...session,
+          sessionDates: session.sessionDates.map((date) =>
+            moment(date).toDate(),
+          ),
+        }));
+
+        sortedSessions.sort((a: Session, b: Session) => {
+          const dateA = new Date(
+            Math.max(...a.sessionDates.map((date: any) => date.getTime())),
+          );
+          const dateB = new Date(
+            Math.max(...b.sessionDates.map((date: any) => date.getTime())),
+          );
+          return dateB.getTime() - dateA.getTime();
+        });
+
+        setSessionsRequest(sortedSessions);
+        // console.log("sorted session requests ", sortedSessions);
+        const pendingSessions = sortedSessions.filter(
+          (session: Session) => session.status === "pending",
+        );
+        if (fromStudentProfile === true) {
+          setSessionsRequest(pendingSessions);
+        }
+        // Set the retrieved Seeions in the state
+      })
+      .catch((error) => {
+        console.error("Error fetching sessions:", error);
+      });
+  };
   //   update Dates
   const handleUpdateDates = (sessionId: Number | any) => {
     if (!newDates || newDates.length === 0) {
@@ -214,7 +213,7 @@ const fetchMySessionRequests=()=>{
             Authorization: `Bearer ${cookie.get("token")}`,
           },
           body: JSON.stringify(updatedSession),
-        }
+        },
       )
         .then((response) => response.json())
         .then((data) => {
@@ -261,7 +260,7 @@ const fetchMySessionRequests=()=>{
                         date,
                         "UTC",
                         Intl.DateTimeFormat().resolvedOptions().timeZone,
-                        "h:mm A"
+                        "h:mm A",
                       )}
                     </li>
                   ))}
@@ -280,19 +279,6 @@ const fetchMySessionRequests=()=>{
                     {session.status}{" "}
                   </span>
                 </p>
-                {/* <p>
-                  Type:
-                  <span
-                    className={`${
-                      session.type != "free"
-                        ? "bg-red-500 text-white"
-                        : "bg-white border"
-                    } shadow  px-3 py-1 ml-2  rounded-lg`}
-                  >
-                    {" "}
-                    {session.type === "paid" ? "Paid$" : "Free"}{" "}
-                  </span>{" "}
-                </p> */}
                 <div
                   className={`${
                     session.status === "pending" ? "flex" : "hidden"

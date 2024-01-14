@@ -15,7 +15,7 @@ export default function FreeSesstionsTable() {
     inputTime: moment.MomentInput,
     inputTimezone: string,
     outputTimezone: string,
-    ourFormat: string
+    ourFormat: string,
   ) => {
     const convertedTime = moment(inputTime)
       .tz(inputTimezone)
@@ -86,7 +86,7 @@ export default function FreeSesstionsTable() {
                             freeSession.sessionDates[0],
                             "UTC",
                             Intl.DateTimeFormat().resolvedOptions().timeZone,
-                            "h:mm A"
+                            "h:mm A",
                           )}
                         </span>
                       </li>
@@ -115,11 +115,11 @@ export default function FreeSesstionsTable() {
                                 "UTC",
                                 Intl.DateTimeFormat().resolvedOptions()
                                   .timeZone,
-                                "MM/DD/YYYY hh:mm A"
+                                "MM/DD/YYYY hh:mm A",
                               )}
                             </li>
                           );
-                        }
+                        },
                       )}
                     </ul>
                   </div>
@@ -130,7 +130,7 @@ export default function FreeSesstionsTable() {
                     "cursor-pointer bg-secondary-color hover:bg-secondary-hover transition-colors px-[10px] py-[6px] text-[12px] text-white rounded-[16px]"
                   }
                 >
-                  Assign Session #{freeSession.id}
+                  Take Session #{freeSession.id}
                 </h5>
                 {selectedSession && selectedSession.id === freeSession.id && (
                   <AssignModal

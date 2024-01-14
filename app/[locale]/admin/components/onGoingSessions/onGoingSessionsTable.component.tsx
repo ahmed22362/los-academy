@@ -70,7 +70,7 @@ export default function OnGoingSessionsTable() {
         </div>
       ) : (
         <div className="p-5">
-          <OnGoingSessionComboBox updateComponent={fetchAllSessions} />
+          <OnGoingSessionComboBox />
           {allSessions && allSessions.length > 0 ? (
             <>
               {" "}
@@ -136,7 +136,6 @@ export default function OnGoingSessionsTable() {
                           <FetchOnGoingSessionData
                             key={index}
                             sessionData={session}
-                            updateComponent={fetchAllSessions}
                           />
                         </Table.Cell>
                       </Table.Row>
@@ -184,7 +183,6 @@ export default function OnGoingSessionsTable() {
                         <FetchOnGoingSessionData
                           key={index}
                           sessionData={session}
-                          updateComponent={fetchAllSessions}
                         />
                       }
                     </div>

@@ -1,5 +1,10 @@
 "use client";
-export default function OnGoingSessionComboBox() {
+
+export default function GenericComboBox({
+  AdditionalComponent,
+}: {
+  AdditionalComponent?: JSX.Element;
+}) {
   return (
     <section className={"mb-3"}>
       <div
@@ -16,9 +21,7 @@ export default function OnGoingSessionComboBox() {
             placeholder={"search"}
           />
         </form>
-        <div
-          className={"flex flex-row justify-between items-center gap-5 my-3"}
-        ></div>
+        {AdditionalComponent}
       </div>
     </section>
   );

@@ -4,10 +4,8 @@ import Link from "next/link";
 
 export default function FetchOnGoingSessionData({
   sessionData,
-  updateComponent,
 }: {
   sessionData: any;
-  updateComponent: () => void;
 }) {
   const session = sessionData && sessionData;
 

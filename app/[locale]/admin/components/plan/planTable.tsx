@@ -161,7 +161,7 @@ export default function PlanTable() {
                       {`This Plan Recommended?   `}
                       <Recommend recommended={plan.recommended} />
                     </div>
-                    <div className="text-sm text-gray-700 w-fit w-fit flex justify-center items-center gap-4">
+                    <div className="text-sm text-gray-700 w-fit  flex justify-center items-center gap-4">
                       {`Plan Status? `}
                       <Active active={plan.active} />
                     </div>

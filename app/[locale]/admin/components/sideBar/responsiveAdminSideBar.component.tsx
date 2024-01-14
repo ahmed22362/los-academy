@@ -14,7 +14,7 @@ export default function ResponsiveAdminSideBar({
   sidebarLinks,
 }: {
   logOut: () => void;
-  sidebarLinks: SidebarLinks[];
+  sidebarLinks?: SidebarLinks[];
 }) {
   const [visible, setVisible] = useState<boolean>(false);
   const pathName = usePathname();
@@ -29,7 +29,7 @@ export default function ResponsiveAdminSideBar({
       </button>
       <Sidebar visible={visible} onHide={() => setVisible(false)}>
         <ul className={"flex flex-col gap-3"}>
-          {sidebarLinks.map((link) => (
+          {sidebarLinks?.map((link) => (
             <Link
               key={link.href}
               href={link.href}

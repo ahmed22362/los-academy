@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
 import { Card, CustomFlowbiteTheme } from "flowbite-react";
 import { useState } from "react";
 import CustomPlanModal from "./PriceModal/customPlanModal";
 function CustomPlanCard() {
-  
   const plan = {
     id: 1,
     title: "Customize your Plan",
@@ -12,25 +11,24 @@ function CustomPlanCard() {
     // sessionDuration: "30 min",
     // sessionsCount: "10",
     // sessionsPerWeek: "2",
-  }
-
+  };
 
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => {
-        setOpenModal(true);
-    };
+    setOpenModal(true);
+  };
 
-    const handleCloseModal = () => {
-        setOpenModal(false);
-    }
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   const customTheme: CustomFlowbiteTheme = {
     card: {
       root: {
         children: "flex h-full flex-col justify-center gap-1 p-6 max-sm:gap-0",
-      }
-    }
-  }
+      },
+    },
+  };
 
   return (
     <Card theme={customTheme.card} className=" h-[auto] w-[300]">
@@ -44,19 +42,19 @@ function CustomPlanCard() {
       </div>
       <ul className="mt-5 mb-3 space-y-5 h-auto">
         <li className="flex space-x-3 rtl:gap-2">
-        <i className="bi bi-check-circle-fill text-gray-500"></i>
+          <i className="bi bi-check-circle-fill text-gray-500"></i>
           <span className="text-base font-normal leading-tight text-black-color-two">
             Choose Session Duration
           </span>
         </li>
         <li className="flex space-x-3 rtl:gap-2">
-        <i className="bi bi-check-circle-fill text-gray-500"></i>
+          <i className="bi bi-check-circle-fill text-gray-500"></i>
           <span className="text-base font-normal leading-tight text-black-color-two">
             Choose Session Count
           </span>
         </li>
         <li className="flex space-x-3 rtl:gap-2">
-        <i className="bi bi-check-circle-fill text-gray-500"></i>
+          <i className="bi bi-check-circle-fill text-gray-500"></i>
           <span className="text-base font-normal leading-tight text-black-color-two">
             Choose Session Per Week
           </span>
@@ -69,12 +67,12 @@ function CustomPlanCard() {
         Get Plan
       </button>
       <CustomPlanModal
-            handleOpen={openModal} 
-            handleCloseModal={handleCloseModal}
-            targetComponent={plan.id}
-        />
+        handleOpen={openModal}
+        handleCloseModal={handleCloseModal}
+        targetComponent={plan.id}
+      />
     </Card>
-  )
+  );
 }
 
-export default CustomPlanCard
+export default CustomPlanCard;

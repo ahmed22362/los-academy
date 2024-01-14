@@ -1,32 +1,37 @@
-'use client';
+"use client";
 
 import { Card, CustomFlowbiteTheme } from "flowbite-react";
-import PrimaryButton from './PrimaryButton'
+import PrimaryButton from "./PrimaryButton";
 import { useState, useRef } from "react";
 import PriceModal from "./PriceModal/PriceModal";
-import Cookies from 'universal-cookie';
-import { Toast } from 'primereact/toast';
-import {useRouter} from "next/navigation"
-function PlanCard({planData}: any) {
-  
-  const plan = planData && planData
-  const cookeis = new Cookies()
+import Cookies from "universal-cookie";
+import { Toast } from "primereact/toast";
+import { useRouter } from "next/navigation";
+function PlanCard({ planData }: any) {
+  const plan = planData && planData;
+  const cookeis = new Cookies();
   const toast = useRef<Toast>(null);
   const [openModal, setOpenModal] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
   const showSuccess = () => {
-    toast.current?.show({severity:'success', summary: 'Success', detail:'Add Success You will Redirect To Payment Page', life: 4000});
-  }
+    toast.current?.show({
+      severity: "success",
+      summary: "Success",
+      detail: "Add Success You will Redirect To Payment Page",
+      life: 4000,
+    });
+  };
   const showError = (msg: string) => {
-      toast.current?.show({severity:'error', summary: 'Error', detail: msg, life: 4000});
-    }
+    toast.current?.show({
+      severity: "error",
+      summary: "Error",
+      detail: msg,
+      life: 4000,
+    });
+  };
   const handleOpenModal = () => {
-        setOpenModal(true);
-    };
-
-    const handleCloseModal = () => {
-        setOpenModal(false);
-    };
+    setOpenModal(true);
+  };
 
     const priceAfterDiscount=plan.price-(plan.price* (plan.discount/100))
 
@@ -34,41 +39,43 @@ function PlanCard({planData}: any) {
     card: {
       root: {
         children: "flex h-full flex-col justify-center gap-1 p-6 max-sm:gap-0",
-      }
-    }
-  }
+      },
+    },
+  };
 
   const choosePlan = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/subscription/`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        "Authorization": `Bearer ${cookeis.get('token')}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookeis.get("token")}`,
       },
       body: JSON.stringify({
-        planId: plan.id
+        planId: plan.id,
       }),
     })
-    .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          if (data.status=='success') {
-              showSuccess()
-              const timer = setTimeout(() => {
-                router.push(data.data.url)
-              }, 4000)
-              return () => clearTimeout(timer)
-          } else if (data.status === 'fail' && data.message === "Invalid token. Please log in again!") {
-            showError("You Can't Choose This Plan Please Log In First")
-          } else {
-            showError(data.message)
-          }
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status == "success") {
+          showSuccess();
+          const timer = setTimeout(() => {
+            router.push(data.data.url);
+          }, 4000);
+          return () => clearTimeout(timer);
+        } else if (
+          data.status === "fail" &&
+          data.message === "Invalid token. Please log in again!"
+        ) {
+          showError("You Can't Choose This Plan Please Log In First");
+        } else {
+          showError(data.message);
+        }
       })
       .catch((error) => {
-        console.error('Error creating custom plan:', error);
+        console.error("Error creating custom plan:", error);
       });
-  
-  }
+  };
 
   return (
     <Card theme={customTheme.card} className=" h-[auto] w-[300] relative">
@@ -93,19 +100,19 @@ function PlanCard({planData}: any) {
      
       <ul className="mt-5 mb-3 space-y-5 h-auto">
         <li className="flex space-x-3 rtl:gap-2">
-        <i className="bi bi-check-circle-fill text-gray-500"></i>
+          <i className="bi bi-check-circle-fill text-gray-500"></i>
           <span className="text-base font-normal leading-tight text-black-color-two">
             Session Duration: {plan.sessionDuration}
           </span>
         </li>
         <li className="flex space-x-3 rtl:gap-2">
-        <i className="bi bi-check-circle-fill text-gray-500"></i>
+          <i className="bi bi-check-circle-fill text-gray-500"></i>
           <span className="text-base font-normal leading-tight text-black-color-two">
             Session Count: {plan.sessionsCount}
           </span>
         </li>
         <li className="flex space-x-3 rtl:gap-2">
-        <i className="bi bi-check-circle-fill text-gray-500"></i>
+          <i className="bi bi-check-circle-fill text-gray-500"></i>
           <span className="text-base font-normal leading-tight text-black-color-two">
             Session Per Week: {plan.sessionsPerWeek}
           </span>
@@ -118,7 +125,7 @@ function PlanCard({planData}: any) {
         Get Plan
       </button>
     </Card>
-  )
+  );
 }
 
-export default PlanCard
+export default PlanCard;

@@ -16,5 +16,6 @@ export interface PlanDetails {
   sessionsPerWeek: number;
   recommended: boolean;
   discount?: number;
+  planPrice?:number
   type?: string;
 }

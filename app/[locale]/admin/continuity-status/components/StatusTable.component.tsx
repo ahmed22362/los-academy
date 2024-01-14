@@ -89,8 +89,9 @@ export default function StatusTable() {
   useEffect(() => {
     fetchAllStatus(rows, 1);
   }, []);
+
   const idClasses =
-    "whitespace-nowrap font-medium text-gray-900 dark:text-white";
+    "whitespace-nowrap font-medium text-gray-900 text-center dark:text-white";
   const renderTableHead = () => (
     <Table.Head theme={customTheme.head}>
       {Object.keys(headersMapping).map((header, index) => (
@@ -102,14 +103,14 @@ export default function StatusTable() {
   );
   const renderContinueCell = (status: any) => {
     return (
-      <div className="text-sm text-gray-700 w-fit  flex items-center justify-center gap-4">
+      <div className="text-sm text-gray-700 w-fit mx-auto  flex items-center justify-center gap-4">
         <span
           className={
-            status !== null
+           ` ${status !== null
               ? status
                 ? "text-green-500"
                 : "text-red-500"
-              : "text-gray-500"
+              : "text-gray-500"} `
           }
         >
           {status !== null ? (status ? "Yes" : "No") : "No Response"}

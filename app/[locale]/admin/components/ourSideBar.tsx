@@ -28,7 +28,7 @@ export default function OurSideBar() {
   const customTheme: CustomFlowbiteTheme["sidebar"] = {
     root: {
       inner:
-        "h-full overflow-y-auto overflow-x-hidden rounded py-4 px-3 bg-white",
+        "h-full overflow-y-auto scrollAction overflow-x-hidden rounded py-4 px-3 bg-white",
     },
     item: {
       base: "flex items-center justify-center rounded-[1.5rem] px-[1rem] py-[0.8rem] text-base font-medium text-black-color-one hover:text-white hover:bg-secondary-color",
@@ -55,10 +55,10 @@ export default function OurSideBar() {
       <Sidebar
         aria-label="Default sidebar example"
         theme={customTheme}
-        className={"w-[14rem] pt-[70px] max-md:hidden"}
+        className={"w-[14rem] pt-[70px] max-md:hidden "}
       >
         <Sidebar.Items>
-          <Sidebar.ItemGroup className={"text-center"}>
+          <Sidebar.ItemGroup className={"text-center "}>
             {sidebarLinks.map((link) => (
               <Link
                 key={link.href}

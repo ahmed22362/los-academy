@@ -24,6 +24,8 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
     const [sessionsPerWeek, setSessionsPerWeek] = useState<number>(0);
     const [discount, setDiscount] = useState<number>(0);
     const [recommended, setRecommended] = useState<boolean>(false);
+    const [planPrice, setPlanPrice] = useState<number>(0);
+
 
     const cookies = new Cookies();
     const toast = useRef<Toast>(null);
@@ -84,6 +86,7 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
             sessionsPerWeek: sessionsPerWeek,
             discount: discount,
             recommended: recommended,
+            planPrice:planPrice,
             type: 'standard'
         }
         setIsProcessing(true)
@@ -140,6 +143,13 @@ export default function AddPlanModal({openAssignModal, handleCloseModal, updateC
                 <Label htmlFor="sessionsPerWeek" value="Sessions Per Week" />
               </div>
               <TextInput min={0} id="sessionsPerWeek" placeholder='Sessions Per Week' onChange={(e: any) => setSessionsPerWeek(parseInt(e.target.value, 10))} type="number" />
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="planPrice" value="Plan Price" />
+              </div>
+              <TextInput min={0} id="planPrice" placeholder='Plan Price $' onChange={(e: any) => setPlanPrice(parseInt(e.target.value, 10))} type="number" />
+              <span className='text-red-500 text-[13.5px] ml-2'>If the price is not provided, it will be calculated based on the minute cost.</span>
             </div>
             <div>
               <div className="mb-2 block">

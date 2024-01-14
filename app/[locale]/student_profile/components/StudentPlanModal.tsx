@@ -56,7 +56,7 @@ export default function StudentPlanModal(
   const getModalSizeClass = () => {
     numberOfPlans++;
     if (numberOfPlans >= 3) {
-      return "7xl";
+      return "8xl";
     } else if (numberOfPlans === 2) {
       return "4xl";
     } else {
@@ -68,7 +68,7 @@ export default function StudentPlanModal(
       {/* <Button onClick={() => setOpenPlansModal(true)}>Toggle Plans modal</Button> */}
       <Modal
         show={openPlansModal}
-        className="block space-y-0 md:flex md:space-y-0 md:space-x-4 "
+        className="block"
         size={getModalSizeClass()}
         onClose={() => setOpenPlansModal(false)}
       >
@@ -95,6 +95,7 @@ export default function StudentPlanModal(
                   planId={plan.id}
                   title={plan.title}
                   price={plan.price}
+                  discount={plan.discount}
                   recommended={plan.recommended}
                   continueFlag={continueFlag}
                   features={[
@@ -110,6 +111,7 @@ export default function StudentPlanModal(
                 planId={1}
                 title="Customize your Plan"
                 price={50}
+                discount={1}
                 continueFlag={continueFlag}
                 features={[
                   "Fixed times",

@@ -33,9 +33,7 @@ function PlanCard({ planData }: any) {
     setOpenModal(true);
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
+    const priceAfterDiscount=plan.price-(plan.price* (plan.discount/100))
 
   const customTheme: CustomFlowbiteTheme = {
     card: {
@@ -82,17 +80,24 @@ function PlanCard({ planData }: any) {
   return (
     <Card theme={customTheme.card} className=" h-[auto] w-[300] relative">
       <Toast ref={toast} />
-      {plan.recommended && (
-        <span className="recommended flagwave">Recommended</span>
-      )}
-      <h5 className="mb-4 text-xl font-medium text-black-color-two capitalize">
+      {plan.recommended && <span className="recommended flagwave">Recommended</span>}
+      <h5 className="mb-2 text-xl font-medium text-black-color-two capitalize">
         {plan.title}
       </h5>
+      {plan?.discount>0? (
+        <h5 className="mb-2 font-semibold">Discount: {plan.discount}%</h5>
+      ):''}
       <div className="flex items-baseline text-black-color-two h-[60px] w-[200px]">
         <span className="text-2xl font-semibold tracking-tight">
-          {plan.price}$/ per month
+        {plan.discount&&plan.discount>0?`${Math.round(priceAfterDiscount)}$`:`${plan.price}$` }
         </span>
+        {plan.discount&&plan.discount>0 ?(
+           <div className="">
+           <del className="text-lg font-bold ml-5">{plan.price} $</del>
+         </div>
+        ) :""}
       </div>
+     
       <ul className="mt-5 mb-3 space-y-5 h-auto">
         <li className="flex space-x-3 rtl:gap-2">
           <i className="bi bi-check-circle-fill text-gray-500"></i>

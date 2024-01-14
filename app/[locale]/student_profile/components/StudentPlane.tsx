@@ -8,6 +8,7 @@ import { IoCheckmarkCircleSharp } from "react-icons/io5";
 interface StudentPlaneProps {
   title: string;
   price: number;
+  discount:number;
   features: string[];
   recommended?: boolean;
   planId?: number;
@@ -21,6 +22,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
   recommended,
   planId,
   continueFlag,
+  discount
 }) => {
   const router = useRouter();
   const toast = useRef<Toast>(null);
@@ -44,7 +46,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
   const token = cookie.get("token");
   const [openCustomPlan, setOpenCustomPlan] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-
+const priceAfterDiscount=price-(price* (discount/100))
   const handleClose = () => {
     setOpenCustomPlan(false);
   };
@@ -93,7 +95,7 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
           style={{ top: "-6%", left: "20%" }}
           className={
             recommended
-              ? `px-4 bg-[#27AE60] rounded-full py-2 text-white absolute`
+              ? `px-4 bg-[#27AE60] rounded-full py-2  text-white absolute`
               : "hidden	"
           }
         >
@@ -102,6 +104,9 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
         <h5 className="mb-0 pb-0 text-xl font-medium dark:text-gray-400 text-center">
           {title}
         </h5>
+        {title != "Customize your Plan"&&discount&&discount>0? (
+        <h5 className="mb-2 font-semibold">Discount: {discount}%</h5>
+      ):''}
         <div className="flex items-baseline text-gray-900 dark:text-white mt-0 pt-0 w-full max-md:text-xs">
           <span
             style={{ top: "15% ", transform: "translateY(-30px)" }}
@@ -114,12 +119,18 @@ const StudentPlane: React.FC<StudentPlaneProps> = ({
 
           <span className="text-3xl font-semibold">$</span>
           <span className="text-5xl font-extrabold tracking-tight">
-            {price}
+            {discount&&title != "Customize your Plan"&&discount>0?Math.round(priceAfterDiscount):price}
           </span>
           <span className="ml-1 text-xl font-normal text-gray-500 dark:text-gray-400 max-sm:text-sm w-content">
             /month
           </span>
         </div>
+        {discount&&title != "Customize your Plan"&&discount>0 ?(
+           <div className="-translate-y-3">
+           <del className="text-lg font-bold ml-5">{price} $</del>
+         </div>
+        ) :""}
+         
         <ul className="my-7 space-y-5">
           {features &&
             features.map((feature, index) => (

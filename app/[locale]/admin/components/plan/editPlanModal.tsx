@@ -115,6 +115,9 @@ export default function EditPlanModal({
     if (status !== planDetails.active) {
       updatedData.active = status;
     }
+    if (price !== planDetails.price) {
+      updatedData.price = price;
+    }
     if (Object.keys(updatedData).length === 0) {
       showError("Nothing to update");
       return;

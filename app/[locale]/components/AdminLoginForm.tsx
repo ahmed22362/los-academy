@@ -108,7 +108,7 @@ export default function AdminLoginForm() {
           }
         } else {
           showError(
-            "Email or password is incorrect, please make sure you entered the correct email and password"
+            "Email or password is incorrect, please make sure you entered the correct email and password",
           );
         }
         setIsProcessing(false);
@@ -116,7 +116,7 @@ export default function AdminLoginForm() {
       .catch((err) => {
         err
           ? showError(
-              "Something went wrong. Please try again later. or Contact Support Team"
+              "Something went wrong. Please try again later. or Contact Support Team",
             )
           : "";
       });

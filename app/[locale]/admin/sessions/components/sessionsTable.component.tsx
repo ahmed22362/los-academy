@@ -32,13 +32,16 @@ export default function SessionsTable() {
   };
 
   const fetchAllSessions = (limit: number, page: number) => {
-    fetch(`http://localhost:8080/api/v1/session?limit=${limit}&page=${page}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
+    fetch(
+      `${process.env.NEXT_PUBLIC_APIURL}/session?limit=${limit}&page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
       },
-    })
+    )
       .then((response) => response.json())
       .then((data) => {
         // console.log(data)

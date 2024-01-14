@@ -15,17 +15,13 @@ export default function SessionsTable() {
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
   const [first, setFirst] = useState<number>(0);
-  const [rows, setRows] = useState<number>(10);
+  const [rows, setRows] = useState<number>(5);
   const onPageChange = (event: PaginatorPageChangeEvent) => {
     setFirst(event.first);
     setRows(event.rows);
+    console.log(first, rows);
+    fetchAllSessions(event.rows, event.first / event.rows + 1);
   };
-  const getPaginatedData = () => {
-    const endIndex = first + rows;
-    return allSessions.slice(first, endIndex);
-  };
-  const displayedSessions = getPaginatedData();
-
   const customTheme: CustomFlowbiteTheme["table"] = {
     head: {
       base: "group/head text-xs uppercase text-black-color-one bg-white-color p-[15px] text-center",
@@ -35,8 +31,8 @@ export default function SessionsTable() {
     },
   };
 
-  const fetchAllSessions = () => {
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session`, {
+  const fetchAllSessions = (limit: number, page: number) => {
+    fetch(`http://localhost:8080/api/v1/session?limit=${limit}&page=${page}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +58,7 @@ export default function SessionsTable() {
   };
 
   useEffect(() => {
-    fetchAllSessions();
+    fetchAllSessions(rows, 1);
   }, []);
 
   return (
@@ -103,7 +99,7 @@ export default function SessionsTable() {
                     </Table.HeadCell>
                   </Table.Head>
                   <Table.Body className="divide-y divide-gray-100">
-                    {displayedSessions.map((session: any, index: number) => (
+                    {allSessions.map((session: any, index: number) => (
                       <Table.Row
                         key={index}
                         className="bg-white dark:border-gray-700 dark:bg-gray-800 text-center"
@@ -134,7 +130,7 @@ export default function SessionsTable() {
                 </Table>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
-                {displayedSessions.map((session: any, index: number) => (
+                {allSessions.map((session: any, index: number) => (
                   <div
                     key={index}
                     className="bg-white space-y-3 p-4 rounded-lg shadow"
@@ -186,7 +182,7 @@ export default function SessionsTable() {
               first={first}
               rows={rows}
               totalRecords={allSessions.length ?? 0}
-              rowsPerPageOptions={[10, 20, 30]}
+              rowsPerPageOptions={[5, 10, 15]}
               onPageChange={onPageChange}
             />
           </div>

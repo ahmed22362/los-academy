@@ -90,6 +90,9 @@ export default function PlanTable() {
                       Sessions Per Week
                     </Table.HeadCell>
                     <Table.HeadCell theme={customTheme.head}>
+                      Price
+                    </Table.HeadCell>
+                    <Table.HeadCell theme={customTheme.head}>
                       Recommended
                     </Table.HeadCell>
                     <Table.HeadCell theme={customTheme.head}>
@@ -115,6 +118,7 @@ export default function PlanTable() {
                         <Table.Cell>{plan.sessionDuration}</Table.Cell>
                         <Table.Cell>{plan.sessionsCount}</Table.Cell>
                         <Table.Cell>{plan.sessionsPerWeek}</Table.Cell>
+                        <Table.Cell>{plan.price}$</Table.Cell>
                         <Table.Cell>
                           <Recommend recommended={plan.recommended} />
                         </Table.Cell>
@@ -156,6 +160,8 @@ export default function PlanTable() {
                       {` And `}
                       <strong>{plan.sessionsPerWeek}</strong>
                       {` Sessions per week!`}
+                      {` With Price: `}
+                      <strong>{plan.price} $</strong>
                     </div>
                     <div className="text-sm text-gray-700 w-fit flex justify-center items-center gap-4">
                       {`This Plan Recommended?   `}

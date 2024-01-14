@@ -5,7 +5,7 @@ import Link from "next/link";
 import { BiLogOut } from "react-icons/bi";
 import Cookies from "universal-cookie";
 import { useRouter, usePathname } from "next/navigation";
-import ResponsiveAdminSideBar from "./responsiveAdminSideBar";
+import ResponsiveAdminSideBar from "./responsiveAdminSideBar.component";
 
 export default function OurSideBar() {
   const pathName = usePathname();

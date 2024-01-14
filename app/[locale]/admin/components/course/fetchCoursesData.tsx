@@ -1,7 +1,6 @@
-import { CustomFlowbiteTheme, Table } from "flowbite-react";
 import { BsTrash } from "react-icons/bs";
 import { BiSolidEditAlt } from "react-icons/bi";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Toast } from "primereact/toast";
 import EditCoursesModal from "./editCoursesModal";
 import Cookies from "universal-cookie";

@@ -1,13 +1,11 @@
-import PlanTable from "../components/plan/planTable";
+import PlanTable from "./components/planTable";
 
 function PlansPage() {
   return (
-    <main className='ps-[255px] max-md:ps-[20px] pe-[20px] pt-[7rem] '>
-
-        <PlanTable />
-    
+    <main className="ps-[255px] max-md:ps-[20px] pe-[20px] pt-[7rem] ">
+      <PlanTable />
     </main>
-  )
+  );
 }
 
 export default PlansPage;

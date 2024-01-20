@@ -1,11 +1,8 @@
 "use client";
-// import "primereact/resources/themes/lara-light-indigo/theme.css";
-// import "primereact/resources/primereact.min.css";
 
 import {
   Button,
   CustomFlowbiteTheme,
-  Label,
   Spinner,
   TextInput,
 } from "flowbite-react";
@@ -14,6 +11,7 @@ import { useState, useRef } from "react";
 import { Toast } from "primereact/toast";
 import { Checkbox } from "primereact/checkbox";
 import Cookies from "universal-cookie";
+import { showError, showSuccess } from "@/utilities/toastMessages";
 
 export default function AdminLoginForm() {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -24,22 +22,8 @@ export default function AdminLoginForm() {
   const router = useRouter();
   const toast = useRef<Toast>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const showSuccess = () => {
-    toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Login Success",
-      life: 2000,
-    });
-  };
-  const showError = (msg: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: msg,
-      life: 4000,
-    });
-  };
+  const oneDayInSec = 86400;
+  const oneMonthInSec = 86400;
 
   const buttonTheme: CustomFlowbiteTheme["button"] = {
     color: {
@@ -84,31 +68,32 @@ export default function AdminLoginForm() {
           if (data.data.role === "admin") {
             cookies.set("token", data.token, {
               secure: true,
-              maxAge: checked ? 2592000000 : 3600,
+              maxAge: checked ? oneMonthInSec : oneDayInSec,
             });
             cookies.set("id", data.data.id, {
               secure: true,
-              maxAge: checked ? 2592000000 : 3600,
+              maxAge: checked ? oneMonthInSec : oneDayInSec,
             });
-            showSuccess();
+            showSuccess("Login Success", toast);
             router.replace("/admin");
           } else if (data.data.role === "teacher") {
             cookies.set("token", data.token, {
               secure: true,
-              maxAge: checked ? 2592000000 : 3600,
+              maxAge: checked ? oneMonthInSec : oneDayInSec,
             });
             cookies.set("id", data.data.id, {
               secure: true,
-              maxAge: checked ? 2592000000 : 3600,
+              maxAge: checked ? oneMonthInSec : oneDayInSec,
             });
-            showSuccess();
+            showSuccess("Login Success", toast);
             router.replace("/teacher");
           } else {
-            showError("Login Failed you are not an admin");
+            showError("Login Failed you are not an admin", toast);
           }
         } else {
           showError(
             "Email or password is incorrect, please make sure you entered the correct email and password",
+            toast,
           );
         }
         setIsProcessing(false);
@@ -117,6 +102,7 @@ export default function AdminLoginForm() {
         err
           ? showError(
               "Something went wrong. Please try again later. or Contact Support Team",
+              toast,
             )
           : "";
       });
@@ -145,9 +131,6 @@ export default function AdminLoginForm() {
       <div>
         <div className="mb-2 block">
           <label htmlFor="login-email"></label>
-          {/* <Label
-                htmlFor="email"
-            /> */}
         </div>
         <TextInput
           theme={inputTheme}

@@ -1,36 +1,40 @@
 "use client";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
-import "primereact/resources/primereact.min.css";
+
 import { Spinner, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
-import SessionComboBox from "./sessionComboBox";
 import Cookies from "universal-cookie";
+import OnGoingSessionComboBox from "./onGoingSessionsComboBox";
+import MeetingLink from "./MeetingLink";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
 import { convertDateTimeZone } from "@/utilities";
-import getDateAfter from "@/utilities/getDateAfterDuration";
-import StatusBadge from "../../../../../utilities/StatusBadge";
+import getDateAfterDuration from "@/utilities/getDateAfterDuration";
+import { Session } from "@/types";
 import {
   renderTableBody,
   renderTableHead,
 } from "@/app/[locale]/components/genericTableComponent/table.component";
-import { Session } from "@/types";
 
-export default function SessionsTable() {
+export default function OnGoingSessionsTable() {
   const [allSessions, setAllSessions]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
   const [first, setFirst] = useState<number>(0);
   const [rows, setRows] = useState<number>(10);
   const [totalRecord, setTotalRecords] = useState<number>(1);
+  const onPageChange = (event: PaginatorPageChangeEvent) => {
+    setFirst(event.first);
+    setRows(event.rows);
+    fetchAllSessions(event.rows, event.first / event.rows + 1);
+  };
 
   const headersMapping: Record<string, keyof Session | string> = {
     "#ID": "id",
     "Teacher Name": "SessionInfo.teacher.name",
     "Student Name": "SessionInfo.user.name",
-    "Date Time": "sessionDate",
-    "Session Duration": "sessionDuration",
+    "Start Time": "sessionDate",
+    "End Time": "sessionDate",
     Type: "type",
-    Status: "status",
+    "Meeting Link": "meetingLink",
   };
 
   const fetchAllSessions = (limit: number, page: number) => {
@@ -53,6 +57,7 @@ export default function SessionsTable() {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         const sorted = data.data.sort((a: any, b: any) => {
           return (
             new Date(a.sessionDate).getTime() -
@@ -69,16 +74,11 @@ export default function SessionsTable() {
       });
   };
 
-  const onPageChange = (event: PaginatorPageChangeEvent) => {
-    setFirst(event.first);
-    setRows(event.rows);
-    fetchAllSessions(event.rows, event.first / event.rows + 1);
-  };
   useEffect(() => {
     fetchAllSessions(rows, 1);
   }, []);
-  const renderMobileCardComponent = (session: Session, index: number) => (
-    <div key={index} className="bg-white space-y-3 p-4 rounded-lg shadow">
+  const renderMobileCardComponent = (session: Session) => (
+    <div key={session.id} className="bg-white space-y-3 p-4 rounded-lg shadow">
       <div className="flex items-center space-x-2 text-sm">
         <div>
           <span className="text-blue-500 font-bold hover:underline">
@@ -87,26 +87,28 @@ export default function SessionsTable() {
           <span className="text-sm text-gray-700">{` ${session.SessionInfo.user.name} with ${session.SessionInfo.teacher.name}`}</span>
         </div>
       </div>
-      <div className="text-sm text-gray-700">
+      <div>
         {`From: 
-  ${convertDateTimeZone(
-    session.sessionDate,
-    "UTC",
-    Intl.DateTimeFormat().resolvedOptions().timeZone,
-    "YYYY-MM-DD h:mm A",
-  )} To ${convertDateTimeZone(
-          getDateAfter(session.sessionDate, session.sessionDuration),
+      ${convertDateTimeZone(
+        session.sessionDate,
+        "UTC",
+        Intl.DateTimeFormat().resolvedOptions().timeZone,
+        "YYYY-MM-DD h:mm A",
+      )} To- ${convertDateTimeZone(
+          getDateAfterDuration(session.sessionDate, session.sessionDuration),
           "UTC",
           Intl.DateTimeFormat().resolvedOptions().timeZone,
           "YYYY-MM-DD h:mm A",
         )} `}
       </div>
       <div className="text-sm text-gray-700"> Type: {session.type}</div>
-      <span className="text-sm text-gray-700 w-fit m-auto">
-        {" "}
-        Status: {<StatusBadge status={session.status} />}
-      </span>
+      <div className="text-sm font-medium text-black flex justify-center items-center">
+        {<MeetingLink key={session.id} session={session} />}
+      </div>
     </div>
+  );
+  const renderMeetingComponent = (session: Session) => (
+    <MeetingLink session={session} key={session.id} />
   );
   return (
     <>
@@ -116,7 +118,7 @@ export default function SessionsTable() {
         </div>
       ) : (
         <div className="p-5">
-          <SessionComboBox updateComponent={fetchAllSessions} />
+          <OnGoingSessionComboBox />
           {allSessions && allSessions.length > 0 ? (
             <>
               {" "}
@@ -127,25 +129,27 @@ export default function SessionsTable() {
                     headersValues: Object.values(headersMapping),
                     idValueName: "id",
                     data: allSessions,
+                    renderUpdateComponent: (session: Session) =>
+                      renderMeetingComponent(session),
                   })}
                 </Table>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
-                {allSessions.map((session: any, index: number) =>
-                  renderMobileCardComponent(session, index),
+                {allSessions.map((session: Session, index: number) =>
+                  renderMobileCardComponent(session),
                 )}
               </div>
             </>
           ) : (
             <div className="bg-red-100 text-red-800 p-4 rounded-md">
-              There are no sessions for now!
+              There are no OnGoing sessions for now!
             </div>
           )}
           <div className="card mt-4">
             <Paginator
               first={first}
               rows={rows}
-              totalRecords={totalRecord}
+              totalRecords={totalRecord ?? 1}
               rowsPerPageOptions={[10, 20, 30]}
               onPageChange={onPageChange}
             />

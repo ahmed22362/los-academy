@@ -6,7 +6,6 @@ export default async function Reports() {
   // console.log(allReports)
   const theResult = await allReports.data;
 
-
   return (
     <div className={"adminBox w-full flex-col my-5"}>
       <SectionHeader />

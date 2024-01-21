@@ -1,3 +1,5 @@
+"use client";
+
 import { CustomFlowbiteTheme, Sidebar } from "flowbite-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";

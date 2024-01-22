@@ -22,9 +22,10 @@ export interface PlanDetails {
 export interface FormField {
   name: string;
   label: string;
-  type: "text" | "email" | "select" | "tel" | "number" | "textarea";
+  type: "text" | "email" | "select" | "tel" | "number" | "textarea" | "file";
   options?: string[];
   placeholder?: string;
+  accept?: string;
 }
 export interface Session {
   id: number;
@@ -48,4 +49,13 @@ export interface Course {
   description: string;
   details: string;
   createdAt: string;
+}
+export interface Material {
+  id: number;
+  name: string;
+  course: string;
+  age: number;
+  createdAt: string;
+  status: string;
+  b2Link: string;
 }

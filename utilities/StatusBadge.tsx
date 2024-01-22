@@ -14,6 +14,13 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
     case "taken":
       colorClass = "bg-success-color";
       text = "Completed";
+    case "new Arrival":
+      colorClass = "bg-success-color";
+      text = "New Arrival";
+      break;
+    case "archived":
+      colorClass = "bg-warning-color";
+      text = "Archived";
       break;
     case "failed":
       colorClass = "bg-danger-color";
@@ -33,7 +40,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   }
 
   return (
-    <span className={`text-white px-2 py-1 rounded-full ${colorClass}`}>
+    <span className={`text-white px-2 py-1 rounded-full ${colorClass} w-100`}>
       {text}
     </span>
   );

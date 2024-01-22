@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import { useEffect, useRef } from "react";
 import { Toast } from "primereact/toast";
 import Cookies from "universal-cookie";
-import LoadingButton from "../loadingButton";
+import LoadingButton from "../../components/loadingButton";
 export default function EditorialModal({
   openAssignModal,
   handleCloseModal,

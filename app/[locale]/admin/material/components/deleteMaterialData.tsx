@@ -1,6 +1,5 @@
 "use client";
 
-import { Table } from "flowbite-react";
 import { BsTrash } from "react-icons/bs";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { useState, useRef } from "react";

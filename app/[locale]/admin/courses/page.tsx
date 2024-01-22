@@ -1,4 +1,4 @@
-import CoursesTable from "../components/course/coursesTable";
+import CoursesTable from "./components/coursesTable";
 
 export default function Courses() {
   return (

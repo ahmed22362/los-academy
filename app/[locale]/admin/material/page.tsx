@@ -1,4 +1,4 @@
-import MaterialTable from "../components/material/materialTable";
+import MaterialTable from "./components/materialTable";
 
 function MaterialPage() {
   return (

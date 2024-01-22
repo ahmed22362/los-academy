@@ -22,9 +22,9 @@ interface UpdateModalProps {
   onSubmit: (values: any) => void;
   modalHeader: string;
   isProcessing: boolean;
-  schema?: yup.Schema;
   icon?: React.ReactNode;
   updateButtonText: string;
+  objectDetails: any;
 }
 
 const UpdateModal: React.FC<UpdateModalProps> = ({
@@ -33,22 +33,24 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
   formFields,
   onSubmit,
   modalHeader,
-  schema,
   isProcessing,
   icon,
   updateButtonText,
+  objectDetails,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
       initialValues: formFields.reduce(
-        (acc, field) => ({ ...acc, [field.name]: "" }),
+        (acc, field) => ({
+          ...acc,
+          [field.name]: objectDetails[field.name] || "",
+        }),
         {},
       ) as FormValues,
       onSubmit: (formValues) => {
         onSubmit(formValues);
       },
-      validationSchema: schema,
     });
 
   useEffect(() => {

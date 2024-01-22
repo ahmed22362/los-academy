@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useRef } from "react";
 import { Toast } from "primereact/toast";
-import { GiTeacher } from "react-icons/gi";
 import Cookies from "universal-cookie";
 import { FormField } from "@/types";
 import AddModal from "@/app/[locale]/components/genericTableComponent/genericAddModal";

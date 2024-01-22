@@ -3,6 +3,9 @@ import ContactOptions from "./contactOptions.component";
 import { convertDateTimeZone } from "@/utilities";
 import StatusBadge from "@/utilities/StatusBadge";
 import { Active, Recommend } from "../../admin/plans/components/planTable";
+import { GrDocumentDownload } from "react-icons/gr";
+import Link from "next/link";
+import { renderLinkComponent } from "../../admin/material/components/materialTable";
 
 const customTheme: CustomFlowbiteTheme["table"] = {
   head: {
@@ -44,7 +47,7 @@ export function renderTableBody<T>({
             {headersValues.map((valueName: string, columnIndex) => (
               <Table.Cell
                 key={columnIndex}
-                className={valueName === idValueName ? idClasses : ""}
+                className={`${valueName === idValueName ? idClasses : ""}`}
               >
                 {valueName === idValueName &&
                 typeof row[valueName] === "string" ? (
@@ -66,6 +69,11 @@ export function renderTableBody<T>({
                   <Recommend recommended={row[valueName]} />
                 ) : valueName === "active" ? (
                   <Active active={row[valueName]} />
+                ) : valueName === "b2Link" ? (
+                  renderLinkComponent(row[valueName])
+                ) : typeof row[valueName] === "string" &&
+                  row[valueName].length > 100 ? (
+                  row[valueName].substring(0, 100) + "..."
                 ) : (
                   row[valueName]
                 )}

@@ -57,7 +57,6 @@ export default function PlanTable() {
     } else if (page !== undefined) {
       url += `?page=${page}`;
     }
-    console.log(url);
     fetch(url, {
       method: "GET",
       headers: {

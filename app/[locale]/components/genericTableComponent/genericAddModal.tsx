@@ -1,7 +1,13 @@
 import React, { useRef, useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { CustomFlowbiteTheme, Label, Modal, TextInput } from "flowbite-react";
+import {
+  CustomFlowbiteTheme,
+  FileInput,
+  Label,
+  Modal,
+  TextInput,
+} from "flowbite-react";
 import LoadingButton from "../../admin/components/loadingButton";
 import { FormField } from "@/types";
 
@@ -39,10 +45,13 @@ const AddModal: React.FC<AddModalProps> = ({
     handleBlur,
     handleChange,
     handleSubmit,
-    isValid,
+    setFieldValue,
   } = useFormik({
     initialValues: formFields.reduce(
-      (acc, field) => ({ ...acc, [field.name]: "" }),
+      (acc, field) => ({
+        ...acc,
+        [field.name]: field.type === "file" ? null : "",
+      }),
       {},
     ) as FormValues,
     onSubmit: (formValues) => {
@@ -84,7 +93,7 @@ const AddModal: React.FC<AddModalProps> = ({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handleSubmit();
+              handleSubmit(e);
             }}
             className="flex flex-col gap-4"
           >
@@ -114,6 +123,17 @@ const AddModal: React.FC<AddModalProps> = ({
                       </option>
                     ))}
                   </select>
+                ) : field.type === "file" ? (
+                  <div id={field.name} className="max-w-md">
+                    <FileInput
+                      id={field.name}
+                      helperText="Accepted PDF files only"
+                      onChange={(e: any) => {
+                        const file = e.target.files[0];
+                        setFieldValue(field.name, file);
+                      }}
+                    />
+                  </div>
                 ) : (
                   <TextInput
                     id={field.name}
@@ -138,6 +158,7 @@ const AddModal: React.FC<AddModalProps> = ({
                   "text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors mt-5"
                 }
                 isProcessing={isProcessing}
+                action={() => onSubmit(values)}
               />
             </div>
           </form>

@@ -159,7 +159,7 @@ export default function PayOutTable() {
             </>
           ) : (
             <div className="bg-red-100 text-red-800 p-4 rounded-md">
-              There are no Materials, Add One!
+              There are no Transactions, Add One!
             </div>
           )}
         </div>

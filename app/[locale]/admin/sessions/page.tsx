@@ -1,4 +1,4 @@
-import SessionsTable from "../components/session/sessionsTable";
+import SessionsTable from "./components/sessionsTable.component";
 
 function SessionsPage() {
   return (

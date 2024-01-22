@@ -254,7 +254,7 @@ export default function OnGoingBox(session: any) {
                   target="_blank"
                   className="smallBtn hover:bg-secondary-hover transition-colors "
                   onClick={() => handleUpdateAttendance(session.id)}
-                  href={session.meetingLink}
+                  href={session.meetingLink? session.meetingLink:"#"}
                 >
                   Join Meeting Now !!
                 </Link>

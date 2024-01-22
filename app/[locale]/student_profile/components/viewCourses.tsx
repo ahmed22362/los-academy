@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import Cookies from "universal-cookie";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
+import Select from 'react-select'
 
 interface Course {
   id: number;
@@ -13,23 +14,20 @@ interface Course {
 
 function ViewCourses({ setSelectedCourses, selectedCourses }: any) {
   const cookie = new Cookies();
-  const url = process.env.NEXT_PUBLIC_APIURL;
-  const token = cookie.get("token");
 
   const [courses, setCourses] = useState<Course[]>([]);
   // const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
 
   useEffect(() => {
     // Make a GET request to the course/ endpoint
-    fetch(`${url}/course/`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/course/`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.get("token")}`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
         // Update the courses state with the retrieved data
         setCourses(data.data);
       })
@@ -45,18 +43,29 @@ function ViewCourses({ setSelectedCourses, selectedCourses }: any) {
 
   return (
     <div className="card flex justify-content-center mt-4 w-full">
-      <span className="p-float-label text-lg w-full ">
-        <MultiSelect
+      <span className=" text-lg w-full ">
+        {/* <MultiSelect
           value={selectedCourses}
           onChange={(e) => setSelectedCourses(e.target.value)}
           options={options}
           optionLabel="label"
           maxSelectedLabels={3}
-          className="w-full md:w-20rem border mt-2"
-        />
-        <label htmlFor="ms-courses" className="text-[18px] mb-2">
+          className="w-full  border mt-2"
+        /> */}
+         <Select
+    defaultValue={selectedCourses}
+    isMulti
+    name="Courses"
+    options={options}
+    onChange={(selectedOptions) => {
+      const selectedCourseNames = selectedOptions.map(option => option.value);
+      setSelectedCourses(selectedCourseNames);
+    }}    className="basic-multi-select"
+    classNamePrefix="select"
+  />
+        {/* <label htmlFor="ms-courses" className="text-[18px] mb-2">
           Select Courses:
-        </label>
+        </label> */}
       </span>
     </div>
   );

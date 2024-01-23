@@ -60,7 +60,7 @@ export default function PaidSessionsTable({ isAdmin }: { isAdmin: boolean }) {
               selectedSession={selectedSession}
               handleCloseModal={handleCloseModal}
               rerenderComponent={rerenderComponent}
-              assign={isAdmin}
+              isAdmin={isAdmin}
             />
           ))
         ) : (

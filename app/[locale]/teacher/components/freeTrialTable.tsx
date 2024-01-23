@@ -60,7 +60,7 @@ export default function FreeSesstionsTable() {
   return (
     <div className={"w-full my-5"}>
       <h3 className={"adminBoxTitle responsiveText"}>Free Sessions Requests</h3>
-      <div className={"adminBox mt-4 flex flex-col w-[390px] mx-auto"}>
+      <div className={"adminBox mt-4 flex flex-col w-full mx-auto"}>
         {loading ? (
           <Spinner />
         ) : totalFree && totalFree.length > 0 ? (

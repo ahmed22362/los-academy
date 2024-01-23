@@ -5,8 +5,6 @@ import Statistics from "./components/statistics";
 import TeacherSchedule from "./components/teacherSchedule";
 import FetchingUpComingSessions from "./components/fetchingUpComingSessions";
 import StudentAbsent from "./components/studentAbsent";
-import FreeSessionsTable from "../admin/components/sessionRequests/freeTrialTable";
-import PaidSessionsTable from "../admin/components/sessionRequests/paidSessionsTable";
 import PaidSesstionsTable from "./components/paidSessionsTable";
 import FreeSesstionsTable from "./components/freeTrialTable";
 
@@ -14,7 +12,7 @@ export default function TeacherPage() {
   return (
     <main
       className={
-        "ps-[255px] max-md:ps-[20px] w-full items-center pt-[7rem] flex justify-center gap-5 flex-wrap "
+        "ps-[255px] max-md:ps-[20px] w-full items-center pt-[7rem] flex justify-center gap-5 max-lg:flex-wrap "
       }
     >
       <section
@@ -36,7 +34,7 @@ export default function TeacherPage() {
         </div>
         <Reports />
       </section>
-      <section className="mx-auto max-md:w-full max-md:flex max-md:flex-col max-md:gap-5 max-md:items-center ">
+      <section className="mx-auto w-full">
         <RescheduleSessions />
         <div className="px-3 w-full">
           <FreeSesstionsTable/>

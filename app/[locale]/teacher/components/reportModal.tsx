@@ -151,8 +151,8 @@ export default function ReportModal({
               <ul className="ps-5">
                 {userRole && (
                   <UserDetailsComponent
-                    userName={reportDetails.session.SessionInfo.user.name}
-                    teacherName={reportDetails.session.SessionInfo.teacher.name}
+                    userName={reportDetails?.user.name}
+                    teacherName={reportDetails?.teacher.name}
                     role={userRole}
                   />
                 )}

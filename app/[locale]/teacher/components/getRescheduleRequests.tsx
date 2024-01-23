@@ -9,7 +9,7 @@ export default async function RescheduleSessions() {
   const allSessions = await getReschedualSession(token);
 
   return (
-    <div className={"adminBox w-full h-[350px] flex-col mb-5"}>
+    <div className={"adminBox w-full mx-4 h-[350px] flex-col mb-5"}>
       <h3 className={"adminBoxTitle"}>Reschedule Sessions</h3>
       <div className="w-full flex-col gap-2 h-[300px] scrollAction ">
         {allSessions && allSessions.length > 0 ? (

@@ -14,12 +14,14 @@ export default function AssignModal({
   sessionReqId,
   user,
   updateComponent,
+  isAdmin
 }: {
   openAssignModal: boolean;
   handleCloseModal: () => void;
   sessionReqId: number | string;
   user: string | any;
   updateComponent: () => void;
+  isAdmin?:boolean;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
   const cookies = new Cookies();
@@ -154,13 +156,14 @@ export default function AssignModal({
         </Modal.Header>
         <Toast ref={toast} />
         <Modal.Body>
-          <div className="flex items-center gap-5 flex-col ">
+          <div className="flex items-center gap-5  ">
             <Image
               src={"/vectors/feedback3.svg"}
               alt={"student"}
               width={25}
               height={25}
               className=""
+              style={{ width: "50px", height: "50px" }}
             />
             <span className="text-black-one-color">Student Name: {user}</span>
           </div>

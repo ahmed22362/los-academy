@@ -7,12 +7,14 @@ import FetchingUpComingSessions from "./components/fetchingUpComingSessions";
 import StudentAbsent from "./components/studentAbsent";
 import FreeSessionsTable from "../admin/components/sessionRequests/freeTrialTable";
 import PaidSessionsTable from "../admin/components/sessionRequests/paidSessionsTable";
+import PaidSesstionsTable from "./components/paidSessionsTable";
+import FreeSesstionsTable from "./components/freeTrialTable";
 
 export default function TeacherPage() {
   return (
     <main
       className={
-        "ps-[255px] max-md:ps-[20px] pe-[20px] pt-[7rem] flex justify-between gap-5 flex-wrap max-md:justify-between max-md:items-center"
+        "ps-[255px] max-md:ps-[20px] w-full items-center pt-[7rem] flex justify-center gap-5 flex-wrap "
       }
     >
       <section
@@ -26,7 +28,7 @@ export default function TeacherPage() {
         </div>
         <div
           className={
-            "flex flex-col items-center gap-5 pb-[20px] max-md:flex-wrap"
+            "flex lg:flex-col max-md:flex-row w-full justify-center items-center gap-5 pb-[20px] max-md:flex-wrap"
           }
         >
           <TeacherSchedule />
@@ -34,11 +36,11 @@ export default function TeacherPage() {
         </div>
         <Reports />
       </section>
-      <section className="mx-auto">
+      <section className="mx-auto max-md:w-full max-md:flex max-md:flex-col max-md:gap-5 max-md:items-center ">
         <RescheduleSessions />
-        <div className="px-2">
-          <FreeSessionsTable isAdmin={false} />
-          <PaidSessionsTable isAdmin={false} />
+        <div className="px-3 w-full">
+          <FreeSesstionsTable/>
+          <PaidSesstionsTable/>
           <Statistics />
         </div>
       </section>

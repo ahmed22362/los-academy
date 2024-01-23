@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AssignModal from "./assignModal";
 import Cookies from "universal-cookie";
 import { Spinner } from "flowbite-react";
 import { convertDateTimeZone } from "@/utilities";
+import TakeModal from "./takeModal";
 export default function PaidSesstionsTable() {
   const [totalPaid, setTotlaPaid] = useState([]);
   const [selectedSession, setSelectedSession]: any = useState(null);
@@ -132,10 +132,10 @@ export default function PaidSesstionsTable() {
                     "cursor-pointer bg-secondary-color hover:bg-secondary-hover transition-colors px-[10px] py-[6px] text-[12px] text-white rounded-[16px]"
                   }
                 >
-                  Assign Session #{paidSession.id}
+                  Take Session #{paidSession.id}
                 </h5>
                 {selectedSession && selectedSession.id === paidSession.id && (
-                  <AssignModal
+                  <TakeModal
                     openAssignModal={true}
                     handleCloseModal={handleCloseModal}
                     sessionReqId={selectedSession.id}

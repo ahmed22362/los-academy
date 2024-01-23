@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AssignModal from "./assignModal";
 import Cookies from "universal-cookie";
 import moment from "moment-timezone";
 import { Spinner } from "flowbite-react";
+import TakeModal from "./takeModal";
 export default function FreeSesstionsTable() {
   const [totalFree, setTotlaFree] = useState([]);
   const [selectedSession, setSelectedSession]: any = useState(null);
@@ -133,7 +133,7 @@ export default function FreeSesstionsTable() {
                   Take Session #{freeSession.id}
                 </h5>
                 {selectedSession && selectedSession.id === freeSession.id && (
-                  <AssignModal
+                  <TakeModal
                     openAssignModal={true}
                     handleCloseModal={handleCloseModal}
                     sessionReqId={selectedSession.id}

@@ -9,7 +9,7 @@ import LoadingButton from "../../admin/components/loadingButton";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
 
-export default function AssignModal({
+export default function TakeModal({
   openAssignModal,
   handleCloseModal,
   sessionReqId,
@@ -82,7 +82,7 @@ export default function AssignModal({
   };
   const modalTheme: CustomFlowbiteTheme["modal"] = {
     header: {
-      base: "flex items-start justify-between rounded-t p-5",
+      base: "flex items-start justify-between rounded-t p-5 pb-1",
     },
   };
 
@@ -126,11 +126,11 @@ export default function AssignModal({
         size={"lg"}
       >
         <Modal.Header theme={modalTheme.header}>
-          Assign to this Student :
+          Take this Student :
         </Modal.Header>
         <Toast ref={toast} />
         <Modal.Body>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-5 mb-3">
             <Image
               src={"/vectors/feedback3.svg"}
               alt={"student"}
@@ -138,11 +138,9 @@ export default function AssignModal({
               height={50}
               style={{ width: "50px", height: "50px" }}
             />
-            <span className="text-black-one-color">Student Name: {user}</span>
+            <span className="text-black-one-color ">Student Name: {user}</span>
           </div>
-          <div className="flex flex-col my-5 gap-3">
-            <h4 className="adminBoxTitle">Assign Session: </h4>
-          </div>
+          
           <div className="flex justify-center items-center">
             <LoadingButton
               action={assignTeacher}

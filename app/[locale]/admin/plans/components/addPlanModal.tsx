@@ -45,7 +45,7 @@ export const planFormFields: FormField[] = [
     placeholder: "Select Recommended",
   },
   {
-    name: "planPrice",
+    name: "price",
     label: "Plan Price $",
     type: "number",
     placeholder: "Enter plan price",
@@ -90,7 +90,6 @@ export default function AddPlanModal({
         } else {
           let message;
           Array.isArray(data) ? (message = data[0].message) : data.message;
-          console.log(Array.isArray(data));
           showError(`Error Adding plan: ${message}`, toast);
         }
         setIsProcessing(false);

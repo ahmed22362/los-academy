@@ -35,7 +35,7 @@ export default function PlanTable() {
     "Session Duration": "sessionDuration",
     "Sessions Count": "sessionsCount",
     "Sessions Per Week": "sessionsPerWeek",
-    Price: "price",
+    "Price In $": "price",
     Recommended: "recommended",
     Discount: "discount",
     Status: "active",
@@ -66,7 +66,6 @@ export default function PlanTable() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("here is sorted plan");
         const sortedData = data.data.sort((x: any, y: any) => x.id - y.id);
         setAllPlan(sortedData);
         setTotalRecords(data.length);

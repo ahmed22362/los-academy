@@ -219,7 +219,7 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
                   type="text"
                   className="my-2"
                   key={`course-${index}`}
-                  value={
+                  defaultValue={
                     isEditMode
                       ? initialData?.reportCourses[index]?.courseComment || ""
                       : ""
@@ -236,7 +236,7 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
           </div>
           <fieldset className="flex w-full flex-col gap-4" id="radio">
             <legend className="mb-4">
-              Total {monthlyReport ? "session" : "Month"} grade
+              Total {monthlyReport ? "Month" : "session"} grade
             </legend>
             <div className={"flex flex-row gap-4"}>
               {Object.values(GradeOptions).map((grade) => (
@@ -245,12 +245,14 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
                     <Radio
                       id={grade}
                       name="radio"
-                      value={grade}
-                      className="h-4 w-4"
                       onChange={(e: any) => {
                         handleTotalGradeChange(e.target.value);
                       }}
-                      checked={isEditMode && initialData?.grade === grade}
+                      value={grade}
+                      className="h-4 w-4"
+                      defaultChecked={
+                        isEditMode && initialData?.grade === grade
+                      }
                     />
                     <span className="ml-2">{grade}</span>
                   </Label>

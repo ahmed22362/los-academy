@@ -55,7 +55,7 @@ const AddModal: React.FC<AddModalProps> = ({
       {},
     ) as FormValues,
     onSubmit: (formValues) => {
-      onSubmit(formValues);
+      // onSubmit(formValues);
     },
     validationSchema: schema,
   });

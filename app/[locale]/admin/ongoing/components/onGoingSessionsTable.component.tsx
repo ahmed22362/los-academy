@@ -39,14 +39,14 @@ export default function OnGoingSessionsTable() {
 
   const fetchAllSessions = (limit: number, page: number) => {
     setIsLoading(true);
-    let url = `${process.env.NEXT_PUBLIC_APIURL}/session`;
+    let url = `${process.env.NEXT_PUBLIC_APIURL}/session?status=ongoing`;
     if (limit !== undefined) {
-      url += `?limit=${limit}`;
+      url += `&limit=${limit}`;
       if (page !== undefined) {
         url += `&page=${page}`;
       }
     } else if (page !== undefined) {
-      url += `?page=${page}`;
+      url += `&page=${page}`;
     }
     fetch(url, {
       method: "GET",

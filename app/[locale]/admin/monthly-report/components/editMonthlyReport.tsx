@@ -28,14 +28,11 @@ export default function EditMonthlyReport({
   const courses = getCourses();
 
   const editReport = (formData: any) => {
-    const reportData: { [key: string]: any } = {};
-
-    if (Object.keys(reportData).length === 0) {
+    if (Object.keys(formData).length === 0) {
       showError("No data to Update monthly report", toast);
       return;
     }
-
-    console.log(reportData);
+    console.log(formData);
     setIsProcessing(true);
     fetch(
       `${process.env.NEXT_PUBLIC_APIURL}/monthlyReport/${reportDetails.id}`,
@@ -45,7 +42,7 @@ export default function EditMonthlyReport({
           "Content-Type": "application/json",
           Authorization: `Bearer ${cookies.get("token")}`,
         },
-        body: JSON.stringify(reportData),
+        body: JSON.stringify(formData),
       },
     )
       .then((response) => response.json())

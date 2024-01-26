@@ -1,17 +1,8 @@
 "use client";
 
-import {
-  CustomFlowbiteTheme,
-  Label,
-  Modal,
-  Select,
-  TextInput,
-  Textarea,
-} from "flowbite-react";
 import React, { useState } from "react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Toast } from "primereact/toast";
-import LoadingButton from "../../components/loadingButton";
 import Cookies from "universal-cookie";
 import UpdateModal from "@/app/[locale]/components/genericTableComponent/updateModal";
 import { courseFormFields } from "./addCoursesModal";
@@ -27,7 +18,6 @@ export default function EditCoursesModal({
   courseDetails: any;
   updateComponent: () => void;
 }) {
-  const modalRef = useRef<HTMLDivElement>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const cookies = new Cookies();
   const toast = useRef<Toast>(null);

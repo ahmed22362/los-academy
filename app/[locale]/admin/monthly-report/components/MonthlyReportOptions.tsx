@@ -8,6 +8,7 @@ import DisplayReportModal from "./displayReportModal";
 import EditMonthlyReport from "./editMonthlyReport";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
+import { showError, showSuccess } from "@/utilities/toastMessages";
 
 export default function FetchMonthlyReportsData({
   reportData,
@@ -25,14 +26,6 @@ export default function FetchMonthlyReportsData({
   const toastB = useRef<Toast>(null);
   const toastC = useRef<Toast>(null);
 
-  const showError = () => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: "Deleted Success",
-      life: 3000,
-    });
-  };
   const openAddReportModal = () => {
     setHandleAddModal(true);
   };
@@ -108,7 +101,11 @@ export default function FetchMonthlyReportsData({
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        showError();
+        if (data.status === "success") {
+          showSuccess(data.message, toast);
+        } else {
+          showError(data.message, toast);
+        }
         const timer = setTimeout(() => {
           updateComponent();
           clearTimeout(timer);
@@ -119,7 +116,7 @@ export default function FetchMonthlyReportsData({
       });
   };
   return (
-    <Table.Cell>
+    <>
       <div className="flex flex-row items-center justify-center gap-3">
         <Tooltip content="View Report" style="light">
           <BiFile
@@ -154,6 +151,6 @@ export default function FetchMonthlyReportsData({
         handleCloseModal={closeAddReportModal}
         details={report}
       />
-    </Table.Cell>
+    </>
   );
 }

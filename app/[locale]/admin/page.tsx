@@ -2,7 +2,7 @@ import Statistics from "@/app/[locale]/admin/components/statistics";
 import Attendance from "@/app/[locale]/admin/components/attendance";
 import OnGoingBox from "@/app/[locale]/admin/components/onGoingBox";
 import TeacherSchedule from "@/app/[locale]/admin/components/teacherSchedule";
-import Reports from "@/app/[locale]/admin/components/reports";
+import Reports from "@/app/[locale]/admin/components/report/reports.box";
 import PaidSessionsTable from "@/app/[locale]/admin/components/sessionRequests/paidSessionsTable";
 import FreeSessionsTable from "./components/sessionRequests/freeTrialTable";
 import ReplaceTeacher from "./components/replaceTeacher";

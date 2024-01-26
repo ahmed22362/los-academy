@@ -14,6 +14,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
     case "taken":
       colorClass = "bg-success-color";
       text = "Completed";
+      break;
     case "new Arrival":
       colorClass = "bg-success-color";
       text = "New Arrival";

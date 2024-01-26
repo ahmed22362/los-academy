@@ -22,7 +22,15 @@ export interface PlanDetails {
 export interface FormField {
   name: string;
   label: string;
-  type: "text" | "email" | "select" | "tel" | "number" | "textarea" | "file";
+  type:
+    | "text"
+    | "email"
+    | "select"
+    | "tel"
+    | "number"
+    | "textarea"
+    | "file"
+    | "radio";
   options?: string[];
   placeholder?: string;
   accept?: string;
@@ -58,4 +66,29 @@ export interface Material {
   createdAt: string;
   status: string;
   b2Link: string;
+}
+export interface MonthlyReport {
+  id: number;
+  userId: string;
+  createdAt: string;
+}
+export interface Student {
+  id: string;
+  name: string;
+  email: string;
+  gender: string;
+  age: number;
+  availableFreeSession: number;
+  remainSessions: number;
+  phone: string;
+  options?: any;
+}
+export interface Payout {
+  id: number;
+  teacher: {
+    name: string;
+  };
+  createdAt: string;
+  amount: number;
+  status: string;
 }

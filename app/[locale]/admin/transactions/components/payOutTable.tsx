@@ -2,41 +2,42 @@
 
 import { Spinner, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
-import CoursesComboBox from "./coursesComboBox";
-import FetchCoursesData from "./deleteCoursesData";
+import PayOutComboBox from "./payOutComboBox";
+import FetchPayOutData from "./fetchPayOutData";
 import Cookies from "universal-cookie";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
-import { Course } from "@/types";
+import StatusBadge from "@/utilities/StatusBadge";
+import { Payout } from "@/types";
 import {
   renderTableBody,
   renderTableHead,
 } from "@/app/[locale]/components/genericTableComponent/table.component";
+import { convertDateTimeZone } from "@/utilities";
 
-export default function CoursesTable() {
-  const [allCourses, setAllCourses] = useState([]);
+export default function PayOutTable() {
+  const [allPayOuts, setAllPayOuts]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
-  const [first, setFirst] = useState(0);
-  const [rows, setRows] = useState(10);
+
+  const [first, setFirst] = useState<number>(0);
+  const [rows, setRows] = useState<number>(10);
   const [totalRecord, setTotalRecords] = useState(1);
-
-  const headersMapping: Record<string, keyof Course | string> = {
+  const headersMapping: Record<string, keyof Payout | string> = {
     "#ID": "id",
-    Title: "title",
-    Description: "description",
-    Details: "details",
-    "Created At": "createdAt",
+    "Teacher Name": "teacher.name",
+    "Date Time": "createdAt",
+    "Amount In $": "amount",
+    Status: "status",
   };
-
   const onPageChange = (event: PaginatorPageChangeEvent) => {
     setFirst(event.first);
     setRows(event.rows);
-    fetchAllCourses(event.rows, event.first / event.rows + 1);
+    fetchAllPayOuts(event.rows, event.first / event.rows + 1);
   };
 
-  const fetchAllCourses = (limit?: number, page?: number) => {
+  const fetchAllPayOuts = (limit?: number, page?: number) => {
     setIsLoading(true);
-    let url = `${process.env.NEXT_PUBLIC_APIURL}/course`;
+    let url = `${process.env.NEXT_PUBLIC_APIURL}/payout`;
     if (limit !== undefined) {
       url += `?limit=${limit}`;
       if (page !== undefined) {
@@ -53,9 +54,9 @@ export default function CoursesTable() {
       },
     })
       .then((response) => response.json())
-      .then((res) => {
-        setAllCourses(res.data);
-        setTotalRecords(res.length);
+      .then((data) => {
+        console.log(data);
+        setAllPayOuts(data.data);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -65,40 +66,44 @@ export default function CoursesTable() {
   };
 
   useEffect(() => {
-    fetchAllCourses(rows, 1);
+    fetchAllPayOuts();
   }, []);
-  const renderMobileCardComponent = (course: Course) => (
-    <div key={course.id} className="bg-white space-y-3 p-4 rounded-lg shadow">
+  const renderMobileCardComponent = (payout: Payout) => (
+    <div key={payout.id} className="bg-white space-y-3 p-4 rounded-lg shadow">
       <div className="flex items-center space-x-2 text-sm">
         <div>
-          <span className="text-blue-500 font-bold hover:underline">
-            #{course.id}
-          </span>
+          <a href="#" className="text-blue-500 font-bold hover:underline">
+            #{payout.id}
+          </a>
         </div>
-        <div className="text-gray-500">{course.title}</div>
+        <div className="text-gray-500">{payout.teacher.name}</div>
       </div>
-      <div className="text-sm text-gray-700">{course.description}</div>
       <div className="text-sm text-gray-700">
-        {course.details.length > 20
-          ? course.details.substring(0, 100) + "..."
-          : course.details}
+        Asked to be payed out amount {payout.amount}$
       </div>
+      <div className="text-sm text-gray-700">
+        At:{" "}
+        {convertDateTimeZone(
+          payout.createdAt,
+          "UTC",
+          Intl.DateTimeFormat().resolvedOptions().timeZone,
+          "YYYY-MM-DD h:mm A",
+        )}
+      </div>
+      <span className="text-sm text-gray-700 w-fit m-auto">
+        {" "}
+        Status: {<StatusBadge status={payout.status} />}
+      </span>{" "}
       <div className="text-sm font-medium text-black flex justify-center items-center">
-        {
-          <FetchCoursesData
-            key={course.id}
-            coursesData={course}
-            updateComponent={fetchAllCourses}
-          />
-        }
+        {renderUpdateOptions(payout)}
       </div>
     </div>
   );
-  const renderUpdateComponent = (course: Course) => (
-    <FetchCoursesData
-      key={course.id}
-      coursesData={course}
-      updateComponent={fetchAllCourses}
+  const renderUpdateOptions = (payout: Payout) => (
+    <FetchPayOutData
+      key={payout.id}
+      payOutData={payout}
+      updateComponent={fetchAllPayOuts}
     />
   );
   return (
@@ -109,8 +114,8 @@ export default function CoursesTable() {
         </div>
       ) : (
         <div className="p-5">
-          <CoursesComboBox updateComponent={fetchAllCourses} />
-          {allCourses && allCourses.length > 0 ? (
+          <PayOutComboBox updateComponent={fetchAllPayOuts} />
+          {allPayOuts && allPayOuts.length > 0 ? (
             <>
               {" "}
               <div className="overflow-auto rounded-lg shadow hidden md:block">
@@ -119,21 +124,21 @@ export default function CoursesTable() {
                   {renderTableBody({
                     headersValues: Object.values(headersMapping),
                     idValueName: "id",
-                    data: allCourses,
-                    renderUpdateComponent: (course: Course) =>
-                      renderUpdateComponent(course),
+                    data: allPayOuts,
+                    renderUpdateComponent: (payout: Payout) =>
+                      renderUpdateOptions(payout),
                   })}
                 </Table>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
-                {allCourses.map((course: any, index: number) =>
-                  renderMobileCardComponent(course),
+                {allPayOuts.map((payout: Payout, index: number) =>
+                  renderMobileCardComponent(payout),
                 )}
               </div>
             </>
           ) : (
             <div className="bg-red-100 text-red-800 p-4 rounded-md">
-              There are no Courses, Add One!
+              There are no Transactions, Add One!
             </div>
           )}
           <div className="card mt-4">

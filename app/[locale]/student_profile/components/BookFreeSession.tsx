@@ -53,6 +53,7 @@ function BookFreeSession({ setOpenBookModal }: any) {
     );
     if (!selectedCourseTitles) {
       showErrorMessage("you should select at least one course");
+      return;
     }
     const requestBody = {
       sessionDates: selectedDates,

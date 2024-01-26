@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AssignModal from "./assignModal";
 import Cookies from "universal-cookie";
 import { Spinner } from "flowbite-react";
 import { convertDateTimeZone } from "@/utilities";
-export default function PaidSesstionsTable() {
-  const [totalPaid, setTotlaPaid] = useState([]);
+import TakeModal from "./takeModal";
+export default function PaidSessionsTable() {
+  const [totalPaid, setTotalPaid] = useState([]);
   const [selectedSession, setSelectedSession]: any = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +23,7 @@ export default function PaidSesstionsTable() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        setTotlaPaid(data.data);
+        setTotalPaid(data.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -49,7 +49,7 @@ export default function PaidSesstionsTable() {
   return (
     <div className={"w-full my-5"}>
       <h3 className={"adminBoxTitle responsiveText"}>Paid Sessions Requests</h3>
-      <div className={"adminBox mt-4 flex flex-col w-[390px] mx-auto"}>
+      <div className={"adminBox mt-4 flex flex-col w-full mx-auto"}>
         {loading ? (
           <Spinner />
         ) : totalPaid && totalPaid.length > 0 ? (
@@ -77,7 +77,7 @@ export default function PaidSesstionsTable() {
                                 <br />
                               </span>
                             );
-                          }
+                          },
                         )}
                       </li>
                       <li>
@@ -87,7 +87,7 @@ export default function PaidSesstionsTable() {
                             paidSession.sessionDates[0],
                             "UTC",
                             Intl.DateTimeFormat().resolvedOptions().timeZone,
-                            "h:mm A"
+                            "h:mm A",
                           )}
                         </span>
                       </li>
@@ -116,11 +116,11 @@ export default function PaidSesstionsTable() {
                                 "UTC",
                                 Intl.DateTimeFormat().resolvedOptions()
                                   .timeZone,
-                                "MM/DD/YYYY hh:mm A"
+                                "MM/DD/YYYY hh:mm A",
                               )}
                             </li>
                           );
-                        }
+                        },
                       )}
                     </ul>
                   </div>
@@ -132,10 +132,10 @@ export default function PaidSesstionsTable() {
                     "cursor-pointer bg-secondary-color hover:bg-secondary-hover transition-colors px-[10px] py-[6px] text-[12px] text-white rounded-[16px]"
                   }
                 >
-                  Assign Session #{paidSession.id}
+                  Take Session #{paidSession.id}
                 </h5>
                 {selectedSession && selectedSession.id === paidSession.id && (
-                  <AssignModal
+                  <TakeModal
                     openAssignModal={true}
                     handleCloseModal={handleCloseModal}
                     sessionReqId={selectedSession.id}

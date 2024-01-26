@@ -4,17 +4,21 @@ import { convertDateTimeZone } from "@/utilities";
 import { CustomFlowbiteTheme, Modal } from "flowbite-react";
 import jsPDF from "jspdf";
 import Image from "next/image";
-
 import { useEffect, useRef } from "react";
+import { GradeOptions, ReportsCourses } from "./addReportModal";
+import { UserRole } from "@/types";
+import UserDetailsComponent from "../UserDetails.Component";
 
-export default function DisplayReportModal({
+export default function ReportModal({
   openAssignModal,
   handleCloseModal,
   details,
+  userRole,
 }: {
   openAssignModal: boolean;
   handleCloseModal: () => void;
   details: string | any;
+  userRole?: UserRole;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
   const reportDetails = details && details;
@@ -51,6 +55,16 @@ export default function DisplayReportModal({
     },
   };
 
+  const getGradeClass = (grade: GradeOptions) => {
+    if (["excellent", "very good", "good"].includes(grade)) {
+      return "text-success-color";
+    } else if (grade === "average") {
+      return "text-warning-color";
+    } else {
+      return "text-danger-color";
+    }
+  };
+
   return (
     <>
       <Modal
@@ -67,7 +81,7 @@ export default function DisplayReportModal({
           >
             <div className="flex flex-col-reverse">
               <h3 className="mt-10 text-black-color-one text-center font-semibold text-md">
-                Monthly Report Details :
+                Report Details :
               </h3>
               <div className="flex flex-col justify-center items-center gap-1">
                 <Image
@@ -90,59 +104,21 @@ export default function DisplayReportModal({
               Courses Grades :
             </h3>
             <ul className="ps-5 capitalize flex flex-col items-start justify-center gap-2">
-              {reportDetails.arabicGrade === null ||
-              reportDetails.arabicGrade === "" ? (
-                ""
-              ) : (
-                <li>
-                  Arabic Grade:{" "}
-                  <span className="ps-3 ">{reportDetails.arabicGrade}</span>
-                </li>
-              )}
-              {reportDetails.arabicToPage === null ||
-              reportDetails.arabicToPage === "" ? (
-                ""
-              ) : (
-                <li>
-                  Arabic To Page:{" "}
-                  <span className="ps-3 ">{reportDetails.arabicToPage}</span>
-                </li>
-              )}
-              {reportDetails.islamicGrade === null ||
-              reportDetails.islamicGrade === "" ? (
-                ""
-              ) : (
-                <li>
-                  Islamic Grade:{" "}
-                  <span className="ps-3 ">{reportDetails.islamicGrade}</span>
-                </li>
-              )}
-              {reportDetails.islamicToPage === null ||
-              reportDetails.islamicToPage === "" ? (
-                ""
-              ) : (
-                <li>
-                  Islamic To Page:{" "}
-                  <span className="ps-3 ">{reportDetails.islamicToPage}</span>
-                </li>
-              )}
-              {reportDetails.quranGrade === null ||
-              reportDetails.quranGrade === "" ? (
-                ""
-              ) : (
-                <li>
-                  Quran Grade:{" "}
-                  <span className="ps-3 ">{reportDetails.quranGrade}</span>
-                </li>
-              )}
-              {reportDetails.quranToPage === null ||
-              reportDetails.quranToPage === "" ? (
-                ""
-              ) : (
-                <li>
-                  Quran To Page:{" "}
-                  <span className="ps-3 ">{reportDetails.quranToPage}</span>
-                </li>
+              {reportDetails.reportCourses.map(
+                (course: ReportsCourses, index: number) => (
+                  <li key={index}>
+                    {course.courseName}:{" "}
+                    <span className="ps-3 ">{course.courseGrade}</span>
+                    {course.courseComment && (
+                      <div>
+                        {course.courseName} Comment:{" "}
+                        <span className="ps-3 ">
+                          <q>{course.courseComment}</q>
+                        </span>
+                      </div>
+                    )}
+                  </li>
+                ),
               )}
             </ul>
             <p className="flex flex-col  w-[500px]">
@@ -152,18 +128,40 @@ export default function DisplayReportModal({
                 {reportDetails.comment}{" "}
               </q>
             </p>
-
             <hr
               style={{ width: "70%", height: "2px", backgroundColor: "black" }}
             />
+            <h3 className="text-black-color-one text-center font-semibold text-md">
+              Total Grade:{" "}
+              <span
+                className={`${getGradeClass(
+                  reportDetails.grade,
+                )} capitalize italic ps-3`}
+              >
+                {reportDetails.grade}
+              </span>
+            </h3>
+
             <div>
               <h6 className="pb-1 text-black-color-one font-semibold">
                 Session Info
               </h6>
               <ul className="ps-5">
-                <li className="capitalize">
-                  Student Name:{" "}
-                  {reportDetails.user?.name || reportDetails.userId}
+                {userRole && (
+                  <UserDetailsComponent
+                    userName={reportDetails?.user.name}
+                    teacherName={reportDetails?.teacher.name}
+                    role={userRole}
+                  />
+                )}
+                <li>
+                  Session Date:{" "}
+                  {convertDateTimeZone(
+                    reportDetails?.session?.sessionDate,
+                    "UTC",
+                    Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    "D-MMM-YYYY",
+                  )}
                 </li>
                 <li>
                   Create at:{" "}
@@ -177,7 +175,7 @@ export default function DisplayReportModal({
               </ul>
             </div>
           </div>
-          <div className="flex justify-center items-center my-3">
+          <div className="flex justify-center items-center">
             <button
               className="text-white bg-success-color hover:bg-green-300 rounded-full py-2 px-5 transition-colors"
               onClick={() => downloadPdf(reportDetails.id)}

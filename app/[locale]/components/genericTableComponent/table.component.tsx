@@ -63,6 +63,10 @@ export function renderTableBody<T>({
                   row["SessionInfo"]["teacher"]["name"]
                 ) : valueName === "SessionInfo.user.name" ? (
                   row["SessionInfo"]["user"]["name"]
+                ) : valueName === "user.name" ? (
+                  row["user"]["name"]
+                ) : valueName === "teacher.name" ? (
+                  row["teacher"]["name"]
                 ) : valueName === "status" ? (
                   <StatusBadge status={row[valueName]} />
                 ) : valueName === "recommended" ? (

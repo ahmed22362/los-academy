@@ -2,7 +2,7 @@
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
-import AddReportModal from "./addReportModal";
+import AddReportModal from "./reoprt/addReportModal";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Spinner } from "flowbite-react";
@@ -254,7 +254,7 @@ export default function OnGoingBox(session: any) {
                   target="_blank"
                   className="smallBtn hover:bg-secondary-hover transition-colors "
                   onClick={() => handleUpdateAttendance(session.id)}
-                  href={session.meetingLink}
+                  href={session.meetingLink ? session.meetingLink : "#"}
                 >
                   Join Meeting Now !!
                 </Link>

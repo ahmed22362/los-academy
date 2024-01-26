@@ -7,7 +7,7 @@ interface SessionDetailsProps {
   selectedSession: any;
   handleCloseModal: () => void;
   rerenderComponent: () => void;
-  assign: boolean;
+  isAdmin?: boolean;
 }
 
 const SessionDetails: React.FC<SessionDetailsProps> = ({
@@ -16,7 +16,7 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
   selectedSession,
   handleCloseModal,
   rerenderComponent,
-  assign,
+  isAdmin,
 }) => (
   <div className="p-1 my-2 font-semibold flex w-full justify-between items-center text-base">
     <details>
@@ -45,7 +45,7 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
         "cursor-pointer bg-secondary-color hover:bg-secondary-hover transition-colors px-[10px] py-[6px] text-[12px] text-white rounded-[16px]"
       }
     >
-      {assign ? "Assign" : "Take"} request
+      {isAdmin ? "Assign" : "Take"} request
     </h5>
     {selectedSession && selectedSession.id === request.id && (
       <AssignModal
@@ -54,6 +54,7 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
         sessionReqId={selectedSession.id}
         user={selectedSession.user.name}
         updateComponent={rerenderComponent}
+        isAdmin={isAdmin}
       />
     )}
   </div>

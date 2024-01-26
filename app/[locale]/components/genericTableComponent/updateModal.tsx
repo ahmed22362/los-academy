@@ -7,6 +7,7 @@ import {
   Modal,
   TextInput,
   Select,
+  Radio,
 } from "flowbite-react";
 import LoadingButton from "../../admin/components/loadingButton";
 import { FormField } from "@/types";
@@ -117,6 +118,24 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
                       </option>
                     ))}
                   </Select>
+                ) : field.type === "radio" ? (
+                  <div className="flex gap-4">
+                    {field.options?.map((option) => (
+                      <div key={option}>
+                        <Label
+                          htmlFor={`${field.name}_${option}`}
+                          value={option}
+                        />
+                        <Radio
+                          id={`${field.name}_${option}`}
+                          name={field.name}
+                          value={option}
+                          checked={values[field.name] === option}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <TextInput
                     id={field.name}

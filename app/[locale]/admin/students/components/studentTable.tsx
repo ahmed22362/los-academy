@@ -1,7 +1,7 @@
 "use client";
 
-import { CustomFlowbiteTheme, Spinner, Table } from "flowbite-react";
-import { useCallback, useEffect, useState } from "react";
+import { Spinner, Table } from "flowbite-react";
+import { useEffect, useState } from "react";
 import FetchStudentData from "./deleteStudentData";
 import StudentComboBox from "./studentComboBox";
 import Cookies from "universal-cookie";
@@ -11,17 +11,7 @@ import {
   renderTableBody,
   renderTableHead,
 } from "@/app/[locale]/components/genericTableComponent/table.component";
-interface Student {
-  id: string;
-  name: string;
-  email: string;
-  gender: string;
-  age: number;
-  availableFreeSession: number;
-  remainSessions: number;
-  phone: string;
-  options?: any;
-}
+import { Student } from "@/types";
 
 export default function StudentTable() {
   const [allStudents, setAllStudents]: any = useState([]);

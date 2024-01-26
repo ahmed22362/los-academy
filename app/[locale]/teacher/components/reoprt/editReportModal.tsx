@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import { useEffect, useRef } from "react";
 import { Toast } from "primereact/toast";
 import Cookies from "universal-cookie";
-import LoadingButton from "../../admin/components/loadingButton";
+import LoadingButton from "../../../admin/components/loadingButton";
 import { useRouter } from "next/navigation";
 import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
 import { FaRegFileLines } from "react-icons/fa6";

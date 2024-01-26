@@ -1,12 +1,17 @@
 "use client";
 
-import { CustomFlowbiteTheme, Spinner, Table } from "flowbite-react";
+import { Spinner, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
 import MonthlyReportCombBox from "./monthlyReportCombBox";
-import FetchMonthlyReportsData from "./fetchMonthlyReportData";
+import FetchMonthlyReportsData from "./MonthlyReportOptions";
 import { convertDateTimeZone } from "@/utilities";
+import {
+  renderTableBody,
+  renderTableHead,
+} from "@/app/[locale]/components/genericTableComponent/table.component";
+import { MonthlyReport } from "@/types";
 
 export default function MonthlyReportTable() {
   const [allReports, setAllReports] = useState([]);
@@ -14,28 +19,31 @@ export default function MonthlyReportTable() {
   const cookies = new Cookies();
   const [first, setFirst] = useState<number>(0);
   const [rows, setRows] = useState<number>(10);
+
   const onPageChange = (event: PaginatorPageChangeEvent) => {
     setFirst(event.first);
     setRows(event.rows);
+    getMonthlyReport(event.rows, event.first / event.rows + 1);
   };
 
-  const getPaginatedData = () => {
-    const endIndex = first + rows;
-    return allReports?.slice(first, endIndex) ?? allReports;
+  const headerMapping = {
+    "#Report ID": "id",
+    "Student Name": "user.name",
+    "Teacher Name": "teacher.name",
+    "Report Date": "createdAt",
   };
-  const displayedReports = getPaginatedData();
-
-  const customTheme: CustomFlowbiteTheme["table"] = {
-    head: {
-      base: "group/head text-xs uppercase text-black-color-one bg-white-color p-[15px] text-center",
-      cell: {
-        base: "group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-white-color px-6 py-3",
-      },
-    },
-  };
-
-  const getMonthlyReport = () => {
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/monthlyReport`, {
+  const getMonthlyReport = (limit?: number, page?: number) => {
+    setIsLoading(true);
+    let url = `${process.env.NEXT_PUBLIC_APIURL}/monthlyReport`;
+    if (limit !== undefined) {
+      url += `?limit=${limit}`;
+      if (page !== undefined) {
+        url += `&page=${page}`;
+      }
+    } else if (page !== undefined) {
+      url += `?page=${page}`;
+    }
+    fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -55,13 +63,19 @@ export default function MonthlyReportTable() {
   };
 
   useEffect(() => {
-    getMonthlyReport();
+    getMonthlyReport(rows, 1);
   }, []);
 
   const updateComponent = () => {
     getMonthlyReport();
   };
-
+  const renderUpdateComponent = (report: MonthlyReport) => (
+    <FetchMonthlyReportsData
+      key={report.id}
+      reportData={report}
+      updateComponent={updateComponent}
+    />
+  );
   return (
     <>
       {isLoading ? (
@@ -76,50 +90,18 @@ export default function MonthlyReportTable() {
               {" "}
               <div className="overflow-auto rounded-lg shadow hidden md:block">
                 <Table>
-                  <Table.Head theme={customTheme.head}>
-                    <Table.HeadCell theme={customTheme.head}>
-                      #Report ID
-                    </Table.HeadCell>
-                    <Table.HeadCell theme={customTheme.head}>
-                      Student Name
-                    </Table.HeadCell>
-                    <Table.HeadCell theme={customTheme.head}>
-                      Report Date
-                    </Table.HeadCell>
-                    <Table.HeadCell theme={customTheme.head}>
-                      options
-                    </Table.HeadCell>
-                  </Table.Head>
-                  <Table.Body className="divide-y divide-gray-100">
-                    {displayedReports.map((report: any, index: number) => (
-                      <Table.Row
-                        key={report.id}
-                        className="bg-white dark:border-gray-700 dark:bg-gray-800 text-center"
-                      >
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {report.id}
-                        </Table.Cell>
-                        <Table.Cell>{report.userId}</Table.Cell>
-                        <Table.Cell>
-                          {convertDateTimeZone(
-                            report.createdAt,
-                            "UTC",
-                            Intl.DateTimeFormat().resolvedOptions().timeZone,
-                            "YYYY-MM-DD h:mm A",
-                          )}
-                        </Table.Cell>
-                        <FetchMonthlyReportsData
-                          key={index}
-                          reportData={report}
-                          updateComponent={updateComponent}
-                        />
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
+                  {renderTableHead(Object.keys(headerMapping), false, true)}
+                  {renderTableBody({
+                    headersValues: Object.values(headerMapping),
+                    idValueName: "id",
+                    data: allReports,
+                    renderUpdateComponent: (report: MonthlyReport) =>
+                      renderUpdateComponent(report),
+                  })}
                 </Table>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
-                {displayedReports.map((report: any, index: number) => (
+                {allReports.map((report: any, index: number) => (
                   <div
                     key={index}
                     className="bg-white space-y-3 p-4 rounded-lg shadow"
@@ -141,13 +123,7 @@ export default function MonthlyReportTable() {
                       )}
                     </div>
                     <div className="text-sm font-medium text-black flex justify-center items-center">
-                      {
-                        <FetchMonthlyReportsData
-                          key={index}
-                          reportData={report}
-                          updateComponent={updateComponent}
-                        />
-                      }
+                      {}
                     </div>
                   </div>
                 ))}

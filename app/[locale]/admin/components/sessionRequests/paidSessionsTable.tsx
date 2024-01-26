@@ -12,7 +12,6 @@ export default function PaidSessionsTable({ isAdmin }: { isAdmin: boolean }) {
 
   const cookies = new Cookies();
 
-  const convertDate = convertDateTimeZone;
   const totalPaidSession = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/paid/available`, {
       headers: {

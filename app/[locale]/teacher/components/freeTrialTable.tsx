@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 import moment from "moment-timezone";
 import { Spinner } from "flowbite-react";
 import TakeModal from "./takeModal";
-export default function FreeSesstionsTable() {
+export default function FreeSessionsTable() {
   const [totalFree, setTotlaFree] = useState([]);
   const [selectedSession, setSelectedSession]: any = useState(null);
   const [loading, setLoading] = useState(true);

@@ -1,5 +1,5 @@
 import AdminNavBar from "@/app/[locale]/admin/components/AdminNavBar";
-import OurSideBar from "@/app/[locale]/admin/components/sideBar/ourSideBar";
+import OurSideBar from "@/app/[locale]/admin/components/sideBar/adminSideBar";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 

@@ -19,11 +19,10 @@ interface Student extends User {
 }
 
 interface UserDetailsComponentProps {
-  userName: string;
-  teacherName: string;
+  userName?: string;
+  teacherName?: string;
   role: UserRole;
 }
-
 const UserDetailsComponent: React.FC<UserDetailsComponentProps> = ({
   userName,
   teacherName,
@@ -39,7 +38,7 @@ const UserDetailsComponent: React.FC<UserDetailsComponentProps> = ({
       );
 
     case UserRole.Teacher:
-      return <li>User Name: {userName}</li>;
+      return <li>Student Name: {userName}</li>;
 
     case UserRole.Student:
       return <li>Teacher Name: {teacherName}</li>;

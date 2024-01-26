@@ -1,4 +1,4 @@
-import MonthlyReportTable from "../components/monthlyReport/monthlyReportTable";
+import MonthlyReportTable from "./components/monthlyReportTable";
 
 export default function MonthlyReports() {
   return (

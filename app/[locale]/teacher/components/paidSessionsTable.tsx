@@ -5,8 +5,8 @@ import Cookies from "universal-cookie";
 import { Spinner } from "flowbite-react";
 import { convertDateTimeZone } from "@/utilities";
 import TakeModal from "./takeModal";
-export default function PaidSesstionsTable() {
-  const [totalPaid, setTotlaPaid] = useState([]);
+export default function PaidSessionsTable() {
+  const [totalPaid, setTotalPaid] = useState([]);
   const [selectedSession, setSelectedSession]: any = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +23,7 @@ export default function PaidSesstionsTable() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        setTotlaPaid(data.data);
+        setTotalPaid(data.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -77,7 +77,7 @@ export default function PaidSesstionsTable() {
                                 <br />
                               </span>
                             );
-                          }
+                          },
                         )}
                       </li>
                       <li>
@@ -87,7 +87,7 @@ export default function PaidSesstionsTable() {
                             paidSession.sessionDates[0],
                             "UTC",
                             Intl.DateTimeFormat().resolvedOptions().timeZone,
-                            "h:mm A"
+                            "h:mm A",
                           )}
                         </span>
                       </li>
@@ -116,11 +116,11 @@ export default function PaidSesstionsTable() {
                                 "UTC",
                                 Intl.DateTimeFormat().resolvedOptions()
                                   .timeZone,
-                                "MM/DD/YYYY hh:mm A"
+                                "MM/DD/YYYY hh:mm A",
                               )}
                             </li>
                           );
-                        }
+                        },
                       )}
                     </ul>
                   </div>

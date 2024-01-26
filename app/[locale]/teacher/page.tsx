@@ -1,12 +1,12 @@
 import Attendance from "./components/attendance";
 import RescheduleSessions from "./components/getRescheduleRequests";
-import Reports from "./components/reports";
+import Reports from "./components/reoprt/reports";
 import Statistics from "./components/statistics";
 import TeacherSchedule from "./components/teacherSchedule";
 import FetchingUpComingSessions from "./components/fetchingUpComingSessions";
 import StudentAbsent from "./components/studentAbsent";
-import PaidSesstionsTable from "./components/paidSessionsTable";
-import FreeSesstionsTable from "./components/freeTrialTable";
+import PaidSessionsTable from "./components/paidSessionsTable";
+import FreeSessionsTable from "./components/freeTrialTable";
 
 export default function TeacherPage() {
   return (
@@ -37,8 +37,8 @@ export default function TeacherPage() {
       <section className="mx-auto w-full">
         <RescheduleSessions />
         <div className="px-3 w-full">
-          <FreeSesstionsTable/>
-          <PaidSesstionsTable/>
+          <FreeSessionsTable />
+          <PaidSessionsTable />
           <Statistics />
         </div>
       </section>

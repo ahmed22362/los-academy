@@ -1,4 +1,4 @@
-import StatisticBox from "@/app/[locale]/admin/components/StatisticBox";
+import StatisticBox from "@/app/[locale]/admin/components/StatisticBox.component";
 import { getStaticData } from "@/utilities/fetchDataFunctionAsync";
 export default async function Statistics() {
   const totalBalance = await getStaticData("teacher/adminBalance");

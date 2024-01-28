@@ -6,6 +6,7 @@ import { useState, useRef } from "react";
 import { Toast } from "primereact/toast";
 import EditMartialModal from "./editMaterialModal";
 import Cookies from "universal-cookie";
+import { showError, showSuccess } from "@/utilities/toastMessages";
 
 export default function FetchMatrialData({
   martialData: martialData,
@@ -22,14 +23,6 @@ export default function FetchMatrialData({
   const toast = useRef<Toast>(null);
   const toastB = useRef<Toast>(null);
   const toastC = useRef<Toast>(null);
-  const showError = () => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: "Deleted Success",
-      life: 3000,
-    });
-  };
 
   // Modal Handling
   const openModal = () => {
@@ -43,8 +36,6 @@ export default function FetchMatrialData({
     toastC.current?.clear();
     setVisible(false);
   };
-
-  // Confirm Delete matrial
 
   const confirm = () => {
     if (!visible) {
@@ -103,8 +94,12 @@ export default function FetchMatrialData({
       .then((response) => response.json())
       .then((data) => {
         // console.log(data)
-        updateComponent();
-        showError();
+        if (data.status === "success") {
+          showSuccess("material deleted successfully!", toast);
+          updateComponent();
+        } else {
+          showError(`Error deleting material ${data.message}`, toast);
+        }
       })
       .catch((err) => {
         console.log(err);

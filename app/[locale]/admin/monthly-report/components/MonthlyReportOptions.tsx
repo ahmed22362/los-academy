@@ -9,13 +9,18 @@ import EditMonthlyReport from "./editMonthlyReport";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
 import { showError, showSuccess } from "@/utilities/toastMessages";
+import { Student, UserRole } from "@/types";
 
 export default function FetchMonthlyReportsData({
   reportData,
   updateComponent,
+  students,
+  role,
 }: {
   reportData: any;
   updateComponent: () => void;
+  students: Student[];
+  role: UserRole;
 }) {
   const [handleAddModal, setHandleAddModal] = useState(false);
   const [handleEditModal, setHandleEditModal] = useState(false);
@@ -145,11 +150,13 @@ export default function FetchMonthlyReportsData({
         handleCloseModal={closeHandleEditModal}
         reportData={report}
         updateComponent={updateComponent}
+        students={students}
       />
       <DisplayReportModal
         openAssignModal={handleAddModal}
         handleCloseModal={closeAddReportModal}
         details={report}
+        role={role}
       />
     </>
   );

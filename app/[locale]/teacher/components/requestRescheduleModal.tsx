@@ -1,13 +1,12 @@
 "use client";
 
-import { CustomFlowbiteTheme, Datepicker, Label, Modal } from "flowbite-react";
+import { CustomFlowbiteTheme, Label, Modal } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import LoadingButton from "../../admin/components/loadingButton";
-import { useRouter } from "next/navigation";
-import { Calendar } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 import { Toast } from "primereact/toast";
+import { showError, showSuccess } from "@/utilities/toastMessages";
 
 export default function RescheduleModal({
   openAssignModal,
@@ -20,7 +19,6 @@ export default function RescheduleModal({
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
   const cookies = new Cookies();
-  const [message, setMessage] = useState("");
   const sessionData = session && session;
   const [isProcessing, setIsProcessing] = useState(false);
   const [startRangeDate, setStartRangeDate] = useState<
@@ -36,24 +34,6 @@ export default function RescheduleModal({
       sessionData.SessionInfo.user &&
       sessionData.SessionInfo.user.name) ||
     "name not found :)";
-
-  const showSuccess = (message: string) => {
-    toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: message,
-      life: 3000,
-    });
-  };
-
-  const showError = (message: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: message,
-      life: 4000,
-    });
-  };
 
   const modalTheme: CustomFlowbiteTheme["modal"] = {
     header: {
@@ -79,14 +59,7 @@ export default function RescheduleModal({
     return null;
   }
 
-  const reschduleRequest = () => {
-    console.log({
-      sessionId: sessionData.id,
-      newDateStartRange: [
-        new Date(startRangeDate).toISOString(),
-        new Date(endRangeDate).toISOString(),
-      ],
-    });
+  const rescheduleRequest = () => {
     setIsProcessing(true);
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher/requestReschedule`, {
       method: "POST",
@@ -107,15 +80,15 @@ export default function RescheduleModal({
       .then((data) => {
         console.log(data);
         if (data.status === "success") {
-          showSuccess(data.message);
+          showSuccess(data.message, toast);
         } else {
-          showError(data.message);
+          showError(data.message, toast);
         }
         setIsProcessing(false);
       })
       .catch((err) => {
         console.log(err);
-        showError(err.message);
+        showError(err.message, toast);
         setIsProcessing(false);
       });
   };
@@ -155,7 +128,7 @@ export default function RescheduleModal({
           <div className="w-full mt-3 flex items-center justify-center">
             <LoadingButton
               title={"Reschdeule Session"}
-              action={reschduleRequest}
+              action={rescheduleRequest}
               customStyle={
                 "text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
               }

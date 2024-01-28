@@ -23,7 +23,7 @@ export function getUserTimezone() {
       },
       (error) => {
         console.error("Error getting user's location:", error);
-      }
+      },
     );
   }
 

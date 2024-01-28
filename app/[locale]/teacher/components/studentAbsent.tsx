@@ -3,7 +3,7 @@ import TeacherScheduleData from "./teacherScheduleData";
 
 export default async function StudentAbsent() {
   const allSessiosns = await getAllSessions(
-    "teacher/sessions?status=user_absent"
+    "teacher/sessions?status=user_absent",
   );
   // console.log(allSessiosns.sessions);
   const sortedSessions = allSessiosns.sessions?.sort((a: any, b: any) => {

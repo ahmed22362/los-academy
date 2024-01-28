@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import AcceptRescheduleModal from "./acceptReschedule";
 import { useRouter } from "next/navigation";
 import { convertDateTimeZone } from "@/utilities";
+import { showError, showSuccess } from "@/utilities/toastMessages";
 
 export default function sessionData({
   data,
@@ -23,22 +24,6 @@ export default function sessionData({
   const toast = useRef<Toast>(null);
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
-  const showSuccess = () => {
-    toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: "Accepted Success",
-      life: 3000,
-    });
-  };
-  const showError = (msg: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: msg,
-      life: 4000,
-    });
-  };
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -61,9 +46,8 @@ export default function sessionData({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.status === "success") {
-          showError(data.message);
+          showSuccess(data.message, toast);
           const timer = setTimeout(() => {
             router.refresh();
             clearTimeout(timer);
@@ -71,6 +55,7 @@ export default function sessionData({
         }
       })
       .catch((err) => {
+        showError(err.message, toast);
         console.log(err);
       });
   };
@@ -88,7 +73,7 @@ export default function sessionData({
           session.oldDate,
           "UTC",
           Intl.DateTimeFormat().resolvedOptions().timeZone,
-          "D-MMM-YYYY hh:mm A"
+          "D-MMM-YYYY hh:mm A",
         )})`}</p>
         <p className={"font-semibold text-base"}>New Date Options :</p>
         <span>
@@ -97,7 +82,7 @@ export default function sessionData({
             session.newDatesOptions[0],
             "UTC",
             Intl.DateTimeFormat().resolvedOptions().timeZone,
-            "D-MMM-YYYY hh:mm A"
+            "D-MMM-YYYY hh:mm A",
           )}
         </span>
         <span>
@@ -106,7 +91,7 @@ export default function sessionData({
             session.newDatesOptions[1],
             "UTC",
             Intl.DateTimeFormat().resolvedOptions().timeZone,
-            "D-MMM-YYYY hh:mm A"
+            "D-MMM-YYYY hh:mm A",
           )}
         </span>
       </div>

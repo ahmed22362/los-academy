@@ -4,24 +4,26 @@ import React, { useState } from "react";
 import { useRef } from "react";
 import { Toast } from "primereact/toast";
 import Cookies from "universal-cookie";
-import { getAllStudents } from "@/utilities/getAllStudents";
+import { fetchEndPoint } from "@/utilities/fetchDataFromApi";
 import { getCourses } from "@/utilities/getCourses";
 import AddReportForm from "@/app/[locale]/components/report/AddReportForm";
 import { showError, showSuccess } from "@/utilities/toastMessages";
+import { Student } from "@/types";
 
 export default function AddMonthlyReport({
   openReportModal,
   handleCloseModal,
   updateComponent,
+  allStudents,
 }: {
   openReportModal: boolean;
   handleCloseModal: () => void;
   updateComponent: () => void;
+  allStudents: Student[];
 }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const cookies = new Cookies();
   const toast = useRef<Toast>(null);
-  const allStudents = getAllStudents(cookies.get("token"));
   const allCourses = getCourses();
   const addReport = (formData: any) => {
     if (allStudents && formData.userId.length === 0) {

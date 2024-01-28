@@ -12,19 +12,6 @@ export default function FreeSessionsTable({ isAdmin }: { isAdmin: boolean }) {
 
   const cookies = new Cookies();
 
-  const convertDateTimeZone = (
-    inputTime: moment.MomentInput,
-    inputTimezone: string,
-    outputTimezone: string,
-    ourFormat: string,
-  ) => {
-    const convertedTime = moment(inputTime)
-      .tz(inputTimezone)
-      .clone()
-      .tz(outputTimezone);
-    return convertedTime.format(ourFormat);
-  };
-
   const totalFreeSessions = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/free/available`, {
       headers: {
@@ -60,7 +47,7 @@ export default function FreeSessionsTable({ isAdmin }: { isAdmin: boolean }) {
   return (
     <div className={"w-full mb-5"}>
       <h3 className={"adminBoxTitle responsiveText"}>Free Sessions Requests</h3>
-      <div className={"adminBox mt-4 flex flex-col w-[390px] mx-auto"}>
+      <div className={"adminBox mt-4 flex flex-col w-full mx-auto"}>
         {loading ? (
           <Spinner />
         ) : totalFree && totalFree.length > 0 ? (

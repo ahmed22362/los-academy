@@ -1,35 +1,11 @@
 "use client";
 
-import {
-  CustomFlowbiteTheme,
-  Label,
-  Modal,
-  Select,
-  TextInput,
-  Textarea,
-} from "flowbite-react";
-import React, { useState } from "react";
-import { useEffect, useRef } from "react";
+import React from "react";
+import { useRef } from "react";
 import { Toast } from "primereact/toast";
-import Cookies from "universal-cookie";
-import { useRouter } from "next/navigation";
-import { getAllStudents } from "@/utilities/getAllStudents";
-import UpdateModal from "../genericTableComponent/updateModal";
-import { FormField, Student } from "@/types";
-import { showError, showSuccess } from "@/utilities/toastMessages";
+import { Student } from "@/types";
 import AddReportForm from "./AddReportForm";
 
-export const reportFormFields = ({
-  users,
-  courses,
-}: {
-  users?: string[];
-  courses: string[];
-}): FormField[] => [
-  { name: "title", label: "Report Title", type: "text" },
-  { name: "grade", label: "Total Grade", type: "radio" },
-  { name: "comment", label: "Your Message", type: "textarea" },
-];
 export default function EditReportForm({
   openReportModal,
   reportData,

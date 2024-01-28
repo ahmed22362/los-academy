@@ -8,6 +8,7 @@ import Cookies from "universal-cookie";
 import LoadingButton from "../../admin/components/loadingButton";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
+import { showError, showSuccess } from "@/utilities/toastMessages";
 
 export default function TakeModal({
   openAssignModal,
@@ -30,23 +31,6 @@ export default function TakeModal({
   const toast = useRef<any>(null);
   const router = useRouter();
 
-  const showSuccess = (message: string) => {
-    toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: message,
-      life: 3000,
-    });
-  };
-
-  const showError = (message: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: message,
-      life: 4000,
-    });
-  };
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | any) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -102,18 +86,18 @@ export default function TakeModal({
       .then((data) => {
         console.log(data);
         if (data.status === "success") {
-          showSuccess(data.message);
+          showSuccess(data.message, toast);
           updateComponent();
           router.refresh();
         } else {
-          showError(data.message);
+          showError(data.message, toast);
           updateComponent();
         }
         setIsProcessing(false);
       })
       .catch((err) => {
         console.log(err);
-        showError(err);
+        showError(err.message, toast);
       });
   };
 
@@ -140,7 +124,7 @@ export default function TakeModal({
             />
             <span className="text-black-one-color ">Student Name: {user}</span>
           </div>
-          
+
           <div className="flex justify-center items-center">
             <LoadingButton
               action={assignTeacher}

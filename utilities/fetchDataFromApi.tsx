@@ -3,10 +3,10 @@
 import { Student } from "@/types";
 import { useEffect, useState } from "react";
 
-export const getAllStudents = (token: string) => {
+export const fetchEndPoint = (endPoint: String, token: string) => {
   const [data, setData] = useState<Student[]>([]);
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_APIURL}/user`, {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/${endPoint}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

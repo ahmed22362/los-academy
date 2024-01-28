@@ -10,14 +10,6 @@ interface User {
   name: string;
 }
 
-interface Teacher extends User {
-  teacherName: string;
-}
-
-interface Student extends User {
-  studentName: string;
-}
-
 interface UserDetailsComponentProps {
   userName?: string;
   teacherName?: string;

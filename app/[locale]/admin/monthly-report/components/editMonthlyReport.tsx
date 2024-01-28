@@ -4,32 +4,38 @@ import React, { useState } from "react";
 import { useRef } from "react";
 import { Toast } from "primereact/toast";
 import Cookies from "universal-cookie";
-import { getAllStudents } from "@/utilities/getAllStudents";
 import { showError, showSuccess } from "@/utilities/toastMessages";
 import EditReportForm from "@/app/[locale]/components/report/EditReportForm";
 import { getCourses } from "@/utilities/getCourses";
+import { Student } from "@/types";
 
 export default function EditMonthlyReport({
   openReportModal,
   reportData,
   handleCloseModal,
   updateComponent,
+  students,
 }: {
   openReportModal: boolean;
   reportData: any;
   handleCloseModal: () => void;
   updateComponent: () => void;
+  students: Student[];
 }) {
   const reportDetails = reportData && reportData;
   const [isProcessing, setIsProcessing] = useState(false);
   const cookies = new Cookies();
   const toast = useRef<Toast>(null);
-  const myStudentsData = getAllStudents(cookies.get("token"));
   const courses = getCourses();
 
   const editReport = (formData: any) => {
     if (Object.keys(formData).length === 0) {
       showError("No data to Update monthly report", toast);
+      return;
+    }
+    if (!formData.grade || !formData.comment) {
+      showError("Please provide both total grade and comment.", toast);
+      setIsProcessing(false);
       return;
     }
     console.log(formData);
@@ -73,7 +79,7 @@ export default function EditMonthlyReport({
         handleCloseModal={handleCloseModal}
         courses={courses.map((course) => course.title)}
         onEditReport={editReport}
-        users={myStudentsData}
+        users={students}
         monthlyReport={true}
         header={"Update Monthly Report"}
       />

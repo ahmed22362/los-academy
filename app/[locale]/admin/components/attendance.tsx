@@ -1,5 +1,16 @@
-import AdminChart from "./adminChart";
-export default function Attendance() {
+import { ResponseSessionStatistsData } from "@/types";
+import { getStaticData } from "@/utilities/fetchDataFunctionAsync";
+import TeacherChart from "../../teacher/components/teacherChart";
+
+interface ResponseData {
+  data: ResponseSessionStatistsData[];
+}
+export default async function Attendance() {
+  const myStatistics: ResponseData = await getStaticData("session/statistics");
+  const totalCount = myStatistics.data.reduce(
+    (total, item) => total + item.count,
+    0,
+  );
   return (
     <div
       className={
@@ -10,10 +21,13 @@ export default function Attendance() {
         <h3 className={"text-black-color-one font-semibold text-[16px]"}>
           Attendance Overview
         </h3>
-        <AdminChart />
+        <TeacherChart
+          totalSessions={totalCount}
+          teacherStatistics={myStatistics.data}
+        />{" "}
       </div>
       <span className={"font-semibold text-base text-black-color-one"}>
-        Total: 100
+        Total: {totalCount} Sessions
       </span>
     </div>
   );

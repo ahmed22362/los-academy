@@ -2,13 +2,13 @@
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import { useState } from "react";
-import SessionComboBox from "./sessionComboBox";
 import Cookies from "universal-cookie";
 import { convertDateTimeZone } from "@/utilities";
 import getDateAfter from "@/utilities/getDateAfterDuration";
 import StatusBadge from "../../../../../utilities/StatusBadge";
 import { Session } from "@/types";
 import GenericSessionsTable from "@/utilities/session/GenericSessionTable";
+import GenericComboBox from "@/app/[locale]/components/genericTableComponent/genericSearchBox.component";
 
 export default function SessionsTable() {
   const [allSessions, setAllSessions]: any = useState([]);
@@ -18,7 +18,6 @@ export default function SessionsTable() {
 
   const headersMapping: Record<string, keyof Session | string> = {
     "#ID": "id",
-    "Teacher Name": "SessionInfo.teacher.name",
     "Student Name": "SessionInfo.user.name",
     "Date Time": "sessionDate",
     "Session Duration": "sessionDuration",
@@ -28,7 +27,7 @@ export default function SessionsTable() {
 
   const fetchAllSessions = (limit?: number, page?: number) => {
     setIsLoading(true);
-    let url = `${process.env.NEXT_PUBLIC_APIURL}/session`;
+    let url = `${process.env.NEXT_PUBLIC_APIURL}/teacher/sessions`;
     if (limit !== undefined) {
       url += `?limit=${limit}`;
       if (page !== undefined) {
@@ -45,16 +44,17 @@ export default function SessionsTable() {
       },
     })
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        const sorted = data.data.sort((a: any, b: any) => {
+      .then((res) => {
+        console.log(res);
+
+        const sorted = res.data.sort((a: any, b: any) => {
           return (
             new Date(a.sessionDate).getTime() -
             new Date(b.sessionDate).getTime()
           );
         });
         setAllSessions(sorted);
-        setTotalRecords(data.length);
+        setTotalRecords(res.length);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -70,7 +70,7 @@ export default function SessionsTable() {
           <span className="text-blue-500 font-bold hover:underline">
             #{session.id}
           </span>
-          <span className="text-sm text-gray-700">{` ${session.SessionInfo.user.name} with ${session.SessionInfo.teacher.name}`}</span>
+          <span className="text-sm text-gray-700">{` ${session.SessionInfo.user.name}`}</span>
         </div>
       </div>
       <div className="text-sm text-gray-700">
@@ -94,11 +94,12 @@ export default function SessionsTable() {
       </span>
     </div>
   );
+  const renderSearchBox = () => <GenericComboBox />;
   return (
     <GenericSessionsTable
       headersMapping={headersMapping}
       fetchFunction={fetchAllSessions}
-      renderSearchBox={SessionComboBox}
+      renderSearchBox={renderSearchBox}
       totalRecords={totalRecord}
       allSessions={allSessions}
       renderMobileCardComponent={renderMobileCardComponent}

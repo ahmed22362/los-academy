@@ -1,6 +1,6 @@
-import StatisticBox from "@/app/[locale]/admin/components/StatisticBox";
 import { getCurrentTeacher } from "@/utilities/getMe";
 import { cookies } from "next/headers";
+import StatisticBox from "../../admin/components/StatisticBox";
 
 export default async function Statistics() {
   const token = cookies().get("token")?.value;

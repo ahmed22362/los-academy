@@ -7,17 +7,19 @@ export default function DisplayReportModal({
   openAssignModal,
   handleCloseModal,
   details,
+  role,
 }: {
   openAssignModal: boolean;
   handleCloseModal: () => void;
   details: string | any;
+  role: UserRole;
 }) {
   return (
     <ReportModal
       openAssignModal={openAssignModal}
       handleCloseModal={handleCloseModal}
       details={details}
-      userRole={UserRole.Admin}
+      userRole={role}
     />
   );
 }

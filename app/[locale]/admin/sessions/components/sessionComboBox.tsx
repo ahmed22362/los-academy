@@ -2,6 +2,6 @@
 
 import GenericComboBox from "../../continuity-status/components/GenericSearchBox";
 
-export default function SessionComboBox({ ...props }: any) {
+export default function SessionComboBox() {
   return <GenericComboBox />;
 }

@@ -7,6 +7,7 @@ import { SetStateAction, useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import { Toast } from "primereact/toast";
 import LoadingButton from "./loadingButton";
+import { showError, showSuccess } from "@/utilities/toastMessages";
 
 export default function AssignModal({
   openAssignModal,
@@ -14,14 +15,12 @@ export default function AssignModal({
   sessionReqId,
   user,
   updateComponent,
-  isAdmin
 }: {
   openAssignModal: boolean;
   handleCloseModal: () => void;
   sessionReqId: number | string;
   user: string | any;
   updateComponent: () => void;
-  isAdmin?:boolean;
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
   const cookies = new Cookies();
@@ -30,28 +29,12 @@ export default function AssignModal({
   const [teacherId, setTeacherId] = useState(null);
   const toast = useRef<Toast>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const showSuccess = (msg: string) => {
-    toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: msg,
-      life: 5000,
-    });
-  };
-  const showError = (msg: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: msg,
-      life: 5000,
-    });
-  };
 
   const selectTeacher = (selectedTeacherName: SetStateAction<string>) => {
     setTeacher(selectedTeacherName);
   };
-  const selectTeacherid = (selectedTeacherid: any) => {
-    setTeacherId(selectedTeacherid);
+  const selectTeacherId = (selectedTeacherId: any) => {
+    setTeacherId(selectedTeacherId);
   };
 
   const getAllTeachers = () => {
@@ -129,16 +112,16 @@ export default function AssignModal({
       .then((data) => {
         console.log(data);
         if (data.status === "success") {
-          showSuccess(data.message);
+          showSuccess(data.message, toast);
           updateComponent();
         } else {
-          showError(data.message);
+          showError(data.message, toast);
         }
         setIsProcessing(false);
       })
       .catch((err) => {
         console.log(err);
-        showError(err);
+        showError(err.message, toast);
         setIsProcessing(false);
       });
   };
@@ -176,7 +159,7 @@ export default function AssignModal({
                     key={index}
                     onClick={() => {
                       selectTeacher(teacher.name);
-                      selectTeacherid(teacher.id);
+                      selectTeacherId(teacher.id);
                     }}
                   >
                     {teacher.name}

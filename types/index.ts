@@ -70,6 +70,10 @@ export interface Material {
 export interface MonthlyReport {
   id: number;
   userId: string;
+  teacherId: string;
+  grade: string;
+  user?: { name: string };
+  teacher?: { name: string };
   createdAt: string;
 }
 export interface Student {
@@ -91,4 +95,8 @@ export interface Payout {
   createdAt: string;
   amount: number;
   status: string;
+}
+export interface ResponseSessionStatistsData {
+  status: string;
+  count: number;
 }

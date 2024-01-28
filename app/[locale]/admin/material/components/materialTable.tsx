@@ -36,7 +36,7 @@ export const renderLinkComponent = (link: string) => (
     </Link>
   </div>
 );
-export default function MaterialTable() {
+export default function MaterialTable({ isTeacher }: { isTeacher?: boolean }) {
   const [allMaterial, setAllMartial]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
@@ -103,9 +103,11 @@ export default function MaterialTable() {
       {<StatusBadge status={material.status} />}
       <div className="text-sm text-gray-700">{`And Can Downloaded from here :`}</div>
       {renderLinkComponent(material.b2Link)}
-      <div className="text-sm font-medium text-black flex justify-center items-center">
-        {renderUpdateComponent(material)}
-      </div>
+      {!isTeacher && (
+        <div className="text-sm font-medium text-black flex justify-center items-center">
+          {renderUpdateComponent(material)}
+        </div>
+      )}
     </div>
   );
   useEffect(() => {
@@ -126,13 +128,18 @@ export default function MaterialTable() {
               {" "}
               <div className="overflow-auto rounded-lg shadow hidden md:block">
                 <Table>
-                  {renderTableHead(Object.keys(headersMapping), false, true)}
+                  {renderTableHead(
+                    Object.keys(headersMapping),
+                    false,
+                    !isTeacher,
+                  )}
                   {renderTableBody({
                     headersValues: Object.values(headersMapping),
                     idValueName: "id",
                     data: allMaterial,
-                    renderUpdateComponent: (material: Material) =>
-                      renderUpdateComponent(material),
+                    renderUpdateComponent: isTeacher
+                      ? undefined
+                      : (material: Material) => renderUpdateComponent(material),
                   })}
                 </Table>
               </div>

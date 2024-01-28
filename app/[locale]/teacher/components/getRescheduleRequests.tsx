@@ -1,12 +1,10 @@
 import SessionData from "./sessionData";
-import Cookies from "universal-cookie";
-import { Spinner } from "flowbite-react";
-import { getReschedualSession } from "@/utilities/getReschedualRequests";
+import { fetchRescheduledSession } from "@/utilities/fetchRescheduledSession";
 import { cookies } from "next/headers";
 
 export default async function RescheduleSessions() {
   const token = cookies().get("token")?.value;
-  const allSessions = await getReschedualSession(token);
+  const allSessions = await fetchRescheduledSession(token);
 
   return (
     <div className={"adminBox w-full mx-4 h-[350px] flex-col mb-5"}>

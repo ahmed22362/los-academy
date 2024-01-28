@@ -9,6 +9,7 @@ import { Nullable } from "primereact/ts-helpers";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
 import { convertDateTimeZone } from "@/utilities";
+import { showError, showSuccess } from "@/utilities/toastMessages";
 export default function AcceptRescheduleModal({
   openModal,
   handleCloseModal,
@@ -28,26 +29,6 @@ export default function AcceptRescheduleModal({
   const toast = useRef<any>(null);
   const router = useRouter();
   const convertDate = convertDateTimeZone;
-
-  useEffect(() => {
-    console.log(sessionData.newDatesOptions);
-  }, []);
-  const showSuccess = (message: string) => {
-    toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: message,
-      life: 3000,
-    });
-  };
-  const showError = (message: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: message,
-      life: 4000,
-    });
-  };
 
   const modalTheme: CustomFlowbiteTheme["modal"] = {
     header: {
@@ -75,7 +56,7 @@ export default function AcceptRescheduleModal({
 
   const acceptReschedule = () => {
     if (!newDate) {
-      return showError("Please select new date");
+      return showError("Please select new date", toast);
     }
 
     setIsProcessing(true);
@@ -85,7 +66,6 @@ export default function AcceptRescheduleModal({
         "Content-Type": "application/json",
         Authorization: `Bearer ${cookies.get("token")}`,
       },
-
       body: JSON.stringify({
         rescheduleRequestId: sessionData.id,
         newDate: newDate,
@@ -94,11 +74,11 @@ export default function AcceptRescheduleModal({
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          showSuccess(data.message);
+          showSuccess(data.message, toast);
           // handleCloseModal();
           router.refresh();
         } else {
-          showError(data.message);
+          showError(data.message, toast);
           router.refresh();
         }
         setIsProcessing(false);
@@ -107,7 +87,7 @@ export default function AcceptRescheduleModal({
       })
       .catch((err) => {
         console.log(err);
-        showError(err.message);
+        showError(err.message, toast);
       });
   };
 
@@ -138,7 +118,7 @@ export default function AcceptRescheduleModal({
                 session.newDatesOptions[0],
                 "UTC",
                 Intl.DateTimeFormat().resolvedOptions().timeZone,
-                "D-MMM-YYYY hh:mm A"
+                "D-MMM-YYYY hh:mm A",
               )}
             </option>
             <option value={sessionData.newDatesOptions[1]}>
@@ -146,23 +126,10 @@ export default function AcceptRescheduleModal({
                 session.newDatesOptions[1],
                 "UTC",
                 Intl.DateTimeFormat().resolvedOptions().timeZone,
-                "D-MMM-YYYY hh:mm A"
+                "D-MMM-YYYY hh:mm A",
               )}
             </option>
           </Select>
-          {/* <Calendar
-                    id='newDate'
-                    inline
-                    value={newDate} 
-                    onChange={(e:any) => {
-                    console.log(e.value)
-                    setNewDate(e.value)
-                  }}
-                    showTime
-                    hourFormat="12"
-                    className={"border-[5px] border-secondary-color rounded-xl"}
-                
-              /> */}
           <div className="w-full mt-3 flex items-center justify-center">
             <LoadingButton
               title={"Reschdeule Session"}

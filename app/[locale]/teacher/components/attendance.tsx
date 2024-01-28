@@ -1,13 +1,19 @@
 import TeacherChart from "@/app/[locale]/teacher/components/teacherChart";
-import OurChart from "@/app/[locale]/teacher/components/teacherChart";
 import { getMyStatistics } from "@/utilities/getTeacherStatistics";
-import { getMyAllSessions } from "@/utilities/teacherGetMyAllSessions";
 import { cookies } from "next/headers";
+import { ResponseSessionStatistsData } from "@/types";
+
+interface ResponseData {
+  data: ResponseSessionStatistsData[];
+}
 export default async function Attendance() {
   const token = cookies().get("token")?.value.toString();
-  const totalSessions = await getMyAllSessions(token);
-  const myStatistics = await getMyStatistics(token);
-  //   console.log(myStatistics);
+  const myStatistics: ResponseData = await getMyStatistics(token);
+  const totalCount = myStatistics.data.reduce(
+    (total, item) => total + item.count,
+    0,
+  );
+
   return (
     <div
       className={
@@ -19,12 +25,12 @@ export default async function Attendance() {
           Attendance Overview
         </h3>
         <TeacherChart
-          totalSessions={totalSessions.length}
+          totalSessions={totalCount}
           teacherStatistics={myStatistics.data}
         />
       </div>
       <span className={"font-semibold text-base text-black-color-one"}>
-        Total Sessions: {totalSessions.length}
+        Total Sessions: {totalCount}
       </span>
     </div>
   );

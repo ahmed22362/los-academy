@@ -1,4 +1,4 @@
-export const getReschedualSession = async (token: string | any) => {
+export const fetchRescheduledSession = async (token: string | any) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_APIURL}/teacher/receivedRescheduleRequests?status=pending`,
     {
@@ -7,7 +7,7 @@ export const getReschedualSession = async (token: string | any) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
   const data = response.json();
   return data;

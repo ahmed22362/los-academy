@@ -4,17 +4,17 @@ import { Spinner, Table } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
-import MonthlyReportCombBox from "./monthlyReportCombBox";
-import FetchMonthlyReportsData from "./MonthlyReportOptions";
-import { convertDateTimeZone } from "@/utilities";
 import {
   renderTableBody,
   renderTableHead,
 } from "@/app/[locale]/components/genericTableComponent/table.component";
 import { MonthlyReport, UserRole } from "@/types";
-import { Toast } from "primereact/toast";
+import { convertDateTimeZone } from "@/utilities";
 import { showError } from "@/utilities/toastMessages";
+import { Toast } from "primereact/toast";
+import MonthlyReportCombBox from "@/app/[locale]/admin/monthly-report/components/monthlyReportCombBox";
 import { fetchEndPoint } from "@/utilities/fetchDataFromApi";
+import FetchMonthlyReportsData from "@/app/[locale]/admin/monthly-report/components/MonthlyReportOptions";
 
 export default function MonthlyReportTable() {
   const [allReports, setAllReports] = useState([]);
@@ -23,23 +23,23 @@ export default function MonthlyReportTable() {
   const [first, setFirst] = useState<number>(0);
   const [rows, setRows] = useState<number>(10);
   const toast = useRef<Toast>(null);
-  const allStudents = fetchEndPoint("user", cookies.get("token"));
+
+  const myStudents = fetchEndPoint("teacher/myStudents", cookies.get("token"));
 
   const onPageChange = (event: PaginatorPageChangeEvent) => {
     setFirst(event.first);
     setRows(event.rows);
     getMonthlyReport(event.rows, event.first / event.rows + 1);
   };
-
   const headerMapping = {
     "#Report ID": "id",
     "Student Name": "user.name",
-    "Teacher Name": "teacher.name",
+    "Month Grade": "grade",
     "Report Date": "createdAt",
   };
+
   const getMonthlyReport = (limit?: number, page?: number) => {
-    setIsLoading(true);
-    let url = `${process.env.NEXT_PUBLIC_APIURL}/monthlyReport`;
+    let url = `${process.env.NEXT_PUBLIC_APIURL}/teacher/myMonthlyReport`;
     if (limit !== undefined) {
       url += `?limit=${limit}`;
       if (page !== undefined) {
@@ -68,7 +68,6 @@ export default function MonthlyReportTable() {
       .catch((err) => {
         console.log(err);
         showError(`Error Getting monthly reports ${err.message}`, toast);
-
         setIsLoading(false);
       });
   };
@@ -85,10 +84,11 @@ export default function MonthlyReportTable() {
       key={report.id}
       reportData={report}
       updateComponent={updateComponent}
-      students={allStudents}
-      role={UserRole.Admin}
+      students={myStudents}
+      role={UserRole.Teacher}
     />
   );
+
   const renderMobileCardComponent = (report: MonthlyReport) => (
     <div key={report.id} className="bg-white space-y-3 p-4 rounded-lg shadow">
       <div className="flex items-center space-x-2 text-sm">
@@ -100,8 +100,8 @@ export default function MonthlyReportTable() {
         <div className="text-gray-500">{report.user?.name}</div>
       </div>
       <div className="text-sm text-gray-700 w-fit  flex justify-center items-center gap-4">
-        {`By Teacher: `}
-        <strong>{report.teacher?.name}</strong>
+        {`With Grade: `}
+        <strong>{report.grade}</strong>
       </div>
       <div className="text-sm font-medium text-black flex justify-center items-center">
         {"At: "}
@@ -119,6 +119,7 @@ export default function MonthlyReportTable() {
       </div>
     </div>
   );
+
   return (
     <>
       {isLoading ? (
@@ -129,9 +130,9 @@ export default function MonthlyReportTable() {
         <div className="p-5">
           <MonthlyReportCombBox
             updateComponent={updateComponent}
-            students={allStudents}
+            students={myStudents}
           />
-          {allReports && allReports.length > 0 ? (
+          {allReports && allReports?.length > 0 ? (
             <>
               {" "}
               <div className="overflow-auto rounded-lg shadow hidden md:block">

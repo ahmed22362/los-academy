@@ -3,8 +3,15 @@ import { CustomFlowbiteTheme, Dropdown } from "flowbite-react";
 import { useState } from "react";
 import AddMonthlyReport from "./addMonthlyReport";
 import GenericComboBox from "@/app/[locale]/components/genericTableComponent/genericSearchBox.component";
+import { Student } from "@/types";
 
-export default function MonthlyReportCombBox({ ...props }: any) {
+export default function MonthlyReportCombBox({
+  updateComponent,
+  students,
+}: {
+  updateComponent: () => void;
+  students: Student[];
+}) {
   const [handleModal, setHandleModal] = useState(false);
 
   const openModal = () => {
@@ -31,7 +38,8 @@ export default function MonthlyReportCombBox({ ...props }: any) {
           <AddMonthlyReport
             openReportModal={handleModal}
             handleCloseModal={closeModal}
-            updateComponent={props.updateComponent}
+            updateComponent={updateComponent}
+            allStudents={students}
           />
         </div>
       }

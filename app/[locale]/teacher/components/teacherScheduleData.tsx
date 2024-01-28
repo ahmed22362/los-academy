@@ -19,7 +19,7 @@ function TeacherScheduleData({ data }: { data: any }) {
     session.sessionDate,
     "UTC",
     Intl.DateTimeFormat().resolvedOptions().timeZone,
-    "MM/DD/YYYY hh:mm A"
+    "MM/DD/YYYY hh:mm A",
   );
   const [isCanReschedual, setIsCanReschedual] = useState(false);
   const handleSessionTime = (time: any) => {

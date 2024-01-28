@@ -1,4 +1,4 @@
-import StudentTable from "../components/student/studentTable";
+import StudentTable from "./components/StudentsTable";
 
 export default function StudentSection() {
   return (

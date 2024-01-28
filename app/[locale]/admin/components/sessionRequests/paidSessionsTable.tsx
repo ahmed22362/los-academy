@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { Spinner } from "flowbite-react";
-import { convertDateTimeZone } from "@/utilities";
 import SessionDetails from "./RequestDetails";
 export default function PaidSessionsTable({ isAdmin }: { isAdmin: boolean }) {
   const [totalPaid, setTotalPaid] = useState([]);
@@ -47,7 +46,7 @@ export default function PaidSessionsTable({ isAdmin }: { isAdmin: boolean }) {
   return (
     <div className={"w-full my-5"}>
       <h3 className={"adminBoxTitle responsiveText"}>Paid Sessions Requests</h3>
-      <div className={"adminBox mt-4 flex flex-col w-[390px] mx-auto"}>
+      <div className={"adminBox mt-4 flex flex-col w-full mx-auto"}>
         {loading ? (
           <Spinner />
         ) : totalPaid && totalPaid.length > 0 ? (

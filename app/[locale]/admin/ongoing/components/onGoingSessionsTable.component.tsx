@@ -34,7 +34,6 @@ export default function OnGoingSessionsTable() {
     "Start Time": "sessionDate",
     "End Time": "sessionDate",
     Type: "type",
-    "Meeting Link": "meetingLink",
   };
 
   const fetchAllSessions = (limit: number, page: number) => {
@@ -124,7 +123,7 @@ export default function OnGoingSessionsTable() {
               {" "}
               <div className="overflow-auto rounded-lg shadow hidden md:block">
                 <Table>
-                  {renderTableHead(Object.keys(headersMapping))}
+                  {renderTableHead(Object.keys(headersMapping), false, true)}
                   {renderTableBody({
                     headersValues: Object.values(headersMapping),
                     idValueName: "id",

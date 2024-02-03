@@ -132,7 +132,7 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
       onEditReport!(formData);
     } else if (onAddReport) {
       sessionId
-        ? (formData.title = `Report ${sessionId}`)
+        ? (formData.title = `Session ${sessionId} Report`)
         : `Report ${formData.sessionId}`;
       onAddReport(formData);
     } else {

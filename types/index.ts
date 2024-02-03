@@ -9,6 +9,13 @@ export enum UserRole {
   Teacher = "teacher",
   Student = "student",
 }
+export enum SessionStatus {
+  PENDING = "pending",
+  ONGOING = "ongoing",
+  TAKEN = "taken",
+  USER_ABSENT = "user_absent",
+  TEACHER_ABSENT = "teacher_absent",
+}
 export interface PlanDetails {
   title: string;
   sessionDuration: number;
@@ -30,6 +37,7 @@ export interface FormField {
     | "number"
     | "textarea"
     | "file"
+    | "datepicker"
     | "radio";
   options?: string[];
   placeholder?: string;
@@ -99,4 +107,14 @@ export interface Payout {
 export interface ResponseSessionStatistsData {
   status: string;
   count: number;
+}
+export interface Teacher {
+  id: string;
+  name: string;
+  role: string;
+  committed_mins: number;
+  hour_cost: number;
+  createdAt: string;
+  phone: string;
+  email: string;
 }

@@ -105,7 +105,11 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
                         : "border-gray-300"
                     }`}
                     id={field.name}
-                    value={values[field.name]}
+                    defaultValue={
+                      typeof values[field.name] === "boolean"
+                        ? `${values[field.name]}`
+                        : values[field.name]
+                    }
                     onChange={handleChange}
                     onBlur={handleBlur}
                   >
@@ -140,7 +144,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
                   <TextInput
                     id={field.name}
                     placeholder={field.placeholder ?? field.label}
-                    value={values[field.name]}
+                    defaultValue={values[field.name]}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     type={field.type}

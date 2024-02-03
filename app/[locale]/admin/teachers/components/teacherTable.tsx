@@ -12,17 +12,8 @@ import {
   renderTableHead,
 } from "@/app/[locale]/components/genericTableComponent/table.component";
 import { convertDateTimeZone } from "@/utilities";
+import { Teacher } from "@/types";
 
-interface Teacher {
-  id: string;
-  name: string;
-  role: string;
-  committedSessions: number;
-  sessionCost: number;
-  createdAt: string;
-  phone: string;
-  email: string;
-}
 export default function TeacherTable() {
   const [allTeachers, setAllTeachers] = useState<Teacher[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,8 +25,8 @@ export default function TeacherTable() {
     "#ID": "id",
     Name: "name",
     Role: "role",
-    "Sessions Completed": "committedSessions",
-    "Session Cost": "sessionCost",
+    "Completed Mins": "committed_mins",
+    "Hour Cost In $": "hour_cost",
     "Joined Date": "createdAt",
   };
 
@@ -96,7 +87,7 @@ export default function TeacherTable() {
         <div className="text-gray-500 font-bold">{teacher.name}</div>
       </div>
       <div className="text-sm text-gray-700">{`Role: ${teacher.role}`}</div>
-      <div className="text-sm text-gray-700">{`Session Committed: ${teacher.committedSessions} With Session Cost of ${teacher.sessionCost}$ `}</div>
+      <div className="text-sm text-gray-700">{`Committed Minuets: ${teacher.committed_mins} With Hour Cost of ${teacher.hour_cost}$ `}</div>
       <div className="text-sm text-gray-700">{`Joined: ${convertDateTimeZone(
         teacher.createdAt,
         "UTC",

@@ -65,15 +65,14 @@ export default function CustomNavbar() {
     },
   };
 
-  const [userName, setUserName] = useState(cookies.get('name'));
+  const [userName, setUserName] = useState(cookies.get("name"));
 
   useEffect(() => {
     // This effect will run whenever the 'name' cookie changes
-    const newName = cookies.get('name');
+    const newName = cookies.get("name");
     setUserName(newName);
-  }, [cookies.get('name')]); 
-  
-  
+  }, [cookies.get("name")]);
+
   const addActiveClass = (e: any) => {
     const navLinks = document.querySelectorAll(".navBarLink");
     navLinks.forEach((link) => {
@@ -132,10 +131,11 @@ export default function CustomNavbar() {
                 }}
               >
                 LOS Academy
-
               </h2>
             </Link>
-            <div className="text-[14px] ml-12 max-[450px]:text-[12px] font-semibold -translate-y-1 ">Learning Of Science</div>
+            <div className="text-[14px] ml-12 max-[450px]:text-[12px] font-semibold -translate-y-1 ">
+              Learning Of Science
+            </div>
           </div>
 
           <Navbar.Collapse
@@ -204,7 +204,11 @@ export default function CustomNavbar() {
           >
             <Navbar.Toggle theme={customNavTheme.toggle} />
             {userName && userName ? (
-              <UserDropDown userName={userName} logOut={logOut} setUserName={setUserName}/>
+              <UserDropDown
+                userName={userName}
+                logOut={logOut}
+                setUserName={setUserName}
+              />
             ) : (
               <LoginButton />
             )}

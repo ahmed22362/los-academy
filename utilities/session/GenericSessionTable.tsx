@@ -20,6 +20,7 @@ export default function GenericSessionsTable({
   allSessions,
   renderMobileCardComponent,
   isLoading,
+  renderUpdateComponent,
 }: {
   headersMapping: Record<string, keyof Session | string>;
   fetchFunction: (limit?: number, page?: number) => void;
@@ -28,6 +29,7 @@ export default function GenericSessionsTable({
   allSessions: Session[];
   renderMobileCardComponent: (data: any, index?: number) => JSX.Element;
   isLoading: boolean;
+  renderUpdateComponent?: (session: Session) => JSX.Element;
 }) {
   const [first, setFirst] = useState<number>(0);
   const [rows, setRows] = useState<number>(10);
@@ -55,11 +57,18 @@ export default function GenericSessionsTable({
               {" "}
               <div className="overflow-auto rounded-lg shadow hidden md:block">
                 <Table>
-                  {renderTableHead(Object.keys(headersMapping))}
+                  {renderTableHead(
+                    Object.keys(headersMapping),
+                    false,
+                    renderUpdateComponent ? true : false,
+                  )}
                   {renderTableBody({
                     headersValues: Object.values(headersMapping),
                     idValueName: "id",
                     data: allSessions,
+                    renderUpdateComponent: renderUpdateComponent
+                      ? (session: Session) => renderUpdateComponent(session)
+                      : undefined,
                   })}
                 </Table>
               </div>

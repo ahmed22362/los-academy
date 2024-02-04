@@ -7,6 +7,7 @@ import ContinuitySearchBox from "./GenericSearchBox";
 import Cookies from "universal-cookie";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
 import StatusCard from "./statusCard.component";
+import { showError, showSuccess } from "@/utilities/toastMessages";
 export interface Status {
   sessionInfoId: number;
   sessionDate: string;
@@ -20,6 +21,8 @@ export interface Status {
 export default function StatusTable() {
   const [allStatus, setAllStatus] = useState<Status[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedStatusId, setSelectedStatusId] = useState<number | null>(null);
+
   const toast = useRef<Toast>(null);
 
   const cookies = new Cookies();
@@ -42,14 +45,6 @@ export default function StatusTable() {
     "Teacher Name": "teacherName",
     "Teacher Email": "teacherEmail",
     "Will Continue": "continueStatus",
-  };
-  const showError = (msg: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: msg,
-      life: 3000,
-    });
   };
 
   const onPageChange = (event: PaginatorPageChangeEvent) => {
@@ -82,13 +77,50 @@ export default function StatusTable() {
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
-        showError("Error while fetching data");
+        showError("Error while fetching data", toast);
         console.log("here in catch!");
       });
   };
   useEffect(() => {
     fetchAllStatus(rows, 1);
   }, []);
+
+  const updateStatus = (statusId: number, newStatus: string) => {
+    fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/updateSessionContinuity`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.get("token")}`,
+      },
+      body: JSON.stringify({
+        status:
+          newStatus.length === 0 ? null : newStatus === "true" ? true : false,
+        sessionInfoId: statusId,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((res) => {
+        if (res.data) {
+          setAllStatus(
+            allStatus.map((status) =>
+              status.sessionInfoId === statusId
+                ? { ...status, continueStatus: newStatus }
+                : status,
+            ),
+          );
+          showSuccess("Status Updated Successfully", toast);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        showError("Error while updating status", toast);
+      });
+  };
 
   const idClasses =
     "whitespace-nowrap font-medium text-gray-900 text-center dark:text-white";
@@ -104,17 +136,24 @@ export default function StatusTable() {
   const renderContinueCell = (status: any) => {
     return (
       <div className="text-sm text-gray-700 w-fit mx-auto  flex items-center justify-center gap-4">
-        <span
-          className={
-           ` ${status !== null
-              ? status
-                ? "text-green-500"
-                : "text-red-500"
-              : "text-gray-500"} `
+        <select
+          className="rounded-md"
+          defaultValue={
+            status.continueStatus === true
+              ? "true"
+              : status.continueStatus === false
+              ? "false"
+              : ""
           }
+          onChange={(e) => {
+            setSelectedStatusId(status.sessionInfoId);
+            updateStatus(status.sessionInfoId, e.target.value);
+          }}
         >
-          {status !== null ? (status ? "Yes" : "No") : "No Response"}
-        </span>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+          <option value="">No Response</option>
+        </select>
       </div>
     );
   };
@@ -129,7 +168,7 @@ export default function StatusTable() {
           className={header === "sessionInfoId" ? idClasses : ""}
         >
           {header === "continueStatus"
-            ? renderContinueCell(status[header])
+            ? renderContinueCell(status)
             : status[header]}
         </Table.Cell>
       ))}
@@ -149,14 +188,10 @@ export default function StatusTable() {
       There are no Status yet!
     </div>
   );
-  const renderErrorFetchingMessage = () => (
-    <div className="bg-red-100 text-red-800 p-4 rounded-md">
-      Error While getting the data contact your developer for more information!
-    </div>
-  );
 
   return (
     <>
+      <Toast ref={toast} />
       <ContinuitySearchBox />
       {isLoading ? (
         <div className="flex justify-center items-center h-full">

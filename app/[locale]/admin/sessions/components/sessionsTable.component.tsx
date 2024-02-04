@@ -7,14 +7,19 @@ import Cookies from "universal-cookie";
 import { convertDateTimeZone } from "@/utilities";
 import getDateAfter from "@/utilities/getDateAfterDuration";
 import StatusBadge from "../../../../../utilities/StatusBadge";
-import { Session } from "@/types";
+import { Session, Student, Teacher } from "@/types";
 import GenericSessionsTable from "@/utilities/session/GenericSessionTable";
+import { fetchEndPoint } from "@/utilities/fetchDataFromApi";
+import GetSessionOptions from "./SessionOptions";
 
 export default function SessionsTable() {
   const [allSessions, setAllSessions]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
   const [totalRecord, setTotalRecords] = useState<number>(1);
+
+  const students = fetchEndPoint<Student>("user", cookies.get("token"));
+  const teachers = fetchEndPoint<Teacher>("teacher", cookies.get("token"));
 
   const headersMapping: Record<string, keyof Session | string> = {
     "#ID": "id",
@@ -94,15 +99,28 @@ export default function SessionsTable() {
       </span>
     </div>
   );
+  const renderSessionOptions = (session: Session) => (
+    <GetSessionOptions
+      sessionData={session}
+      updateComponent={() => fetchAllSessions(10, 1)}
+    />
+  );
   return (
     <GenericSessionsTable
       headersMapping={headersMapping}
-      fetchFunction={fetchAllSessions}
-      renderSearchBox={SessionComboBox}
+      fetchFunction={() => fetchAllSessions(10, 1)}
+      renderSearchBox={() => (
+        <SessionComboBox
+          updateComponent={() => fetchAllSessions(10, 1)}
+          students={students}
+          teachers={teachers}
+        />
+      )}
       totalRecords={totalRecord}
       allSessions={allSessions}
       renderMobileCardComponent={renderMobileCardComponent}
       isLoading={isLoading}
+      renderUpdateComponent={renderSessionOptions}
     />
   );
 }

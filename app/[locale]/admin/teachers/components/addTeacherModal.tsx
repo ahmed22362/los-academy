@@ -38,8 +38,8 @@ const teacherFormFields: FormField[] = [
     options: ["admin", "teacher"],
   },
   {
-    name: "sessionCost",
-    label: "Session Cost",
+    name: "hour_cost",
+    label: "Hour Cost",
     type: "text",
     placeholder: "Cost currency is in USD / $",
   },

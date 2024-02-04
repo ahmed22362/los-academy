@@ -155,15 +155,6 @@ export default function ReportModal({
                   />
                 )}
                 <li>
-                  Session Date:{" "}
-                  {convertDateTimeZone(
-                    reportDetails?.session?.sessionDate,
-                    "UTC",
-                    Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    "D-MMM-YYYY",
-                  )}
-                </li>
-                <li>
                   Create at:{" "}
                   {convertDateTimeZone(
                     reportDetails.createdAt,

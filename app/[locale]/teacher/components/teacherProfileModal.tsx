@@ -3,10 +3,11 @@
 import { Accordion, Label, Modal, TextInput } from "flowbite-react";
 import Image from "next/image";
 import { CustomFlowbiteTheme } from "flowbite-react";
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cookies from "universal-cookie";
 import LoadingButton from "../../admin/components/loadingButton";
-import { useRouter } from "next/navigation";
+import { showError, showSuccess } from "@/utilities/toastMessages";
+import { Toast } from "primereact/toast";
 
 export default function TeacherProfile({
   openAssignModal,
@@ -21,13 +22,13 @@ export default function TeacherProfile({
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
   const cookies = new Cookies();
-  const [message, setMessage] = useState("");
   const userDetails = user && user;
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [cost, setCost] = useState("");
   const [password, setPassword] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const toast = useRef<Toast>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | any) => {
@@ -66,26 +67,24 @@ export default function TeacherProfile({
         name: name,
         phone: phone,
         password: password,
-        sessionCost: cost,
       }),
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        setMessage(data.status);
         if (data.status === "success") {
           updateComponent();
+          showSuccess(data.message, toast);
+        } else {
+          showError(data.message, toast);
         }
         setIsProcessing(false);
-        const clearMess = setTimeout(() => {
-          setMessage("");
-        }, 5000);
-
-        return () => {
-          clearTimeout(clearMess);
-        };
+        return;
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        showError(err.message, toast);
+        setIsProcessing(false);
+      });
   };
 
   return (
@@ -97,19 +96,6 @@ export default function TeacherProfile({
         size={"lg"}
       >
         <Modal.Header theme={modalTheme.header}>Teacher Profile</Modal.Header>
-        {message ? (
-          <span
-            className={`${
-              message === "fail" ? "bg-danger-color" : "bg-success-color"
-            } text-center py-4 px-8 text-green-100`}
-          >
-            {message === "fail"
-              ? "Failed to update info try agian later or contact admin"
-              : "Updated Success"}
-          </span>
-        ) : (
-          <></>
-        )}
         <Modal.Body>
           <div className="flex flex-col items-center pb-10">
             <Image
@@ -133,7 +119,7 @@ export default function TeacherProfile({
               <span>Phone: {userDetails.phone}</span>
             </div>
             <div className="mt-4 flex space-x-3 lg:mt-6 w-full bg-white-color p-5 rounded-xl">
-              <span>Session Cost: {userDetails.sessionCost}$</span>
+              <span>Hour Cost: {userDetails.hour_cost}$</span>
             </div>
           </div>
           <div>
@@ -172,17 +158,6 @@ export default function TeacherProfile({
                       type="text"
                       placeholder="update password"
                       onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="cost" value="Cost" />
-                    </div>
-                    <TextInput
-                      id="cost"
-                      type="text"
-                      defaultValue={userDetails.sessionCost}
-                      onChange={(e) => setCost(e.target.value)}
                     />
                   </div>
                   <div className="w-full">

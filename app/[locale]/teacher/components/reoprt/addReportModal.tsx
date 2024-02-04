@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Toast } from "primereact/toast";
 import Cookies from "universal-cookie";
 import { showError, showSuccess } from "@/utilities/toastMessages";
@@ -51,6 +51,11 @@ export default function AddReportModal({
     }
     if (!formData.grade || !formData.comment) {
       showError("Please provide both total grade and comment.", toast);
+      setIsProcessing(false);
+      return;
+    }
+    if (!idSession && !formData.sessionId) {
+      showError("please provide the Id of Session", toast);
       setIsProcessing(false);
       return;
     }

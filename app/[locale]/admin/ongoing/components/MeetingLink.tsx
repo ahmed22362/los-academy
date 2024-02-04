@@ -8,21 +8,20 @@ export default function MeetingLink({ session }: { session: Session }) {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
     if (newWindow) newWindow.opener = null;
   };
+
   return (
-    <>
-      <div className="bg-secondary-color text-white px-2 py-1 rounded-full font-semibold">
-        <Link href={session.meetingLink ?? "#"}>
-          <a
-            className="hover:underline"
-            onClick={(e) => {
-              e.preventDefault();
-              openInNewTab(session.meetingLink ?? "#");
-            }}
-          >
-            meeting link{" "}
-          </a>
+    <div className="bg-secondary-color text-white px-2 py-1 rounded-full font-semibold">
+      {session.meetingLink ? (
+        <Link
+          passHref
+          onClick={() => openInNewTab(session.meetingLink ?? "#")}
+          href={""}
+        >
+          meeting link
         </Link>
-      </div>
-    </>
+      ) : (
+        <span>meeting link</span>
+      )}
+    </div>
   );
 }

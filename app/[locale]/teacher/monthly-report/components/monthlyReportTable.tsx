@@ -8,7 +8,7 @@ import {
   renderTableBody,
   renderTableHead,
 } from "@/app/[locale]/components/genericTableComponent/table.component";
-import { MonthlyReport, UserRole } from "@/types";
+import { MonthlyReport, Student, UserRole } from "@/types";
 import { convertDateTimeZone } from "@/utilities";
 import { showError } from "@/utilities/toastMessages";
 import { Toast } from "primereact/toast";
@@ -24,7 +24,10 @@ export default function MonthlyReportTable() {
   const [rows, setRows] = useState<number>(10);
   const toast = useRef<Toast>(null);
 
-  const myStudents = fetchEndPoint("teacher/myStudents", cookies.get("token"));
+  const myStudents = fetchEndPoint<Student>(
+    "teacher/myStudents",
+    cookies.get("token"),
+  );
 
   const onPageChange = (event: PaginatorPageChangeEvent) => {
     setFirst(event.first);

@@ -38,7 +38,7 @@ export default function AddSessionModal({
     },
     {
       name: "sessionDates",
-      label: "Session Dates",
+      label: "Session Dates Only For The First Week",
       type: "datepicker",
     },
     {

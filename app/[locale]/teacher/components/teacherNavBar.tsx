@@ -104,7 +104,7 @@ export default function TeacherNavBar() {
             Profile
           </Dropdown.Item>
         </Dropdown>
-        <AdminProfile
+        <TeacherProfile
           openAssignModal={handleModal}
           handleCloseModal={handleCloseModal}
           user={data}

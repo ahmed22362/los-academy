@@ -11,7 +11,7 @@ import {
   renderTableBody,
   renderTableHead,
 } from "@/app/[locale]/components/genericTableComponent/table.component";
-import { MonthlyReport, UserRole } from "@/types";
+import { MonthlyReport, Student, UserRole } from "@/types";
 import { Toast } from "primereact/toast";
 import { showError } from "@/utilities/toastMessages";
 import { fetchEndPoint } from "@/utilities/fetchDataFromApi";
@@ -23,7 +23,7 @@ export default function MonthlyReportTable() {
   const [first, setFirst] = useState<number>(0);
   const [rows, setRows] = useState<number>(10);
   const toast = useRef<Toast>(null);
-  const allStudents = fetchEndPoint("user", cookies.get("token"));
+  const allStudents = fetchEndPoint<Student>("user", cookies.get("token"));
 
   const onPageChange = (event: PaginatorPageChangeEvent) => {
     setFirst(event.first);

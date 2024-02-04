@@ -152,14 +152,14 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
       <Modal.Body>
         <div className="space-y-6">
           <Toast ref={toast} />
-          {sessionId && (
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="id" value="Session ID" />
-              </div>
-              <TextInput id="id" defaultValue={sessionId} type="text" />
+
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="id" value="Session ID" />
             </div>
-          )}
+            <TextInput id="id" defaultValue={sessionId ?? ""} type="number" />
+          </div>
+
           {monthlyReport && (
             <div>
               <div className="mb-2 block">

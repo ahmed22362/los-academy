@@ -31,7 +31,7 @@ export default function SessionsTable() {
     Status: "status",
   };
 
-  const fetchAllSessions = (limit?: number, page?: number) => {
+  const fetchAllSessions = (limit: number = 10, page: number = 1) => {
     setIsLoading(true);
     let url = `${process.env.NEXT_PUBLIC_APIURL}/session`;
     if (limit !== undefined) {
@@ -51,7 +51,6 @@ export default function SessionsTable() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         const sorted = data.data.sort((a: any, b: any) => {
           return (
             new Date(a.sessionDate).getTime() -
@@ -108,7 +107,7 @@ export default function SessionsTable() {
   return (
     <GenericSessionsTable
       headersMapping={headersMapping}
-      fetchFunction={() => fetchAllSessions(10, 1)}
+      fetchFunction={() => fetchAllSessions()}
       renderSearchBox={() => (
         <SessionComboBox
           updateComponent={() => fetchAllSessions(10, 1)}

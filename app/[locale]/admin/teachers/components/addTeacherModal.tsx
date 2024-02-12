@@ -57,16 +57,11 @@ export default function AddTeacherModal({
   const [isProcessing, setIsProcessing] = useState(false);
   const cookies = new Cookies();
 
-  const onSubmit = (values: any) => {
-    const data = (({ sessionCost, ...values }) => {
-      return { ...values, sessionCost: parseInt(sessionCost, 10) };
-    })(values); // remove b and c
-    console.log(data);
-    addTeacher(data);
-  };
-
   const addTeacher = (formData: any) => {
     setIsProcessing(true);
+    console.log(formData);
+    formData.hour_cost = parseFloat(formData.hour_cost);
+    console.log(formData);
 
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher`, {
       method: "POST",
@@ -103,7 +98,7 @@ export default function AddTeacherModal({
         openModal={openAssignModal}
         closeModal={handleCloseModal}
         formFields={teacherFormFields}
-        onSubmit={onSubmit}
+        onSubmit={addTeacher}
         modalHeader="Add Teacher"
         schema={TeacherSchema}
         isProcessing={isProcessing}

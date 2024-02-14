@@ -35,6 +35,10 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
       colorClass = "bg-danger-color";
       text = "Teacher Absent";
       break;
+    case "both_absent":
+      colorClass = "bg-danger-color";
+      text = "Both Absent";
+      break;
     default:
       colorClass = "bg-danger-color";
       text = "No Status";

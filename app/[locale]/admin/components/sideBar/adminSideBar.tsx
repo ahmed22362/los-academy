@@ -44,7 +44,7 @@ export default function OurSideBar() {
     { href: "/admin/ongoing", label: "Ongoing Sessions" },
     { href: "/admin/continuity-status", label: "Continuity Status" },
     { href: "/admin/material", label: "Material" },
-    { href: "/admin/transactions", label: "Transactions" },
+    { href: "/admin/payout", label: "Payout" },
     { href: "/admin/plans", label: "Plans" },
     { href: "/admin/courses", label: "Courses" },
     { href: "/admin/monthly-report", label: "Monthly Reports" },

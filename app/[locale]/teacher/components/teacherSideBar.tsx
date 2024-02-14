@@ -40,7 +40,7 @@ export default function OurSideBar() {
     { href: "/teacher/students", label: "Students" },
     { href: "/teacher/sessions", label: "Sessions" },
     { href: "/teacher/material", label: "Material" },
-    { href: "/teacher/transactions", label: "Transactions" },
+    { href: "/teacher/payout", label: "Payouts" },
     { href: "/teacher/monthly-report", label: "Monthly Reports" },
   ];
 

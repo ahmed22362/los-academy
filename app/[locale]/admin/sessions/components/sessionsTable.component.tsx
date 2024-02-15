@@ -101,16 +101,16 @@ export default function SessionsTable() {
   const renderSessionOptions = (session: Session) => (
     <GetSessionOptions
       sessionData={session}
-      updateComponent={() => fetchAllSessions(10, 1)}
+      updateComponent={fetchAllSessions}
     />
   );
   return (
     <GenericSessionsTable
       headersMapping={headersMapping}
-      fetchFunction={() => fetchAllSessions()}
+      fetchFunction={fetchAllSessions}
       renderSearchBox={() => (
         <SessionComboBox
-          updateComponent={() => fetchAllSessions(10, 1)}
+          updateComponent={fetchAllSessions}
           students={students}
           teachers={teachers}
         />

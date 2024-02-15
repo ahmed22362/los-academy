@@ -51,10 +51,7 @@ export default function AddPayoutModal({
             clearTimeout(timerToClose);
           }, 3000);
         } else {
-          let message;
-          Array.isArray(data) ? (message = data[0].message) : data.message;
-          console.log(Array.isArray(data));
-          showError(message, toast);
+          showError(data.message, toast);
         }
         setIsProcessing(false);
       })

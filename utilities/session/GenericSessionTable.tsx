@@ -40,7 +40,7 @@ export default function GenericSessionsTable({
     fetchFunction(event.rows, event.first / event.rows + 1);
   };
   useEffect(() => {
-    fetchFunction(rows, 1);
+    fetchFunction();
   }, []);
 
   return (

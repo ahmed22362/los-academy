@@ -1,18 +1,9 @@
 "use client";
 
-import {
-  CustomFlowbiteTheme,
-  FileInput,
-  Label,
-  Modal,
-  TextInput,
-} from "flowbite-react";
 import React, { useState } from "react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Toast } from "primereact/toast";
-import { PiStudentBold } from "react-icons/pi";
 import Cookies from "universal-cookie";
-import LoadingButton from "../../components/loadingButton";
 import { FormField } from "@/types";
 import AddModal from "@/app/[locale]/components/genericTableComponent/genericAddModal";
 import materialSchema from "@/schemas/material.schmea";

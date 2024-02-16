@@ -117,4 +117,5 @@ export interface Teacher {
   createdAt: string;
   phone: string;
   email: string;
+  balance: number;
 }

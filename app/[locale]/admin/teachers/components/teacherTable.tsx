@@ -26,6 +26,7 @@ export default function TeacherTable() {
     Name: "name",
     Role: "role",
     "Completed Mins": "committed_mins",
+    "Balance In $": "balance",
     "Hour Cost In $": "hour_cost",
     "Joined Date": "createdAt",
   };

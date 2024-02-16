@@ -3,16 +3,17 @@
 import { Spinner, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 import PayOutComboBox from "./payOutComboBox";
-import FetchPayOutData from "./fetchPayOutData";
 import Cookies from "universal-cookie";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
 import StatusBadge from "@/utilities/StatusBadge";
-import { Payout } from "@/types";
+import { Payout, Teacher } from "@/types";
 import {
   renderTableBody,
   renderTableHead,
 } from "@/app/[locale]/components/genericTableComponent/table.component";
 import { convertDateTimeZone } from "@/utilities";
+import FetchPayoutData from "./deletePayoutData";
+import { fetchEndPoint } from "@/utilities/fetchDataFromApi";
 
 export default function PayOutTable() {
   const [allPayOuts, setAllPayOuts]: any = useState([]);
@@ -22,6 +23,8 @@ export default function PayOutTable() {
   const [first, setFirst] = useState<number>(0);
   const [rows, setRows] = useState<number>(10);
   const [totalRecord, setTotalRecords] = useState(1);
+  const teachers = fetchEndPoint<Teacher>("teacher", cookies.get("token"));
+
   const headersMapping: Record<string, keyof Payout | string> = {
     "#ID": "id",
     "Teacher Name": "teacher.name",
@@ -35,7 +38,7 @@ export default function PayOutTable() {
     fetchAllPayOuts(event.rows, event.first / event.rows + 1);
   };
 
-  const fetchAllPayOuts = (limit?: number, page?: number) => {
+  const fetchAllPayOuts = (limit: number = 10, page: number = 1) => {
     setIsLoading(true);
     let url = `${process.env.NEXT_PUBLIC_APIURL}/payout`;
     if (limit !== undefined) {
@@ -79,7 +82,7 @@ export default function PayOutTable() {
         <div className="text-gray-500">{payout.teacher.name}</div>
       </div>
       <div className="text-sm text-gray-700">
-        Asked to be payed out amount {payout.amount}$
+        Payed out amount {payout.amount}$
       </div>
       <div className="text-sm text-gray-700">
         At:{" "}
@@ -100,9 +103,9 @@ export default function PayOutTable() {
     </div>
   );
   const renderUpdateOptions = (payout: Payout) => (
-    <FetchPayOutData
+    <FetchPayoutData
       key={payout.id}
-      payOutData={payout}
+      payout={payout}
       updateComponent={fetchAllPayOuts}
     />
   );
@@ -114,7 +117,10 @@ export default function PayOutTable() {
         </div>
       ) : (
         <div className="p-5">
-          <PayOutComboBox updateComponent={fetchAllPayOuts} />
+          <PayOutComboBox
+            updateComponent={fetchAllPayOuts}
+            teachers={teachers}
+          />
           {allPayOuts && allPayOuts.length > 0 ? (
             <>
               {" "}
@@ -138,7 +144,7 @@ export default function PayOutTable() {
             </>
           ) : (
             <div className="bg-red-100 text-red-800 p-4 rounded-md">
-              There are no Transactions, Add One!
+              There are no Payouts, Add One!
             </div>
           )}
           <div className="card mt-4">

@@ -67,7 +67,7 @@ export default function PayOutTable() {
   return (
     <>
       <PayOutComboBox />
-      <div className={"px-5 py-4"}>
+      <div className="overflow-auto rounded-lg shadow">
         <Table>
           <Table.Head theme={customTheme.head}>
             <Table.HeadCell theme={customTheme.head}>#PayoutID</Table.HeadCell>

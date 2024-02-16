@@ -49,7 +49,6 @@ export default function OnGoingBox(session: any) {
     });
   }, []);
 
-  const convertTimeZone = convertDateTimeZone;
   const handleOpen = () => {
     setOpenModal(true);
   };

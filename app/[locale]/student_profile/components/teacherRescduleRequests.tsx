@@ -25,7 +25,7 @@ function TeacherRescduleRequests({
     inputTime: moment.MomentInput,
     inputTimezone: string,
     outputTimezone: string,
-    ourFormat: string
+    ourFormat: string,
   ) => {
     const convertedTime = moment(inputTime)
       .tz(inputTimezone)
@@ -67,7 +67,7 @@ function TeacherRescduleRequests({
         // console.log(data);
 
         const pendingRescheduleRequests = data.data.filter(
-          (request: any) => request.status === "pending"
+          (request: any) => request.status === "pending",
         );
 
         const sortedPendingRescheduleRequests = pendingRescheduleRequests.sort(
@@ -76,10 +76,10 @@ function TeacherRescduleRequests({
             return moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0])
               ? 1
               : -1;
-          }
+          },
         );
         const sortedTeacherRequests = data.data.sort((a: any, b: any) =>
-          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1,
         );
         setTeatcherReschedule(sortedTeacherRequests);
         if (fromStudentProfile === true) {
@@ -141,7 +141,7 @@ function TeacherRescduleRequests({
         // console.log(data.data);
 
         const pendingRescheduleRequests = data.data.filter(
-          (request: any) => request.status === "pending"
+          (request: any) => request.status === "pending",
         );
 
         const sortedPendingRescheduleRequests = pendingRescheduleRequests.sort(
@@ -150,10 +150,10 @@ function TeacherRescduleRequests({
             return moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0])
               ? 1
               : -1;
-          }
+          },
         );
         const sortedTeacherRequests = data.data.sort((a: any, b: any) =>
-          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1,
         );
         setTeatcherReschedule(sortedTeacherRequests);
         if (fromStudentProfile === true) {
@@ -202,31 +202,34 @@ function TeacherRescduleRequests({
       });
   };
   return (
-    <div className={`${teatcherreschedule.length>0? 'scrollAction':''} sm:h-[120px] max-[450px]:h-[120px] lg:h-[150px]`} >
+    <div
+      className={`${
+        teatcherreschedule.length > 0 ? "scrollAction" : ""
+      } sm:h-[120px] max-[450px]:h-[120px] lg:h-[150px]`}
+    >
       <RescheduleSession
         setOpenRescheduleModal={setOpenRescheduleModal}
         openRescheduleModal={openRescheduleModal}
         sessionId={sessionId}
         fromTeacherRequest={true}
-
       />
       <Toast ref={toast} />
       <div className="md:min-h-[190px] max-md:min-h-[150px] ">
         {loading ? (
           // React Content Loader while data is being fetched
           <>
-          <ContentLoader
-            speed={2}
-            width={800}
-            height={300}
-            viewBox="0 0 800 300"
-            backgroundColor="#f3f3f3"
-            foregroundColor="#ecebeb"
-          >
-            <rect x="0" y="0" rx="3" ry="3" width="70" height="10" />
-            <rect x="80" y="0" rx="3" ry="3" width="100" height="10" />
-            <rect x="190" y="0" rx="3" ry="3" width="10" height="10" />
-          </ContentLoader>
+            <ContentLoader
+              speed={2}
+              width={800}
+              height={300}
+              viewBox="0 0 800 300"
+              backgroundColor="#f3f3f3"
+              foregroundColor="#ecebeb"
+            >
+              <rect x="0" y="0" rx="3" ry="3" width="70" height="10" />
+              <rect x="80" y="0" rx="3" ry="3" width="100" height="10" />
+              <rect x="190" y="0" rx="3" ry="3" width="10" height="10" />
+            </ContentLoader>
           </>
         ) : (
           <>
@@ -244,23 +247,24 @@ function TeacherRescduleRequests({
                         </p>
                         <p className="  font-medium">
                           Teacher Name:{" "}
-                          {request.session?.SessionInfo?.teacher.name}
+                          {request.session?.sessionInfo?.teacher.name}
                         </p>
-                        {fromStudentProfile?'':
-                      (
-                        <p className="  font-medium">
-                        Status:{" "}
-                        <span
-                          className={`${
-                            request.status === "pending"
-                              ? "bg-yellow-400 text-white"
-                              : "border shadow bg-white"
-                          }  px-3 py-1 font-semibold rounded-lg `}
-                        >
-                          {request.status}
-                        </span>
-                      </p>
-                      )}
+                        {fromStudentProfile ? (
+                          ""
+                        ) : (
+                          <p className="  font-medium">
+                            Status:{" "}
+                            <span
+                              className={`${
+                                request.status === "pending"
+                                  ? "bg-yellow-400 text-white"
+                                  : "border shadow bg-white"
+                              }  px-3 py-1 font-semibold rounded-lg `}
+                            >
+                              {request.status}
+                            </span>
+                          </p>
+                        )}
                         {/* 
                     <p className="  font-medium">
                       Requested By: {request.requestedBy.toUpperCase()}
@@ -324,7 +328,7 @@ function TeacherRescduleRequests({
                                               "UTC",
                                               Intl.DateTimeFormat().resolvedOptions()
                                                 .timeZone,
-                                              "DD/MMM/YYYY h:mm A"
+                                              "DD/MMM/YYYY h:mm A",
                                             )}
                                           </label>
                                         </div>
@@ -360,7 +364,7 @@ function TeacherRescduleRequests({
                                       )}
                                     </p> */}
                                       </div>
-                                    )
+                                    ),
                                   )}
                                 </div>
                               </div>
@@ -379,7 +383,7 @@ function TeacherRescduleRequests({
                                   onClick={() =>
                                     denyAllReschedule(
                                       request.id,
-                                      request.sessionId
+                                      request.sessionId,
                                     )
                                   }
                                   className={`hover:text-white hover:bg-secondary-color px-3 py-1 text-secondary-color border-2 border-[--secondary-color] font-semibold transition-colors  w-fit rounded-full `}

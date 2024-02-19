@@ -223,7 +223,7 @@ export default function OnGoingBox(session: any) {
         <div>
           <h4 className="mb-3">
             add report for the last session with{" "}
-            {lastTakenSession && lastTakenSession.SessionInfo?.user?.name}
+            {lastTakenSession && lastTakenSession.sessionInfo?.user?.name}
           </h4>
           <button
             className="smallBtn hover:bg-secondary-hover transition-colors"
@@ -246,7 +246,7 @@ export default function OnGoingBox(session: any) {
                 className="h-full flex flex-col items-center gap-2"
               >
                 <h4 className="">
-                  session <b>{session.SessionInfo?.user?.name}</b>{" "}
+                  session <b>{session.sessionInfo?.user?.name}</b>{" "}
                   <b className="text-success-color">session started !!</b>
                 </h4>
                 <Link
@@ -302,7 +302,7 @@ export default function OnGoingBox(session: any) {
                 className="h-full flex flex-col items-center gap-2"
               >
                 <h4>
-                  Next session with <b>{session.SessionInfo?.user?.name}</b>{" "}
+                  Next session with <b>{session.sessionInfo?.user?.name}</b>{" "}
                 </h4>
                 <span>
                   {convertDateTimeZone(

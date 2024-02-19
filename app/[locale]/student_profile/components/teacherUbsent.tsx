@@ -10,7 +10,7 @@ function TeacherUbsent() {
   const [teacherUbsentSessions, setTeacherUbsentSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
-    null
+    null,
   );
   const [openRescheduleModal, setOpenRescheduleModal] = useState(false);
 
@@ -23,11 +23,11 @@ function TeacherUbsent() {
     inputTime: moment.MomentInput,
     inputTimezone: string,
     outputTimezone: string,
-    ourFormat: string
+    ourFormat: string,
   ) => {
     const convertedTime = moment(
       `${moment().format("YYYY-MM-DD")}T${inputTime}`,
-      "YYYY-MM-DDTHH:mm:ss.SSS"
+      "YYYY-MM-DDTHH:mm:ss.SSS",
     )
       .tz(inputTimezone)
       .clone()
@@ -35,29 +35,7 @@ function TeacherUbsent() {
     return convertedTime.format(ourFormat);
   };
 
- const fetchTeacherUbsentSession=()=>{
-  fetch(
-    `${process.env.NEXT_PUBLIC_APIURL}/user/mySessions?status=teacher_absent`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${cookie.get("token")}`,
-      },
-    }
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      // console.log(data.data);
-
-      setTeacherUbsentSessions(data.data);
-
-    })
-    .catch((error) => {
-      console.error("Error fetching sessions:", error);
-    });
-  }
-  useEffect(() => {
-    
+  const fetchTeacherUbsentSession = () => {
     fetch(
       `${process.env.NEXT_PUBLIC_APIURL}/user/mySessions?status=teacher_absent`,
       {
@@ -65,7 +43,27 @@ function TeacherUbsent() {
         headers: {
           Authorization: `Bearer ${cookie.get("token")}`,
         },
-      }
+      },
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log(data.data);
+
+        setTeacherUbsentSessions(data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching sessions:", error);
+      });
+  };
+  useEffect(() => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_APIURL}/user/mySessions?status=teacher_absent`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${cookie.get("token")}`,
+        },
+      },
     )
       .then((response) => response.json())
       .then((data) => {
@@ -82,11 +80,8 @@ function TeacherUbsent() {
   }, []);
 
   useEffect(() => {
-   
-      fetchTeacherUbsentSession();
-    
-  }, [openRescheduleModal])
-  
+    fetchTeacherUbsentSession();
+  }, [openRescheduleModal]);
 
   return (
     <>
@@ -146,32 +141,31 @@ function TeacherUbsent() {
                       </div>
                     </div> */}
                     <div className="flex  justify-between items-center sm:flex-col gap-3 xl:gap-0 xl:flex-row max-[450px]:flex-col">
-                    <div className="flex flex-col justify-center items-start">
-                    <p className=" font-medium">
-                      Teacher Name: {sessionInfo?.SessionInfo?.teacher?.name}
-                    </p>
-                   
-                      <p className=" font-medium flex  gap-4">
-                      Date:
-                      <span className="text-red-600">
-                        {convertDateTimeZone(
-                          sessionInfo.sessionDate,
-                          "UTC",
-                          Intl.DateTimeFormat().resolvedOptions().timeZone,
-                          "DD/MMM/YYYY h:mm A"
-                        )}
-                      </span>
-                    </p>
-                    </div>
-                    <button
+                      <div className="flex flex-col justify-center items-start">
+                        <p className=" font-medium">
+                          Teacher Name:{" "}
+                          {sessionInfo?.sessionInfo?.teacher?.name}
+                        </p>
+
+                        <p className=" font-medium flex  gap-4">
+                          Date:
+                          <span className="text-red-600">
+                            {convertDateTimeZone(
+                              sessionInfo.sessionDate,
+                              "UTC",
+                              Intl.DateTimeFormat().resolvedOptions().timeZone,
+                              "DD/MMM/YYYY h:mm A",
+                            )}
+                          </span>
+                        </p>
+                      </div>
+                      <button
                         onClick={() => handleRescheduleClick(sessionInfo.id)}
                         className="bg-[--secondary-color]  hover:bg-[#453ed2] h-fit text-sm py-2 rounded-full  text-white px-4"
                       >
                         Reschedule
                       </button>
                     </div>
-                    
-                   
                   </div>
                 </li>
               ))}

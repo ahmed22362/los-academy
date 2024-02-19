@@ -66,8 +66,8 @@ export default function OnGoingBox() {
               )}
             </span>
             <p>
-              {allSessions[0].SessionInfo.teacher.name} with{" "}
-              {allSessions[0].SessionInfo.user.name}
+              {allSessions[0].sessionInfo.teacher.name} with{" "}
+              {allSessions[0].sessionInfo.user.name}
             </p>
             <Link
               href={allSessions[0]?.meetingLink}

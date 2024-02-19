@@ -9,9 +9,9 @@ function TeacherScheduleData({ data }: { data: any }) {
   const session = data && data;
   const userName =
     (session &&
-      session.SessionInfo &&
-      session.SessionInfo.user &&
-      session.SessionInfo.user.name) ||
+      session.sessionInfo &&
+      session.sessionInfo.user &&
+      session.sessionInfo.user.name) ||
     "name not found :)";
 
   const convertDate = convertDateTimeZone;

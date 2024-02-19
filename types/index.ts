@@ -45,7 +45,7 @@ export interface FormField {
 }
 export interface Session {
   id: number;
-  SessionInfo: {
+  sessionInfo: {
     teacher: {
       name: string;
     };

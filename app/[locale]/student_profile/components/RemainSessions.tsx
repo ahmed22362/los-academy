@@ -12,7 +12,7 @@ function RemainSessions() {
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
-    null
+    null,
   );
 
   const [openRescheduleModal, setOpenRescheduleModal] = useState(false);
@@ -20,7 +20,7 @@ function RemainSessions() {
     inputTime: moment.MomentInput,
     inputTimezone: string,
     outputTimezone: string,
-    ourFormat: string
+    ourFormat: string,
   ) => {
     const convertedTime = moment(inputTime)
       .tz(inputTimezone)
@@ -33,7 +33,6 @@ function RemainSessions() {
     setSelectedSessionId(sessionId);
     // Open the reschedule modal
     setOpenRescheduleModal(true);
-
   };
 
   useEffect(() => {
@@ -70,7 +69,7 @@ function RemainSessions() {
             {sessions.map((session, index) => {
               const sessionStartTime = moment.utc(session.sessionDate);
               const currentTime = moment().tz(
-                Intl.DateTimeFormat().resolvedOptions().timeZone
+                Intl.DateTimeFormat().resolvedOptions().timeZone,
               );
               const allowedStartTimeForReschedule = sessionStartTime
                 .clone()
@@ -78,7 +77,9 @@ function RemainSessions() {
 
               const check = currentTime.isBetween(
                 allowedStartTimeForReschedule,
-                sessionStartTime.clone().add(session.sessionDuration, "minutes")
+                sessionStartTime
+                  .clone()
+                  .add(session.sessionDuration, "minutes"),
               );
               return (
                 <div
@@ -93,7 +94,7 @@ function RemainSessions() {
                         session.sessionDate,
                         "UTC",
                         Intl.DateTimeFormat().resolvedOptions().timeZone,
-                        "h:mm A"
+                        "h:mm A",
                       )}
                       {" - "}
                       {convertDateTimeZone(
@@ -102,7 +103,7 @@ function RemainSessions() {
                           .format(),
                         "UTC",
                         Intl.DateTimeFormat().resolvedOptions().timeZone,
-                        "h:mm A"
+                        "h:mm A",
                       )}
                     </p>
                     <p className="">
@@ -111,14 +112,14 @@ function RemainSessions() {
                         session.sessionDate,
                         "UTC",
                         Intl.DateTimeFormat().resolvedOptions().timeZone,
-                        "MMM D,YYYY"
+                        "MMM D,YYYY",
                       )}
                     </p>
-                    
+
                     <div className={"  py-1 "}>
                       with teacher:{" "}
                       <span className="font-bold">
-                        {session.SessionInfo.teacher.name}
+                        {session.sessionInfo.teacher.name}
                       </span>
                     </div>
                   </div>
@@ -153,9 +154,9 @@ function RemainSessions() {
       <RescheduleSession
         sessionId={selectedSessionId}
         openRescheduleModal={openRescheduleModal}
-        setOpenRescheduleModal={setOpenRescheduleModal} 
+        setOpenRescheduleModal={setOpenRescheduleModal}
         fromTeacherRequest={false}
-        />
+      />
     </div>
   );
 }

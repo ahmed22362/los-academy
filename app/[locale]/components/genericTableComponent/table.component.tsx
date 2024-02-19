@@ -59,10 +59,10 @@ export function renderTableBody<T>({
                     Intl.DateTimeFormat().resolvedOptions().timeZone,
                     "YYYY-MM-DD h:mm A",
                   )
-                ) : valueName === "SessionInfo.teacher.name" ? (
-                  row["SessionInfo"]["teacher"]["name"]
-                ) : valueName === "SessionInfo.user.name" ? (
-                  row["SessionInfo"]["user"]["name"]
+                ) : valueName === "sessionInfo.teacher.name" ? (
+                  row["sessionInfo"]["teacher"]["name"]
+                ) : valueName === "sessionInfo.user.name" ? (
+                  row["sessionInfo"]["user"]["name"]
                 ) : valueName === "user.name" ? (
                   row["user"]["name"]
                 ) : valueName === "teacher.name" ? (

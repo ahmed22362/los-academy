@@ -30,9 +30,9 @@ export default function RescheduleModal({
   const toast = useRef<any>(null);
   const userName =
     (sessionData &&
-      sessionData.SessionInfo &&
-      sessionData.SessionInfo.user &&
-      sessionData.SessionInfo.user.name) ||
+      sessionData.sessionInfo &&
+      sessionData.sessionInfo.user &&
+      sessionData.sessionInfo.user.name) ||
     "name not found :)";
 
   const modalTheme: CustomFlowbiteTheme["modal"] = {

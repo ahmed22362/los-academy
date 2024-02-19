@@ -20,14 +20,6 @@ export interface ReportsCourses {
   courseGrade: GradeOptions;
   courseComment?: GradeOptions;
 }
-interface FormData {
-  [key: string]: any;
-  sessionId: number;
-  reportCourses: ReportsCourses[];
-  comment?: string;
-  grade?: GradeOptions;
-  title: string;
-}
 export default function AddReportModal({
   openAssignModal,
   handleCloseModal,

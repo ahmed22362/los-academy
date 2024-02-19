@@ -18,7 +18,7 @@ function MyRescheduleRequest({
     inputTime: moment.MomentInput,
     inputTimezone: string,
     outputTimezone: string,
-    ourFormat: string
+    ourFormat: string,
   ) => {
     const convertedTime = moment(inputTime)
       .tz(inputTimezone)
@@ -39,14 +39,14 @@ function MyRescheduleRequest({
         // console.log(data);
 
         const pendingRequests = data.data.filter(
-          (request: any) => request.status === "pending"
+          (request: any) => request.status === "pending",
         );
         const sortedPendingRequests = pendingRequests.sort((a: any, b: any) =>
-          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1,
         );
 
         const sortedRequests = data.data.sort((a: any, b: any) =>
-          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1,
         );
         setMyReschedule(sortedRequests);
 
@@ -74,13 +74,13 @@ function MyRescheduleRequest({
         // console.log(data);
 
         const pendingRequests = data.data.filter(
-          (request: any) => request.status === "pending"
+          (request: any) => request.status === "pending",
         );
         const sortedPendingRequests = pendingRequests.sort((a: any, b: any) =>
-          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1,
         );
         const sortedRequests = data.data.sort((a: any, b: any) =>
-          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1
+          moment(a.newDatesOptions[0]).isBefore(b.newDatesOptions[0]) ? 1 : -1,
         );
         setMyReschedule(sortedRequests);
 
@@ -120,7 +120,8 @@ function MyRescheduleRequest({
       message: "Do you want to delete this request?",
       header: "Delete Confirmation",
       icon: "pi pi-info-circle",
-      rejectClassName: "bg-secondary-color mr-2 text-white px-2 py-1 rounded-md",
+      rejectClassName:
+        "bg-secondary-color mr-2 text-white px-2 py-1 rounded-md",
       acceptClassName: "px-3 text-white  bg-red-500 hover:bg-red-600 py-1",
       accept: () => cancelMyRescheduleRequest(requestId), // Use accept instead of cancelMySessionRequest in accept callback
       reject: () => {},
@@ -161,23 +162,26 @@ function MyRescheduleRequest({
   };
 
   return (
-    <div className={`${myReschedule.length>0?"scrollAction":''} sm:h-[120px] max-[450px]:h-[120px] lg:h-[150px]`}>
+    <div
+      className={`${
+        myReschedule.length > 0 ? "scrollAction" : ""
+      } sm:h-[120px] max-[450px]:h-[120px] lg:h-[150px]`}
+    >
       <Toast ref={toast} />
       <ConfirmDialog />
       <div className="md:min-h-[190px] max-md:min-h-[150px]  ">
         {loading ? (
           // React Content Loader while data is being fetched
-         <>
-          <ContentLoader
-            speed={2}
-            width={800}
-            height={300}
-            viewBox="0 0 800 300"
-            backgroundColor="#f3f3f3"
-            foregroundColor="#ecebeb"
-          >
-          </ContentLoader>
-         </>
+          <>
+            <ContentLoader
+              speed={2}
+              width={800}
+              height={300}
+              viewBox="0 0 800 300"
+              backgroundColor="#f3f3f3"
+              foregroundColor="#ecebeb"
+            ></ContentLoader>
+          </>
         ) : (
           <>
             {myReschedule?.length === 0 ? (
@@ -185,92 +189,96 @@ function MyRescheduleRequest({
             ) : (
               <div className="">
                 <ul className="mx-2">
-                {myReschedule.map((request, index) => (
-                  <li className="flex flex-col gap-5 mb-3" key={request.id}>
-                    <div className="bg-white-color p-2 flex flex-col gap-1 rounded-xl ">
-                      {/* <div className="flex justify-center items-center  mt-2">
+                  {myReschedule.map((request, index) => (
+                    <li className="flex flex-col gap-5 mb-3" key={request.id}>
+                      <div className="bg-white-color p-2 flex flex-col gap-1 rounded-xl ">
+                        {/* <div className="flex justify-center items-center  mt-2">
                         <h3 className="px-2 py-1 font-semibold text-lg bg-blueviolet-600 rounded-xl">
                           With Teacher:{" "}
-                          {request.session.SessionInfo.teacher.name}
+                          {request.session.sessionInfo.teacher.name}
                         </h3>{" "}
                       </div> */}
-                      {/* <p className="my-1  font-medium">
+                        {/* <p className="my-1  font-medium">
                         Session ID:{" "}
                         <span className="bg-[--secondary-color] text-white p-1 rounded-2xl">
                           {request.sessionId}
                         </span>
                       </p> */}
-                      {fromStudentProfile?'':
-                      (
-                        <p className="my-1  font-medium">
-                        Status:{" "}
-                        <span
-                          className={`${
-                            request.status === "pending"
-                              ? "bg-[#ffaa38] text-white"
-                              : "border shadow bg-white"
-                          } px-3 py-1  rounded-lg`}
-                        >
-                          {request.status}
-                        </span>
-                      </p>
-                      )}
-                    
-                      {/* <p className="my-1  font-medium">
+                        {fromStudentProfile ? (
+                          ""
+                        ) : (
+                          <p className="my-1  font-medium">
+                            Status:{" "}
+                            <span
+                              className={`${
+                                request.status === "pending"
+                                  ? "bg-[#ffaa38] text-white"
+                                  : "border shadow bg-white"
+                              } px-3 py-1  rounded-lg`}
+                            >
+                              {request.status}
+                            </span>
+                          </p>
+                        )}
+
+                        {/* <p className="my-1  font-medium">
                         Requested By:{" "}
                         {request.requestedBy === "user"
                           ? "Me"
                           : request.requestedBy.toUpperCase()}
                       </p> */}
-                      {request.newDatesOptions.map(
-                        (date: string, i: number) => (
-                          <div
-                            className="max-[450px]:flex-col sm:flex-col lg:flex-row  flex gap-2 items-center justify-start"
-                            key={i}
-                          >
-                           <p>
-                           <span>Date:</span>
-                            {convertDateTimeZone(
-                              date,
-                              "UTC",
-                              Intl.DateTimeFormat().resolvedOptions().timeZone,
-                              "DD/MMM/YYYY "
-                            )}
-                           </p>
-                            <p className="flex gap-2 items-center justify-start">
-                              <span>Time:</span>
+                        {request.newDatesOptions.map(
+                          (date: string, i: number) => (
+                            <div
+                              className="max-[450px]:flex-col sm:flex-col lg:flex-row  flex gap-2 items-center justify-start"
+                              key={i}
+                            >
+                              <p>
+                                <span>Date:</span>
+                                {convertDateTimeZone(
+                                  date,
+                                  "UTC",
+                                  Intl.DateTimeFormat().resolvedOptions()
+                                    .timeZone,
+                                  "DD/MMM/YYYY ",
+                                )}
+                              </p>
+                              <p className="flex gap-2 items-center justify-start">
+                                <span>Time:</span>
+                                {convertDateTimeZone(
+                                  date,
+                                  "UTC",
+                                  Intl.DateTimeFormat().resolvedOptions()
+                                    .timeZone,
+                                  "h:mm A",
+                                )}
+                              </p>
+                            </div>
+                          ),
+                        )}
+                        <p className="my-1  font-medium">
+                          Teacher Name:{" "}
+                          {request.session.sessionInfo.teacher.name}
+                        </p>
+                        {request.status === "approved" ? (
+                          <p className="my-1  font-medium flex  gap-4">
+                            New Date:
+                            <span className="text-green-600">
                               {convertDateTimeZone(
-                                date,
+                                request.newDate,
                                 "UTC",
                                 Intl.DateTimeFormat().resolvedOptions()
                                   .timeZone,
-                                "h:mm A"
+                                "DD/MMM/YYYY h:mm A",
                               )}
-                            </p>
-                          </div>
-                        )
-                      )}
-                      <p className="my-1  font-medium">
-                        Teacher Name: {request.session.SessionInfo.teacher.name}
-                      </p>
-                      {request.status === "approved" ? (
-                        <p className="my-1  font-medium flex  gap-4">
-                          New Date:
-                          <span className="text-green-600">
-                            {convertDateTimeZone(
-                              request.newDate,
-                              "UTC",
-                              Intl.DateTimeFormat().resolvedOptions().timeZone,
-                              "DD/MMM/YYYY h:mm A"
-                            )}
-                          </span>
-                        </p>
-                      ) : (
-                        ""
-                      )}
-                      {request.status === "pending" ? (
-                        <>
-                          {/* <div className=" flex flex-col gap-3 ">
+                            </span>
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                        {request.status === "pending" ? (
+                          <>
+                            {/* <div className=" flex flex-col gap-3 ">
                             <h3 className="font-semibold text-lg ">
                               The Date You Chose :
                             </h3>
@@ -293,26 +301,23 @@ function MyRescheduleRequest({
                               )}
                             </div>
                           </div> */}
-                          <div className="flex justify-center items-center">
-                            <button
-                              onClick={() =>
-                                confirm2(request.id)
-                              }
-                              className={`hover:text-white hover:bg-secondary-color px-3 py-1 text-secondary-color border-2 border-[--secondary-color] font-semibold transition-colors  w-fit rounded-full `}
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                            <div className="flex justify-center items-center">
+                              <button
+                                onClick={() => confirm2(request.id)}
+                                className={`hover:text-white hover:bg-secondary-color px-3 py-1 text-secondary-color border-2 border-[--secondary-color] font-semibold transition-colors  w-fit rounded-full `}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              
             )}
           </>
         )}

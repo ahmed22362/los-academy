@@ -20,7 +20,7 @@ function TeacherScheduleData({ data }: { data: any }) {
           "MM/DD/YYYY hh:mm A",
         )}
       </span>
-      <p>{`${session.SessionInfo.teacher.name} with ${session.SessionInfo.user.name}`}</p>
+      <p>{`${session.sessionInfo.teacher.name} with ${session.sessionInfo.user.name}`}</p>
     </div>
   );
 }

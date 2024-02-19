@@ -23,8 +23,8 @@ export default function SessionsTable() {
 
   const headersMapping: Record<string, keyof Session | string> = {
     "#ID": "id",
-    "Teacher Name": "SessionInfo.teacher.name",
-    "Student Name": "SessionInfo.user.name",
+    "Teacher Name": "sessionInfo.teacher.name",
+    "Student Name": "sessionInfo.user.name",
     "Date Time": "sessionDate",
     "Session Duration": "sessionDuration",
     Type: "type",
@@ -74,7 +74,7 @@ export default function SessionsTable() {
           <span className="text-blue-500 font-bold hover:underline">
             #{session.id}
           </span>
-          <span className="text-sm text-gray-700">{` ${session.SessionInfo.user.name} with ${session.SessionInfo.teacher.name}`}</span>
+          <span className="text-sm text-gray-700">{` ${session.sessionInfo.user.name} with ${session.sessionInfo.teacher.name}`}</span>
         </div>
       </div>
       <div className="text-sm text-gray-700">

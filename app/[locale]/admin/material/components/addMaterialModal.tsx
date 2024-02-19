@@ -26,6 +26,12 @@ export default function AddMaterialModal({
     { name: "name", label: "Book Name", type: "text" },
     { name: "age", label: "Up to Age", type: "text" },
     { name: "course", label: "Course", type: "text" },
+    {
+      name: "status",
+      label: "Status",
+      type: "select",
+      options: ["new Arrival", "active", "archived"],
+    },
     { name: "file", label: "Upload file", type: "file", accept: ".pdf" },
   ];
 

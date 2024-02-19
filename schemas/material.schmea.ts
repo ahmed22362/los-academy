@@ -8,7 +8,7 @@ const materialSchema = yup.object().shape({
   status: yup
     .string()
     .oneOf(["new Arrival", "active", "archived"], "Invalid status")
-    .required("Status is required"),
+    .optional(),
 });
 
 export default materialSchema;

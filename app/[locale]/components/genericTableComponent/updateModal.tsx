@@ -50,7 +50,10 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
         {},
       ) as FormValues,
       onSubmit: (formValues) => {
-        onSubmit(formValues);
+        const filteredFormValues = Object.fromEntries(
+          Object.entries(formValues).filter(([key, value]) => value !== ""),
+        );
+        onSubmit(filteredFormValues);
       },
     });
 

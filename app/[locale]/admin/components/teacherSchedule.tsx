@@ -3,7 +3,7 @@ import TeacherScheduleData from "./teacherScheduleData";
 
 export default async function TeacherSchedule() {
   const allSessions = await getAllSessions(
-    "session?status=pending&limit=10&page=1",
+    "session?status=pending&limit=10&page=1&orderBy=ASC",
   );
 
   const sortedSessions = allSessions?.data ?? [];

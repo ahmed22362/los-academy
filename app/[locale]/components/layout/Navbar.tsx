@@ -169,7 +169,7 @@ export default function CustomNavbar() {
                 {t("about-link")}
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 href="/#prices"
                 onClick={addActiveClass}
@@ -177,7 +177,7 @@ export default function CustomNavbar() {
               >
                 {t("prices-link")}
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link
                 href="/#feedback"

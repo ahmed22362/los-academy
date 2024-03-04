@@ -50,10 +50,10 @@ function FooterMain() {
               <GoLocation className="text-xl" /> Location
             </li>
             <li className="flex items-start gap-4">
-              <BsTelephone className="text-xl" /> +020 1023456789
+              <BsTelephone className="text-xl" /> +201102845688
             </li>
             <li className="flex items-start gap-4">
-              <TbMailOpened className="text-xl" /> Quran@gmail.com
+              <TbMailOpened className="text-xl" /> support@los-academy.net
             </li>
           </ul>
         </div>

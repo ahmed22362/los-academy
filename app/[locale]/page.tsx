@@ -23,7 +23,7 @@ export default function Home({
       <TrySection />
       <OurCourses />
       <AboutUs />
-      <Plans />
+      {/* <Plans /> */}
       <FeedBack />
       <ContactUs />
     </main>

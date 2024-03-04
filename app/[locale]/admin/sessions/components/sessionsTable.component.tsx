@@ -96,6 +96,9 @@ export default function SessionsTable() {
         {" "}
         Status: {<StatusBadge status={session.status} />}
       </span>
+      <div className="text-sm font-medium text-black flex justify-center items-center">
+        {renderSessionOptions(session)}
+      </div>
     </div>
   );
   const renderSessionOptions = (session: Session) => (

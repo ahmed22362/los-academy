@@ -43,6 +43,12 @@ const teacherFormFields: FormField[] = [
     type: "text",
     placeholder: "Cost currency is in USD / $",
   },
+  {
+    name: "permanent_meeting_url",
+    label: "Teacher permanent meeting link",
+    type: "text",
+    placeholder: "https://us05web.zoom.us/j/****?pwd=***.1",
+  },
 ];
 export default function AddTeacherModal({
   openAssignModal,

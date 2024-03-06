@@ -45,6 +45,11 @@ export default function EditTeacherModal({
       options: ["admin", "teacher"],
     },
     {
+      name: "permanent_meeting_url",
+      label: "Teacher permanent meeting link",
+      type: "text",
+    },
+    {
       name: "committed_mins",
       label: "Committed Minutes",
       type: "number",

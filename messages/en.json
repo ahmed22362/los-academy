@@ -47,91 +47,90 @@
   "plans-section": {
     "plan-title": "Choose the plan that works for you",
     "plan-btn": "Get this plan",
-  "plans":
-    [
+    "plans": [
       {
-          "id": 1,
-          "title": "Customize your Plan",
-          "price": "Start from $50p/ month",
-          "features": {
-              "f-1": "Fixed times",
-              "f-2": "Fixed Prices",
-              "f-3": "You can choose days",
-              "f-4": "Private one-to-one",
-              "f-5": "Professional & Qualified"
-          }
+        "id": 1,
+        "title": "Customize your Plan",
+        "price": "Start from $50p/ month",
+        "features": {
+          "f-1": "Fixed times",
+          "f-2": "Fixed Prices",
+          "f-3": "You can choose days",
+          "f-4": "Private one-to-one",
+          "f-5": "Professional & Qualified"
+        }
       },
       {
-          "id": 2,
-          "title": "5 Days per Week",
-          "price": "$200p/month",
-          "features": {
-              "f-1": "45 mins",
-              "f-2": "Private one-to-one",
-              "f-3": "5 Classes per week",
-              "f-4": "20 Classes Monthly",
-              "f-5": "Professional & Qualified"
-          }
+        "id": 2,
+        "title": "5 Days per Week",
+        "price": "$200p/month",
+        "features": {
+          "f-1": "45 mins",
+          "f-2": "Private one-to-one",
+          "f-3": "5 Classes per week",
+          "f-4": "20 Classes Monthly",
+          "f-5": "Professional & Qualified"
+        }
       },
       {
-          "id": 3,
-          "title": "4 Days per Week",
-          "price": "$120p/month",
-          "features": {
-              "f-1": "30 mins",
-              "f-2": "Private one-to-one",
-              "f-3": "4 Classes per week",
-              "f-4": "16 Classes Monthly",
-              "f-5": "Professional & Qualified"
-          }
+        "id": 3,
+        "title": "4 Days per Week",
+        "price": "$120p/month",
+        "features": {
+          "f-1": "30 mins",
+          "f-2": "Private one-to-one",
+          "f-3": "4 Classes per week",
+          "f-4": "16 Classes Monthly",
+          "f-5": "Professional & Qualified"
+        }
       },
       {
-          "id": 4,
-          "title": "3 Days per Week",
-          "price": "$90p/month",
-          "features": {
-              "f-1": "15 mins",
-              "f-2": "Private one-to-one",
-              "f-3": "3 Classes per week",
-              "f-4": "12 Classes Monthly",
-              "f-5": "Professional & Qualified"
-          }
+        "id": 4,
+        "title": "3 Days per Week",
+        "price": "$90p/month",
+        "features": {
+          "f-1": "15 mins",
+          "f-2": "Private one-to-one",
+          "f-3": "3 Classes per week",
+          "f-4": "12 Classes Monthly",
+          "f-5": "Professional & Qualified"
+        }
       }
     ]
   },
-    "getInTouch": {
-      "getInTouch-title": "Get in touch",
-      "getInTouch-paragraph": "If you have any non answered questions feel free to contact us",
-      "getInTouch-btn": "Contact Us"
-    },
+  "getInTouch": {
+    "getInTouch-title": "Get in touch",
+    "getInTouch-paragraph": "If you have any non answered questions feel free to contact us",
+    "getInTouch-btn": "Contact Us"
+  },
   "feedbackSection": {
     "feedbackTitle": "Our Students Feedback",
     "studentsFeedbacks": [
       {
         "name": "Maria Hernandez",
         "country": "England",
-        "comment": "The academy's emphasis on personalized learning is commendable. I feel comfortable asking questions"
+        "comment": "I am very happy. I have almost finished memorizing Juz Amma in less than two months. Thank you, my beautiful teacher."
       },
       {
         "name": "Hossam Mahmoud",
         "country": "Egypt",
-        "comment": "The academy's emphasis on personalized learning is commendable. I feel comfortable asking questions"
+        "comment": "My children have begun to understand what they have memorized from the Qur’an, and this makes me extremely happy"
       },
       {
         "name": "Julia Smith",
         "country": "France",
-        "comment": "The academy's emphasis on personalized learning is commendable. I feel comfortable asking questions"
+        "comment": "What I love most is reading short stories and fun games"
       },
       {
         "name": "adam hassan",
         "country": "Australia",
-        "comment": "The academy's emphasis on personalized learning is commendable. I feel comfortable asking questions"
+        "comment": "I have begun to understand the meanings of the Arabic phrases and words I read without having to use a dictionary or translation. It is an amazing feeling."
       }
     ]
   },
-    "Footer": {
-      "footer-title": "All Rights received - Codegate©2023",
-      "footer-follow": "Follow us on"
+  "Footer": {
+    "footer-title": "All Rights received - Codegate©2023",
+    "footer-follow": "Follow us on"
   },
   "eachModal": {
     "title": "Each Package Includes",
@@ -152,6 +151,6 @@
       "Alphabet and Phonetics: Children learn to recognize and write Arabic letters, understand their sounds, and practice pronunciation through interactive exercises.",
       "Vocabulary Building: Kids are introduced to a range of age-appropriate vocabulary words, such as colors, numbers, animals, food, and everyday objects. They learn to use these words in simple phrases and sentences.",
       "Basic Grammar: Children learn basic sentence structure, verb conjugation, and grammatical concepts, such as gender and plural forms."
-      ]
+    ]
   }
 }

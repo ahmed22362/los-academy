@@ -12,7 +12,6 @@ import LoadingButton from "../../admin/components/loadingButton";
 import { FormField, Student, Teacher } from "@/types";
 import type { Value } from "react-multi-date-picker";
 import DatePickerField from "../../admin/components/Calender/DatePickerField";
-import { BsArrowRight } from "react-icons/bs";
 import Image from "next/image";
 import { showError } from "@/utilities/toastMessages";
 import { Toast } from "primereact/toast";
@@ -207,6 +206,7 @@ const AddModal: React.FC<AddModalProps> = ({
                         onChange={handleDateChange}
                         error={errors[field.name]}
                         touched={touched[field.name]}
+                        mutable={true}
                       />
                     </div>
                   )}

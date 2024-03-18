@@ -60,6 +60,10 @@ export default function EditSessionModal({
   ];
   const updateSession = (formData: any) => {
     setIsProcessing(true);
+    formData.sessionDate = formData.sessionDate
+      .toString()
+      .split(",")
+      .map((strDate: string) => new Date(strDate).toISOString())[0];
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/${sessionDetails.id}`, {
       method: "PATCH",
       headers: {

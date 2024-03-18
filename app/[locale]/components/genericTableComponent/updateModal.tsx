@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useFormik } from "formik";
-import * as yup from "yup";
+import type { Value } from "react-multi-date-picker";
 import {
   CustomFlowbiteTheme,
   Label,
@@ -11,6 +11,8 @@ import {
 } from "flowbite-react";
 import LoadingButton from "../../admin/components/loadingButton";
 import { FormField } from "@/types";
+import Image from "next/image";
+import DatePickerField from "../../admin/components/Calender/DatePickerField";
 
 interface FormValues {
   [key: string]: string | number;
@@ -40,22 +42,37 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
   objectDetails,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
-    useFormik({
-      initialValues: formFields.reduce(
-        (acc, field) => ({
-          ...acc,
-          [field.name]: objectDetails[field.name] || "",
-        }),
-        {},
-      ) as FormValues,
-      onSubmit: (formValues) => {
-        const filteredFormValues = Object.fromEntries(
-          Object.entries(formValues).filter(([key, value]) => value !== ""),
-        );
-        onSubmit(filteredFormValues);
-      },
-    });
+  const [datePickerValue, setDatePickerValue] = useState<Value>(
+    objectDetails["sessionDate"] ?? null,
+  );
+
+  const handleDateChange = (value: Value) => {
+    setDatePickerValue(value);
+    setFieldValue("sessionDate", value);
+  };
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    setFieldValue,
+  } = useFormik({
+    initialValues: formFields.reduce(
+      (acc, field) => ({
+        ...acc,
+        [field.name]: objectDetails[field.name] || "",
+      }),
+      {},
+    ) as FormValues,
+    onSubmit: (formValues) => {
+      const filteredFormValues = Object.fromEntries(
+        Object.entries(formValues).filter(([key, value]) => value !== ""),
+      );
+      onSubmit(filteredFormValues);
+    },
+  });
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | any) => {
@@ -157,6 +174,28 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
                   <span className="text-danger-color">
                     {errors[field.name]}
                   </span>
+                )}
+                {field.type === "datepicker" && (
+                  <div className="m-2">
+                    <div className="flex items-center">
+                      <div className="cursor-pointer">Choose Dates</div>
+                      <div className="relative w-4 h-4">
+                        <Image
+                          src="/vectors/ArrowRight.svg"
+                          alt="Arrow Right 90 degree"
+                          width={10}
+                          height={10}
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                    <DatePickerField
+                      value={datePickerValue}
+                      onChange={handleDateChange}
+                      error={errors[field.name]}
+                      touched={touched[field.name]}
+                    />
+                  </div>
                 )}
               </div>
             ))}

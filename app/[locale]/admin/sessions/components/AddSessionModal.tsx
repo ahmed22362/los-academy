@@ -69,7 +69,7 @@ export default function AddSessionModal({
   ];
   const addSession = (formData: any) => {
     setIsProcessing(true);
-
+    console.log(formData);
     if (formData.sessionDates.length === 0) {
       setIsProcessing(false);
       showError("please choose dates for the session ", toast);
@@ -99,9 +99,7 @@ export default function AddSessionModal({
             clearTimeout(timerToClose);
           }, 3000);
         } else {
-          let message;
-          Array.isArray(data) ? (message = data[0].message) : data.message;
-          showError(message, toast);
+          showError(data.message, toast);
         }
         setIsProcessing(false);
       })

@@ -8,6 +8,7 @@ interface DatePickerFieldProps {
   onChange: (value: Value) => void;
   error: string | undefined;
   touched: boolean | undefined;
+  mutable?: boolean;
 }
 
 const DatePickerField: React.FC<DatePickerFieldProps> = ({
@@ -15,6 +16,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   onChange,
   error,
   touched,
+  mutable,
 }) => {
   const MS_IN_MINUTE = 1000 * 60;
   const minDate = new Date(new Date().getTime() - 5 * MS_IN_MINUTE);
@@ -27,7 +29,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
         placeholder="MM/DD/YYYY-HH:mm"
         format="MM/DD/YYYY HH:mm:ss"
         minDate={minDate}
-        multiple
+        multiple={mutable ?? false}
         plugins={[<TimePicker position="bottom" />, <DatePanel markFocused />]}
       />
       {error && touched && <span className="text-danger-color">{error}</span>}

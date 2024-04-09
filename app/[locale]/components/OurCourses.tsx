@@ -148,15 +148,17 @@ function OurCourses() {
           </div>
         </div>
       ) : (
-        <Slider {...settings}>
+        <>
           {courses && courses.length > 0 ? (
-            courses.map((course: any, index: number) => (
-              <OurCard key={index} data={course} />
-            ))
+            <Slider {...settings}>
+              {courses.map((course: any, index: number) => (
+                <OurCard key={index} data={course} />
+              ))}
+            </Slider>
           ) : (
-            <OurCard data={noData} />
+            <div>There is no courses found</div>
           )}
-        </Slider>
+        </>
       )}
       <ScrollTop className="bg-secondary-color hover:bg-secondary-hover" />
     </section>

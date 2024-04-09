@@ -5,14 +5,10 @@ import OurCard from "./OurCard";
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { Skeleton } from "primereact/skeleton";
-import { usePathname } from "next/navigation";
 import { ScrollTop } from "primereact/scrolltop";
-import { title } from "process";
 function OurCourses() {
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const pathname = usePathname();
-  const t = useTranslations("courses");
   const t2 = useTranslations("Hompage");
   const noData = {
     title: "No Courses Found",
@@ -23,14 +19,14 @@ function OurCourses() {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: courses.length === 1 ? 1 : courses.length === 2 ? 2 : 3,
+    slidesToShow: (courses?.length < 2 ? courses?.length : 3) ?? 0,
     slidesToScroll: 1,
     initialSlide: 1,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: courses.length > 1 ? 3 : 1,
+          slidesToShow: courses?.length > 1 ? 3 : 1,
           slidesToScroll: 3,
           infinite: true,
         },
@@ -38,7 +34,7 @@ function OurCourses() {
       {
         breakpoint: 1023,
         settings: {
-          slidesToShow: courses.length > 1 ? 2 : 1,
+          slidesToShow: courses?.length > 1 ? 2 : 1,
           slidesToScroll: 2,
           initialSlide: 2,
         },
@@ -63,7 +59,7 @@ function OurCourses() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data.data);
-        setCourses(data.data);
+        setCourses(data.data ?? []);
         setIsLoading(false);
       })
       .catch((err) => console.log(err));

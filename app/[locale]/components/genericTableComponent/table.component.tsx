@@ -6,6 +6,7 @@ import { Active, Recommend } from "../../admin/plans/components/planTable";
 import { GrDocumentDownload } from "react-icons/gr";
 import Link from "next/link";
 import { renderLinkComponent } from "../../admin/material/components/materialTable";
+import { truncateHtmlText } from "@/utilities/truncateHtmlText";
 
 const customTheme: CustomFlowbiteTheme["table"] = {
   head: {
@@ -75,6 +76,18 @@ export function renderTableBody<T>({
                   <Active active={row[valueName]} />
                 ) : valueName === "b2Link" ? (
                   renderLinkComponent(row[valueName])
+                ) : valueName === "details" ? (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: truncateHtmlText(row.details, 50),
+                    }}
+                  />
+                ) : valueName === "description" ? (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: truncateHtmlText(row.description, 50),
+                    }}
+                  />
                 ) : typeof row[valueName] === "string" &&
                   row[valueName].length > 100 ? (
                   row[valueName].substring(0, 100) + "..."

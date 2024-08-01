@@ -17,6 +17,7 @@
     "flowbite": "^1.8.1",
     "flowbite-react": "^0.6.4",
     "formik": "^2.4.5",
+    "html-to-text": "^9.0.5",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "lodash.js": "^0.0.1-security",
@@ -35,6 +36,7 @@
     "react-joyride": "^2.7.0",
     "react-multi-date-picker": "^4.4.1",
     "react-pro-sidebar": "^1.1.0-alpha.1",
+    "react-quill": "^2.0.0",
     "react-select": "^5.8.0",
     "react-slick": "^0.29.0",
     "react-timer-hook": "^3.0.7",
@@ -46,6 +48,7 @@
   },
   "devDependencies": {
     "@types/aos": "^3.0.7",
+    "@types/html-to-text": "^9.0.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

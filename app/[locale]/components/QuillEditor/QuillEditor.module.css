@@ -1,0 +1,8 @@
+.quillContainer {
+  padding-bottom: 10px;
+  margin: 16px 0;
+}
+
+.quillEditor {
+  height: 95px; /* Adjust this value as needed */
+}

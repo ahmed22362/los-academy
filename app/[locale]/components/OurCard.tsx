@@ -47,14 +47,17 @@ function OurCard({ data }: { data: any }) {
           className={"w-auto h-auto"}
         />
       </div>
-      <h3 className="my-2 text-2xl font-semibold tracking-tight text-black-color-one h-[70px]">
+      <h3 className="my-2 text-2xl font-semibold tracking-tight text-black-color-one">
         {courseData.title}
       </h3>
-      <p
-        className={`font-medium text-black-two-color text-base max-md:text-sm h-[100px]`}
+      <div
+        className={`font-medium text-black-two-color text-base max-md:text-sm h-[120px]`}
+        dangerouslySetInnerHTML={{
+          __html: courseData.description,
+        }}
       >
-        {courseData.description}
-      </p>
+        {/* {courseData.description} */}
+      </div>
       <button
         className={
           "bg-secondary-color hover:bg-secondary-hover text-sm font-semibold transition-colors text-white shadow-[0px_4px_10px_0px_rgba(0,0,0,0.25)] py-4 px-12 rounded-full w-50 mx-auto mt-5 max-md:py-2.5 max-md:px-10 max-md:w-45"

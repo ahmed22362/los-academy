@@ -11,8 +11,8 @@ import { showError, showSuccess } from "@/utilities/toastMessages";
 
 export const courseFormFields: FormField[] = [
   { name: "title", label: "Course Title", type: "text" },
-  { name: "description", label: "Course Description", type: "text" },
-  { name: "details", label: "Course Details", type: "textarea" },
+  { name: "description", label: "Course Description", type: "richEditText" },
+  { name: "details", label: "Course Details", type: "richEditText" },
 ];
 export default function AddCourseModal({
   openAssignModal,

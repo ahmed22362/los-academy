@@ -58,7 +58,6 @@ function OurCourses() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
         setCourses(data.data ?? []);
         setIsLoading(false);
       })

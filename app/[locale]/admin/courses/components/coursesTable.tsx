@@ -11,6 +11,7 @@ import {
   renderTableBody,
   renderTableHead,
 } from "@/app/[locale]/components/genericTableComponent/table.component";
+import { truncateHtmlText } from "@/utilities/truncateHtmlText";
 
 export default function CoursesTable() {
   const [allCourses, setAllCourses] = useState([]);
@@ -67,6 +68,9 @@ export default function CoursesTable() {
   useEffect(() => {
     fetchAllCourses(rows, 1);
   }, []);
+
+
+
   const renderMobileCardComponent = (course: Course) => (
     <div key={course.id} className="bg-white space-y-3 p-4 rounded-lg shadow">
       <div className="flex items-center space-x-2 text-sm">
@@ -77,11 +81,20 @@ export default function CoursesTable() {
         </div>
         <div className="text-gray-500">{course.title}</div>
       </div>
-      <div className="text-sm text-gray-700">{course.description}</div>
       <div className="text-sm text-gray-700">
-        {course.details.length > 20
-          ? course.details.substring(0, 100) + "..."
-          : course.details}
+        <span
+          dangerouslySetInnerHTML={{
+            __html: truncateHtmlText(course.description, 30),
+          }}
+        />
+      </div>
+      <hr className="border-gray-300 my-2" />
+      <div className="text-sm text-gray-700">
+        <span
+          dangerouslySetInnerHTML={{
+            __html: truncateHtmlText(course.details, 100),
+          }}
+        />
       </div>
       <div className="text-sm font-medium text-black flex justify-center items-center">
         {
@@ -94,6 +107,7 @@ export default function CoursesTable() {
       </div>
     </div>
   );
+
   const renderUpdateComponent = (course: Course) => (
     <FetchCoursesData
       key={course.id}
@@ -101,6 +115,7 @@ export default function CoursesTable() {
       updateComponent={fetchAllCourses}
     />
   );
+
   return (
     <>
       {isLoading ? (

@@ -15,6 +15,7 @@ import DatePickerField from "../../admin/components/Calender/DatePickerField";
 import Image from "next/image";
 import { showError } from "@/utilities/toastMessages";
 import { Toast } from "primereact/toast";
+import QuillEditor from "../QuillEditor/QuillEditor";
 
 interface FormValues {
   [key: string]: string | number;
@@ -172,6 +173,10 @@ const AddModal: React.FC<AddModalProps> = ({
                         }}
                       />
                     </div>
+                  ) : field.type === "richEditText" ? (
+                    <QuillEditor
+                      onChange={(content) => setFieldValue(field.name, content)}
+                    />
                   ) : (
                     <TextInput
                       id={field.name}

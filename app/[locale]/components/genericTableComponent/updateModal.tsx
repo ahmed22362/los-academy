@@ -13,6 +13,7 @@ import LoadingButton from "../../admin/components/loadingButton";
 import { FormField } from "@/types";
 import Image from "next/image";
 import DatePickerField from "../../admin/components/Calender/DatePickerField";
+import QuillEditor from "../QuillEditor/QuillEditor";
 
 interface FormValues {
   [key: string]: string | number;
@@ -160,6 +161,11 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
                       </div>
                     ))}
                   </div>
+                ) : field.type === "richEditText" ? (
+                  <QuillEditor
+                    initialValue={objectDetails[field.name] as string}
+                    onChange={(content) => setFieldValue(field.name, content)}
+                  />
                 ) : (
                   <TextInput
                     id={field.name}

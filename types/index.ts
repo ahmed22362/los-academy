@@ -36,6 +36,7 @@ export interface FormField {
     | "tel"
     | "number"
     | "textarea"
+    | "richEditText"
     | "file"
     | "datepicker"
     | "radio";

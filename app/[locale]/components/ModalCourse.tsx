@@ -94,7 +94,8 @@ const ModalCourse: FC<ModalCourseProps> = ({
               </h3>
               <ul className="text-md text-black-color-two font-normal list-none pl-4">
                 {[
-                  "Get 1 free trial class for any course",
+                  "Get 2 free trial class for any course",
+                  "Progress Reports After Each Session to Track Student's Level",
                   "Get a certificate after completing course",
                   "Safe learning environment for you and kids",
                   "One-to-One Live Sessions",

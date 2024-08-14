@@ -50,10 +50,19 @@ function FooterMain() {
               <GoLocation className="text-xl" /> Location
             </li>
             <li className="flex items-start gap-4">
-              <BsTelephone className="text-xl" /> +201102845688
+              <BsTelephone className="text-xl" />
+              <a href="tel:+201102845688" className="hover:underline">
+                +201102845688
+              </a>
             </li>
             <li className="flex items-start gap-4">
-              <TbMailOpened className="text-xl" /> support@los-academy.net
+              <TbMailOpened className="text-xl" />
+              <a
+                href="mailto:support@los-academy.net"
+                className="hover:underline"
+              >
+                support@los-academy.net
+              </a>
             </li>
           </ul>
         </div>

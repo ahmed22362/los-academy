@@ -10,6 +10,7 @@ export default function Footer() {
   const isAdminLogin = router.startsWith("/los_auth");
   const isStudentProfile = router.startsWith("/student");
   const isTeacherProfile = router.startsWith("/teacher");
+  const currentYear = new Date().getFullYear();
   const t = useTranslations("Footer");
   if (
     !(isAdminDashboard || isAdminLogin || isStudentProfile || isTeacherProfile)
@@ -25,7 +26,7 @@ export default function Footer() {
         <section className="w-full text-center p-4 border-t-[1px] border-secondary-color">
           {" "}
           <p className="font-semibold text-sm text-black-one-color">
-            {t("footer-title")}
+            {`All Rights Reserved - Codegate©${currentYear}`}
           </p>{" "}
         </section>
       </footer>

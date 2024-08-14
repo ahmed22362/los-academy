@@ -95,16 +95,15 @@ const ModalCourse: FC<ModalCourseProps> = ({
               <ul className="text-md text-black-color-two font-normal list-none pl-4">
                 {[
                   "Get 2 free trial class for any course",
-                  "Progress Reports After Each Session to Track Student's Level",
+                  "Progress Reports After Each Session",
                   "Get a certificate after completing course",
                   "Safe learning environment for you and kids",
                   "One-to-One Live Sessions",
-                  "Professional & Qualified",
                 ].map((item, index) => (
                   <li key={index} className="flex items-center mb-2">
                     <FaCheckCircle
                       className="text-secondary-color mr-2"
-                      size={20}
+                      style={{ fontSize: "20px", minWidth: "20px" }}
                     />{" "}
                     {item}
                   </li>

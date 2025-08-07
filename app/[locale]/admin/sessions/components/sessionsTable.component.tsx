@@ -1,52 +1,61 @@
-"use client";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
-import "primereact/resources/primereact.min.css";
-import { useState } from "react";
-import SessionComboBox from "./sessionComboBox";
-import Cookies from "universal-cookie";
-import { convertDateTimeZone } from "@/utilities";
-import getDateAfter from "@/utilities/getDateAfterDuration";
-import StatusBadge from "../../../../../utilities/StatusBadge";
-import { Session, Student, Teacher } from "@/types";
-import GenericSessionsTable from "@/utilities/session/GenericSessionTable";
-import { fetchEndPoint } from "@/utilities/fetchDataFromApi";
-import GetSessionOptions from "./SessionOptions";
+'use client';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import 'primereact/resources/primereact.min.css';
+import { useState } from 'react';
+import SessionComboBox from './sessionComboBox';
+import Cookies from 'universal-cookie';
+import { convertDateTimeZone } from '@/utilities';
+import getDateAfter from '@/utilities/getDateAfterDuration';
+import StatusBadge from '../../../../../utilities/StatusBadge';
+import { Session, Student, Teacher } from '@/types';
+import GenericSessionsTable from '@/utilities/session/GenericSessionTable';
+import { fetchEndPoint } from '@/utilities/fetchDataFromApi';
+import GetSessionOptions from './SessionOptions';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function SessionsTable() {
+  const searchParams = useSearchParams();
+
   const [allSessions, setAllSessions]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const cookies = new Cookies();
   const [totalRecord, setTotalRecords] = useState<number>(1);
 
-  const students = fetchEndPoint<Student>("user", cookies.get("token"));
-  const teachers = fetchEndPoint<Teacher>("teacher", cookies.get("token"));
-
+  const students = fetchEndPoint<Student>('user', cookies.get('token'));
+  const teachers = fetchEndPoint<Teacher>('teacher', cookies.get('token'));
+  // Get current filters from URL
+  const currentPage = parseInt(searchParams.get('page') || '1');
+  const currentLimit = parseInt(searchParams.get('limit') || '10');
+  const teacherFilter = searchParams.get('teacher');
+  const userFilter = searchParams.get('user');
   const headersMapping: Record<string, keyof Session | string> = {
-    "#ID": "id",
-    "Teacher Name": "sessionInfo.teacher.name",
-    "Student Name": "sessionInfo.user.name",
-    "Date Time": "sessionDate",
-    "Session Duration": "sessionDuration",
-    Type: "type",
-    Status: "status",
+    '#ID': 'id',
+    'Teacher Name': 'sessionInfo.teacher.name',
+    'Student Name': 'sessionInfo.user.name',
+    'Date Time': 'sessionDate',
+    'Session Duration': 'sessionDuration',
+    Type: 'type',
+    Status: 'status',
   };
 
   const fetchAllSessions = (limit: number = 10, page: number = 1) => {
     setIsLoading(true);
-    let url = `${process.env.NEXT_PUBLIC_APIURL}/session`;
-    if (limit !== undefined) {
-      url += `?limit=${limit}`;
-      if (page !== undefined) {
-        url += `&page=${page}`;
-      }
-    } else if (page !== undefined) {
-      url += `?page=${page}`;
-    }
+    // Start building URL with all filters
+    const params = new URLSearchParams();
+    params.set('limit', String(limit));
+    params.set('page', String(page));
+
+    // Forward additional filters
+    if (teacherFilter) params.set('teacher', teacherFilter);
+    if (userFilter) params.set('user', userFilter);
+    const url = `${
+      process.env.NEXT_PUBLIC_APIURL
+    }/session?${params.toString()}`;
     fetch(url, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${cookies.get('token')}`,
       },
     })
       .then((response) => response.json())
@@ -81,19 +90,19 @@ export default function SessionsTable() {
         {`From: 
   ${convertDateTimeZone(
     session.sessionDate,
-    "UTC",
+    'UTC',
     Intl.DateTimeFormat().resolvedOptions().timeZone,
-    "YYYY-MM-DD h:mm A",
+    'YYYY-MM-DD h:mm A'
   )} To ${convertDateTimeZone(
           getDateAfter(session.sessionDate, session.sessionDuration),
-          "UTC",
+          'UTC',
           Intl.DateTimeFormat().resolvedOptions().timeZone,
-          "YYYY-MM-DD h:mm A",
+          'YYYY-MM-DD h:mm A'
         )} `}
       </div>
       <div className="text-sm text-gray-700"> Type: {session.type}</div>
       <span className="text-sm text-gray-700 w-fit m-auto">
-        {" "}
+        {' '}
         Status: {<StatusBadge status={session.status} />}
       </span>
       <div className="text-sm font-medium text-black flex justify-center items-center">

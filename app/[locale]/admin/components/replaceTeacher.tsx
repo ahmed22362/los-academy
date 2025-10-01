@@ -1,31 +1,31 @@
-"use client";
+'use client';
 
-import { Label, Select } from "flowbite-react";
-import { useEffect, useRef, useState } from "react";
-import LoadingButton from "./loadingButton";
-import Cookies from "universal-cookie";
-import { Toast } from "primereact/toast";
-import { useRouter } from "next/navigation";
-import { fetchEndPoint } from "@/utilities/fetchDataFromApi";
-import { showError, showSuccess } from "@/utilities/toastMessages";
+import { Label, Select } from 'flowbite-react';
+import { useEffect, useRef, useState } from 'react';
+import LoadingButton from './loadingButton';
+import Cookies from 'universal-cookie';
+import { Toast } from 'primereact/toast';
+import { useRouter } from 'next/navigation';
+import { fetchEndPoint } from '@/utilities/fetchDataFromApi';
+import { showError, showSuccess } from '@/utilities/toastMessages';
 
 export default function replaceTeacher() {
   const [isProcessing, setIsProcessing] = useState(false);
   const cookies = new Cookies();
-  const [oldTeacher, setOldTeacher] = useState<any>("");
-  const [newTeacher, setNewTeacher] = useState<any>("");
-  const [student, setStudent] = useState<any>("");
+  const [oldTeacher, setOldTeacher] = useState<any>('');
+  const [newTeacher, setNewTeacher] = useState<any>('');
+  const [student, setStudent] = useState<any>('');
   const [allTeacher, setAllTeacher] = useState([]);
-  const allStudents = fetchEndPoint("user", cookies.get("token"));
+  const allStudents = fetchEndPoint('user', cookies.get('token'));
   const router = useRouter();
   const toast = useRef<Toast>(null);
 
   const getTeachers = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/teacher`, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${cookies.get('token')}`,
       },
     })
       .then((response) => response.json())
@@ -38,15 +38,15 @@ export default function replaceTeacher() {
 
   const replaceTeacherAction = () => {
     if (!oldTeacher || !student || !newTeacher) {
-      return showError("Please choose teacher and student", toast);
+      return showError('Please choose teacher and student', toast);
     }
 
     setIsProcessing(true);
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/session/replaceTeacher`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${cookies.get('token')}`,
       },
       body: JSON.stringify({
         oldTeacherId: oldTeacher,
@@ -57,7 +57,7 @@ export default function replaceTeacher() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        if (data.status === "success") {
+        if (data.status === 'success') {
           showSuccess(data.message, toast);
           const timer = setTimeout(() => {
             router.refresh();
@@ -81,9 +81,13 @@ export default function replaceTeacher() {
 
   return (
     <div className="w-full my-5">
-      <h3 className={"adminBoxTitle responsiveText"}>Replace Teacher</h3>
+      <h3 className={'adminBoxTitle responsiveText'}>Replace Teacher</h3>
       <Toast ref={toast} />
-      <div className={"adminBox mt-4 flex flex-col w-[390px] mx-auto"}>
+      <div
+        className={
+          'adminBox mt-4 flex flex-col w-full max-w-[800px] mx-auto lg:max-w-full'
+        }
+      >
         <div className="block mb-2">
           <Label>choose Old Teacher:</Label>
         </div>

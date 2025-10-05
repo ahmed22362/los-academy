@@ -1,18 +1,19 @@
-"use client";
+'use client';
 
-import { AiOutlineFileText } from "react-icons/ai";
-import { useRef, useState } from "react";
-import { BiTrash } from "react-icons/bi";
-import Cookies from "universal-cookie";
-import { Toast } from "primereact/toast";
-import { useRouter } from "next/navigation";
-import { convertDateTimeZone } from "@/utilities";
-import ReportModal from "../../../teacher/components/reoprt/reportModal";
-import { UserRole } from "@/types";
-import { showError } from "@/utilities/toastMessages";
+import { AiOutlineFileText } from 'react-icons/ai';
+import { useRef, useState } from 'react';
+import { BiTrash } from 'react-icons/bi';
+import Cookies from 'universal-cookie';
+import { Toast } from 'primereact/toast';
+import { useRouter } from 'next/navigation';
+import { convertDateTimeZone } from '@/utilities';
+import ReportModal from '../../../teacher/components/reoprt/reportModal';
+import { UserRole } from '@/types';
+import { showError } from '@/utilities/toastMessages';
 
 export default function ReportData({ data }: { data: any }) {
   const report = data && data;
+  console.log(report);
   const convertDate = convertDateTimeZone;
   const [selectedReport, setSelectedReport]: any = useState(false);
   const cookies = new Cookies();
@@ -42,18 +43,18 @@ export default function ReportData({ data }: { data: any }) {
       setVisible(true);
       toastC.current?.clear();
       toastC.current?.show({
-        severity: "warn",
+        severity: 'warn',
         sticky: true,
         content: (
           <div
             className="flex flex-column align-items-center"
-            style={{ flex: "1" }}
+            style={{ flex: '1' }}
           >
             <div className="flex flex-col">
               <div className="text-center">
                 <i
                   className="pi pi-exclamation-triangle"
-                  style={{ fontSize: "3rem" }}
+                  style={{ fontSize: '3rem' }}
                 ></i>
                 <div className="font-bold text-xl my-3">
                   Are you sure you want to delete?
@@ -85,15 +86,15 @@ export default function ReportData({ data }: { data: any }) {
 
   const confirmDelete = () => {
     fetch(`${process.env.NEXT_PUBLIC_APIURL}/report/${report.id}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${cookies.get('token')}`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.status === "success") {
+        if (data.status === 'success') {
           showError(data.message, toast);
           const timer = setTimeout(() => {
             router.refresh();
@@ -112,34 +113,34 @@ export default function ReportData({ data }: { data: any }) {
   return (
     <div
       className={
-        "bg-white-color px-10 py-5 rounded-[16px] flex justify-between items-center w-full my-4 flex-wrap"
+        'bg-white-color px-10 py-5 rounded-[16px] flex justify-between items-center w-full my-4 flex-wrap'
       }
     >
-      <div className={"flex items-center justify-center gap-5"}>
-        <AiOutlineFileText className={"text-[26px]"} />
-        <div className={"flex flex-col gap-2"}>
-          <p className={"font-semibold text-base"}>{`Report ID ${
+      <div className={'flex items-center justify-center gap-5'}>
+        <AiOutlineFileText className={'text-[26px]'} />
+        <div className={'flex flex-col gap-2'}>
+          <p className={'font-semibold text-base'}>{`Report ID ${
             report.id
           } (${convertDate(
             report.createdAt,
-            "UTC",
+            'UTC',
             Intl.DateTimeFormat().resolvedOptions().timeZone,
-            "D-MMM-YYYY",
+            'D-MMM-YYYY'
           )})`}</p>
           <span>{report.title}</span>
         </div>
       </div>
-      <div className={"flex gap-5 items-center"}>
+      <div className={'flex gap-5 items-center'}>
         <Toast ref={toast} />
         <button
-          className={"smallBtn hover:bg-secondary-hover transition-colors"}
+          className={'smallBtn hover:bg-secondary-hover transition-colors'}
           onClick={handleOpen}
         >
           View
         </button>
         <BiTrash
           className={
-            "text-[26px] text-danger-color cursor-pointer hover:text-red-300 transition-colors"
+            'text-[26px] text-danger-color cursor-pointer hover:text-red-300 transition-colors'
           }
           onClick={confirm}
         />

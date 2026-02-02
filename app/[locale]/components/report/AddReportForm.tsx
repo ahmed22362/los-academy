@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Toast } from "primereact/toast";
-import LoadingButton from "../../admin/components/loadingButton";
+import React, { useState, useRef, useEffect } from 'react';
+import { Toast } from 'primereact/toast';
+import LoadingButton from '../../admin/components/loadingButton';
 import {
   CustomFlowbiteTheme,
   Label,
@@ -9,18 +9,18 @@ import {
   Select,
   TextInput,
   Textarea,
-} from "flowbite-react";
+} from 'flowbite-react';
 import {
   GradeOptions,
   ReportsCourses,
-} from "../../teacher/components/reoprt/addReportModal";
-import { FaRegFileLines } from "react-icons/fa6";
-import { Student } from "@/types";
+} from '../../teacher/components/reoprt/addReportModal';
+import { FaRegFileLines } from 'react-icons/fa6';
+import { Student } from '@/types';
 
-const modalTheme: CustomFlowbiteTheme["modal"] = {
+const modalTheme: CustomFlowbiteTheme['modal'] = {
   header: {
-    base: "flex items-start justify-between rounded-t px-5 py-2 w-full",
-    title: "w-full flex items-center gap-4 text-2xl font-semibold",
+    base: 'flex items-start justify-between rounded-t px-5 py-2 w-full',
+    title: 'w-full flex items-center gap-4 text-2xl font-semibold',
   },
 };
 interface AddReportFormProps {
@@ -67,10 +67,10 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
     };
 
     if (openAssignModal) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     }
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [openAssignModal, handleCloseModal]);
 
@@ -136,7 +136,7 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
         : `Report ${formData.sessionId}`;
       onAddReport(formData);
     } else {
-      console.error("There is no handled submit function in add report form!");
+      console.error('There is no handled submit function in add report form!');
     }
   };
   return (
@@ -144,7 +144,7 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
       ref={modalRef}
       show={openAssignModal}
       onClose={handleCloseModal}
-      size={"3xl"}
+      size={'3xl'}
     >
       <Modal.Header theme={modalTheme.header}>
         {modalHeader} <FaRegFileLines />
@@ -157,7 +157,7 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
             <div className="mb-2 block">
               <Label htmlFor="id" value="Session ID" />
             </div>
-            <TextInput id="id" defaultValue={sessionId ?? ""} type="number" />
+            <TextInput id="id" defaultValue={sessionId ?? ''} type="number" />
           </div>
 
           {monthlyReport && (
@@ -167,7 +167,7 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
               </div>
               <Select
                 id="id"
-                defaultValue={isEditMode ? initialData?.userId : ""}
+                defaultValue={isEditMode ? initialData?.userId : ''}
                 onChange={(e) => handleUserIdChange(e.target.value)}
                 className="w-full"
               >
@@ -221,8 +221,8 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
                   key={`course-${index}`}
                   defaultValue={
                     isEditMode
-                      ? initialData?.reportCourses[index]?.courseComment || ""
-                      : ""
+                      ? initialData?.reportCourses[index]?.courseComment || ''
+                      : ''
                   }
                   onChange={(e) => {
                     handleCourseCommentChange({
@@ -236,9 +236,9 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
           </div>
           <fieldset className="flex w-full flex-col gap-4" id="radio">
             <legend className="mb-4">
-              Total {monthlyReport ? "Month" : "session"} grade
+              Total {monthlyReport ? 'Month' : 'session'} grade
             </legend>
-            <div className={"flex flex-row gap-4"}>
+            <div className={'flex flex-row gap-4'}>
               {Object.values(GradeOptions).map((grade) => (
                 <div className="flex items-center gap-2" key={grade}>
                   <Label className="cursor-pointer" htmlFor={grade}>
@@ -267,19 +267,18 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
             <Textarea
               id="comment"
               placeholder="Leave a comment..."
-              required
               rows={4}
               onChange={(e) => handleCommentChange(e.target.value)}
-              defaultValue={isEditMode ? initialData.comment : ""}
+              defaultValue={isEditMode ? initialData.comment : ''}
             />
           </div>
           <div className="w-full">
             <LoadingButton
-              title={isEditMode ? "Update Report" : "Add Report"}
+              title={isEditMode ? 'Update Report' : 'Add Report'}
               isProcessing={isProcessing}
               action={() => handleSubmit(formData)}
               customStyle={
-                "text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors"
+                'text-white bg-secondary-color hover:bg-secondary-hover rounded-full py-2 px-5 transition-colors'
               }
             />
           </div>

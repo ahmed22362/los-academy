@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { Spinner, Table } from "flowbite-react";
-import { useEffect, useRef, useState } from "react";
-import Cookies from "universal-cookie";
-import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
-import MonthlyReportCombBox from "./monthlyReportCombBox";
-import FetchMonthlyReportsData from "./MonthlyReportOptions";
-import { convertDateTimeZone } from "@/utilities";
+import { Spinner, Table } from 'flowbite-react';
+import { useEffect, useRef, useState } from 'react';
+import Cookies from 'universal-cookie';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
+import MonthlyReportCombBox from './monthlyReportCombBox';
+import FetchMonthlyReportsData from './MonthlyReportOptions';
+import { convertDateTimeZone } from '@/utilities';
 import {
   renderTableBody,
   renderTableHead,
-} from "@/app/[locale]/components/genericTableComponent/table.component";
-import { MonthlyReport, Student, UserRole } from "@/types";
-import { Toast } from "primereact/toast";
-import { showError } from "@/utilities/toastMessages";
-import { fetchEndPoint } from "@/utilities/fetchDataFromApi";
+} from '@/app/[locale]/components/genericTableComponent/table.component';
+import { MonthlyReport, Student, UserRole } from '@/types';
+import { Toast } from 'primereact/toast';
+import { showError } from '@/utilities/toastMessages';
+import { fetchEndPoint } from '@/utilities/fetchDataFromApi';
 
 export default function MonthlyReportTable() {
   const [allReports, setAllReports] = useState([]);
@@ -22,43 +22,52 @@ export default function MonthlyReportTable() {
   const cookies = new Cookies();
   const [first, setFirst] = useState<number>(0);
   const [rows, setRows] = useState<number>(10);
+  const [search, setSearch] = useState<string>('');
   const toast = useRef<Toast>(null);
-  const allStudents = fetchEndPoint<Student>("user", cookies.get("token"));
+  const allStudents = fetchEndPoint<Student>('user', cookies.get('token'));
 
   const onPageChange = (event: PaginatorPageChangeEvent) => {
     setFirst(event.first);
     setRows(event.rows);
-    getMonthlyReport(event.rows, event.first / event.rows + 1);
+    getMonthlyReport(event.rows, event.first / event.rows + 1, search);
+  };
+
+  const handleSearch = (value: string) => {
+    setSearch(value);
+    setFirst(0);
+    getMonthlyReport(rows, 1, value);
   };
 
   const headerMapping = {
-    "#Report ID": "id",
-    "Student Name": "user.name",
-    "Teacher Name": "teacher.name",
-    "Report Date": "createdAt",
+    '#Report ID': 'id',
+    'Student Name': 'user.name',
+    'Teacher Name': 'teacher.name',
+    'Report Date': 'createdAt',
   };
-  const getMonthlyReport = (limit?: number, page?: number) => {
+  const getMonthlyReport = (
+    limit?: number,
+    page?: number,
+    searchQuery?: string,
+  ) => {
     setIsLoading(true);
-    let url = `${process.env.NEXT_PUBLIC_APIURL}/monthlyReport`;
-    if (limit !== undefined) {
-      url += `?limit=${limit}`;
-      if (page !== undefined) {
-        url += `&page=${page}`;
-      }
-    } else if (page !== undefined) {
-      url += `?page=${page}`;
-    }
+    const params = new URLSearchParams();
+    if (limit !== undefined) params.set('limit', String(limit));
+    if (page !== undefined) params.set('page', String(page));
+    const q = searchQuery !== undefined ? searchQuery : search;
+    if (q) params.set('search', q);
+    const queryString = params.toString();
+    const url = `${process.env.NEXT_PUBLIC_APIURL}/monthlyReport${queryString ? `?${queryString}` : ''}`;
     fetch(url, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${cookies.get('token')}`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        if (data.status === "success") {
+        if (data.status === 'success') {
           setAllReports(data.data);
         } else {
           showError(`Error Getting monthly reports ${data.message}`, toast);
@@ -104,13 +113,13 @@ export default function MonthlyReportTable() {
         <strong>{report.teacher?.name}</strong>
       </div>
       <div className="text-sm font-medium text-black flex justify-center items-center">
-        {"At: "}
+        {'At: '}
         <strong>
           {convertDateTimeZone(
             report.createdAt,
-            "UTC",
+            'UTC',
             Intl.DateTimeFormat().resolvedOptions().timeZone,
-            "YYYY-MM-DD h:mm A",
+            'YYYY-MM-DD h:mm A',
           )}
         </strong>
       </div>
@@ -120,26 +129,27 @@ export default function MonthlyReportTable() {
     </div>
   );
   return (
-    <>
+    <div className="p-5">
+      <MonthlyReportCombBox
+        updateComponent={updateComponent}
+        students={allStudents}
+        onSearch={handleSearch}
+      />
       {isLoading ? (
-        <div className="flex justify-center items-center h-full">
+        <div className="flex justify-center items-center h-40">
           <Spinner size="xl" />
         </div>
       ) : (
-        <div className="p-5">
-          <MonthlyReportCombBox
-            updateComponent={updateComponent}
-            students={allStudents}
-          />
+        <>
           {allReports && allReports.length > 0 ? (
             <>
-              {" "}
+              {' '}
               <div className="overflow-auto rounded-lg shadow hidden md:block">
                 <Table>
                   {renderTableHead(Object.keys(headerMapping), false, true)}
                   {renderTableBody({
                     headersValues: Object.values(headerMapping),
-                    idValueName: "id",
+                    idValueName: 'id',
                     data: allReports,
                     renderUpdateComponent: (report: MonthlyReport) =>
                       renderUpdateComponent(report),
@@ -157,17 +167,17 @@ export default function MonthlyReportTable() {
               There are no Monthly Reports, Add One!
             </div>
           )}
-        </div>
+          <div className="card mt-4">
+            <Paginator
+              first={first}
+              rows={rows}
+              totalRecords={allReports?.length ?? 0}
+              rowsPerPageOptions={[10, 20, 30]}
+              onPageChange={onPageChange}
+            />
+          </div>
+        </>
       )}
-      <div className="card mt-4">
-        <Paginator
-          first={first}
-          rows={rows}
-          totalRecords={allReports?.length ?? 0}
-          rowsPerPageOptions={[10, 20, 30]}
-          onPageChange={onPageChange}
-        />
-      </div>
-    </>
+    </div>
   );
 }

@@ -59,6 +59,22 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
 
   const toast = useRef<Toast>(null);
 
+  // Pre-populate all courses with their default grade so unmodified selects
+  // are not sent as undefined to the backend.
+  useEffect(() => {
+    if (!isEditMode && courses && courses.length > 0) {
+      setFormData((prev: any) => ({
+        ...prev,
+        reportCourses: courses.map((courseName) => {
+          const existing = prev.reportCourses?.find(
+            (c: ReportsCourses) => c.courseName === courseName,
+          );
+          return existing ?? { courseName, courseGrade: GradeOptions.AVERAGE };
+        }),
+      }));
+    }
+  }, [courses, isEditMode]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | any) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -76,6 +92,10 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
 
   const handleCommentChange = (comment: string) => {
     setFormData({ ...formData, comment });
+  };
+
+  const handleSessionIdChange = (sessionId: number) => {
+    setFormData({ ...formData, sessionId });
   };
 
   const handleTotalGradeChange = (grade: GradeOptions) => {
@@ -157,7 +177,12 @@ const AddReportForm: React.FC<AddReportFormProps> = ({
             <div className="mb-2 block">
               <Label htmlFor="id" value="Session ID" />
             </div>
-            <TextInput id="id" defaultValue={sessionId ?? ''} type="number" />
+            <TextInput
+              id="id"
+              defaultValue={sessionId ?? ''}
+              type="number"
+              onChange={(e) => handleSessionIdChange(Number(e.target.value))}
+            />
           </div>
 
           {monthlyReport && (

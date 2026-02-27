@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Spinner, Table } from "flowbite-react";
-import { useEffect, useState } from "react";
-import FetchStudentData from "./deleteStudentData";
-import StudentComboBox from "./studentComboBox";
-import Cookies from "universal-cookie";
-import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
-import ContactOptions from "./contactOptionsComponent";
+import { Spinner, Table } from 'flowbite-react';
+import { useEffect, useState } from 'react';
+import FetchStudentData from './deleteStudentData';
+import StudentComboBox from './studentComboBox';
+import Cookies from 'universal-cookie';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
+import ContactOptions from './contactOptionsComponent';
 import {
   renderTableBody,
   renderTableHead,
-} from "@/app/[locale]/components/genericTableComponent/table.component";
-import { Student } from "@/types";
+} from '@/app/[locale]/components/genericTableComponent/table.component';
+import { Student } from '@/types';
 
 export default function StudentTable() {
   const [allStudents, setAllStudents]: any = useState([]);
@@ -20,33 +20,36 @@ export default function StudentTable() {
   const cookies = new Cookies();
   const [first, setFirst] = useState<number>(0);
   const [rows, setRows] = useState<number>(10);
+  const [search, setSearch] = useState<string>('');
 
   const headersMapping: Record<string, keyof Student> = {
-    "#ID": "id",
-    Name: "name",
-    Email: "email",
-    Gender: "gender",
-    Age: "age",
-    "Available Free Session": "availableFreeSession",
-    "Remain Paid Sessions": "remainSessions",
+    '#ID': 'id',
+    Name: 'name',
+    Email: 'email',
+    Gender: 'gender',
+    Age: 'age',
+    'Available Free Session': 'availableFreeSession',
+    'Remain Paid Sessions': 'remainSessions',
   };
 
-  const fetchAllStudents = (limit?: number, page?: number) => {
+  const fetchAllStudents = (
+    limit?: number,
+    page?: number,
+    searchQuery?: string,
+  ) => {
     setIsLoading(true);
-    let url = `${process.env.NEXT_PUBLIC_APIURL}/user`;
-    if (limit !== undefined) {
-      url += `?limit=${limit}`;
-      if (page !== undefined) {
-        url += `&page=${page}`;
-      }
-    } else if (page !== undefined) {
-      url += `?page=${page}`;
-    }
+    const params = new URLSearchParams();
+    if (limit !== undefined) params.set('limit', String(limit));
+    if (page !== undefined) params.set('page', String(page));
+    const q = searchQuery !== undefined ? searchQuery : search;
+    if (q) params.set('search', q);
+    const queryString = params.toString();
+    let url = `${process.env.NEXT_PUBLIC_APIURL}/user${queryString ? `?${queryString}` : ''}`;
     fetch(url, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${cookies.get('token')}`,
       },
     })
       .then((response) => response.json())
@@ -64,7 +67,13 @@ export default function StudentTable() {
   const onPageChange = (event: PaginatorPageChangeEvent) => {
     setFirst(event.first);
     setRows(event.rows);
-    fetchAllStudents(event.rows, event.first / event.rows + 1);
+    fetchAllStudents(event.rows, event.first / event.rows + 1, search);
+  };
+
+  const handleSearch = (value: string) => {
+    setSearch(value);
+    setFirst(0);
+    fetchAllStudents(rows, 1, value);
   };
   useEffect(() => {
     fetchAllStudents(rows, 1);
@@ -107,23 +116,25 @@ export default function StudentTable() {
     </div>
   );
   return (
-    <>
+    <div className="p-5">
+      <StudentComboBox
+        updateComponent={fetchAllStudents}
+        onSearch={handleSearch}
+      />
       {isLoading ? (
-        <div className="flex justify-center items-center h-full">
+        <div className="flex justify-center items-center h-40">
           <Spinner size="xl" />
         </div>
       ) : (
-        <div className="p-5">
-          <StudentComboBox updateComponent={fetchAllStudents} />
+        <>
           {allStudents && allStudents.length > 0 ? (
             <>
-              {" "}
               <div className="overflow-auto rounded-lg shadow hidden md:block">
                 <Table>
                   {renderTableHead(Object.keys(headersMapping), true, true)}
                   {renderTableBody({
                     headersValues: Object.values(headersMapping),
-                    idValueName: "id",
+                    idValueName: 'id',
                     data: allStudents,
                     contactOptions: true,
                     renderUpdateComponent: (student: Student) =>
@@ -151,8 +162,8 @@ export default function StudentTable() {
               onPageChange={onPageChange}
             />
           </div>
-        </div>
+        </>
       )}
-    </>
+    </div>
   );
 }

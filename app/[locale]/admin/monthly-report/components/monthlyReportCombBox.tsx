@@ -1,16 +1,18 @@
-"use client";
-import { CustomFlowbiteTheme, Dropdown } from "flowbite-react";
-import { useState } from "react";
-import AddMonthlyReport from "./addMonthlyReport";
-import GenericComboBox from "@/app/[locale]/components/genericTableComponent/genericSearchBox.component";
-import { Student } from "@/types";
+'use client';
+import { CustomFlowbiteTheme, Dropdown } from 'flowbite-react';
+import { useState } from 'react';
+import AddMonthlyReport from './addMonthlyReport';
+import GenericComboBox from '@/app/[locale]/components/genericTableComponent/genericSearchBox.component';
+import { Student } from '@/types';
 
 export default function MonthlyReportCombBox({
   updateComponent,
   students,
+  onSearch,
 }: {
   updateComponent: () => void;
   students: Student[];
+  onSearch?: (value: string) => void;
 }) {
   const [handleModal, setHandleModal] = useState(false);
 
@@ -23,14 +25,15 @@ export default function MonthlyReportCombBox({
 
   return (
     <GenericComboBox
+      onSearch={onSearch}
       AdditionalComponent={
         <div
-          className={"flex flex-row justify-between items-center gap-5 my-3"}
+          className={'flex flex-row justify-between items-center gap-5 my-3'}
         >
           <button
             onClick={openModal}
             className={
-              "bg-white hover:bg-gray-100 transition-colors text-black-color-one px-5 py-2 rounded-[16px] font-normal"
+              'bg-white hover:bg-gray-100 transition-colors text-black-color-one px-5 py-2 rounded-[16px] font-normal'
             }
           >
             Add Report +

@@ -3,7 +3,7 @@ import { getStaticData } from '@/utilities/fetchDataFunctionAsync';
 export default async function Statistics() {
   const totalBalance = await getStaticData('teacher/adminBalance');
   const totalStudentsAndTeachers = await getStaticData(
-    'teacher/totalRecordsOf?records=user,teacher'
+    'teacher/totalRecordsOf?records=user,teacher',
   );
   return (
     <section
@@ -21,7 +21,7 @@ export default async function Statistics() {
       />
       <StatisticBox
         title={'Total Balance'}
-        number={`${totalBalance.balance[0].amount}$`}
+        number={`${totalBalance.balance}$`}
       />
     </section>
   );
